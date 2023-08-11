@@ -1,13 +1,14 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-branch="$(git rev-parse --abbrev-ref HEAD)"
+SUPERPROJECT_WORKING_TREE=`git rev-parse --show-superproject-working-tree`
+echo "📣 Committing to $SUPERPROJECT_WORKING_TREE."
+cd $SUPERPROJECT_WORKING_TREE
 
-if [ "$branch" = "develop" ]; then
-  cd ..
-  echo "$PWD"
-  git submodule update --remote
-  git add .
-  git commit -m "Update submodule huma-js"
-  git push
-fi
+# Clean the Git environment before crossing repository boundaries.
+# From https://stackoverflow.com/questions/69275415/why-is-git-describe-picking-out-the-tag-that-it-does/75228688#75228688
+unset $(git rev-parse --local-env-vars)
+
+git add src/huma-js
+git commit -m "Update submodule huma-js"
+git push

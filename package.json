@@ -24,7 +24,8 @@
     "lint:sdk": "yarn workspace @huma-finance/sdk lint",
     "lint:widget": "yarn workspace @huma-finance/widgets lint",
     "lint:all": "yarn lint:shared && yarn lint:sdk && yarn lint:widget",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postCommit": "bash .husky/post-commit"
   },
   "devDependencies": {
     "husky": "^8.0.3",
