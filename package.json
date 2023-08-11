@@ -1,5 +1,5 @@
 {
-  "name": "huma-js-10",
+  "name": "huma-js",
   "private": true,
   "workspaces": {
     "packages": [
