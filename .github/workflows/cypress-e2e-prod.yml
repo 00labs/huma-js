@@ -1,0 +1,35 @@
+name: Cypress e2e Production
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches: ["master"]
+  workflow_dispatch:
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    environment: e2e-testing-production
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress run with env
+        uses: cypress-io/github-action@v5
+        with:
+          start: yarn start
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 180
+          config: baseUrl=http://localhost:3000
+          browser: chrome
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_E2E_TEST_INFURA_GOERLI: ${{ secrets.CYPRESS_E2E_TEST_INFURA_GOERLI }}
+          CYPRESS_E2E_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_E2E_TEST_PRIVATE_KEY }}
+          CYPRESS_E2E_TEST_RN_CREATE_BASE_URL: ${{ vars.CYPRESS_E2E_TEST_RN_CREATE_BASE_URL }}
+          REACT_APP_ALCHEMY_API_KEY: ${{ secrets.REACT_APP_ALCHEMY_API_KEY }}
+          REACT_APP_INFURA_API_KEY: ${{ secrets.REACT_APP_INFURA_API_KEY }}

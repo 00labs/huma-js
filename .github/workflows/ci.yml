@@ -1,0 +1,36 @@
+name: Huma Dapp Monorepo CI
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    branches: ["develop"]
+    paths-ignore:
+      - "**/README.md"
+      - "**/netlify.toml"
+      - "**/gitleaks.toml"
+      - "**/LICENSE"
+      - "**/.husky/pre-commit"
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint all
+        run: yarn lint:all
+
+      - name: Build shared
+        run: yarn build:shared
+
+      - name: Unit tests
+        run: yarn test:all

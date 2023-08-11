@@ -1,0 +1,10 @@
+title = "Gitleaks config"
+[whitelist]
+files = [
+    "(.*?)(jpg|gif|doc|pdf|bin)$",
+    "^vendor/(.*?)$",
+    ".gitleaks.toml",
+]
+commits = [
+    "a3629013e1684648881ceae2383e9928",
+]

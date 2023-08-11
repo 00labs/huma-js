@@ -1,0 +1,33 @@
+{
+  "name": "huma-js-10",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "lernaPublish": "yarn lerna publish --no-private",
+    "start:widget": "yarn workspace @huma-finance/widgets cosmos",
+    "build:widget": "yarn workspace @huma-finance/widgets build",
+    "build:shared": "yarn workspace @huma-finance/shared build",
+    "prettier:widget": "yarn workspace @huma-finance/widgets prettier",
+    "prettier:shared": "yarn workspace @huma-finance/shared prettier",
+    "prettier:sdk": "yarn workspace @huma-finance/sdk prettier",
+    "prettier:all": "yarn prettier:widget && yarn prettier:shared && yarn prettier:sdk",
+    "docs:widget": "yarn workspace @huma-finance/widgets generateDocs",
+    "test:shared": "yarn workspace @huma-finance/shared test",
+    "test:sdk": "yarn workspace @huma-finance/sdk test",
+    "test:all": "yarn test:shared && yarn test:sdk",
+    "test:badges:sdk": "yarn workspace @huma-finance/sdk test:badges",
+    "lint:shared": "yarn workspace @huma-finance/shared lint",
+    "lint:sdk": "yarn workspace @huma-finance/sdk lint",
+    "lint:widget": "yarn workspace @huma-finance/widgets lint",
+    "lint:all": "yarn lint:shared && yarn lint:sdk && yarn lint:widget",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lerna": "^6.6.1"
+  }
+}
