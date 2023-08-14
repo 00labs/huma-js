@@ -1,9 +1,14 @@
 {
   "name": "@huma-finance/sdk",
   "version": "0.0.39",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/index.js",
+  "types": "./src/index.ts",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "publishConfig": {
+    "types": "./dist/index.d.ts",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/index.js"
+  },
   "files": [
     "dist",
     "getting-started.md",

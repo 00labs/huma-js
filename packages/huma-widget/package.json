@@ -1,16 +1,19 @@
 {
   "name": "@huma-finance/widgets",
   "version": "0.0.39",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/00labs/huma-dapp.git"
   },
-  "types": "dist/index.d.ts",
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/index.js",
+  "types": "./src/index.ts",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "types": "dist/index.d.ts",
+    "main": "dist/cjs/index.cjs",
+    "module": "dist/index.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

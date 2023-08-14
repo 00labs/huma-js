@@ -4,8 +4,8 @@ import {
   downScale,
   formatMoney,
   sendTxAtom,
+  ERC20_ABI,
 } from '@huma-finance/shared'
-import erc20Abi from '@huma-finance/shared/dist/abis/erc20.json'
 import React, { useEffect, useState } from 'react'
 
 import { useAtom } from 'jotai'
@@ -23,7 +23,7 @@ export function Success({ poolInfo, handleAction }: Props): React.ReactElement {
 
   useEffect(() => {
     if (txReceipt) {
-      const [event] = decodeLogs(txReceipt.logs, erc20Abi)
+      const [event] = decodeLogs(txReceipt.logs, ERC20_ABI)
       if (event) {
         const payedAmount = downScale(event.args.value.toString(), decimals)
         setApprovedAmount(payedAmount)

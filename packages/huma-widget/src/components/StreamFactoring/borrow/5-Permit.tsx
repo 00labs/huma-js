@@ -5,9 +5,9 @@ import {
   SuperfluidPoolProcessor,
   useERC2612Permit,
   useMount,
+  ERC2612_ABI,
+  SuperfluidPoolProcessor_ABI,
 } from '@huma-finance/shared'
-import ERC2612Abi from '@huma-finance/shared/dist/abis/erc2612.json'
-import PoolProcessorAbi from '@huma-finance/shared/dist/abis/SuperfluidPoolProcessor.json'
 import { Contract, ethers } from 'ethers'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -49,7 +49,7 @@ export function Permit({
       poolInfo.poolProcessor!,
       borrowAmountBN!,
     )
-    const tokenContract = new Contract(tokenAddress, ERC2612Abi) as Erc2612
+    const tokenContract = new Contract(tokenAddress, ERC2612_ABI) as Erc2612
     return tokenContract.interface.encodeFunctionData('permit', [
       poolInfo.poolProcessor!,
       borrowAmountBN!,
@@ -98,7 +98,7 @@ export function Permit({
     )
     const poolProcessorContract = new Contract(
       poolInfo.poolProcessor!,
-      PoolProcessorAbi,
+      SuperfluidPoolProcessor_ABI,
     ) as SuperfluidPoolProcessor
 
     return poolProcessorContract.interface.encodeFunctionData(
