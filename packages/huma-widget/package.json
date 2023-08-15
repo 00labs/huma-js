@@ -4,6 +4,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist",
+    "API.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/00labs/huma-dapp.git"
