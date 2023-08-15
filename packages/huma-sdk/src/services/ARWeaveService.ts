@@ -8,10 +8,10 @@ import axios from 'axios'
 import request, { gql } from 'graphql-request'
 
 /**
- * The configuration for Bundlr network instancesasdf
+ * The configuration for Bundlr network instances
  *
  * @typedef {Object} BundlrConfig
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @property {string} nodeUrl - The Bundlr node URL to use.
  * @property {string} currency - The currency to pay for uploads with.
  *  Please see https://docs.bundlr.network/sdk/using-other-currencies for all the supported currencies
@@ -27,7 +27,7 @@ export type BundlrConfig = {
  * Get the configuration for Bundlr network given a chain ID
  *
  * @function
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @param {number} chainId - The chain ID.
  * @returns {BundlrConfig} - The configuration for the Bundlr network.
  */
@@ -64,7 +64,7 @@ export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
  *
  * @async
  * @function
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @param {BundlrConfig} config - The configuration for the Bundlr network.
  * @param {string} signer - The private key of the wallet to use Bundlr with.
  * @returns The Bundlr instance
@@ -92,7 +92,7 @@ async function getBundlrInstance(config: BundlrConfig, signer: string) {
  *
  * @async
  * @function
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @param {BundlrConfig} config - The configuration for the Bundlr network.
  * @param {string} signer - The private key of the wallet to send funds from.
  * @param {number} amount - The amount to fund, denoted in whatever currency specified by the config (e.g. MATIC, ETH)
@@ -127,7 +127,7 @@ async function prefundBundlr(
  *
  * @async
  * @function
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @param {BundlrConfig} config - Configuration object for the Bundlr instance.
  * @param {Web3Provider | string} signerOrPrivateKey - Wallet object used for interacting with the Bundlr instance.
  *         If calling from a browser, this should be a `Web3Provider` instance. If calling from a Node.js
@@ -179,7 +179,7 @@ async function storeData(
  *
  * @async
  * @function
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @param {number} chainId - The chain ID.
  * @param {string} sender - The sender tag to query.
  * @param {string} referenceId - The referenceId tag to query, whatever was used when uploading the metadata.
@@ -223,7 +223,7 @@ async function queryForMetadata(
  *
  * @async
  * @function
- * @memberof ArweaveService
+ * @memberof ARWeaveService
  * @param {string} url - The ARWeave metadata URL to query.
  * @returns {Promise<JSON>} Promise resolving with the queried data.
  */
