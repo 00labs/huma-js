@@ -36,4 +36,5 @@ jobs:
       - name: Check for uncommitted changes
         run: |
           # Check for changes after build/docs
-          git diff --exit-code --quiet || { echo "Uncommitted changes detected after build/docs"; exit 1; }
+          git diff
+          git diff --exit-code --quiet || { git status --porcelain; exit 1; }
