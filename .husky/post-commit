@@ -2,6 +2,12 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 SUPERPROJECT_WORKING_TREE=`git rev-parse --show-superproject-working-tree`
+
+if [[ "$SUPERPROJECT_WORKING_TREE" == "" ]]; then
+  echo "📣 Not in a submodule."
+  exit 0
+fi
+
 echo "📣 Committing to $SUPERPROJECT_WORKING_TREE."
 cd $SUPERPROJECT_WORKING_TREE
 

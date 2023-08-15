@@ -132,6 +132,117 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 <p>An object that contains functions to interact with Huma-related data stored on ARWeave</p>
 
 **Kind**: global namespace  
+
+* [ARWeaveService](#ARWeaveService) : <code>object</code>
+    * [.getBundlrNetworkConfig(chainId)](#ARWeaveService.getBundlrNetworkConfig) ⇒ <code>BundlrConfig</code>
+    * [.getBundlrInstance(config, signer)](#ARWeaveService.getBundlrInstance) ⇒
+    * [.prefundBundlr(config, signer, amount)](#ARWeaveService.prefundBundlr) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
+    * [.storeData(config, signerOrPrivateKey, data, tags, [lazyFund])](#ARWeaveService.storeData) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
+    * [.queryForMetadata(chainId, sender, referenceId)](#ARWeaveService.queryForMetadata) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.fetchMetadataFromUrl(url)](#ARWeaveService.fetchMetadataFromUrl) ⇒ <code>Promise.&lt;JSON&gt;</code>
+    * [.BundlrConfig](#ARWeaveService.BundlrConfig) : <code>Object</code>
+
+<a name="ARWeaveService.getBundlrNetworkConfig"></a>
+
+### ARWeaveService.getBundlrNetworkConfig(chainId) ⇒ <code>BundlrConfig</code>
+<p>Get the configuration for Bundlr network given a chain ID</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <code>BundlrConfig</code> - <ul>
+<li>The configuration for the Bundlr network.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chainId | <code>number</code> | <p>The chain ID.</p> |
+
+<a name="ARWeaveService.getBundlrInstance"></a>
+
+### ARWeaveService.getBundlrInstance(config, signer) ⇒
+<p>Get a Bundlr instance for a specific network</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <p>The Bundlr instance</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| config | <code>BundlrConfig</code> | <p>The configuration for the Bundlr network.</p> |
+| signer | <code>string</code> | <p>The private key of the wallet to use Bundlr with.</p> |
+
+<a name="ARWeaveService.prefundBundlr"></a>
+
+### ARWeaveService.prefundBundlr(config, signer, amount) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
+<p>Prefund the Bundlr network with the specified amount. Required if not lazy funding.
+Important note: The amount is denominated in the base unit of currency for that network.
+If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <code>Promise.&lt;FundResponse&gt;</code> - <ul>
+<li>The fund response.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| config | <code>BundlrConfig</code> | <p>The configuration for the Bundlr network.</p> |
+| signer | <code>string</code> | <p>The private key of the wallet to send funds from.</p> |
+| amount | <code>number</code> | <p>The amount to fund, denoted in whatever currency specified by the config (e.g. MATIC, ETH)</p> |
+
+<a name="ARWeaveService.storeData"></a>
+
+### ARWeaveService.storeData(config, signerOrPrivateKey, data, tags, [lazyFund]) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
+<p>Store data on ARWeave using the Bundlr Network.</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <code>Promise.&lt;UploadResponse&gt;</code> - <p>Promise resolving with the upload response.</p>  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| config | <code>BundlrConfig</code> |  | <p>Configuration object for the Bundlr instance.</p> |
+| signerOrPrivateKey | <code>Web3Provider</code> \| <code>string</code> |  | <p>Wallet object used for interacting with the Bundlr instance. If calling from a browser, this should be a <code>Web3Provider</code> instance. If calling from a Node.js environment, this should be a private key string.</p> |
+| data | <code>Record.&lt;string, unknown&gt;</code> |  | <p>The data to store in the Bundlr instance.</p> |
+| tags | <code>Array.&lt;{name: string, value: string}&gt;</code> |  | <p>Array of tag objects with <code>name</code> and <code>value</code> properties.</p> |
+| [lazyFund] | <code>boolean</code> | <code>true</code> | <p>Optional flag to fund the Bundlr instance lazily. If set to <code>false</code>, the Bundlr node should already be funded or else uploads will fail.</p> |
+
+<a name="ARWeaveService.queryForMetadata"></a>
+
+### ARWeaveService.queryForMetadata(chainId, sender, referenceId) ⇒ <code>Promise.&lt;any&gt;</code>
+<p>Helper method to query the Arweave network for receivables metadata previously uploaded.</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <code>Promise.&lt;any&gt;</code> - <p>Promise resolving with the queried data.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chainId | <code>number</code> | <p>The chain ID.</p> |
+| sender | <code>string</code> | <p>The sender tag to query.</p> |
+| referenceId | <code>string</code> | <p>The referenceId tag to query, whatever was used when uploading the metadata.</p> |
+
+<a name="ARWeaveService.fetchMetadataFromUrl"></a>
+
+### ARWeaveService.fetchMetadataFromUrl(url) ⇒ <code>Promise.&lt;JSON&gt;</code>
+<p>Helper method to fetch data from an ARWeave URL.</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <code>Promise.&lt;JSON&gt;</code> - <p>Promise resolving with the queried data.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | <p>The ARWeave metadata URL to query.</p> |
+
+<a name="ARWeaveService.BundlrConfig"></a>
+
+### ARWeaveService.BundlrConfig : <code>Object</code>
+<p>The configuration for Bundlr network instances</p>
+
+**Kind**: static typedef of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| nodeUrl | <code>string</code> | <p>The Bundlr node URL to use.</p> |
+| currency | <code>string</code> | <p>The currency to pay for uploads with. Please see https://docs.bundlr.network/sdk/using-other-currencies for all the supported currencies</p> |
+| [providerUrl] | <code>string</code> | <p>The provider URL, required for devnets.</p> |
+
 <a name="EAService"></a>
 
 ## EAService : <code>object</code>

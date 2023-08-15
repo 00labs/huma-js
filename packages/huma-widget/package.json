@@ -86,7 +86,7 @@
     "lint": "eslint --max-warnings=0 \"src/**/*.{js,ts,tsx,graphql}\"",
     "lint-staged": "lint-staged",
     "e2e": "cypress run --config baseUrl=http://localhost:8000 --headed --browser chrome --e2e",
-    "generateDocs": "jsdoc2md --files src/**/* --configure ./jsdoc2md.json > API.md",
+    "generateDocs": "jsdoc2md --files \"src/**/*.tsx\" --configure ./jsdoc2md.json > API.md",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "prettier": "prettier --write \"src/**/*.{js,ts,tsx,graphql}\""
   },
@@ -97,6 +97,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,ts,tsx,css,sass,less,graphql}": [
+      "yarn generateDocs",
       "eslint --fix --max-warnings=0",
       "prettier --write",
       "git add ."
