@@ -1,36 +1,36 @@
-name: Huma Dapp Monorepo CI
+name: Huma Monorepo CI
 on:
+  push:
+    branches: ["develop", "master"]
   pull_request:
-    types: [opened, reopened, edited, synchronize]
-    branches: ["develop"]
-    paths-ignore:
-      - "**/README.md"
-      - "**/netlify.toml"
-      - "**/gitleaks.toml"
-      - "**/LICENSE"
-      - "**/.husky/pre-commit"
-  workflow_dispatch:
+    branches: ["develop", "master"]
 
 jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
-
-      - name: Checkout
-        uses: actions/checkout@v3
+          node-version: 16.x
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Lint all
         run: yarn lint:all
 
-      - name: Build shared
-        run: yarn build:shared
+      - name: Build all
+        run: yarn build:all
 
       - name: Unit tests
         run: yarn test:all
+
+      - name: Check for uncommitted changes
+        run: |
+          # Check for changes after build/docs
+          git diff --exit-code --quiet || { echo "Uncommitted changes detected after build/docs"; exit 1; }
