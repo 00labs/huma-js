@@ -1,9 +1,9 @@
-name: Beta NPM Packages Publishing
+name: Production NPM Packages Publishing
 
 on:
   workflow_run:
     workflows: ["Huma Monorepo CI"]
-    branches: ["develop"]
+    branches: ["master"]
     types:
       - completed
 
@@ -36,4 +36,4 @@ jobs:
 
       - name: Publish packages
         run: |
-          yarn lerna:publish:canary --yes
+          yarn lerna:publish --yes
