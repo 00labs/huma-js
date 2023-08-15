@@ -16,7 +16,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: 'yarn'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -35,6 +42,6 @@ jobs:
         
       - name: Check for uncommitted changes
         run: |
-          # Check for changes after build/docs
+          # Check for changes after build/docs/lint
           git diff
           git diff --exit-code --quiet || { git status --porcelain; exit 1; }
