@@ -1,11 +1,9 @@
 name: Beta NPM Packages Publishing
 
 on:
-  workflow_run:
-    workflows: ["Huma Monorepo CI"]
+  pull_request:
+    types: [closed]
     branches: ["develop"]
-    types:
-      - completed
 
 jobs:
   deploy-beta:
@@ -24,6 +22,14 @@ jobs:
         with:
           node-version: 16.x
           cache: 'yarn'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
         
       - name: Install dependencies
         run: yarn install --frozen-lockfile
