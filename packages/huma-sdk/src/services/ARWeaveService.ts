@@ -8,7 +8,7 @@ import axios from 'axios'
 import request, { gql } from 'graphql-request'
 
 /**
- * The configuration for Bundlr network instances
+ * The configuration for Bundlr network instancesasdf
  *
  * @typedef {Object} BundlrConfig
  * @memberof ArweaveService
