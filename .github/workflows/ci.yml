@@ -29,8 +29,13 @@ jobs:
       - name: Lint all
         run: yarn lint:all
 
-      - name: Build shared
-        run: yarn build:shared
+      - name: Build all
+        run: yarn build:all
 
       - name: Unit tests
         run: yarn test:all
+
+      - name: Check for uncommitted changes
+        run: |
+          # Check for changes after build/docs
+          git diff --exit-code --quiet || { echo "Uncommitted changes detected after build/docs"; exit 1; }
