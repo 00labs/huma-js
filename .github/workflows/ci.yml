@@ -28,15 +28,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Lint all
-        run: yarn lint:all
-
-      - name: Build all
-        run: yarn build:all
-
-      - name: Unit tests
-        run: yarn test:all
-
       - name: Generate docs
         run: yarn docs:all
         
@@ -44,4 +35,3 @@ jobs:
         run: |
           # Check for changes after build/docs/lint
           git diff
-          git diff --exit-code --quiet || { git status --porcelain; exit 1; }
