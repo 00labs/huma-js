@@ -36,4 +36,4 @@ jobs:
 
       - name: Publish packages
         run: |
-          yarn publish:canary --yes
+          yarn lerna:publish:canary --yes
