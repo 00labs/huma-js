@@ -30,6 +30,9 @@ jobs:
       - name: Unit tests
         run: yarn test:all
 
+      - name: Generate docs
+        run: yarn docs:all
+        
       - name: Check for uncommitted changes
         run: |
           # Check for changes after build/docs
