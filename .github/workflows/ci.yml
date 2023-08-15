@@ -1,13 +1,9 @@
 name: Huma Monorepo CI
 on:
+  push:
+    branches: ["develop", "master"]
   pull_request:
     branches: ["develop", "master"]
-    paths-ignore:
-      - "**/README.md"
-      - "**/netlify.toml"
-      - "**/gitleaks.toml"
-      - "**/LICENSE"
-      - "**/.husky/pre-commit"
 
 jobs:
   ci:
