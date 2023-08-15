@@ -40,15 +40,15 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "git add . && lint-staged && yarn generateDocs"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
     "src/**/*.{js,ts,tsx,graphql}": [
-      "eslint --fix --max-warnings=0",
-      "prettier --write",
       "yarn generateDocs",
       "yarn test:badges",
+      "eslint --fix --max-warnings=0",
+      "prettier --write",
       "git add ."
     ],
     "tests/**/*.{js,ts}": [

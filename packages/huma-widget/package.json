@@ -92,11 +92,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "git add . && lint-staged"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
     "src/**/*.{js,ts,tsx,css,sass,less,graphql}": [
+      "yarn generateDocs",
       "eslint --fix --max-warnings=0",
       "prettier --write",
       "git add ."
