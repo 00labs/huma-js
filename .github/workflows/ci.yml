@@ -44,4 +44,4 @@ jobs:
         run: |
           echo "Uncommitted changes detected after build/docs."
           echo "Unchanged files:"
-          git diff --name-only
+          git diff
