@@ -49,7 +49,7 @@ jobs:
       - name: Synchronize lerna version bump commit with develop branch
         run: |
           git fetch --unshallow
-          git checkout dev
+          git checkout develop
           git pull
-          git merge --no-ff master -m "Auto-merge master back to dev"
+          git merge --no-ff master -m "Auto-merge master back to develop"
           git push
