@@ -1,4 +1,4 @@
-name: Huma Dapp Monorepo CI
+name: Huma Monorepo CI
 on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
