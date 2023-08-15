@@ -2,7 +2,7 @@ name: Huma Dapp Monorepo CI
 on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
-    branches: ["develop"]
+    branches: ["develop", "master"]
     paths-ignore:
       - "**/README.md"
       - "**/netlify.toml"
