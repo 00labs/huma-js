@@ -1,10 +1,3 @@
-## Members
-
-<dl>
-<dt><a href="#ChainEnum">ChainEnum</a></dt>
-<dd><p>Updates cy.visit() to include an injected window.ethereum provider.</p></dd>
-</dl>
-
 ## Functions
 
 <dl>
@@ -25,9 +18,6 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend withdraw widget</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
 <dd><p>Superfluid factoring widget</p></dd>
-<dt><a href="#components">components()</a></dt>
-<dd><p>This file can be used to override default props and styles on the various Material components
-see: https://mui.com/customization/theme-components/</p></dd>
 </dl>
 
 ## Typedefs
@@ -67,12 +57,6 @@ see: https://mui.com/customization/theme-components/</p></dd>
 <dd><p>Lend pool withdraw widget props</p></dd>
 </dl>
 
-<a name="ChainEnum"></a>
-
-## ChainEnum
-<p>Updates cy.visit() to include an injected window.ethereum provider.</p>
-
-**Kind**: global variable  
 <a name="InvoiceFactoringBorrowWidget"></a>
 
 ## InvoiceFactoringBorrowWidget(props) ⇒
@@ -170,13 +154,6 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | props | [<code>WidgetProps</code>](#WidgetProps) | <p>The superfluid factoring widget props.</p> |
 
-<a name="components"></a>
-
-## components()
-<p>This file can be used to override default props and styles on the various Material components
-see: https://mui.com/customization/theme-components/</p>
-
-**Kind**: global function  
 <a name="CreditLineApproveProps"></a>
 
 ## CreditLineApproveProps : <code>Object</code>
