@@ -36,4 +36,12 @@ jobs:
       - name: Check for uncommitted changes
         run: |
           # Check for changes after build/docs
-          git diff --exit-code --quiet || { echo "Uncommitted changes detected after build/docs"; exit 1; }
+          git diff --exit-code --quiet || { git status --porcelain; exit 1; }
+        id: check_diff
+
+      - name: Output Unchanged Files
+        if: steps.check_diff.conclusion == 'failure'
+        run: |
+          echo "Uncommitted changes detected after build/docs."
+          echo "Unchanged files:"
+          git diff --name-only
