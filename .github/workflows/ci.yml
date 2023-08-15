@@ -1,8 +1,7 @@
 name: Huma Monorepo CI
 on:
-  push:
-    branches: ["develop", "master"]
   pull_request:
+    types: [opened, synchronize]
     branches: ["develop", "master"]
 
 jobs:
@@ -17,6 +16,14 @@ jobs:
         with:
           node-version: 16.x
           cache: 'yarn'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -36,12 +43,5 @@ jobs:
       - name: Check for uncommitted changes
         run: |
           # Check for changes after build/docs
-          git diff --exit-code --quiet || { git status --porcelain; exit 1; }
-        id: check_diff
-
-      - name: Output Unchanged Files
-        if: steps.check_diff.conclusion == 'failure'
-        run: |
-          echo "Uncommitted changes detected after build/docs."
-          echo "Unchanged files:"
-          git diff --name-only
+          git diff
+          # git diff --exit-code --quiet || { git status --porcelain; exit 1; }

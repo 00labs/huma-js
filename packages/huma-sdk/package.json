@@ -12,7 +12,7 @@
   "scripts": {
     "start": "tsc -w",
     "graphql": "graphql-codegen",
-    "generateDocs": "jsdoc2md --files src/**/*.ts --configure ./jsdoc2md.json > API.md",
+    "generateDocs": "jsdoc2md --files \"src/**/*.ts\" --configure ./jsdoc2md.json > API.md",
     "build": "tsc --project ./tsconfig.build.json && tsc --project ./tsconfig.cjs.json",
     "lint": "eslint --max-warnings=0 \"src/**/*.{js,ts,tsx,graphql}\" \"tests/**/*.{js,ts,tsx,graphql}\"",
     "lint-staged": "lint-staged",
@@ -40,14 +40,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "git add . && lint-staged && yarn generateDocs"
+      "pre-commit": "git add . && lint-staged"
     }
   },
   "lint-staged": {
     "src/**/*.{js,ts,tsx,graphql}": [
+      "yarn generateDocs",
       "eslint --fix --max-warnings=0",
       "prettier --write",
-      "yarn generateDocs",
       "yarn test:badges",
       "git add ."
     ],

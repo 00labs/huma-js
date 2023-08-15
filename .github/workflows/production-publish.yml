@@ -1,11 +1,9 @@
 name: Production NPM Packages Publishing
 
 on:
-  workflow_run:
-    workflows: ["Huma Monorepo CI"]
+  pull_request:
+    types: [closed]
     branches: ["master"]
-    types:
-      - completed
 
 jobs:
   deploy-beta:
@@ -24,6 +22,14 @@ jobs:
         with:
           node-version: 16.x
           cache: 'yarn'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
         
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -39,3 +45,11 @@ jobs:
       - name: Publish packages
         run: |
           yarn lerna:publish --yes
+
+      - name: Synchronize lerna version bump commit with develop branch
+        run: |
+          git fetch --unshallow
+          git checkout dev
+          git pull
+          git merge --no-ff master -m "Auto-merge master back to dev"
+          git push
