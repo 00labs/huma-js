@@ -1,3 +1,10 @@
+## Members
+
+<dl>
+<dt><a href="#ChainEnum">ChainEnum</a></dt>
+<dd><p>Updates cy.visit() to include an injected window.ethereum provider.</p></dd>
+</dl>
+
 ## Functions
 
 <dl>
@@ -9,17 +16,25 @@
 <dd><p>Credit line borrow widget</p></dd>
 <dt><a href="#CreditLinePaymentWidget">CreditLinePaymentWidget(props)</a> ⇒</dt>
 <dd><p>Credit line payment widget</p></dd>
+<dt><a href="#CreditLineApproveWidget">CreditLineApproveWidget(props)</a> ⇒</dt>
+<dd><p>Credit line allowance approve widget to top up a pool's ERC20 token allowance.
+To be used when re-enabling autopay and other pool actions that require allowance.</p></dd>
 <dt><a href="#LendSupplyWidget">LendSupplyWidget(props)</a> ⇒</dt>
 <dd><p>Lend supply widget</p></dd>
 <dt><a href="#LendWithdrawWidget">LendWithdrawWidget(props)</a> ⇒</dt>
 <dd><p>Lend withdraw widget</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
 <dd><p>Superfluid factoring widget</p></dd>
+<dt><a href="#components">components()</a></dt>
+<dd><p>This file can be used to override default props and styles on the various Material components
+see: https://mui.com/customization/theme-components/</p></dd>
 </dl>
 
 ## Typedefs
 
 <dl>
+<dt><a href="#CreditLineApproveProps">CreditLineApproveProps</a> : <code>Object</code></dt>
+<dd><p>Credit line pool approve allowance props</p></dd>
 <dt><a href="#CreditLineBorrowProps">CreditLineBorrowProps</a> : <code>Object</code></dt>
 <dd><p>Credit line pool borrow props</p></dd>
 <dt><a href="#CreditLinePaymentProps">CreditLinePaymentProps</a> : <code>Object</code></dt>
@@ -44,12 +59,20 @@
 <dd><p>Credit line pool borrow widget props</p></dd>
 <dt><a href="#CreditLinePaymentWidgetProps">CreditLinePaymentWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Credit line pool payment widget props</p></dd>
+<dt><a href="#CreditLinePaymentWidgetProps">CreditLinePaymentWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Credit line allowance approval widget props</p></dd>
 <dt><a href="#LendSupplyWidgetProps">LendSupplyWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props</p></dd>
 <dt><a href="#LendWithdrawWidgetProps">LendWithdrawWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw widget props</p></dd>
 </dl>
 
+<a name="ChainEnum"></a>
+
+## ChainEnum
+<p>Updates cy.visit() to include an injected window.ethereum provider.</p>
+
+**Kind**: global variable  
 <a name="InvoiceFactoringBorrowWidget"></a>
 
 ## InvoiceFactoringBorrowWidget(props) ⇒
@@ -60,7 +83,7 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>InvoiceFactoringBorrowProps</code>](#InvoiceFactoringBorrowProps) \| [<code>WidgetProps</code>](#WidgetProps) | <p>The invoice factoring pool borrow widget props.</p> |
+| props | [<code>InvoiceFactoringBorrowWidgetProps</code>](#InvoiceFactoringBorrowWidgetProps) | <p>The invoice factoring pool borrow widget props.</p> |
 
 <a name="InvoiceFactoringPaymentWidget"></a>
 
@@ -72,7 +95,7 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>InvoiceFactoringPaymentProps</code>](#InvoiceFactoringPaymentProps) \| [<code>WidgetProps</code>](#WidgetProps) | <p>The invoice factoring pool payment widget props.</p> |
+| props | [<code>InvoiceFactoringPaymentWidgetProps</code>](#InvoiceFactoringPaymentWidgetProps) | <p>The invoice factoring pool payment widget props.</p> |
 
 <a name="CreditLineBorrowWidget"></a>
 
@@ -84,7 +107,7 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>CreditLineBorrowProps</code>](#CreditLineBorrowProps) \| [<code>WidgetProps</code>](#WidgetProps) | <p>The credit line pool borrow widget props.</p> |
+| props | [<code>CreditLineBorrowWidgetProps</code>](#CreditLineBorrowWidgetProps) | <p>The credit line pool borrow widget props.</p> |
 
 <a name="CreditLinePaymentWidget"></a>
 
@@ -96,7 +119,20 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>CreditLinePaymentProps</code>](#CreditLinePaymentProps) \| [<code>WidgetProps</code>](#WidgetProps) | <p>The credit line pool payment widget props.</p> |
+| props | [<code>CreditLinePaymentWidgetProps</code>](#CreditLinePaymentWidgetProps) | <p>The credit line pool payment widget props.</p> |
+
+<a name="CreditLineApproveWidget"></a>
+
+## CreditLineApproveWidget(props) ⇒
+<p>Credit line allowance approve widget to top up a pool's ERC20 token allowance.
+To be used when re-enabling autopay and other pool actions that require allowance.</p>
+
+**Kind**: global function  
+**Returns**: <p>Credit line pool approve widget component</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | <code>CreditLineApproveWidgetProps</code> | <p>The credit line pool approve widget props.</p> |
 
 <a name="LendSupplyWidget"></a>
 
@@ -108,7 +144,7 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>LendSupplyProps</code>](#LendSupplyProps) \| [<code>WidgetProps</code>](#WidgetProps) | <p>The lend pool supply widget props.</p> |
+| props | [<code>LendSupplyWidgetProps</code>](#LendSupplyWidgetProps) | <p>The lend pool supply widget props.</p> |
 
 <a name="LendWithdrawWidget"></a>
 
@@ -120,7 +156,7 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>LendWithdrawProps</code>](#LendWithdrawProps) \| [<code>WidgetProps</code>](#WidgetProps) | <p>The lend pool withdraw widget props</p> |
+| props | [<code>LendWithdrawWidgetProps</code>](#LendWithdrawWidgetProps) | <p>The lend pool withdraw widget props</p> |
 
 <a name="SuperfluidFactoringWidget"></a>
 
@@ -133,6 +169,29 @@
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>WidgetProps</code>](#WidgetProps) | <p>The superfluid factoring widget props.</p> |
+
+<a name="components"></a>
+
+## components()
+<p>This file can be used to override default props and styles on the various Material components
+see: https://mui.com/customization/theme-components/</p>
+
+**Kind**: global function  
+<a name="CreditLineApproveProps"></a>
+
+## CreditLineApproveProps : <code>Object</code>
+<p>Credit line pool approve allowance props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| amount | <code>BigNumberish</code> \| <code>undefined</code> | <p>The amount to approve.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool approve allowance action is successful.</p> |
 
 <a name="CreditLineBorrowProps"></a>
 
@@ -250,7 +309,7 @@
 | --- | --- | --- |
 | desiredChainId | <code>desiredChainId</code> \| <code>undefined</code> | <p>Optional desired chain id, will trigger the switch network action if different from the current chain id</p> |
 | jsonRpcUrlMap | [<code>JsonRpcConnectionMap</code>](#JsonRpcConnectionMap) \| <code>undefined</code> | <p>Optional mapping of your JSON-RPC connections indexed by chainId</p> |
-| provider | <code>Eip1193Provider</code> \| <code>JsonRpcProvider</code> \| <code>null</code> \| <code>undefined</code> | <p>Optional EIP-1193 provider or JsonRpc Provider</p> |
+| provider | <code>Eip1193Provider</code> \| <code>JsonRpcProviderl</code> | <p>EIP-1193 provider or JsonRpc Provider</p> |
 
 <a name="InvoiceFactoringBorrowWidgetProps"></a>
 
@@ -302,6 +361,19 @@
 | Name | Type | Description |
 | --- | --- | --- |
 | CreditLinePaymentProps | [<code>CreditLinePaymentProps</code>](#CreditLinePaymentProps) | <p>Credit line pool payment props.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="CreditLinePaymentWidgetProps"></a>
+
+## CreditLinePaymentWidgetProps : <code>Object</code>
+<p>Credit line allowance approval widget props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| CreditLineApproveProps | [<code>CreditLineApproveProps</code>](#CreditLineApproveProps) | <p>Credit line allowance approve props.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendSupplyWidgetProps"></a>

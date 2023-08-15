@@ -54,9 +54,6 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 <dd><p>Get the chain ID from a signer or provider object.</p></dd>
 <dt><a href="#getPoolInfo">getPoolInfo(poolName, poolType)</a> ⇒ <code>PoolInfoType</code> | <code>undefined</code></dt>
 <dd><p>Returns the pool info based on the provided pool name and type, using the same chain ID as the provider/signer given</p></dd>
-<dt><a href="#getRealWorldReceivableContract">getRealWorldReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
-<dd><p>Returns an ethers contract instance for the RealWorldReceivable contract
-associated with the given pool name on the current chain.</p></dd>
 </dl>
 
 ## Typedefs
@@ -615,20 +612,6 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
-
-<a name="getRealWorldReceivableContract"></a>
-
-## getRealWorldReceivableContract(signerOrProvider, chainId) ⇒ <code>Contract</code> \| <code>null</code>
-<p>Returns an ethers contract instance for the RealWorldReceivable contract
-associated with the given pool name on the current chain.</p>
-
-**Kind**: global function  
-**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the RealWorldReceivable contract or null if it could not be found.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
 
 <a name="ApprovalResult"></a>
 

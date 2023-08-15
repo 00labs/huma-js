@@ -18,6 +18,7 @@
     "prettier:shared": "yarn workspace @huma-finance/shared prettier",
     "prettier:widget": "yarn workspace @huma-finance/widgets prettier",
     "prettier:all": "yarn prettier:widget && yarn prettier:shared && yarn prettier:sdk",
+    "docs:all": "yarn docs:sdk && yarn docs:widget",
     "docs:sdk": "yarn workspace @huma-finance/sdk generateDocs",
     "docs:widget": "yarn workspace @huma-finance/widgets generateDocs",
     "test:all": "yarn test:shared && yarn test:sdk",
