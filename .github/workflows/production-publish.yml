@@ -34,9 +34,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Authenticate with NPM
-        run: echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
-
       - name: Configure Git User
         run: |
           git config --global user.email "ci@huma.finance"

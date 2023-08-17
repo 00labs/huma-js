@@ -238,6 +238,19 @@ async function fetchMetadataFromUrl(url: string): Promise<JSON | null> {
 }
 
 /**
+ * Helper method to get an ARWeave URI from an ARWeave ID.
+ *
+ * @async
+ * @function
+ * @memberof ARWeaveService
+ * @param {string} arweaveId - The ARWeave metadata ID.
+ * @returns {string} The ARWeave URI.
+ */
+function getURIFromARWeaveId(arweaveId: string): string {
+  return `https://arweave.net/${arweaveId}`
+}
+
+/**
  * An object that contains functions to interact with Huma-related data stored on ARWeave
  * @namespace ARWeaveService
  */
@@ -248,4 +261,5 @@ export const ARWeaveService = {
   getBundlrNetworkConfig,
   getBundlrInstance,
   fetchMetadataFromUrl,
+  getURIFromARWeaveId,
 }

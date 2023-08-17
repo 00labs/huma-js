@@ -5,7 +5,8 @@
   "private": true,
   "main": "src/mintReceivable.js",
   "scripts": {
-    "startMint": "ts-node src/mintReceivable.ts",
+    "startCreate": "ts-node src/createReceivable.ts",
+    "startCreateAlt": "ts-node src/createReceivableAlternateNetwork.ts",
     "startPay": "ts-node src/payReceivable.ts",
     "startPayReference": "ts-node src/payReceivableWithReferenceId.ts",
     "startDrawdownPayback": "ts-node src/drawdownAndPaybackToPool.ts",

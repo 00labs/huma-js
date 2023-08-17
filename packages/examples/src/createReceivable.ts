@@ -46,7 +46,7 @@ async function main() {
     1000, // receivableAmount
     1684517656, // maturityDate
     JSON.parse('{"test": "test"}'), // metadata
-    "12345", // internalId
+    "1234235", // referenceId
     [] // extraTags
   );
   const txResponse = await tx.wait();

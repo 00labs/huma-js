@@ -17,7 +17,7 @@ import { getDefaultGasOptions, getChainIdFromSignerOrProvider } from '../utils'
 import { Receivable } from '../graphql/generatedTypes'
 
 /**
- * Declares a payment on a RealWorldReceivable given a reference Id of the receivable, which was used as an index for ARWeave data.
+ * Fetches the tokenId of a RealWorldReceivable, or null if it doesn't exist, given a metadata URI
  *
  * @async
  * @function
@@ -26,11 +26,11 @@ import { Receivable } from '../graphql/generatedTypes'
  * @param {string} arweaveId -  The internal ARWeave identifier to lookup a token by
  * @returns {Promise<string | null | undefined>} - Either the token Id or null if no token was found.
  */
-async function getTokenIdByARWeaveId(
+async function getTokenIdByURI(
   signer: ethers.Signer,
-  arweaveId: string | null,
+  uri: string | null,
 ): Promise<string | null | undefined> {
-  if (arweaveId === null) {
+  if (uri === null) {
     return null
   }
 
@@ -64,20 +64,19 @@ async function getTokenIdByARWeaveId(
     receivablesQuery,
     {
       owner: signerAddress,
-      uri: `https://arweave.net/${arweaveId}`,
+      uri,
     },
   )
 
   if (!receivablesData?.receivables?.length) {
-    console.log('No receivables found with this ARWeave Id.')
+    console.log('No receivables found with this URI.')
     return null
   }
   if (receivablesData?.receivables?.length > 1) {
-    console.log(
-      `This owner has multiple receivables with the same ARWeave URI, so we don't know which to use. Please burn 
-        unnecessary receivables or pay the correct token manually using declareReceivablePaymentByTokenId`,
+    throw new Error(
+      `This owner has multiple receivables with the same URI, so we don't know which to use. Please burn 
+        unnecessary receivables. If paying, you can pay the correct token manually using declareReceivablePaymentByTokenId`,
     )
-    return null
   }
 
   return receivablesData?.receivables[0]?.tokenId
@@ -116,7 +115,7 @@ async function declareReceivablePaymentByReferenceId(
   )
 
   // Fetch receivables with the same ARWeave Id
-  const tokenId = await getTokenIdByARWeaveId(signer, dataId)
+  const tokenId = await getTokenIdByURI(signer, dataId)
   if (tokenId == null) {
     throw new Error(
       'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
@@ -192,8 +191,8 @@ async function declareReceivablePaymentByTokenId(
  * @param {number} maturityDate - The maturity date of the receivable token, in UNIX timestamp format.
  * @param {string} uri - The URI of the receivable token metadata.
  * @param {Overrides} [gasOpts] - The gas options to use for the transaction.
- * @returns {Promise<TransactionResponse>} - A Promise of the transaction response.
- * @throws {Error} - Throws an error if the RealWorldReceivable contract is not available on the network.
+ * @returns {Promise<TransactionResponse | null>} - A Promise of the transaction response.
+ * @throws {Error} - Throws an error if the RealWorldReceivable contract is not available on the network, or if a token already exists with the same metadata URI.
  */
 async function createReceivable(
   signer: ethers.Signer,
@@ -205,6 +204,11 @@ async function createReceivable(
   uri: string,
   gasOpts: Overrides = {},
 ): Promise<TransactionResponse> {
+  const tokenId = await getTokenIdByURI(signer, uri)
+  if (tokenId != null) {
+    throw new Error('A token already exists with this metadata, canceling mint')
+  }
+
   const chainId = await getChainIdFromSignerOrProvider(signer)
 
   if (!chainId) {
@@ -237,6 +241,94 @@ async function createReceivable(
 }
 
 /**
+ * Uploads metadata onto ARWeave (or fetches the existing metadata with the same reference Id) and returns the ARWeave URL
+ *
+ * @async
+ * @function
+ * @memberof ReceivableService
+ * @param {Web3Provider | ethers.Signer} signerOrProvider - If calling this function from a browser, this function expects a Web3Provider.
+ *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
+ *      from server calls.
+ * @param {string | null} privateKey - Private key of the wallet used to upload metadata to ARWeave. Only required if calling this function from a server.
+ * @param {number} chainId - The chain ID to mint the receivable token on and pay ARWeave funds from.
+ * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
+ * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
+ * @param {Record<string, any>} metadata - The metadata in JSON format. This will be uploaded onto ARWeave
+ * @param {string} referenceId - An internal identifier value added as a tag on ARWeave, for easily querying the metadata later.
+ * @param {Array<{ name: string, value: string }>} extraTags - Any extraTags you'd like to tag your metadata with. Note that metadata on
+ *      ARWeave is indexed by these tags, so make sure to include any tags that you'd like to be able to query by.
+ * @param {boolean} [lazyFund=true] - Whether to lazy fund the ARWeave uploads. If true, the ARWeave uploads will be paid for by the
+ *      metadata uploader immediately before uploading. If false, the ARWeave node must be pre-funded before calling this function.
+ * @returns {Promise<string>} - The ARWeave metadata URI.
+ */
+async function uploadOrFetchMetadataURI(
+  signerOrProvider: Web3Provider | ethers.Signer,
+  privateKey: string | null,
+  chainId: number,
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  metadata: Record<string, unknown>,
+  referenceId: string,
+  extraTags: { name: string; value: string }[],
+  lazyFund: boolean = true,
+): Promise<string> {
+  if (typeof metadata !== 'object' || Array.isArray(metadata)) {
+    throw new Error('Input must be a JSON object.')
+  }
+
+  // Check to see if metadata with referenceId has already been minted
+  const signer =
+    signerOrProvider instanceof Web3Provider
+      ? signerOrProvider.getSigner()
+      : signerOrProvider
+  const signerAddress = await signer.getAddress()
+  const dataId = await ARWeaveService.queryForMetadata(
+    chainId,
+    signerAddress,
+    referenceId,
+  )
+  const config = ARWeaveService.getBundlrNetworkConfig(chainId)
+
+  let arweaveId
+  if (dataId != null) {
+    console.log(
+      `Metadata already exists with this reference Id, returning existing data ==> ${ARWeaveService.getURIFromARWeaveId(
+        dataId,
+      )}`,
+    )
+    arweaveId = dataId
+  } else {
+    const tags = [
+      { name: 'Content-Type', value: 'application/json' },
+      { name: 'appName', value: 'HumaFinance' },
+      { name: 'poolName', value: poolName },
+      { name: 'poolType', value: poolType },
+      { name: 'referenceId', value: referenceId },
+      ...extraTags,
+    ]
+
+    // Append referenceId to metadata (if it's not already there)
+    if (!Object.prototype.hasOwnProperty.call(metadata, 'referenceId')) {
+      metadata.referenceId = referenceId
+    }
+
+    const response = await ARWeaveService.storeData(
+      config,
+      signerOrProvider instanceof Web3Provider ? signerOrProvider : privateKey!,
+      metadata,
+      tags,
+      lazyFund,
+    )
+    arweaveId = response.id
+    console.log(
+      `Data uploaded ==> ${ARWeaveService.getURIFromARWeaveId(arweaveId)}`,
+    )
+  }
+
+  return ARWeaveService.getURIFromARWeaveId(arweaveId)
+}
+
+/**
  * Creates a RealWorldReceivable token with metadata uploaded onto ARWeave
  *
  * @async
@@ -253,7 +345,7 @@ async function createReceivable(
  * @param {number} receivableAmount - The receivable amount.
  * @param {number} maturityDate - The maturity date of the receivable, in UNIX timestamp format.
  * @param {Record<string, any>} metadata - The metadata in JSON format. This will be uploaded onto ARWeave
- * @param {number} referenceId - An internal identifier value added as a tag on ARWeave, for easily querying the metadata later.
+ * @param {string} referenceId - An internal identifier value added as a tag on ARWeave, for easily querying the metadata later.
  * @param {Array<{ name: string, value: string }>} extraTags - Any extraTags you'd like to tag your metadata with. Note that metadata on
  *      ARWeave is indexed by these tags, so make sure to include any tags that you'd like to be able to query by.
  * @param {boolean} [lazyFund=true] - Whether to lazy fund the ARWeave uploads. If true, the ARWeave uploads will be paid for by the
@@ -280,78 +372,34 @@ async function createReceivableWithMetadata(
     throw new Error('Input must be a JSON object.')
   }
 
-  const config = ARWeaveService.getBundlrNetworkConfig(chainId)
+  // Check to see if metadata with referenceId has already been minted
+  const signer =
+    signerOrProvider instanceof Web3Provider
+      ? signerOrProvider.getSigner()
+      : signerOrProvider
 
-  try {
-    // Check to see if metadata with referenceId has already been minted
-    const signer =
-      signerOrProvider instanceof Web3Provider
-        ? signerOrProvider.getSigner()
-        : signerOrProvider
-    const signerAddress = await signer.getAddress()
-    const dataId = await ARWeaveService.queryForMetadata(
-      chainId,
-      signerAddress,
-      referenceId,
-    )
-    let arweaveId
-    if (dataId != null) {
-      // If there already exists metadata with this reference Id, check if there exists
-      // a token with that ARWeave Id as metadata.
-      const tokenId = await getTokenIdByARWeaveId(signer, dataId)
+  const metadataURI = await uploadOrFetchMetadataURI(
+    signerOrProvider,
+    privateKey,
+    chainId,
+    poolName,
+    poolType,
+    metadata,
+    referenceId,
+    extraTags,
+    lazyFund,
+  )
 
-      if (tokenId == null) {
-        console.log(
-          `Reusing existing metadata ${dataId} to mint new receivable`,
-        )
-        arweaveId = dataId
-      } else {
-        throw new Error(
-          'A token already exists with this reference Id, canceling mint',
-        )
-      }
-    } else {
-      const tags = [
-        { name: 'Content-Type', value: 'application/json' },
-        { name: 'appName', value: 'HumaFinance' },
-        { name: 'poolName', value: poolName },
-        { name: 'poolType', value: poolType },
-        { name: 'referenceId', value: referenceId },
-        ...extraTags,
-      ]
-
-      // Append referenceId to metadata (if it's not already there)
-      if (!Object.prototype.hasOwnProperty.call(metadata, 'referenceId')) {
-        metadata.referenceId = referenceId
-      }
-
-      const response = await ARWeaveService.storeData(
-        config,
-        signerOrProvider instanceof Web3Provider
-          ? signerOrProvider
-          : privateKey!,
-        metadata,
-        tags,
-        lazyFund,
-      )
-      arweaveId = response.id
-      console.log(`Data uploaded ==> https://arweave.net/${arweaveId}`)
-    }
-
-    return await createReceivable(
-      signer,
-      poolName,
-      poolType,
-      currencyCode,
-      receivableAmount,
-      maturityDate,
-      `https://arweave.net/${arweaveId}`,
-      gasOpts,
-    )
-  } catch (e) {
-    console.error(e)
-    throw e
-  }
+  return createReceivable(
+    signer,
+    poolName,
+    poolType,
+    currencyCode,
+    receivableAmount,
+    maturityDate,
+    metadataURI,
+    gasOpts,
+  )
 }
 
 /**
@@ -442,4 +490,6 @@ export const ReceivableService = {
   declareReceivablePaymentByTokenId,
   declareReceivablePaymentByReferenceId,
   loadReceivablesOfOwnerWithMetadata,
+  uploadOrFetchMetadataURI,
+  getTokenIdByURI,
 }
