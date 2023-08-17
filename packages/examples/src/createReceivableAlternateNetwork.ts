@@ -50,12 +50,12 @@ async function main() {
   );
 
   // Prefund Bundlr with MATIC
-  //   const fundResponse = await ARWeaveService.prefundBundlr(
-  //     getBundlrNetworkConfig(ChainEnum.Mumbai),
-  //     TEST_PRIVATE_KEY,
-  //     0.05 // Fund with 0.05 matic
-  //   );
-  //   console.log(fundResponse);
+  const fundResponse = await ARWeaveService.prefundBundlr(
+    getBundlrNetworkConfig(ChainEnum.Mumbai),
+    TEST_PRIVATE_KEY,
+    0.05 // Fund with 0.05 matic
+  );
+  console.log(fundResponse);
 
   const uri = await ReceivableService.uploadOrFetchMetadataURI(
     walletOnSupportedBundlrNetwork,
