@@ -29,5 +29,10 @@
     "jsx": "react",
     "esModuleInterop": true,
     "skipLibCheck": true
-  }
+  },
+  "references": [
+    {
+      "path": "../huma-shared"
+    }
+  ]
 }

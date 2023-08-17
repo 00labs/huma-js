@@ -20,5 +20,13 @@
     "emitDeclarationOnly": true,
     "composite": true
   },
-  "include": ["src/**/*", "src/**/*.json"]
+  "include": ["src/**/*", "src/**/*.json"],
+  "references": [
+    {
+      "path": "../huma-shared"
+    },
+    {
+      "path": "../huma-sdk"
+    }
+  ]
 }
