@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 SUPERPROJECT_WORKING_TREE=`git rev-parse --show-superproject-working-tree`
 
 if [[ "$SUPERPROJECT_WORKING_TREE" == "" ]]; then
