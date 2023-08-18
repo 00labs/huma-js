@@ -6,4 +6,4 @@ if [[ "$SUPERPROJECT_WORKING_TREE" == "" ]]; then
   . "$(dirname -- "$0")/_/husky.sh"
 fi
 
-yarn docs:all && git add . && yarn lint:all && yarn prettier:all
+yarn docs:all && yarn prettier:all && git add . && yarn lint:all
