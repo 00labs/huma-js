@@ -35,7 +35,7 @@ const JiaPoolCopies = {
   signInRequired: {
     title: 'Sign In',
     description:
-      'Please sign in to verify that you are the owner of the wallet',
+      'Please sign in to verify that you are the owner of the wallet.',
   },
   verifyIdentity: {
     title: 'Verify Identity',
@@ -87,11 +87,8 @@ export function EvaluationKYC({
   const isDev = envUtil.checkIsDev()
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
-  const { setError: setAuthError } = useAuthErrorHandling(
-    account,
-    chainId,
-    isDev,
-  )
+  const { isWalletOwnershipVerified, setError: setAuthError } =
+    useAuthErrorHandling(account, chainId, isDev)
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()
@@ -250,6 +247,7 @@ export function EvaluationKYC({
     kycProvider,
     poolInfo.pool,
     setAuthError,
+    isWalletOwnershipVerified,
   ])
 
   const approveLender = async () => {

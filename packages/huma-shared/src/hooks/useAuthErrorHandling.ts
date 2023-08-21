@@ -31,15 +31,18 @@ const verifyOwnership = async (
   chainId: number,
   isDev: boolean,
   provider: JsonRpcProvider,
+  onVerificationComplete: () => void,
 ) => {
   const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
   const message = createSiweMessage(address, chainId, nonce, expiresAt)
   const signer = await provider.getSigner()
   const signature = await signer.signMessage(message)
   await AuthService.verifySignature(message, signature, chainId, isDev)
+  onVerificationComplete()
 }
 
 export type AuthState = {
+  isWalletOwnershipVerified: boolean
   setError: React.Dispatch<React.SetStateAction<unknown>>
 }
 
@@ -49,6 +52,7 @@ export const useAuthErrorHandling = (
   isDev: boolean,
 ): AuthState => {
   const [error, setError] = useState<unknown>(null)
+  const [isVerified, setIsVerified] = useState<boolean>(false)
   const { provider } = useWeb3React()
   const throwError = useAsyncError()
 
@@ -70,15 +74,16 @@ export const useAuthErrorHandling = (
         'WalletMismatchException',
       ].includes(error.response?.data?.detail?.type)
     ) {
-      verifyOwnership(address, chainId, isDev, provider).catch((e) =>
-        throwError(e),
-      )
+      verifyOwnership(address, chainId, isDev, provider, () =>
+        setIsVerified(true),
+      ).catch((e) => throwError(e))
     } else {
       throwError(error)
     }
   }, [chainId, isDev, error, throwError, address, provider])
 
   return {
+    isWalletOwnershipVerified: isVerified,
     setError,
   }
 }
