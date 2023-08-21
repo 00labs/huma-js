@@ -16,7 +16,11 @@ describe('requestGet', () => {
     expect(axios.get).toHaveBeenCalledWith(
       url,
       {},
-      { headers: { 'Content-Type': 'application/json' }, method: 'GET' },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'GET',
+        withCredentials: true,
+      },
     )
   })
 
@@ -30,7 +34,11 @@ describe('requestGet', () => {
     expect(axios.get).toHaveBeenCalledWith(
       url,
       {},
-      { headers: { 'Content-Type': 'application/json' }, method: 'GET' },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'GET',
+        withCredentials: true,
+      },
     )
   })
 })

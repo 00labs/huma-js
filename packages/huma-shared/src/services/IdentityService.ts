@@ -112,7 +112,7 @@ const onboard = async (
 /**
  *  Get document signature status
  *
- * @param {string} envelopeId The envelope id.
+ * @param {string} envelopeId The envelope ID.
  * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope ID
@@ -153,7 +153,7 @@ const requestDocSignature = async (
 /**
  * Resend document signature link
  *
- * @param {string} envelopeId The envelope id.
+ * @param {string} envelopeId The envelope ID.
  * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope ID

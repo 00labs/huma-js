@@ -6,6 +6,7 @@ export const requestGet = async <T>(url: string): Promise<T> => {
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   }
 
   // @ts-ignore
@@ -22,6 +23,7 @@ export const requestPost = async <T>(
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   }
 
   return (
@@ -39,6 +41,7 @@ export const requestPut = async <T>(url: string, payload?: any): Promise<T> => {
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   }
 
   return (
