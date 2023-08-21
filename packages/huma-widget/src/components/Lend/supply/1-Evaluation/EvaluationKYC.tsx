@@ -27,11 +27,16 @@ const KYCProvider = 'Securitize'
 type KYCCopy = {
   title: string
   description: string
-  buttonText: string
+  buttonText?: string
 }
 
 // TODO: Add copies for the other pools. Currently only the Jia pool is using the KYC process.
 const JiaPoolCopies = {
+  signInRequired: {
+    title: 'Sign In',
+    description:
+      'Please sign in to verify that you are the owner of the wallet',
+  },
   verifyIdentity: {
     title: 'Verify Identity',
     description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYCProvider}.`,
@@ -165,6 +170,7 @@ export function EvaluationKYC({
       } catch (e) {
         try {
           setAuthError(e)
+          setKYCCopy(JiaPoolCopies.signInRequired)
         } catch (e) {
           // The repeated call will throw an error of 401, so we can ignore it.
           console.log(e)
@@ -216,6 +222,7 @@ export function EvaluationKYC({
       } catch (e: unknown) {
         try {
           setAuthError(e)
+          setKYCCopy(JiaPoolCopies.signInRequired)
         } catch (e) {
           console.error(e)
           dispatch(
@@ -303,6 +310,7 @@ export function EvaluationKYC({
           setKYCCopy(JiaPoolCopies.resendSignatureLink)
         } catch (e) {
           setAuthError(e)
+          setKYCCopy(JiaPoolCopies.signInRequired)
         }
       } finally {
         setLoadingType(undefined)
@@ -327,9 +335,11 @@ export function EvaluationKYC({
           <img src={ApproveLenderImg} alt='approve-lender' />
         </Box>
         <Box css={styles.description}>{kycCopy.description}</Box>
-        <BottomButton variant='contained' onClick={approveLender}>
-          {kycCopy.buttonText}
-        </BottomButton>
+        {Boolean(kycCopy.buttonText) && (
+          <BottomButton variant='contained' onClick={approveLender}>
+            {kycCopy.buttonText}
+          </BottomButton>
+        )}
         {getEmailLinkSentSnackbar()}
       </WrapperModal>
     )
