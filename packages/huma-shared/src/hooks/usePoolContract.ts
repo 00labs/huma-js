@@ -13,7 +13,7 @@ import {
 import { BaseFeeManager } from '../abis/types/BaseFeeManager'
 import { CreditState } from '../utils/credit'
 import { downScale, toBigNumber, upScale } from '../utils/number'
-import { POOL_NAME, POOL_TYPE, PoolContractMap } from '../utils/pool'
+import { POOL_NAME, POOL_TYPE } from '../utils/pool'
 import { useContract, useERC20Contract } from './useContract'
 import { useForceRefresh } from './useForceRefresh'
 import { usePoolInfo } from './usePool'
@@ -200,22 +200,29 @@ export function usePoolBalance(
     poolName,
     poolType,
   )
+  const poolInfo = usePoolInfo(poolName, poolType)
   const { chainId } = useWeb3React()
   const [balance, setBalance] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
 
   useEffect(() => {
     const fetchData = async () => {
-      if (chainId && poolUnderlyingTokenContract) {
-        const { pool } = PoolContractMap[chainId][poolType]?.[poolName] || {}
-        if (pool) {
-          const result = await poolUnderlyingTokenContract.balanceOf(pool)
-          setBalance(result)
-        }
+      if (poolUnderlyingTokenContract && poolInfo) {
+        const result = await poolUnderlyingTokenContract.balanceOf(
+          poolInfo.pool,
+        )
+        setBalance(result)
       }
     }
     fetchData()
-  }, [chainId, poolName, poolType, poolUnderlyingTokenContract, refreshCount])
+  }, [
+    chainId,
+    poolInfo,
+    poolName,
+    poolType,
+    poolUnderlyingTokenContract,
+    refreshCount,
+  ])
 
   return [balance, refresh]
 }
@@ -230,6 +237,7 @@ export function useAccountStats(
     poolName,
     poolType,
   )
+  const [poolBalance] = usePoolBalance(poolName, poolType)
   const [accountStats, setAccountStats] = useState<AccountStats>({
     creditRecord: undefined,
     creditRecordStatic: undefined,
@@ -244,7 +252,7 @@ export function useAccountStats(
 
   useEffect(() => {
     const fetchData = async () => {
-      if (poolContract && account && poolInfo) {
+      if (poolContract && account && poolInfo && poolBalance) {
         const creditRecord = await poolContract.creditRecordMapping(account)
         const creditRecordStatic = await poolContract.creditRecordStaticMapping(
           account,
@@ -264,7 +272,16 @@ export function useAccountStats(
         const principal = payoffWithoutCorrection.sub(
           creditRecord.feesAndInterestDue,
         )
-        const creditAvailable = creditRecordStatic.creditLimit.sub(principal)
+        const unusedCredit = creditRecordStatic.creditLimit.sub(principal)
+        // Set available credit to the minimum of the pool balance or the credit available amount,
+        // since both are upper bounds on the amount of credit that can be borrowed.
+        // If either is negative, cap the available credit to 0.
+        let creditAvailable = unusedCredit.lt(poolBalance)
+          ? unusedCredit
+          : poolBalance
+        creditAvailable = creditAvailable.lt(0)
+          ? BigNumber.from(0)
+          : creditAvailable
 
         const { decimals } = poolInfo.poolUnderlyingToken
         setAccountStats({
@@ -286,7 +303,7 @@ export function useAccountStats(
       }
     }
     fetchData()
-  }, [account, poolContract, poolInfo, refreshCount])
+  }, [account, poolBalance, poolContract, poolInfo, refreshCount])
 
   return [accountStats, refresh]
 }

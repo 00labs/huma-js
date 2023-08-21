@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+SUPERPROJECT_WORKING_TREE=`git rev-parse --show-superproject-working-tree`
 
-yarn docs:all && git add . && yarn workspaces run lint-staged
+# Set husky path if not in a submodule.
+if [[ "$SUPERPROJECT_WORKING_TREE" == "" ]]; then
+  . "$(dirname -- "$0")/_/husky.sh"
+fi
+
+yarn docs:all && yarn prettier:all &&  yarn lint:all && git add . 

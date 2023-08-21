@@ -14,6 +14,7 @@ export enum POOL_NAME {
   Jia = 'Jia',
   ArfCreditPool1 = 'ArfCreditPool1',
   BSOS = 'BSOS',
+  ImpactMarkets = 'ImpactMarkets',
 }
 
 export enum POOL_TYPE {
@@ -119,6 +120,14 @@ export const PoolMap: PoolMapType = {
         'BSOS, a leading FinTech SaaS company, pioneers green financing through Web3 and real-world assets.',
       estAPY: '13%',
     },
+    [POOL_NAME.ImpactMarkets]: {
+      name: 'ImpactMarkets',
+      borrowDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      lendDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      estAPY: '??%',
+    },
   },
   [POOL_TYPE.Invoice]: {
     [POOL_NAME.RequestNetwork]: {
@@ -155,6 +164,11 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
     receivablesSubgraph:
       'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-mumbai',
+  },
+  [ChainEnum.Alfajores]: {
+    subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
+    receivablesSubgraph:
+      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-alfajores',
   },
 }
 
@@ -336,6 +350,33 @@ export const PoolContractMap: PoolContractMapType = {
         },
         extra: {
           hidden: true,
+        },
+      },
+    },
+  },
+  [ChainEnum.Alfajores]: {
+    [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ImpactMarkets]: {
+        basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
+        pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
+        poolFeeManager: '0xbF8B9F511533C8cc4bcAf1B27E9f8CF2b1e1cdD5',
+        poolUnderlyingToken: {
+          address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ImpactMarkets,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x3C32C5bFFD080E579ae58599E72F43a5b7978Fb1',
+          abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0xf069014c47387FB0265E66FE637118b11f59958d',
+          disableBorrow: true,
         },
       },
     },

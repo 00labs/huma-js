@@ -1,7 +1,11 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
+  transform: {
+    '^.+\\.ts?$': 'ts-jest',
+  },
+  coverageReporters: ['json-summary', 'text', 'lcov'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
     '!src/abis/types/**',

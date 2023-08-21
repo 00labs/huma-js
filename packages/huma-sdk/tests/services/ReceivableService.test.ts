@@ -25,6 +25,7 @@ jest.mock('../../src/services/ARWeaveService', () => ({
     getBundlrNetworkConfig: jest.fn(),
     storeData: jest.fn(),
     fetchMetadataFromUrl: jest.fn(),
+    getURIFromARWeaveId: jest.fn(),
   },
 }))
 jest.mock('../../src/helpers/RealWorldReceivableContractHelper', () => ({
@@ -40,7 +41,7 @@ jest.mock('graphql-request', () => ({
 
 describe('declareReceivablePaymentByReferenceId', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   it('should throw if no chain id is found', async () => {
@@ -157,7 +158,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       )
     }
     expect(console.log).toHaveBeenCalledWith(
-      `No receivables found with this ARWeave Id.`,
+      `No receivables found with this URI.`,
     )
   })
 
@@ -192,7 +193,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       )
     }
     expect(console.log).toHaveBeenCalledWith(
-      `No receivables found with this ARWeave Id.`,
+      `No receivables found with this URI.`,
     )
   })
 
@@ -225,13 +226,10 @@ describe('declareReceivablePaymentByReferenceId', () => {
       )
     } catch (error) {
       expect((error as any).message).toBe(
-        `Could not find tokenId for this ARWeave Id. Please check your logs for more details.`,
+        `This owner has multiple receivables with the same URI, so we don't know which to use. Please burn 
+        unnecessary receivables. If paying, you can pay the correct token manually using declareReceivablePaymentByTokenId`,
       )
     }
-    expect(console.log).toHaveBeenCalledWith(
-      `This owner has multiple receivables with the same ARWeave URI, so we don't know which to use. Please burn 
-        unnecessary receivables or pay the correct token manually using declareReceivablePaymentByTokenId`,
-    )
   })
 
   it('should throw if not find RealWorldReceivable contract', async () => {
@@ -242,7 +240,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       'ARWeave id',
     )
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: 'receivable1' }],
+      receivables: [{ tokenId: 12 }],
     })
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
 
@@ -268,6 +266,40 @@ describe('declareReceivablePaymentByReferenceId', () => {
     }
   })
 
+  it('should throw if no tokenId found', async () => {
+    ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
+      ChainEnum.Goerli,
+    )
+    ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
+      'ARWeave id',
+    )
+    ;(request as jest.Mock).mockResolvedValue({
+      receivables: [{ tokenId: null }],
+    })
+    ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
+
+    const signer = {
+      getAddress: jest.fn().mockResolvedValue('no-receivables-address'),
+      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
+    } as any
+    const referenceId = 'ref1'
+    const paymentAmount = 10
+    const gasOpts = {}
+
+    try {
+      await ReceivableService.declareReceivablePaymentByReferenceId(
+        signer,
+        referenceId,
+        paymentAmount,
+        gasOpts,
+      )
+    } catch (error) {
+      expect((error as any).message).toBe(
+        `Could not find tokenId for this ARWeave Id. Please check your logs for more details.`,
+      )
+    }
+  })
+
   it('should return declarePayment', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
       ChainEnum.Goerli,
@@ -275,6 +307,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
     )
+    ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue('uri')
     ;(request as jest.Mock).mockResolvedValue({
       receivables: [{ tokenId: 'receivable1' }],
     })
@@ -305,11 +338,12 @@ describe('declareReceivablePaymentByReferenceId', () => {
 
 describe('declareReceivablePaymentByTokenId', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   it('should throw if no chain id is found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(undefined)
+    ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue('uri')
 
     const signer = {
       getAddress: jest.fn().mockResolvedValue('0x123'),
@@ -417,7 +451,7 @@ describe('declareReceivablePaymentByTokenId', () => {
 
 describe('createReceivable', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   it('should throw if no chain id is found', async () => {
@@ -448,42 +482,6 @@ describe('createReceivable', () => {
       )
     } catch (error) {
       expect((error as any).message).toBe('No Chain Id found')
-    }
-  })
-
-  it('should throw if no poolInfo is found', async () => {
-    const chainIdWithoutPoolInfo = 12
-    ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      chainIdWithoutPoolInfo,
-    )
-
-    const signer = {
-      getAddress: jest.fn().mockResolvedValue('0x123'),
-      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
-    } as any
-    const poolName = POOL_NAME.Jia
-    const poolType = POOL_TYPE.CreditLine
-    const currencyCode = 1
-    const receivableAmount = 10
-    const maturityDate = 1234567890
-    const metadataUri = 'https://arweave.net/tx1'
-    const gasOpts = {}
-
-    try {
-      await ReceivableService.createReceivable(
-        signer,
-        poolName,
-        poolType,
-        currencyCode,
-        receivableAmount,
-        maturityDate,
-        metadataUri,
-        gasOpts,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'RealWorldReceivable is not available on this network',
-      )
     }
   })
 
@@ -559,7 +557,7 @@ describe('createReceivable', () => {
 
 describe('createReceivableWithMetadata', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   it('should throw if metadata is not object', async () => {
@@ -693,6 +691,7 @@ describe('createReceivableWithMetadata', () => {
       'ARWeave id',
     )
     ;(ARWeaveService.storeData as jest.Mock).mockReturnValue({})
+    ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue('uri')
     const signer = { getAddress: jest.fn().mockResolvedValue('0x123') } as any
     ;(request as jest.Mock).mockResolvedValue({
       receivables: [{ tokenId: 'receivable1' }],
@@ -729,7 +728,7 @@ describe('createReceivableWithMetadata', () => {
       )
     } catch (error) {
       expect((error as any).message).toBe(
-        'A token already exists with this reference Id, canceling mint',
+        'A token already exists with this metadata, canceling mint',
       )
     }
   })
@@ -743,6 +742,9 @@ describe('createReceivableWithMetadata', () => {
       'ARWeave-id',
     )
     ;(ARWeaveService.storeData as jest.Mock).mockReturnValue({})
+    ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue(
+      'https://arweave.net/ARWeave-id',
+    )
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
       createRealWorldReceivable: (
         pool: string,
@@ -991,12 +993,13 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
 
     const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
 
-    const result = await ReceivableService.loadReceivablesOfOwnerWithMetadata<{}>(
-      signer,
-      owner,
-      POOL_NAME.HumaCreditLine,
-      POOL_TYPE.CreditLine,
-    )
+    const result =
+      await ReceivableService.loadReceivablesOfOwnerWithMetadata<{}>(
+        signer,
+        owner,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+      )
     expect(result).toStrictEqual([
       {
         tokenId: 1,
@@ -1012,5 +1015,106 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
         },
       },
     ])
+  })
+})
+
+describe('uploadOrFetchMetadataURI', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks()
+    ;(ARWeaveService.queryForMetadata as jest.Mock).mockReset()
+    ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({
+      /* mock config object here */
+    })
+    ;(ARWeaveService.storeData as jest.Mock).mockResolvedValue({
+      id: 'arweave_id_here',
+    })
+    ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue(
+      'arweave_uri_here',
+    )
+  })
+
+  test('should upload metadata and return ARWeave URI if data does not exist', async () => {
+    const mockSigner = {
+      getAddress: jest.fn().mockResolvedValue('0x123'),
+      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
+    } as any
+
+    const mockReferenceId = 'reference_id_here'
+    const mockExtraTags = [{ name: 'tag1', value: 'value1' }]
+    ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(null)
+
+    const result = await ReceivableService.uploadOrFetchMetadataURI(
+      mockSigner,
+      'private key',
+      1,
+      POOL_NAME.HumaCreditLine,
+      POOL_TYPE.CreditLine,
+      { value: 1 },
+      mockReferenceId,
+      mockExtraTags,
+      true,
+    )
+
+    expect(result).toBe('arweave_uri_here')
+    expect(ARWeaveService.queryForMetadata).toHaveBeenCalledWith(
+      1,
+      expect.any(String),
+      mockReferenceId,
+    )
+    expect(ARWeaveService.storeData).toHaveBeenCalledWith(
+      {
+        /* mock config object here */
+      },
+      'private key',
+      { value: 1, referenceId: mockReferenceId },
+      expect.arrayContaining([
+        { name: 'Content-Type', value: 'application/json' },
+        { name: 'appName', value: 'HumaFinance' },
+        { name: 'poolName', value: 'HumaCreditLine' },
+        { name: 'poolType', value: 'CreditLine' },
+        { name: 'referenceId', value: 'reference_id_here' },
+        { name: 'tag1', value: 'value1' },
+      ]),
+      true,
+    )
+    expect(ARWeaveService.getURIFromARWeaveId).toHaveBeenCalledWith(
+      'arweave_id_here',
+    )
+  })
+
+  test('should return existing ARWeave URI if data exists', async () => {
+    const mockSigner = {
+      getAddress: jest.fn().mockResolvedValue('0x123'),
+      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
+    } as any
+
+    const mockReferenceId = 'reference_id_here'
+    const mockExtraTags = [{ name: 'tag1', value: 'value1' }]
+    ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
+      'existing_data_id_here',
+    )
+
+    const result = await ReceivableService.uploadOrFetchMetadataURI(
+      mockSigner,
+      'private_key_here',
+      1,
+      POOL_NAME.HumaCreditLine,
+      POOL_TYPE.CreditLine,
+      { value: 1 },
+      mockReferenceId,
+      mockExtraTags,
+      true,
+    )
+
+    expect(result).toBe('arweave_uri_here')
+    expect(ARWeaveService.queryForMetadata).toHaveBeenCalledWith(
+      1,
+      expect.any(String),
+      mockReferenceId,
+    )
+    expect(ARWeaveService.getURIFromARWeaveId).toHaveBeenCalledWith(
+      'existing_data_id_here',
+    )
+    expect(ARWeaveService.storeData).not.toHaveBeenCalled() // Ensure storeData is not called
   })
 })

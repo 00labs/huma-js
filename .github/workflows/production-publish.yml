@@ -34,8 +34,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Authenticate with NPM
-        run: echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+      - name: Build packages
+        run: yarn build:all
 
       - name: Configure Git User
         run: |

@@ -140,6 +140,7 @@ Note that this does not approve a creditline in Huma's pools and an approve call
     * [.storeData(config, signerOrPrivateKey, data, tags, [lazyFund])](#ARWeaveService.storeData) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
     * [.queryForMetadata(chainId, sender, referenceId)](#ARWeaveService.queryForMetadata) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.fetchMetadataFromUrl(url)](#ARWeaveService.fetchMetadataFromUrl) ⇒ <code>Promise.&lt;JSON&gt;</code>
+    * [.getURIFromARWeaveId(arweaveId)](#ARWeaveService.getURIFromARWeaveId) ⇒ <code>string</code>
     * [.BundlrConfig](#ARWeaveService.BundlrConfig) : <code>Object</code>
 
 <a name="ARWeaveService.getBundlrNetworkConfig"></a>
@@ -229,6 +230,18 @@ If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
 | --- | --- | --- |
 | url | <code>string</code> | <p>The ARWeave metadata URL to query.</p> |
 
+<a name="ARWeaveService.getURIFromARWeaveId"></a>
+
+### ARWeaveService.getURIFromARWeaveId(arweaveId) ⇒ <code>string</code>
+<p>Helper method to get an ARWeave URI from an ARWeave ID.</p>
+
+**Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
+**Returns**: <code>string</code> - <p>The ARWeave URI.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| arweaveId | <code>string</code> | <p>The ARWeave metadata ID.</p> |
+
 <a name="ARWeaveService.BundlrConfig"></a>
 
 ### ARWeaveService.BundlrConfig : <code>Object</code>
@@ -275,17 +288,18 @@ in Huma's pools that can be drawn down by the borrower.</p>
 **Kind**: global namespace  
 
 * [ReceivableService](#ReceivableService) : <code>object</code>
-    * [.getTokenIdByARWeaveId(signer, arweaveId)](#ReceivableService.getTokenIdByARWeaveId) ⇒ <code>Promise.&lt;(string\|null\|undefined)&gt;</code>
+    * [.getTokenIdByURI(signer, arweaveId)](#ReceivableService.getTokenIdByURI) ⇒ <code>Promise.&lt;(string\|null\|undefined)&gt;</code>
     * [.declareReceivablePaymentByReferenceId(signer, referenceId, paymentAmount, [gasOpts])](#ReceivableService.declareReceivablePaymentByReferenceId) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
     * [.declareReceivablePaymentByTokenId(signer, receivableTokenId, paymentAmount, [gasOpts])](#ReceivableService.declareReceivablePaymentByTokenId) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
-    * [.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts])](#ReceivableService.createReceivable) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+    * [.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts])](#ReceivableService.createReceivable) ⇒ <code>Promise.&lt;(TransactionResponse\|null)&gt;</code>
+    * [.uploadOrFetchMetadataURI(signerOrProvider, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund])](#ReceivableService.uploadOrFetchMetadataURI) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.createReceivableWithMetadata(signerOrProvider, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts])](#ReceivableService.createReceivableWithMetadata) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
     * [.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
 
-<a name="ReceivableService.getTokenIdByARWeaveId"></a>
+<a name="ReceivableService.getTokenIdByURI"></a>
 
-### ReceivableService.getTokenIdByARWeaveId(signer, arweaveId) ⇒ <code>Promise.&lt;(string\|null\|undefined)&gt;</code>
-<p>Declares a payment on a RealWorldReceivable given a reference Id of the receivable, which was used as an index for ARWeave data.</p>
+### ReceivableService.getTokenIdByURI(signer, arweaveId) ⇒ <code>Promise.&lt;(string\|null\|undefined)&gt;</code>
+<p>Fetches the tokenId of a RealWorldReceivable, or null if it doesn't exist, given a metadata URI</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
 **Returns**: <code>Promise.&lt;(string\|null\|undefined)&gt;</code> - <ul>
@@ -339,17 +353,17 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.createReceivable"></a>
 
-### ReceivableService.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+### ReceivableService.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts]) ⇒ <code>Promise.&lt;(TransactionResponse\|null)&gt;</code>
 <p>Creates a new RealWorldReceivable token on the given chain of the signer</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
-**Returns**: <code>Promise.&lt;TransactionResponse&gt;</code> - <ul>
+**Returns**: <code>Promise.&lt;(TransactionResponse\|null)&gt;</code> - <ul>
 <li>A Promise of the transaction response.</li>
 </ul>  
 **Throws**:
 
 - <code>Error</code> <ul>
-<li>Throws an error if the RealWorldReceivable contract is not available on the network.</li>
+<li>Throws an error if the RealWorldReceivable contract is not available on the network, or if a token already exists with the same metadata URI.</li>
 </ul>
 
 
@@ -363,6 +377,28 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | maturityDate | <code>number</code> | <p>The maturity date of the receivable token, in UNIX timestamp format.</p> |
 | uri | <code>string</code> | <p>The URI of the receivable token metadata.</p> |
 | [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
+
+<a name="ReceivableService.uploadOrFetchMetadataURI"></a>
+
+### ReceivableService.uploadOrFetchMetadataURI(signerOrProvider, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund]) ⇒ <code>Promise.&lt;string&gt;</code>
+<p>Uploads metadata onto ARWeave (or fetches the existing metadata with the same reference Id) and returns the ARWeave URL</p>
+
+**Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - <ul>
+<li>The ARWeave metadata URI.</li>
+</ul>  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| signerOrProvider | <code>Web3Provider</code> \| <code>ethers.Signer</code> |  | <p>If calling this function from a browser, this function expects a Web3Provider. If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included from server calls.</p> |
+| privateKey | <code>string</code> \| <code>null</code> |  | <p>Private key of the wallet used to upload metadata to ARWeave. Only required if calling this function from a server.</p> |
+| chainId | <code>number</code> |  | <p>The chain ID to mint the receivable token on and pay ARWeave funds from.</p> |
+| poolName | <code>POOL\_NAME</code> |  | <p>The pool name. Used to lookup the pool address to pay to.</p> |
+| poolType | <code>POOL\_TYPE</code> |  | <p>The pool type. Used to lookup the pool address to pay to.</p> |
+| metadata | <code>Record.&lt;string, any&gt;</code> |  | <p>The metadata in JSON format. This will be uploaded onto ARWeave</p> |
+| referenceId | <code>string</code> |  | <p>An internal identifier value added as a tag on ARWeave, for easily querying the metadata later.</p> |
+| extraTags | <code>Array.&lt;{name: string, value: string}&gt;</code> |  | <p>Any extraTags you'd like to tag your metadata with. Note that metadata on ARWeave is indexed by these tags, so make sure to include any tags that you'd like to be able to query by.</p> |
+| [lazyFund] | <code>boolean</code> | <code>true</code> | <p>Whether to lazy fund the ARWeave uploads. If true, the ARWeave uploads will be paid for by the metadata uploader immediately before uploading. If false, the ARWeave node must be pre-funded before calling this function.</p> |
 
 <a name="ReceivableService.createReceivableWithMetadata"></a>
 
@@ -385,7 +421,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | receivableAmount | <code>number</code> |  | <p>The receivable amount.</p> |
 | maturityDate | <code>number</code> |  | <p>The maturity date of the receivable, in UNIX timestamp format.</p> |
 | metadata | <code>Record.&lt;string, any&gt;</code> |  | <p>The metadata in JSON format. This will be uploaded onto ARWeave</p> |
-| referenceId | <code>number</code> |  | <p>An internal identifier value added as a tag on ARWeave, for easily querying the metadata later.</p> |
+| referenceId | <code>string</code> |  | <p>An internal identifier value added as a tag on ARWeave, for easily querying the metadata later.</p> |
 | extraTags | <code>Array.&lt;{name: string, value: string}&gt;</code> |  | <p>Any extraTags you'd like to tag your metadata with. Note that metadata on ARWeave is indexed by these tags, so make sure to include any tags that you'd like to be able to query by.</p> |
 | [lazyFund] | <code>boolean</code> | <code>true</code> | <p>Whether to lazy fund the ARWeave uploads. If true, the ARWeave uploads will be paid for by the metadata uploader immediately before uploading. If false, the ARWeave node must be pre-funded before calling this function.</p> |
 | [gasOpts] | <code>Overrides</code> |  | <p>Optional gas overrides for the transaction.</p> |

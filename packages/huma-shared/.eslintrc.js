@@ -31,6 +31,7 @@ module.exports = {
     'rollup.config.js',
     'webpack.cosmos.js',
     'babel.config.js',
+    'jest.config.js',
   ],
   rules: {
     'jsx-quotes': 'off',

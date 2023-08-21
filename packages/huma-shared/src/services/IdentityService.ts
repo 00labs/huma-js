@@ -59,7 +59,7 @@ export type DocSignatureStatus = {
  *
  * @param {string} walletAddress The wallet address.
  * @param {string} pool The pool address.
- * @param {number} chainId chain Id.
+ * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResult>} Promise that returns the verification status result.
  */
@@ -73,7 +73,7 @@ const getVerificationStatus = async (
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
-    )}/wallets/${walletAddress}/verification-status?poolAddress=${pool}`,
+    )}/wallets/${walletAddress}/verification-status?poolAddress=${pool}&chainId=${chainId}`,
   )
 
   result.isVerified = [IdentityVerificationStatus.ACCREDITED].includes(
@@ -91,7 +91,7 @@ const getVerificationStatus = async (
  * @param {string} walletAddress The wallet address.
  * @param {string} code The investor code.
  * @param {string} pool Pool address.
- * @param {number} chainId chain Id.
+ * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<string>} Promise that returns the onboard result
  */
@@ -106,16 +106,16 @@ const onboard = async (
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
-    )}/wallets/${walletAddress}/onboard?code=${code}&poolAddress=${pool}`,
+    )}/wallets/${walletAddress}/onboard?code=${code}&poolAddress=${pool}&chainId=${chainId}`,
   )
 
 /**
  *  Get document signature status
  *
  * @param {string} envelopeId The envelope id.
- * @param {number} chainId chain Id.
+ * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope id
+ * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope ID
  */
 const getDocSignatureStatus = async (
   envelopeId: string,
@@ -133,9 +133,9 @@ const getDocSignatureStatus = async (
  * Request document signature
  *
  * @param {string} walletAddress The wallet address.
- * @param {number} chainId chain Id.
+ * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope id
+ * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope ID
  */
 const requestDocSignature = async (
   walletAddress: string,
@@ -147,16 +147,16 @@ const requestDocSignature = async (
       chainId,
       isDev,
     )}/request-document-signature`,
-    { walletAddress },
+    { walletAddress, chainId },
   )
 
 /**
  * Resend document signature link
  *
  * @param {string} envelopeId The envelope id.
- * @param {number} chainId chain Id.
+ * @param {number} chainId chain ID.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope id
+ * @returns {Promise<{envelopeId: string}>} Promise that returns the envelope ID
  */
 const resendDocSignatureLink = async (
   envelopeId: string,
