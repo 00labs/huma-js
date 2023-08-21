@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build packages
+        run: yarn build:all
+
       - name: Configure Git User
         run: |
           git config --global user.email "ci@huma.finance"
