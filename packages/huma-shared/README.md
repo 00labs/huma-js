@@ -1,4 +1,6 @@
-# Getting Started with Huma Dapp
+# Huma shared
+
+![Badge functions](coverage/badge-functions.svg) ![Badge lines](coverage/badge-lines.svg)
 
 The Huma Shared includes utilities/services/hooks for shared logics.
 

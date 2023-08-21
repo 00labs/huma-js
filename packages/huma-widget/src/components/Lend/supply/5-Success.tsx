@@ -5,8 +5,8 @@ import {
   formatMoney,
   PoolInfoType,
   sendTxAtom,
+  TRANSFER_ABI,
 } from '@huma-finance/shared'
-import transferAbi from '@huma-finance/shared/dist/abis/Transfer.json'
 import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 
@@ -31,7 +31,7 @@ export function Success({
 
   useEffect(() => {
     if (txReceipt) {
-      const events = decodeLogs(txReceipt.logs, transferAbi)
+      const events = decodeLogs(txReceipt.logs, TRANSFER_ABI)
       if (events) {
         events.forEach((event) => {
           const { from, to, value } = event.args

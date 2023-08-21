@@ -6,7 +6,13 @@
 .pnp.js
 
 # testing
-/coverage
+/coverage/lcov-report
+/coverage/lcov.info
+/coverage/badge-branches.svg
+/coverage/badge-statements.svg
+/coverage/coverage-summary.json
+/coverage/clover.xml
+/coverage/coverage-final.json
 
 # production
 /build

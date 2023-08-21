@@ -12,6 +12,12 @@ const MATIC: AddEthereumChainParameter['nativeCurrency'] = {
   decimals: 18,
 }
 
+const CELO: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'CELO',
+  symbol: 'CELO',
+  decimals: 18,
+}
+
 export interface BasicChainInformation {
   id: number
   urls: string[]
@@ -36,12 +42,6 @@ export enum ChainEnum {
   Celo = 42220,
   Alfajores = 44787,
 }
-
-export const SupportedChainIds = [
-  ChainEnum.Polygon,
-  ChainEnum.Goerli,
-  ChainEnum.Mumbai,
-]
 
 export const CHAINS: {
   [chainId: number]: BasicChainInformation | ExtendedChainInformation
@@ -84,6 +84,16 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Polygon',
+  },
+  [ChainEnum.Alfajores]: {
+    id: ChainEnum.Alfajores,
+    urls: ['https://alfajores-forno.celo-testnet.org'],
+    name: 'Alfajores',
+    nativeCurrency: CELO,
+    explorer: 'https://celoscan.io',
+    wait: 1,
+    isTestnet: true,
+    icon: 'Celo',
   },
 }
 

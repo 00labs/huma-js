@@ -2,6 +2,12 @@ import { CHAINS } from './chain'
 
 const getDevPrefix = (isDev = false) => (isDev ? 'dev.' : '')
 
+const getNetworkType = (chainId: number) =>
+  CHAINS[chainId].isTestnet ? 'testnet' : 'mainnet'
+
+const getNetworkAgnosticServiceUrlPrefix = (chainId: number, isDev: boolean) =>
+  `${getDevPrefix(isDev)}${getNetworkType(chainId)}`
+
 const getEAVerseUrl = (chainId: number, isDev = false) => {
   const network = CHAINS[chainId].name
   return `https://${getDevPrefix(isDev)}${network}.eaverse.huma.finance`
@@ -23,12 +29,17 @@ const getRequestAPIUrl = (chainId: number, isDev = false) => {
   return `https://${getDevPrefix(isDev)}${network}.rnreader.huma.finance`
 }
 
-const getIdentityAPIUrl = (chainId: number, isDev = false) => {
-  const networkType = CHAINS[chainId].isTestnet ? 'testnet' : 'mainnet'
-  return `https://${getDevPrefix(
+const getIdentityAPIUrl = (chainId: number, isDev = false) =>
+  `https://${getNetworkAgnosticServiceUrlPrefix(
+    chainId,
     isDev,
-  )}${networkType}.identity-verification.huma.finance`
-}
+  )}.identity-verification.huma.finance`
+
+const getAuthServiceUrl = (chainId: number, isDev = false) =>
+  `https://${getNetworkAgnosticServiceUrlPrefix(
+    chainId,
+    isDev,
+  )}.auth.huma.finance`
 
 const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
   switch (provider) {
@@ -50,6 +61,7 @@ export const configUtil = {
   getEABaseUrlV1,
   getRequestAPIUrl,
   getIdentityAPIUrl,
+  getAuthServiceUrl,
   getKYCProviderBaseUrl,
   DEFAULT_CHAIN_ID,
 }
