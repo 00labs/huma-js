@@ -1,12 +1,13 @@
 import {
+  CHAINS,
   configUtil,
   DocSignatureStatus,
   IdentityService,
   PoolInfoType,
   timeUtil,
-  VerificationStatusResult,
-  CHAINS,
+  useAuthErrorHandling,
   useParamsSearch,
+  VerificationStatusResult,
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
@@ -81,6 +82,11 @@ export function EvaluationKYC({
   const isDev = envUtil.checkIsDev()
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
+  const { setError: setAuthError } = useAuthErrorHandling(
+    account,
+    chainId,
+    isDev,
+  )
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()
@@ -157,8 +163,12 @@ export function EvaluationKYC({
           )
         }
       } catch (e) {
-        // The repeated call will throw an error of 401, so we can ignore it.
-        console.error(e)
+        try {
+          setAuthError(e)
+        } catch (e) {
+          // The repeated call will throw an error of 401, so we can ignore it.
+          console.log(e)
+        }
       }
 
       try {
@@ -204,12 +214,16 @@ export function EvaluationKYC({
           }
         }
       } catch (e: unknown) {
-        console.error(e)
-        dispatch(
-          setError({
-            errorMessage: 'Something went wrong, please try again later.',
-          }),
-        )
+        try {
+          setAuthError(e)
+        } catch (e) {
+          console.error(e)
+          dispatch(
+            setError({
+              errorMessage: 'Something went wrong, please try again later.',
+            }),
+          )
+        }
       } finally {
         setLoadingType(undefined)
       }
@@ -228,6 +242,7 @@ export function EvaluationKYC({
     kycPool,
     kycProvider,
     poolInfo.pool,
+    setAuthError,
   ])
 
   const approveLender = async () => {
@@ -273,12 +288,22 @@ export function EvaluationKYC({
           setOpenSnackBar(true)
         }
       } catch (e: unknown) {
-        console.error(e)
-        dispatch(
-          setError({
-            errorMessage: 'Something went wrong, please try again later.',
-          }),
-        )
+        try {
+          const { envelopeId } = await IdentityService.requestDocSignature(
+            account!,
+            chainId!,
+            isDev,
+          )
+          localStorage.setItem(envelopeKey, envelopeId)
+          localStorage.setItem(
+            envelopeLastQueryTimeKey,
+            String(timeUtil.getUnixTimestamp()),
+          )
+          setOpenSnackBar(true)
+          setKYCCopy(JiaPoolCopies.resendSignatureLink)
+        } catch (e) {
+          setAuthError(e)
+        }
       } finally {
         setLoadingType(undefined)
       }

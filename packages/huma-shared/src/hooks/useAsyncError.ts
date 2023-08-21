@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 /**
- * Throws an error from outside of the React lifecycle.
+ * Throws an error from outside the React lifecycle.
  * Errors thrown through this method will correctly trigger the ErrorBoundary.
  *
  * @example
