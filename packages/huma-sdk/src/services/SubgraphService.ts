@@ -4,27 +4,9 @@ import {
   POOL_NAME,
   POOL_TYPE,
   requestPost,
+  PoolSubgraphMap,
+  RealWorldReceivableInfoBase,
 } from '@huma-finance/shared'
-
-/**
- * Returns the subgraph URL for a given chain ID.
- *
- * @memberof SubgraphService
- * @param {number} chainId - The ID of the chain.
- * @returns {string} The subgraph URL for the given chain ID.
- */
-function getSubgraphUrlForChainId(chainId: number): string {
-  switch (chainId) {
-    case 5:
-      return 'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli'
-    case 137:
-      return 'https://api.thegraph.com/subgraphs/name/00labs/huma-polygon'
-    case 80001:
-      return 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai'
-    default:
-      return ''
-  }
-}
 
 /**
  * Represents the payload of a credit event.
@@ -36,6 +18,28 @@ export type CreditEventPayload = {
   owner?: string
   pool?: string
   event?: string
+}
+
+/**
+ * Represents the pagination options for a query.
+ * @typedef {Object} Pagination
+ */
+export type Pagination = {
+  first: number | null
+  skip: number | null
+  orderBy: string
+  orderDirection: 'desc' | 'asc'
+}
+
+/**
+ * Returns the subgraph URL for a given chain ID.
+ *
+ * @memberof SubgraphService
+ * @param {number} chainId - The ID of the chain.
+ * @returns {string} The subgraph URL for the given chain ID.
+ */
+function getSubgraphUrlForChainId(chainId: number): string {
+  return PoolSubgraphMap[chainId].subgraph ?? ''
 }
 
 /**
@@ -115,6 +119,133 @@ function getLastFactorizedAmountFromPool(
 }
 
 /**
+ * Returns the paginated real world receivables' info.
+ *
+ * @memberof SubgraphService
+ * @param {string} userAddress - The address of the user.
+ * @param {number} chainId - The ID of the chain.
+ * @param {POOL_NAME} poolName - The name of the pool.
+ * @param {POOL_TYPE} poolType - The type of the pool.
+ * @param {Pagination} pagination - The pagination option.
+ * @returns {Promise<RealWorldReceivableInfoBase>} The paginated real world receivables' info.
+ */
+function getRWReceivableInfo(
+  userAddress: string,
+  chainId: number,
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  pagination: Pagination = {
+    first: null,
+    skip: null,
+    orderBy: 'tokenId',
+    orderDirection: 'desc',
+  },
+): Promise<RealWorldReceivableInfoBase[]> {
+  let url = PoolSubgraphMap[chainId].receivablesSubgraph
+  if (!url) {
+    return Promise.resolve([])
+  }
+
+  url =
+    'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-polygon-test'
+
+  const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
+
+  const query = `
+  query {
+    rwreceivables(
+      where: {
+        owner: "${userAddress}",
+        pool: "${poolAddress}",
+      }
+      first: ${pagination.first}
+      skip: ${pagination.skip}
+      orderBy: "${pagination.orderBy}"
+      orderDirection: "${pagination.orderDirection}"
+    ) {
+      id
+      tokenId
+      receivableAmount
+      paidAmount
+      owner
+      pool
+      maturityDate
+      currencyCode
+      tokenUri
+      status
+    }
+  }
+`
+
+  return requestPost(url, JSON.stringify({ query }), {
+    withCredentials: false,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }).then((res: any) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return []
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return res.data.rwreceivables.map((item: any) => {
+      item.poolAddress = item.pool
+      item.tokenURI = item.tokenUri
+      return item
+    })
+  })
+}
+
+/**
+ * Returns the total count of real world receivables' info.
+ *
+ * @memberof SubgraphService
+ * @param {string} userAddress - The address of the user.
+ * @param {number} chainId - The ID of the chain.
+ * @param {POOL_NAME} poolName - The name of the pool.
+ * @param {POOL_TYPE} poolType - The type of the pool.
+ * @returns {Promise<number>} The total count of real world receivables' info.
+ */
+function getRWReceivableInfoTotalCount(
+  userAddress: string,
+  chainId: number,
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+): Promise<number> {
+  let url = PoolSubgraphMap[chainId].receivablesSubgraph
+  if (!url) {
+    return Promise.resolve(0)
+  }
+
+  url =
+    'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-polygon-test'
+
+  const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
+
+  const query = `
+  query {
+    rwreceivables(
+      where: {
+        owner: "${userAddress}",
+        pool: "${poolAddress}",
+      }
+    ) {
+      id
+    }
+  }
+`
+
+  return requestPost(url, JSON.stringify({ query }), {
+    withCredentials: false,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }).then((res: any) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return 0
+    }
+    return res.data.rwreceivables.length
+  })
+}
+
+/**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
  */
@@ -122,4 +253,6 @@ export const SubgraphService = {
   getSubgraphUrlForChainId,
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
+  getRWReceivableInfo,
+  getRWReceivableInfoTotalCount,
 }
