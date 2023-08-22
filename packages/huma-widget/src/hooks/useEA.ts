@@ -1,3 +1,4 @@
+import axios from 'axios'
 import {
   EAPayload,
   EARejectionError,
@@ -40,6 +41,13 @@ const useEA = () => {
           )
         } else {
           try {
+            console.log(`underwrite returned error`)
+            if (axios.isAxiosError(e)) {
+              console.log(e.response?.data)
+            } else {
+              console.log('Not axios error', e)
+            }
+            console.log('Finished logging')
             setAuthError(e)
             dispatch(setStep(WIDGET_STEP.SignIn))
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

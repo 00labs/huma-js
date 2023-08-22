@@ -57,6 +57,7 @@ export const useAuthErrorHandling = (
   const throwError = useAsyncError()
 
   useEffect(() => {
+    console.log('AuthErrorHandling hook triggered')
     console.log(address, chainId, error, provider)
     if (
       address === undefined ||
