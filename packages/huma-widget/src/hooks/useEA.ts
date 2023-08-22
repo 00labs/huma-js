@@ -16,9 +16,9 @@ import { useAppDispatch } from './useRedux'
 
 const useEA = () => {
   const dispatch = useAppDispatch()
-  const { chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const { isWalletOwnershipVerified, setError: setAuthError } =
-    useAuthErrorHandling()
+    useAuthErrorHandling(account, chainId, envUtil.checkIsDev())
 
   const checkingEA = useCallback(
     async (payload: EAPayload, nextStep: WIDGET_STEP) => {
