@@ -55,9 +55,9 @@ export const useAuthErrorHandling = (
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const { provider } = useWeb3React()
   const throwError = useAsyncError()
-  console.log(address, chainId, error, provider)
 
   useEffect(() => {
+    console.log(address, chainId, error, provider)
     if (
       address === undefined ||
       chainId === undefined ||
