@@ -9,6 +9,7 @@ import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { CheckCircleIcon, CheckGreenIcon } from '../../icons'
 import spinner from '../../icons/spinner.gif'
+import { SignIn } from '../../SignIn'
 
 type Props = {
   poolInfo: PoolInfoType
@@ -121,16 +122,7 @@ export function Evaluation({
   }
 
   if (isWalletOwnershipVerificationRequired) {
-    return (
-      <Box css={styles.wrapper}>
-        <Typography variant='h6' css={styles.header}>
-          Sign In
-        </Typography>
-        <Box css={styles.content}>
-          Please sign in to verify your ownership of the wallet.
-        </Box>
-      </Box>
-    )
+    return <SignIn />
   }
 
   return (

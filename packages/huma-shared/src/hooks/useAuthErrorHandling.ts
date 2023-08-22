@@ -59,7 +59,6 @@ export const useAuthErrorHandling = (
   const { provider } = useWeb3React()
   const throwError = useAsyncError()
   const handleVerificationCompletion = () => {
-    setIsVerificationRequired(false)
     setIsVerified(true)
   }
 
