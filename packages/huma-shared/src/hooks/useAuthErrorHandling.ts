@@ -55,6 +55,7 @@ export const useAuthErrorHandling = (
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const { provider } = useWeb3React()
   const throwError = useAsyncError()
+  console.log(address, chainId, error, provider)
 
   useEffect(() => {
     if (
@@ -64,6 +65,11 @@ export const useAuthErrorHandling = (
       provider === undefined
     ) {
       return
+    }
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data)
+    } else {
+      console.log('Not axios error', error)
     }
     if (
       axios.isAxiosError(error) &&
