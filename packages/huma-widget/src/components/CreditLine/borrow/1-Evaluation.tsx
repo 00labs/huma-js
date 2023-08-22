@@ -20,7 +20,7 @@ export function Evaluation({
   handleApprove,
 }: Props): React.ReactElement {
   const theme = useTheme()
-  const { checkingEA } = useEA()
+  const { checkingEA, isWalletOwnershipVerified } = useEA()
   const dispatch = useAppDispatch()
   const { account, chainId } = useWeb3React()
   const [status, setStatus] = useState<'checking' | 'success'>('checking')
@@ -47,6 +47,7 @@ export function Evaluation({
     handleApprove,
     poolInfo.assetAddress,
     poolInfo.pool,
+    isWalletOwnershipVerified,
   ])
 
   const styles = {

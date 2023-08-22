@@ -8,9 +8,9 @@ import {
   useAuthErrorHandling,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 
-import { setApproval, setError, setStep } from '../store/widgets.reducers'
+import { setApproval, setError } from '../store/widgets.reducers'
 import { WIDGET_STEP } from '../store/widgets.store'
 import { envUtil } from '../utils/env'
 import { useAppDispatch } from './useRedux'
@@ -49,7 +49,6 @@ const useEA = () => {
             }
             console.log('Finished logging')
             setAuthError(e)
-            dispatch(setStep(WIDGET_STEP.SignIn))
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (e: any) {
             dispatch(
@@ -64,11 +63,7 @@ const useEA = () => {
     [chainId, dispatch, setAuthError],
   )
 
-  useEffect(() => {
-    dispatch(setStep(WIDGET_STEP.Evaluation))
-  }, [isWalletOwnershipVerified, dispatch])
-
-  return { checkingEA }
+  return { checkingEA, isWalletOwnershipVerified }
 }
 
 export default useEA
