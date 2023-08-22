@@ -25,6 +25,7 @@ import {
   useDoesChainSupportNotifi,
   useIsFirstTimeNotifiUser,
 } from '../../../hooks/useNotifi'
+import { SignIn } from './0-SignIn'
 
 /**
  * Credit line pool borrow props
@@ -103,6 +104,7 @@ export function CreditLineBorrow({
       handleClose={handleClose}
       handleSuccess={handleSuccess}
     >
+      {step === WIDGET_STEP.SignIn && <SignIn />}
       {step === WIDGET_STEP.Evaluation && (
         <Evaluation poolInfo={poolInfo} handleApprove={approveCallback} />
       )}
