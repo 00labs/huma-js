@@ -127,7 +127,7 @@ export function Evaluation({
           Sign In
         </Typography>
         <Box css={styles.content}>
-          Please sign in to verify your ownership of the wallet
+          Please sign in to verify your ownership of the wallet.
         </Box>
       </Box>
     )

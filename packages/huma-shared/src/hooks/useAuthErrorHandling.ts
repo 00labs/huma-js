@@ -87,7 +87,7 @@ export const useAuthErrorHandling = (
         chainId,
         isDev,
         provider,
-        () => handleVerificationCompletion,
+        handleVerificationCompletion,
       ).catch((e) => throwError(e))
     } else {
       throwError(error)
