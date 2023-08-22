@@ -42,6 +42,7 @@ const verifyOwnership = async (
 }
 
 export type AuthState = {
+  isWalletOwnershipVerificationRequired: boolean
   isWalletOwnershipVerified: boolean
   setError: React.Dispatch<React.SetStateAction<unknown>>
 }
@@ -52,13 +53,17 @@ export const useAuthErrorHandling = (
   isDev: boolean,
 ): AuthState => {
   const [error, setError] = useState<unknown>(null)
+  const [isVerificationRequired, setIsVerificationRequired] =
+    useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const { provider } = useWeb3React()
   const throwError = useAsyncError()
+  const handleVerificationCompletion = () => {
+    setIsVerificationRequired(false)
+    setIsVerified(true)
+  }
 
   useEffect(() => {
-    console.log('AuthErrorHandling hook triggered')
-    console.log(address, chainId, error, provider)
     if (
       address === undefined ||
       chainId === undefined ||
@@ -66,11 +71,6 @@ export const useAuthErrorHandling = (
       provider === undefined
     ) {
       return
-    }
-    if (axios.isAxiosError(error)) {
-      console.log(error.response?.data)
-    } else {
-      console.log('Not axios error', error)
     }
     if (
       axios.isAxiosError(error) &&
@@ -81,8 +81,13 @@ export const useAuthErrorHandling = (
         'WalletMismatchException',
       ].includes(error.response?.data?.detail?.type)
     ) {
-      verifyOwnership(address, chainId, isDev, provider, () =>
-        setIsVerified(true),
+      setIsVerificationRequired(true)
+      verifyOwnership(
+        address,
+        chainId,
+        isDev,
+        provider,
+        () => handleVerificationCompletion,
       ).catch((e) => throwError(e))
     } else {
       throwError(error)
@@ -90,6 +95,7 @@ export const useAuthErrorHandling = (
   }, [chainId, isDev, error, throwError, address, provider])
 
   return {
+    isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
     setError,
   }

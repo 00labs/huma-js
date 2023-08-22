@@ -20,7 +20,11 @@ export function Evaluation({
   handleApprove,
 }: Props): React.ReactElement {
   const theme = useTheme()
-  const { checkingEA, isWalletOwnershipVerified } = useEA()
+  const {
+    checkingEA,
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+  } = useEA()
   const dispatch = useAppDispatch()
   const { account, chainId } = useWeb3React()
   const [status, setStatus] = useState<'checking' | 'success'>('checking')
@@ -114,6 +118,19 @@ export function Evaluation({
 
   const goToNextStep = () => {
     dispatch(setStep(WIDGET_STEP.ChooseAmount))
+  }
+
+  if (isWalletOwnershipVerificationRequired) {
+    return (
+      <Box css={styles.wrapper}>
+        <Typography variant='h6' css={styles.header}>
+          Sign In
+        </Typography>
+        <Box css={styles.content}>
+          Please sign in to verify your ownership of the wallet
+        </Box>
+      </Box>
+    )
   }
 
   return (

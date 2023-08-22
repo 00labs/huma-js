@@ -1,4 +1,3 @@
-import axios from 'axios'
 import {
   EAPayload,
   EARejectionError,
@@ -18,8 +17,11 @@ import { useAppDispatch } from './useRedux'
 const useEA = () => {
   const dispatch = useAppDispatch()
   const { account, chainId } = useWeb3React()
-  const { isWalletOwnershipVerified, setError: setAuthError } =
-    useAuthErrorHandling(account, chainId, envUtil.checkIsDev())
+  const {
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+    setError: setAuthError,
+  } = useAuthErrorHandling(account, chainId, envUtil.checkIsDev())
 
   const checkingEA = useCallback(
     async (payload: EAPayload, nextStep: WIDGET_STEP) => {
@@ -41,13 +43,6 @@ const useEA = () => {
           )
         } else {
           try {
-            console.log(`underwrite returned error`)
-            if (axios.isAxiosError(e)) {
-              console.log(e.response?.data)
-            } else {
-              console.log('Not axios error', e)
-            }
-            console.log('Finished logging')
             setAuthError(e)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (e: any) {
@@ -63,7 +58,11 @@ const useEA = () => {
     [chainId, dispatch, setAuthError],
   )
 
-  return { checkingEA, isWalletOwnershipVerified }
+  return {
+    checkingEA,
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+  }
 }
 
 export default useEA
