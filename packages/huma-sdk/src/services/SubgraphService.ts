@@ -39,7 +39,7 @@ export type Pagination = {
  * @returns {string} The subgraph URL for the given chain ID.
  */
 function getSubgraphUrlForChainId(chainId: number): string {
-  return PoolSubgraphMap[chainId].subgraph ?? ''
+  return PoolSubgraphMap[chainId]?.subgraph ?? ''
 }
 
 /**
@@ -141,7 +141,7 @@ function getRWReceivableInfo(
     orderDirection: 'desc',
   },
 ): Promise<RealWorldReceivableInfoBase[]> {
-  let url = PoolSubgraphMap[chainId].receivablesSubgraph
+  let url = PoolSubgraphMap[chainId]?.receivablesSubgraph
   if (!url) {
     return Promise.resolve([])
   }
@@ -210,7 +210,7 @@ function getRWReceivableInfoTotalCount(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
 ): Promise<number> {
-  let url = PoolSubgraphMap[chainId].receivablesSubgraph
+  let url = PoolSubgraphMap[chainId]?.receivablesSubgraph
   if (!url) {
     return Promise.resolve(0)
   }

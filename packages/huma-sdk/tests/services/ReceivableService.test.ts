@@ -15,6 +15,7 @@ import { getChainIdFromSignerOrProvider } from '../../src/utils/chain'
 import { getRealWorldReceivableContract } from '../../src/helpers/RealWorldReceivableContractHelper'
 import { getDefaultGasOptions } from '../../src/utils/maticGasStation'
 import { ARWeaveService } from '../../src/services/ARWeaveService'
+import { SubgraphService } from '../../src/services/SubgraphService'
 
 jest.mock('../../src/utils/chain', () => ({
   getChainIdFromSignerOrProvider: jest.fn(),
@@ -33,6 +34,12 @@ jest.mock('../../src/helpers/RealWorldReceivableContractHelper', () => ({
 }))
 jest.mock('../../src/utils/maticGasStation', () => ({
   getDefaultGasOptions: jest.fn(),
+}))
+jest.mock('../../src/services/SubgraphService', () => ({
+  SubgraphService: {
+    getRWReceivableInfo: jest.fn(),
+    getRWReceivableInfoTotalCount: jest.fn(),
+  },
 }))
 jest.mock('graphql-request', () => ({
   gql: jest.fn(),
@@ -912,32 +919,6 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
     }
   })
 
-  it('should throw is RealWorldReceivable is not available on this network', async () => {
-    ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
-      Promise.resolve(1),
-    )
-
-    const signer = {
-      getAddress: jest.fn().mockResolvedValue('0x123'),
-      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
-    } as any
-
-    const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
-
-    try {
-      await ReceivableService.loadReceivablesOfOwnerWithMetadata<{}>(
-        signer,
-        owner,
-        POOL_NAME.HumaCreditLine,
-        POOL_TYPE.CreditLine,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'RealWorldReceivable is not available on this network',
-      )
-    }
-  })
-
   it('should return ReceivablesOfOwnerWithMetadata', async () => {
     const poolInfo =
       PoolContractMap[ChainEnum.Goerli]?.[POOL_TYPE.CreditLine]?.[
@@ -949,46 +930,21 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
     ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
       key: 'value',
     })
-    ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
-      balanceOf: () => Promise.resolve(BigNumber.from(2)),
-      tokenOfOwnerByIndex: (owner: string, tokenIndex: number) =>
-        Promise.resolve(tokenIndex),
-      tokenURI: () => Promise.resolve('https://arweave.net/tx1'),
-      rwrInfoMapping: (tokenId: number) => {
-        if (tokenId === 0) {
-          return Promise.resolve({
-            tokenId,
-            poolAddress: 'wrong pool',
-            receivableAmount: 10,
-            paidAmount: 10,
-            creationDate: 1234567890,
-            maturityDate: 1234567890,
-            currencyCode: 1,
-            tokenURI: 'https://arweave.net/tx1',
-            metadata: {
-              key: 'value',
-            },
-          })
-        }
-        return Promise.resolve({
-          tokenId,
-          poolAddress: poolInfo?.pool,
-          receivableAmount: 10,
-          paidAmount: 10,
-          creationDate: 1234567890,
-          maturityDate: 1234567890,
-          currencyCode: 1,
-          tokenURI: 'https://arweave.net/tx1',
-          metadata: {
-            key: 'value',
-          },
-        })
+    ;(SubgraphService.getRWReceivableInfo as jest.Mock).mockReturnValue([
+      {
+        tokenId: '1',
+        poolAddress: poolInfo?.pool,
+        receivableAmount: 10,
+        paidAmount: 10,
+        creationDate: 1234567890,
+        maturityDate: 1234567890,
+        currencyCode: 1,
+        tokenURI: 'https://arweave.net/tx1',
       },
-    })
+    ])
 
     const signer = {
       getAddress: jest.fn().mockResolvedValue('0x123'),
-      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
     } as any
 
     const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
@@ -1002,7 +958,7 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
       )
     expect(result).toStrictEqual([
       {
-        tokenId: 1,
+        tokenId: '1',
         poolAddress: poolInfo?.pool,
         receivableAmount: 10,
         paidAmount: 10,
@@ -1015,6 +971,85 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
         },
       },
     ])
+  })
+})
+
+describe('getTotalCountOfReceivables', () => {
+  it('should throw is owner is not valid', async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+      {
+        name: 'matic',
+        chainId: ChainEnum.Polygon,
+      },
+    )
+
+    const InvalidAccount = '0x123'
+
+    try {
+      await ReceivableService.getTotalCountOfReceivables(
+        provider as any,
+        InvalidAccount,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+      )
+    } catch (error) {
+      expect((error as any).message).toBe('Invalid owner address')
+    }
+  })
+
+  it('should throw is No Chain ID found', async () => {
+    ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
+      Promise.resolve(undefined),
+    )
+
+    const signer = {
+      getAddress: jest.fn().mockResolvedValue('0x123'),
+      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
+    } as any
+
+    const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
+
+    try {
+      await ReceivableService.getTotalCountOfReceivables(
+        signer,
+        owner,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+      )
+    } catch (error) {
+      expect((error as any).message).toBe('No Chain Id found')
+    }
+  })
+
+  it('should return total count of Receivables', async () => {
+    const poolInfo =
+      PoolContractMap[ChainEnum.Goerli]?.[POOL_TYPE.CreditLine]?.[
+        POOL_NAME.HumaCreditLine
+      ]
+    ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
+      Promise.resolve(ChainEnum.Goerli),
+    )
+    ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
+      key: 'value',
+    })
+    ;(
+      SubgraphService.getRWReceivableInfoTotalCount as jest.Mock
+    ).mockResolvedValue(6)
+
+    const signer = {
+      getAddress: jest.fn().mockResolvedValue('0x123'),
+    } as any
+
+    const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
+
+    const result = await ReceivableService.getTotalCountOfReceivables(
+      signer,
+      owner,
+      POOL_NAME.HumaCreditLine,
+      POOL_TYPE.CreditLine,
+    )
+    expect(result).toStrictEqual(6)
   })
 })
 
