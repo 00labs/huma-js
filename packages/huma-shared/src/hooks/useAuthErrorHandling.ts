@@ -6,7 +6,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { useAsyncError } from './useAsyncError'
 import { AuthService } from '../services'
 
-export const createSiweMessage = (
+const createSiweMessage = (
   address: string,
   chainId: number,
   nonce: string,
