@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 import useEA from '../../../hooks/useEA'
 import { LoadingModal } from '../../LoadingModal'
 import { WIDGET_STEP } from '../../../store/widgets.store'
+import { SignIn } from '../../SignIn'
 
 type Props = {
   poolInfo: PoolInfoType
@@ -12,7 +13,11 @@ type Props = {
 }
 
 export function Evaluation({ poolInfo, tokenId }: Props): React.ReactElement {
-  const { checkingEA } = useEA()
+  const {
+    checkingEA,
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+  } = useEA()
   const { account, chainId } = useWeb3React()
 
   useEffect(() => {
@@ -38,8 +43,12 @@ export function Evaluation({ poolInfo, tokenId }: Props): React.ReactElement {
     poolInfo.assetAddress,
     poolInfo.pool,
     tokenId,
+    isWalletOwnershipVerified,
   ])
 
+  if (isWalletOwnershipVerificationRequired) {
+    return <SignIn />
+  }
   return (
     <LoadingModal
       title='Checking Invoice'

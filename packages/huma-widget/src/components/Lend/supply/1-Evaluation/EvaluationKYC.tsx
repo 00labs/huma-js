@@ -88,7 +88,7 @@ export function EvaluationKYC({
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
   const { isWalletOwnershipVerified, setError: setAuthError } =
-    useAuthErrorHandling(account, chainId, isDev)
+    useAuthErrorHandling(isDev)
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()
