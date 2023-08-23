@@ -1,6 +1,4 @@
 import { useWeb3React } from '@web3-react/core'
-import axios from 'axios'
-import MockAdapter from 'axios-mock-adapter'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { useAuthErrorHandling } from '../../src/hooks/useAuthErrorHandling'
@@ -43,14 +41,7 @@ const authError = {
 const otherError = new Error()
 
 describe('useAuthErrorHandling', () => {
-  let mock: MockAdapter
-
-  beforeAll(() => {
-    mock = new MockAdapter(axios)
-  })
-
   afterEach(() => {
-    mock.reset()
     ;(AuthService.createSession as jest.Mock).mockClear()
     ;(AuthService.verifySignature as jest.Mock).mockClear()
   })
