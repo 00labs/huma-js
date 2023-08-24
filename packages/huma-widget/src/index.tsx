@@ -4,16 +4,13 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import {
   Provider as Web3Provider,
   ProviderProps as Web3Props,
-  supportedChainId,
 } from '@huma-finance/shared'
 import { ThemeProvider } from '@mui/material'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { Provider as AtomProvider } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { useWeb3React } from '@web3-react/core'
-import { ChainNotSupportedModal } from './components/ChainNotSupportedModal'
+import { ChainSupportProvider } from './components/ChainSupportProvider'
 import {
   CreditLineApprove,
   CreditLineApproveProps,
@@ -55,7 +52,7 @@ type JsonRpcConnectionMap = {
  * @typedef {Object} WidgetProps
  * @property {desiredChainId|undefined} desiredChainId Optional desired chain id, will trigger the switch network action if different from the current chain id
  * @property {JsonRpcConnectionMap|undefined} jsonRpcUrlMap Optional mapping of your JSON-RPC connections indexed by chainId
- * @property {Eip1193Provider|JsonRpcProviderl} provider EIP-1193 provider or JsonRpc Provider
+ * @property {Eip1193Provider|JsonRpcProvider} provider EIP-1193 provider or JsonRpc Provider
  */
 type WidgetProps = {
   handleClose?: () => void
@@ -66,41 +63,14 @@ type WidgetProps = {
 
 function Widget(props: WCProps<WidgetProps>) {
   const { children } = props
-  const { chainId } = useWeb3React()
-
-  const chainSupported = !!supportedChainId(chainId)
-  const [chainNotSupportedOpen, setChainNotSupportedOpen] = useState(false)
-
-  useEffect(() => {
-    if (chainSupported) {
-      setChainNotSupportedOpen(false)
-    } else {
-      setChainNotSupportedOpen(true)
-    }
-  }, [chainSupported])
-
-  const handleCloseCallback = useCallback(() => {
-    setChainNotSupportedOpen(false)
-  }, [])
-
-  if (!chainSupported) {
-    return (
-      <ThemeProvider theme={themeHuma}>
-        <ReduxProvider store={store}>
-          <ChainNotSupportedModal
-            isOpen={chainNotSupportedOpen}
-            handleClose={handleCloseCallback}
-          />
-        </ReduxProvider>
-      </ThemeProvider>
-    )
-  }
 
   return (
     <ThemeProvider theme={themeHuma}>
       <ReduxProvider store={store}>
         <Web3Provider {...(props as Web3Props)}>
-          <AtomProvider>{children}</AtomProvider>
+          <AtomProvider>
+            <ChainSupportProvider>{children}</ChainSupportProvider>
+          </AtomProvider>
         </Web3Provider>
       </ReduxProvider>
     </ThemeProvider>
