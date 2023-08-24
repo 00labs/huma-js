@@ -471,7 +471,7 @@ export const SupplementaryContractsMap: {
     [SupplementaryContracts.MultiSend]:
       '0x7DeabC1F7E47eD5Cf23Fa4390C48D6ab8543eE82',
     [SupplementaryContracts.RealWorldReceivable]:
-      '0x5F9E8b946472C9bA78491a4AbeA9d3BAccfB28E5',
+      '0xcCE0Ff2017eFC86EF49f165D895E2A19FfBA3A1a',
     [SupplementaryContracts.TestUSDC]:
       '0xcFcaac79a9c4C9B8919d20b9d7214EF7Bd9A6e8F',
   },
