@@ -146,12 +146,13 @@ function getRWReceivableInfo(
     return Promise.resolve([])
   }
 
+  // TODO: remove this once the subgraph is updated
   url =
     'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-polygon-test'
 
   const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
 
-  const query = `
+  const RWReceivablesQuery = `
   query {
     rwreceivables(
       where: {
@@ -177,16 +178,21 @@ function getRWReceivableInfo(
   }
 `
 
-  return requestPost(url, JSON.stringify({ query }), {
+  return requestPost<{
+    errors?: unknown
+    data: {
+      rwreceivables: Array<
+        RealWorldReceivableInfoBase & { pool: string; tokenUri: string }
+      >
+    }
+  }>(url, JSON.stringify({ query: RWReceivablesQuery }), {
     withCredentials: false,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }).then((res: any) => {
+  }).then((res) => {
     if (res.errors) {
       console.error(res.errors)
       return []
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return res.data.rwreceivables.map((item: any) => {
+    return res.data.rwreceivables.map((item) => {
       item.poolAddress = item.pool
       item.tokenURI = item.tokenUri
       return item
@@ -215,12 +221,13 @@ function getRWReceivableInfoTotalCount(
     return Promise.resolve(0)
   }
 
+  // TODO: remove this once the subgraph is updated
   url =
     'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-polygon-test'
 
   const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
 
-  const query = `
+  const RWReceivableTotalCountQuery = `
   query {
     rwreceivables(
       where: {
@@ -233,10 +240,14 @@ function getRWReceivableInfoTotalCount(
   }
 `
 
-  return requestPost(url, JSON.stringify({ query }), {
+  return requestPost<{
+    errors?: unknown
+    data: {
+      rwreceivables: Array<RealWorldReceivableInfoBase>
+    }
+  }>(url, JSON.stringify({ query: RWReceivableTotalCountQuery }), {
     withCredentials: false,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }).then((res: any) => {
+  }).then((res) => {
     if (res.errors) {
       console.error(res.errors)
       return 0

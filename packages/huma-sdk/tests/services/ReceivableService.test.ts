@@ -9,7 +9,7 @@ import {
 } from '@huma-finance/shared'
 import { request } from 'graphql-request'
 
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { ReceivableService } from '../../src/services/ReceivableService'
 import { getChainIdFromSignerOrProvider } from '../../src/utils/chain'
 import { getRealWorldReceivableContract } from '../../src/helpers/RealWorldReceivableContractHelper'
@@ -872,7 +872,7 @@ describe('createReceivableWithMetadata', () => {
 })
 
 describe('loadReceivablesOfOwnerWithMetadata', () => {
-  it('should throw is owner is not valid', async () => {
+  it('should throw if owner is not valid', async () => {
     const provider = new ethers.providers.JsonRpcProvider(
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
       {
