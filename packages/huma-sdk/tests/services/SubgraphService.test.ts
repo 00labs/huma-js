@@ -8,64 +8,24 @@ import {
 import { SubgraphService } from '../../src/services/SubgraphService'
 
 jest.mock('@huma-finance/shared', () => ({
-  ChainEnum: {
-    Goerli: 5,
-  },
-  POOL_NAME: {
-    Arf: 'Arf',
-  },
-  POOL_TYPE: {
-    CreditLine: 'CreditLine',
-  },
-  PoolContractMap: {
-    5: {
-      CreditLine: {
-        Arf: {
-          pool: '0x123',
-        },
-      },
-    },
-  },
-  PoolSubgraphMap: {
-    137: {
-      subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-polygon',
-      receivablesSubgraph:
-        'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-polygon',
-    },
-    5: {
-      subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
-      receivablesSubgraph:
-        'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-goerli',
-    },
-    80001: {
-      subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
-      receivablesSubgraph:
-        'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-mumbai',
-    },
-    44787: {
-      subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
-      receivablesSubgraph:
-        'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-alfajores',
-    },
-  },
-  CreditEvent: { DrawdownMadeWithReceivable: 3 },
+  ...jest.requireActual('@huma-finance/shared'),
   requestPost: jest.fn(),
 }))
 
 describe('getSubgraphUrlForChainId', () => {
   it('should return the correct subgraph URL for a given chain ID', () => {
-    expect(SubgraphService.getSubgraphUrlForChainId(5)).toEqual(
+    expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Goerli)).toEqual(
       'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
     )
-    expect(SubgraphService.getSubgraphUrlForChainId(137)).toEqual(
+    expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon)).toEqual(
       'https://api.thegraph.com/subgraphs/name/00labs/huma-polygon',
     )
-    expect(SubgraphService.getSubgraphUrlForChainId(80001)).toEqual(
+    expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Mumbai)).toEqual(
       'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
     )
-    expect(SubgraphService.getSubgraphUrlForChainId(44787)).toEqual(
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
-    )
+    expect(
+      SubgraphService.getSubgraphUrlForChainId(ChainEnum.Alfajores),
+    ).toEqual('https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores')
     expect(SubgraphService.getSubgraphUrlForChainId(12)).toEqual('')
   })
 })
