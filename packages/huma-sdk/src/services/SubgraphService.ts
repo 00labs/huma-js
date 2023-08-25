@@ -141,14 +141,10 @@ function getRWReceivableInfo(
     orderDirection: 'desc',
   },
 ): Promise<RealWorldReceivableInfoBase[]> {
-  let url = PoolSubgraphMap[chainId]?.receivablesSubgraph
+  const url = PoolSubgraphMap[chainId]?.receivablesSubgraph
   if (!url) {
     return Promise.resolve([])
   }
-
-  // TODO: remove this once the subgraph is updated
-  url =
-    'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-polygon-test'
 
   const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
 
@@ -201,62 +197,6 @@ function getRWReceivableInfo(
 }
 
 /**
- * Returns the total count of real world receivables' info.
- *
- * @memberof SubgraphService
- * @param {string} userAddress - The address of the user.
- * @param {number} chainId - The ID of the chain.
- * @param {POOL_NAME} poolName - The name of the pool.
- * @param {POOL_TYPE} poolType - The type of the pool.
- * @returns {Promise<number>} The total count of real world receivables' info.
- */
-function getRWReceivableInfoTotalCount(
-  userAddress: string,
-  chainId: number,
-  poolName: POOL_NAME,
-  poolType: POOL_TYPE,
-): Promise<number> {
-  let url = PoolSubgraphMap[chainId]?.receivablesSubgraph
-  if (!url) {
-    return Promise.resolve(0)
-  }
-
-  // TODO: remove this once the subgraph is updated
-  url =
-    'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-polygon-test'
-
-  const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
-
-  const RWReceivableTotalCountQuery = `
-  query {
-    rwreceivables(
-      where: {
-        owner: "${userAddress}",
-        pool: "${poolAddress}",
-      }
-    ) {
-      id
-    }
-  }
-`
-
-  return requestPost<{
-    errors?: unknown
-    data: {
-      rwreceivables: Array<RealWorldReceivableInfoBase>
-    }
-  }>(url, JSON.stringify({ query: RWReceivableTotalCountQuery }), {
-    withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return 0
-    }
-    return res.data.rwreceivables.length
-  })
-}
-
-/**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
  */
@@ -265,5 +205,4 @@ export const SubgraphService = {
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
-  getRWReceivableInfoTotalCount,
 }

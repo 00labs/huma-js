@@ -466,15 +466,11 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
  *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
  *      from server calls.
  * @param {string} owner - The receivable token owner to query from.
- * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
- * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
  * @returns {Promise<number>} - Total count of receivables owned by the owner for the pool.
  */
 async function getTotalCountOfReceivables(
   signerOrProvider: Web3Provider | ethers.Signer,
   owner: string,
-  poolName: POOL_NAME,
-  poolType: POOL_TYPE,
 ): Promise<number> {
   if (!ethers.utils.isAddress(owner)) {
     throw new Error('Invalid owner address')
@@ -485,12 +481,13 @@ async function getTotalCountOfReceivables(
     throw new Error('No Chain Id found')
   }
 
-  return SubgraphService.getRWReceivableInfoTotalCount(
-    owner,
-    chainId,
-    poolName,
-    poolType,
-  )
+  const rwrContract = getRealWorldReceivableContract(signerOrProvider, chainId)
+  if (!rwrContract) {
+    throw new Error('Could not find RealWorldReceivable contract')
+  }
+
+  const balance = await rwrContract.balanceOf(owner)
+  return balance.toNumber()
 }
 
 /**

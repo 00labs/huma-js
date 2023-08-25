@@ -9,7 +9,7 @@ import {
 } from '@huma-finance/shared'
 import { request } from 'graphql-request'
 
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { ReceivableService } from '../../src/services/ReceivableService'
 import { getChainIdFromSignerOrProvider } from '../../src/utils/chain'
 import { getRealWorldReceivableContract } from '../../src/helpers/RealWorldReceivableContractHelper'
@@ -873,19 +873,12 @@ describe('createReceivableWithMetadata', () => {
 
 describe('loadReceivablesOfOwnerWithMetadata', () => {
   it('should throw if owner is not valid', async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
-      {
-        name: 'matic',
-        chainId: ChainEnum.Polygon,
-      },
-    )
-
+    const mockProvider = {} as any
     const InvalidAccount = '0x123'
 
     try {
       await ReceivableService.loadReceivablesOfOwnerWithMetadata<{}>(
-        provider as any,
+        mockProvider,
         InvalidAccount,
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
@@ -895,7 +888,7 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
     }
   })
 
-  it('should throw is No Chain ID found', async () => {
+  it('should throw if No Chain ID found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
       Promise.resolve(undefined),
     )
@@ -975,30 +968,21 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
 })
 
 describe('getTotalCountOfReceivables', () => {
-  it('should throw is owner is not valid', async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
-      {
-        name: 'matic',
-        chainId: ChainEnum.Polygon,
-      },
-    )
-
+  it('should throw if owner is not valid', async () => {
+    const mockProvider = {} as any
     const InvalidAccount = '0x123'
 
     try {
       await ReceivableService.getTotalCountOfReceivables(
-        provider as any,
+        mockProvider,
         InvalidAccount,
-        POOL_NAME.HumaCreditLine,
-        POOL_TYPE.CreditLine,
       )
     } catch (error) {
       expect((error as any).message).toBe('Invalid owner address')
     }
   })
 
-  it('should throw is No Chain ID found', async () => {
+  it('should throw if No Chain ID found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
       Promise.resolve(undefined),
     )
@@ -1011,31 +995,45 @@ describe('getTotalCountOfReceivables', () => {
     const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
 
     try {
-      await ReceivableService.getTotalCountOfReceivables(
-        signer,
-        owner,
-        POOL_NAME.HumaCreditLine,
-        POOL_TYPE.CreditLine,
-      )
+      await ReceivableService.getTotalCountOfReceivables(signer, owner)
     } catch (error) {
       expect((error as any).message).toBe('No Chain Id found')
     }
   })
 
-  it('should return total count of Receivables', async () => {
-    const poolInfo =
-      PoolContractMap[ChainEnum.Goerli]?.[POOL_TYPE.CreditLine]?.[
-        POOL_NAME.HumaCreditLine
-      ]
+  it('should throw if RealWorldReceivable contract is not found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
       Promise.resolve(ChainEnum.Goerli),
     )
     ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
       key: 'value',
     })
-    ;(
-      SubgraphService.getRWReceivableInfoTotalCount as jest.Mock
-    ).mockResolvedValue(6)
+
+    const signer = {
+      getAddress: jest.fn().mockResolvedValue('0x123'),
+    } as any
+
+    const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
+
+    try {
+      await ReceivableService.getTotalCountOfReceivables(signer, owner)
+    } catch (error) {
+      expect((error as any).message).toBe(
+        'Could not find RealWorldReceivable contract',
+      )
+    }
+  })
+
+  it('should return total count of Receivables', async () => {
+    ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
+      Promise.resolve(ChainEnum.Goerli),
+    )
+    ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
+      key: 'value',
+    })
+    ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
+      balanceOf: () => Promise.resolve(BigNumber.from(6)),
+    })
 
     const signer = {
       getAddress: jest.fn().mockResolvedValue('0x123'),
@@ -1046,8 +1044,6 @@ describe('getTotalCountOfReceivables', () => {
     const result = await ReceivableService.getTotalCountOfReceivables(
       signer,
       owner,
-      POOL_NAME.HumaCreditLine,
-      POOL_TYPE.CreditLine,
     )
     expect(result).toStrictEqual(6)
   })
