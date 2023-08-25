@@ -1,6 +1,6 @@
 import { BigNumberish } from 'ethers'
 
-export type RealWorldReceivableInfo<T> = {
+export interface RealWorldReceivableInfoBase {
   tokenId: BigNumberish
   poolAddress: string
   receivableAmount: BigNumberish
@@ -9,5 +9,9 @@ export type RealWorldReceivableInfo<T> = {
   maturityDate: BigNumberish
   currencyCode: BigNumberish
   tokenURI: string
+}
+
+export interface RealWorldReceivableInfo<T>
+  extends RealWorldReceivableInfoBase {
   metadata: T
 }
