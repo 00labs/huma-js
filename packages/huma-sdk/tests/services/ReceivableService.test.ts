@@ -1008,6 +1008,7 @@ describe('getTotalCountOfReceivables', () => {
     ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
       key: 'value',
     })
+    ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
 
     const signer = {
       getAddress: jest.fn().mockResolvedValue('0x123'),
