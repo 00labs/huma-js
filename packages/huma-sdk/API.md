@@ -65,6 +65,8 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 <dd><p>Object representing an invoice payload for underwriting approval.</p></dd>
 <dt><a href="#CreditEventPayload">CreditEventPayload</a> : <code>Object</code></dt>
 <dd><p>Represents the payload of a credit event.</p></dd>
+<dt><a href="#Pagination">Pagination</a> : <code>Object</code></dt>
+<dd><p>Represents the pagination options for a query.</p></dd>
 </dl>
 
 <a name="usePoolContract"></a>
@@ -294,7 +296,8 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts])](#ReceivableService.createReceivable) ⇒ <code>Promise.&lt;(TransactionResponse\|null)&gt;</code>
     * [.uploadOrFetchMetadataURI(signerOrProvider, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund])](#ReceivableService.uploadOrFetchMetadataURI) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.createReceivableWithMetadata(signerOrProvider, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts])](#ReceivableService.createReceivableWithMetadata) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
-    * [.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+    * [.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType, pagination)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+    * [.getTotalCountOfReceivables(signerOrProvider, owner)](#ReceivableService.getTotalCountOfReceivables) ⇒ <code>Promise.&lt;number&gt;</code>
 
 <a name="ReceivableService.getTokenIdByURI"></a>
 
@@ -428,7 +431,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.loadReceivablesOfOwnerWithMetadata"></a>
 
-### ReceivableService.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+### ReceivableService.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType, pagination) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
 <p>Loads all RWRs belonging to the specified owner, including the RWR metadata</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
@@ -442,6 +445,22 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | owner | <code>string</code> | <p>The receivable token owner to query from.</p> |
 | poolName | <code>POOL\_NAME</code> | <p>The pool name. Used to lookup the pool address to pay to.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The pool type. Used to lookup the pool address to pay to.</p> |
+| pagination | [<code>Pagination</code>](#Pagination) | <p>The pagination option.</p> |
+
+<a name="ReceivableService.getTotalCountOfReceivables"></a>
+
+### ReceivableService.getTotalCountOfReceivables(signerOrProvider, owner) ⇒ <code>Promise.&lt;number&gt;</code>
+<p>Get the total count of all RWRs belonging to the specified owner</p>
+
+**Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
+**Returns**: <code>Promise.&lt;number&gt;</code> - <ul>
+<li>Total count of receivables owned by the owner for the pool.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signerOrProvider | <code>Web3Provider</code> \| <code>ethers.Signer</code> | <p>If calling this function from a browser, this function expects a Web3Provider. If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included from server calls.</p> |
+| owner | <code>string</code> | <p>The receivable token owner to query from.</p> |
 
 <a name="SubgraphService"></a>
 
@@ -454,6 +473,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.getSubgraphUrlForChainId(chainId)](#SubgraphService.getSubgraphUrlForChainId) ⇒ <code>string</code>
     * [.getCreditEventsForUser(userAddress, chainId, poolName, poolType, event)](#SubgraphService.getCreditEventsForUser) ⇒ <code>Promise.&lt;Array.&lt;CreditEventPayload&gt;&gt;</code>
     * [.getLastFactorizedAmountFromPool(userAddress, chainId, poolName, poolType)](#SubgraphService.getLastFactorizedAmountFromPool) ⇒ <code>Promise.&lt;number&gt;</code>
+    * [.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getRWReceivableInfo) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
 
 <a name="SubgraphService.getSubgraphUrlForChainId"></a>
 
@@ -497,6 +517,22 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | chainId | <code>number</code> | <p>The ID of the chain.</p> |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+
+<a name="SubgraphService.getRWReceivableInfo"></a>
+
+### SubgraphService.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
+<p>Returns the paginated real world receivables' info.</p>
+
+**Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
+**Returns**: <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code> - <p>The paginated real world receivables' info.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userAddress | <code>string</code> | <p>The address of the user.</p> |
+| chainId | <code>number</code> | <p>The ID of the chain.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| pagination | [<code>Pagination</code>](#Pagination) | <p>The pagination option.</p> |
 
 <a name="defaultWrapper"></a>
 
@@ -776,5 +812,11 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 
 ## CreditEventPayload : <code>Object</code>
 <p>Represents the payload of a credit event.</p>
+
+**Kind**: global typedef  
+<a name="Pagination"></a>
+
+## Pagination : <code>Object</code>
+<p>Represents the pagination options for a query.</p>
 
 **Kind**: global typedef  

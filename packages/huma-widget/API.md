@@ -37,6 +37,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendWithdrawProps">LendWithdrawProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw props</p></dd>
+<dt><a href="#InvoiceFactoringBorrowProps">InvoiceFactoringBorrowProps</a> : <code>Object</code></dt>
+<dd><p>Invoice factoring pool borrow props</p></dd>
 <dt><a href="#JsonRpcConnectionMap">JsonRpcConnectionMap</a> : <code>Object</code></dt>
 <dd><p>Mapping of your JSON-RPC connections indexed by chainId</p></dd>
 <dt><a href="#WidgetProps">WidgetProps</a> : <code>Object</code></dt>
@@ -261,6 +263,22 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
+
+<a name="InvoiceFactoringBorrowProps"></a>
+
+## InvoiceFactoringBorrowProps : <code>Object</code>
+<p>Invoice factoring pool borrow props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| tokenId | <code>string</code> \| <code>BigNumber</code> | <p>The NFT token id representing invoice.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the invoice pool borrow action is successful.</p> |
 
 <a name="JsonRpcConnectionMap"></a>
 
