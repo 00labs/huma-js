@@ -544,16 +544,14 @@ export function getPoolInfoForPoolAddress(
   Object.values(POOL_TYPE).find((poolType: POOL_TYPE) => {
     const poolsByType = PoolContractMap[chainId][poolType]
     if (poolsByType) {
-      const foundPool = Object.values(poolsByType).find(
-        (poolInfo: PoolInfoType) => {
-          if (poolInfo?.pool.toLowerCase() === poolAddress.toLowerCase()) {
-            foundPoolInfo = poolInfo
-            return true
-          }
+      const foundPool = Object.values(poolsByType).find((poolInfo) => {
+        if (poolInfo?.pool.toLowerCase() === poolAddress.toLowerCase()) {
+          foundPoolInfo = poolInfo
+          return true
+        }
 
-          return false
-        },
-      )
+        return false
+      })
 
       if (foundPool) {
         return true

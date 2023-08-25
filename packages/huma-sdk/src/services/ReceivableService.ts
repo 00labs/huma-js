@@ -6,6 +6,7 @@ import {
   PoolContractMap,
   PoolSubgraphMap,
   RealWorldReceivableInfo,
+  RealWorldReceivableInfoBase,
   SupplementaryContracts,
   SupplementaryContractsMap,
 } from '@huma-finance/shared'
@@ -15,6 +16,7 @@ import { ARWeaveService } from './ARWeaveService'
 import { getRealWorldReceivableContract } from '../helpers'
 import { getDefaultGasOptions, getChainIdFromSignerOrProvider } from '../utils'
 import { Receivable } from '../graphql/generatedTypes'
+import { Pagination, SubgraphService } from './SubgraphService'
 
 /**
  * Fetches the tokenId of a RealWorldReceivable, or null if it doesn't exist, given a metadata URI
@@ -414,6 +416,7 @@ async function createReceivableWithMetadata(
  * @param {string} owner - The receivable token owner to query from.
  * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
  * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
+ * @param {Pagination} pagination - The pagination option.
  * @returns {Promise<RealWorldReceivableInfo[]>} - An array of receivables owned by the owner for the pool.
  */
 async function loadReceivablesOfOwnerWithMetadata<T>(
@@ -421,6 +424,7 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
   owner: string,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  pagination?: Pagination,
 ): Promise<RealWorldReceivableInfo<T>[]> {
   if (!ethers.utils.isAddress(owner)) {
     throw new Error('Invalid owner address')
@@ -431,11 +435,50 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
     throw new Error('No Chain Id found')
   }
 
-  const poolInfo = chainId
-    ? PoolContractMap[chainId]?.[poolType]?.[poolName]
-    : undefined
-  if (!poolInfo) {
-    throw new Error('RealWorldReceivable is not available on this network')
+  const rwReceivablesBase = await SubgraphService.getRWReceivableInfo(
+    owner,
+    chainId,
+    poolName,
+    poolType,
+    pagination,
+  )
+
+  const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) =>
+    ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
+  const metadatas = await Promise.all(rwReceivablesBase.map(fetchMetadata))
+
+  return rwReceivablesBase.map(
+    (rwrInfoBase, index) =>
+      ({
+        ...rwrInfoBase,
+        metadata: metadatas[index],
+      } as RealWorldReceivableInfo<T>),
+  )
+}
+
+/**
+ * Get the total count of all RWRs belonging to the specified owner
+ *
+ * @async
+ * @function
+ * @memberof ReceivableService
+ * @param {Web3Provider | ethers.Signer} signerOrProvider - If calling this function from a browser, this function expects a Web3Provider.
+ *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
+ *      from server calls.
+ * @param {string} owner - The receivable token owner to query from.
+ * @returns {Promise<number>} - Total count of receivables owned by the owner for the pool.
+ */
+async function getTotalCountOfReceivables(
+  signerOrProvider: Web3Provider | ethers.Signer,
+  owner: string,
+): Promise<number> {
+  if (!ethers.utils.isAddress(owner)) {
+    throw new Error('Invalid owner address')
+  }
+
+  const chainId = await getChainIdFromSignerOrProvider(signerOrProvider)
+  if (!chainId) {
+    throw new Error('No Chain Id found')
   }
 
   const rwrContract = getRealWorldReceivableContract(signerOrProvider, chainId)
@@ -443,41 +486,8 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
     throw new Error('Could not find RealWorldReceivable contract')
   }
 
-  // Load all receivables of owner
   const balance = await rwrContract.balanceOf(owner)
-
-  // Create empty array with length of balance
-  const tokens = Array.from(Array(balance.toNumber()))
-  const fetchPromises = tokens.map(async (_, tokenIndex) => {
-    const tokenId = await rwrContract.tokenOfOwnerByIndex(owner, tokenIndex)
-    const rwrInfo = await rwrContract.rwrInfoMapping(tokenId)
-    // If a RWR uploaded by an owner is not for this specific pool, skip it
-    if (rwrInfo.poolAddress.toLowerCase() !== poolInfo.pool.toLowerCase()) {
-      return undefined
-    }
-
-    const tokenURI = await rwrContract.tokenURI(tokenId)
-    const metadata = await ARWeaveService.fetchMetadataFromUrl(tokenURI)
-
-    return {
-      tokenId,
-      poolAddress: rwrInfo.poolAddress,
-      receivableAmount: rwrInfo.receivableAmount,
-      paidAmount: rwrInfo.paidAmount,
-      creationDate: rwrInfo.creationDate,
-      maturityDate: rwrInfo.maturityDate,
-      currencyCode: rwrInfo.currencyCode,
-      tokenURI,
-      metadata,
-    }
-  })
-
-  const tokenData = await Promise.all(fetchPromises)
-
-  // Filter undefined
-  return tokenData.filter(
-    (token) => token !== undefined,
-  ) as RealWorldReceivableInfo<T>[]
+  return balance.toNumber()
 }
 
 /**
@@ -490,6 +500,7 @@ export const ReceivableService = {
   declareReceivablePaymentByTokenId,
   declareReceivablePaymentByReferenceId,
   loadReceivablesOfOwnerWithMetadata,
+  getTotalCountOfReceivables,
   uploadOrFetchMetadataURI,
   getTokenIdByURI,
 }
