@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 import useEA from '../../../hooks/useEA'
 import { LoadingModal } from '../../LoadingModal'
 import { WIDGET_STEP } from '../../../store/widgets.store'
+import { SignIn } from '../../SignIn'
 
 type Props = {
   poolInfo: PoolInfoType
@@ -17,8 +18,12 @@ export function Evaluation({
   payerAddress,
   superToken,
 }: Props): React.ReactElement {
+  const {
+    checkingEA,
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+  } = useEA()
   const { account } = useWeb3React()
-  const { checkingEA } = useEA()
 
   useEffect(() => {
     if (account) {
@@ -44,8 +49,12 @@ export function Evaluation({
     poolInfo.assetAddress,
     poolInfo.pool,
     superToken,
+    isWalletOwnershipVerified,
   ])
 
+  if (isWalletOwnershipVerificationRequired) {
+    return <SignIn />
+  }
   return (
     <LoadingModal
       title='Checking Stream'

@@ -14,7 +14,7 @@ export enum POOL_NAME {
   Jia = 'Jia',
   ArfCreditPool1 = 'ArfCreditPool1',
   BSOS = 'BSOS',
-  ImpactMarkets = 'ImpactMarkets',
+  ImpactMarket = 'ImpactMarket',
 }
 
 export enum POOL_TYPE {
@@ -120,8 +120,8 @@ export const PoolMap: PoolMapType = {
         'BSOS, a leading FinTech SaaS company, pioneers green financing through Web3 and real-world assets.',
       estAPY: '13%',
     },
-    [POOL_NAME.ImpactMarkets]: {
-      name: 'ImpactMarkets',
+    [POOL_NAME.ImpactMarket]: {
+      name: 'impactMarket',
       borrowDesc:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       lendDesc:
@@ -356,7 +356,7 @@ export const PoolContractMap: PoolContractMapType = {
   },
   [ChainEnum.Alfajores]: {
     [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.ImpactMarkets]: {
+      [POOL_NAME.ImpactMarket]: {
         basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
         pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
         poolFeeManager: '0xbF8B9F511533C8cc4bcAf1B27E9f8CF2b1e1cdD5',
@@ -366,7 +366,7 @@ export const PoolContractMap: PoolContractMapType = {
           decimals: 6,
           icon: 'USDC',
         },
-        poolName: POOL_NAME.ImpactMarkets,
+        poolName: POOL_NAME.ImpactMarket,
         poolType: POOL_TYPE.CreditLine,
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
@@ -471,9 +471,15 @@ export const SupplementaryContractsMap: {
     [SupplementaryContracts.MultiSend]:
       '0x7DeabC1F7E47eD5Cf23Fa4390C48D6ab8543eE82',
     [SupplementaryContracts.RealWorldReceivable]:
-      '0x5F9E8b946472C9bA78491a4AbeA9d3BAccfB28E5',
+      '0xcCE0Ff2017eFC86EF49f165D895E2A19FfBA3A1a',
     [SupplementaryContracts.TestUSDC]:
       '0xcFcaac79a9c4C9B8919d20b9d7214EF7Bd9A6e8F',
+  },
+  [ChainEnum.Alfajores]: {
+    [SupplementaryContracts.RealWorldReceivable]:
+      '0xDc908153Deb70f23ef54C015F622D6E7E6F96E55',
+    [SupplementaryContracts.TestUSDC]:
+      '0x50dc34a634f3e29cfbad79e9cecd2759a6ba8eae',
   },
 }
 
@@ -538,16 +544,14 @@ export function getPoolInfoForPoolAddress(
   Object.values(POOL_TYPE).find((poolType: POOL_TYPE) => {
     const poolsByType = PoolContractMap[chainId][poolType]
     if (poolsByType) {
-      const foundPool = Object.values(poolsByType).find(
-        (poolInfo: PoolInfoType) => {
-          if (poolInfo?.pool.toLowerCase() === poolAddress.toLowerCase()) {
-            foundPoolInfo = poolInfo
-            return true
-          }
+      const foundPool = Object.values(poolsByType).find((poolInfo) => {
+        if (poolInfo?.pool.toLowerCase() === poolAddress.toLowerCase()) {
+          foundPoolInfo = poolInfo
+          return true
+        }
 
-          return false
-        },
-      )
+        return false
+      })
 
       if (foundPool) {
         return true

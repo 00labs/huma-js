@@ -9,6 +9,7 @@ import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { CheckCircleIcon, CheckGreenIcon } from '../../icons'
 import spinner from '../../icons/spinner.gif'
+import { SignIn } from '../../SignIn'
 
 type Props = {
   poolInfo: PoolInfoType
@@ -20,7 +21,11 @@ export function Evaluation({
   handleApprove,
 }: Props): React.ReactElement {
   const theme = useTheme()
-  const { checkingEA } = useEA()
+  const {
+    checkingEA,
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+  } = useEA()
   const dispatch = useAppDispatch()
   const { account, chainId } = useWeb3React()
   const [status, setStatus] = useState<'checking' | 'success'>('checking')
@@ -47,6 +52,7 @@ export function Evaluation({
     handleApprove,
     poolInfo.assetAddress,
     poolInfo.pool,
+    isWalletOwnershipVerified,
   ])
 
   const styles = {
@@ -113,6 +119,10 @@ export function Evaluation({
 
   const goToNextStep = () => {
     dispatch(setStep(WIDGET_STEP.ChooseAmount))
+  }
+
+  if (isWalletOwnershipVerificationRequired) {
+    return <SignIn />
   }
 
   return (

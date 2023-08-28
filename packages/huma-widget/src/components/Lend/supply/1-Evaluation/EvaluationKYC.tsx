@@ -1,12 +1,13 @@
 import {
+  CHAINS,
   configUtil,
   DocSignatureStatus,
   IdentityService,
   PoolInfoType,
   timeUtil,
-  VerificationStatusResult,
-  CHAINS,
+  useAuthErrorHandling,
   useParamsSearch,
+  VerificationStatusResult,
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
@@ -26,11 +27,16 @@ const KYCProvider = 'Securitize'
 type KYCCopy = {
   title: string
   description: string
-  buttonText: string
+  buttonText?: string
 }
 
 // TODO: Add copies for the other pools. Currently only the Jia pool is using the KYC process.
 const JiaPoolCopies = {
+  signInRequired: {
+    title: 'Sign In',
+    description:
+      'Please sign in to verify that you are the owner of the wallet.',
+  },
   verifyIdentity: {
     title: 'Verify Identity',
     description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYCProvider}.`,
@@ -81,6 +87,8 @@ export function EvaluationKYC({
   const isDev = envUtil.checkIsDev()
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
+  const { isWalletOwnershipVerified, setError: setAuthError } =
+    useAuthErrorHandling(isDev)
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()
@@ -157,8 +165,13 @@ export function EvaluationKYC({
           )
         }
       } catch (e) {
-        // The repeated call will throw an error of 401, so we can ignore it.
-        console.error(e)
+        try {
+          setAuthError(e)
+          setKYCCopy(JiaPoolCopies.signInRequired)
+        } catch (e) {
+          // The repeated call will throw an error of 401, so we can ignore it.
+          console.log(e)
+        }
       }
 
       try {
@@ -204,12 +217,17 @@ export function EvaluationKYC({
           }
         }
       } catch (e: unknown) {
-        console.error(e)
-        dispatch(
-          setError({
-            errorMessage: 'Something went wrong, please try again later.',
-          }),
-        )
+        try {
+          setAuthError(e)
+          setKYCCopy(JiaPoolCopies.signInRequired)
+        } catch (e) {
+          console.error(e)
+          dispatch(
+            setError({
+              errorMessage: 'Something went wrong, please try again later.',
+            }),
+          )
+        }
       } finally {
         setLoadingType(undefined)
       }
@@ -228,6 +246,8 @@ export function EvaluationKYC({
     kycPool,
     kycProvider,
     poolInfo.pool,
+    setAuthError,
+    isWalletOwnershipVerified,
   ])
 
   const approveLender = async () => {
@@ -273,12 +293,23 @@ export function EvaluationKYC({
           setOpenSnackBar(true)
         }
       } catch (e: unknown) {
-        console.error(e)
-        dispatch(
-          setError({
-            errorMessage: 'Something went wrong, please try again later.',
-          }),
-        )
+        try {
+          const { envelopeId } = await IdentityService.requestDocSignature(
+            account!,
+            chainId!,
+            isDev,
+          )
+          localStorage.setItem(envelopeKey, envelopeId)
+          localStorage.setItem(
+            envelopeLastQueryTimeKey,
+            String(timeUtil.getUnixTimestamp()),
+          )
+          setOpenSnackBar(true)
+          setKYCCopy(JiaPoolCopies.resendSignatureLink)
+        } catch (e) {
+          setAuthError(e)
+          setKYCCopy(JiaPoolCopies.signInRequired)
+        }
       } finally {
         setLoadingType(undefined)
       }
@@ -302,9 +333,11 @@ export function EvaluationKYC({
           <img src={ApproveLenderImg} alt='approve-lender' />
         </Box>
         <Box css={styles.description}>{kycCopy.description}</Box>
-        <BottomButton variant='contained' onClick={approveLender}>
-          {kycCopy.buttonText}
-        </BottomButton>
+        {Boolean(kycCopy.buttonText) && (
+          <BottomButton variant='contained' onClick={approveLender}>
+            {kycCopy.buttonText}
+          </BottomButton>
+        )}
         {getEmailLinkSentSnackbar()}
       </WrapperModal>
     )

@@ -1,0 +1,31 @@
+name: Update parent repo
+
+on:
+  push:
+    branches: 
+      - develop
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with: 
+          repository: 00labs/huma-dapp
+          ref: 'develop'
+          token: ${{ secrets.GH_TOKEN }}
+          submodules: true
+
+      - name: Pull & update submodules recursively
+        run: |
+          git submodule update --init --recursive
+          git submodule update --recursive --remote
+
+      - name: Commit
+        run: |
+          git config user.email "ci@huma.finance"
+          git config user.name "humaci"
+          git add --all
+          git commit -m "Update submodules" || echo "No changes to commit"
+          git push

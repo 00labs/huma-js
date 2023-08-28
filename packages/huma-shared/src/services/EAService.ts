@@ -209,8 +209,8 @@ const approve = async (payload: EAPayload, chainId: number, isDev = false) => {
 }
 
 /**
- * Checks whether or not a credit underwriting request to Huma's EAVerse would be approved.
- * Note that this does not approve a creditline in Huma's pools and an approve call is still required.
+ * Checks whether a credit underwriting request to Huma's EAVerse would be approved.
+ * Note that this does not approve a creditline in Huma's pools and an `approve` call is still required.
  *
  * @param {EAPreapprovalPayload} payload The payload for the underwrite approval.
  * @param {number} chainId The chain ID.

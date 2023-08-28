@@ -1,17 +1,17 @@
-import { Wallet, ethers } from "ethers";
-import { ReceivableService } from "@huma-finance/sdk";
-import { ChainEnum, POOL_NAME, POOL_TYPE } from "@huma-finance/shared";
-require("dotenv").config();
+import { Wallet, ethers } from 'ethers'
+import { ReceivableService } from '@huma-finance/sdk'
+import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+require('dotenv').config()
 
 async function main() {
-  const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY;
+  const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
     `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
     {
-      name: "Mumbai",
+      name: 'Mumbai',
       chainId: ChainEnum.Mumbai,
-    }
-  );
+    },
+  )
   //   const provider = new ethers.providers.JsonRpcProvider(
   //     `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
   //     {
@@ -20,7 +20,7 @@ async function main() {
   //     }
   //   );
 
-  const wallet = new Wallet(TEST_PRIVATE_KEY, provider);
+  const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
 
   // Mint a receivable without metadata
   //   const tx = await ReceivableService.createReceivable(
@@ -46,11 +46,11 @@ async function main() {
     1000, // receivableAmount
     1684517656, // maturityDate
     JSON.parse('{"test": "test"}'), // metadata
-    "1234235", // referenceId
-    [] // extraTags
-  );
-  const txResponse = await tx.wait();
-  console.log(`Success. Tx hash: ${txResponse.transactionHash}`);
+    '1234235', // referenceId
+    [], // extraTags
+  )
+  const txResponse = await tx.wait()
+  console.log(`Success. Tx hash: ${txResponse.transactionHash}`)
 }
 
-main();
+main()

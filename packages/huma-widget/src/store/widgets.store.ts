@@ -6,6 +6,7 @@ export enum WIDGET_TYPE {
 }
 
 export enum WIDGET_STEP {
+  SignIn = 'SignIn',
   Evaluation = 'Evaluation',
   ChooseAmount = 'ChooseAmount',
   Permit = 'Permit',

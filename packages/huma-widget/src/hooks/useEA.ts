@@ -4,6 +4,7 @@ import {
   EARejectMessage,
   EARejectReason,
   EAService,
+  useAuthErrorHandling,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
@@ -16,6 +17,11 @@ import { useAppDispatch } from './useRedux'
 const useEA = () => {
   const dispatch = useAppDispatch()
   const { chainId } = useWeb3React()
+  const {
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+    setError: setAuthError,
+  } = useAuthErrorHandling(envUtil.checkIsDev())
 
   const checkingEA = useCallback(
     async (payload: EAPayload, nextStep: WIDGET_STEP) => {
@@ -36,18 +42,27 @@ const useEA = () => {
             }),
           )
         } else {
-          dispatch(
-            setError({
-              errorMessage: e.message,
-            }),
-          )
+          try {
+            setAuthError(e)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (e: any) {
+            dispatch(
+              setError({
+                errorMessage: e.message,
+              }),
+            )
+          }
         }
       }
     },
-    [chainId, dispatch],
+    [chainId, dispatch, setAuthError],
   )
 
-  return { checkingEA }
+  return {
+    checkingEA,
+    isWalletOwnershipVerificationRequired,
+    isWalletOwnershipVerified,
+  }
 }
 
 export default useEA
