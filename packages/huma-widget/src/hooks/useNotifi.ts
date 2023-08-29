@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
+  checkIsDev,
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
 } from '@huma-finance/shared'
 import { newFrontendClient } from '@notifi-network/notifi-frontend-client'
-import { envUtil } from '../utils/env'
 
 export const useIsFirstTimeNotifiUser = (
   account: string | undefined,
@@ -18,7 +18,7 @@ export const useIsFirstTimeNotifiUser = (
         const client = newFrontendClient({
           account: { publicKey: account },
           tenantId: 'humadapp',
-          env: envUtil.checkIsDev() ? 'Development' : 'Production',
+          env: checkIsDev() ? 'Development' : 'Production',
           walletBlockchain: getBlockchainConfigFromChain(chainId),
         })
 
@@ -59,7 +59,7 @@ export const useDoesChainSupportNotifi = (
     const checkNotifiChainSupported = async () => {
       if (account != null && chainId != null) {
         setNotifiChainSupported(
-          doesChainSupportNotifi(chainId, envUtil.checkIsDev(), account),
+          doesChainSupportNotifi(chainId, checkIsDev(), account),
         )
       }
     }

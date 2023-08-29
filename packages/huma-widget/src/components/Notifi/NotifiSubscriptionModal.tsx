@@ -11,6 +11,7 @@ import {
   BroadcastEventTypeItem,
 } from '@notifi-network/notifi-frontend-client'
 import {
+  checkIsDev,
   getBlockchainConfigFromChain,
   txAtom,
   getNotifiDappId,
@@ -28,7 +29,6 @@ import Email from '@mui/icons-material/Email'
 import { useResetAtom } from 'jotai/utils'
 
 import { WrapperModal } from '../WrapperModal'
-import { envUtil } from '../../utils/env'
 import { BottomButton } from '../BottomButton'
 import { LoadingModal } from '../LoadingModal'
 import { CheckIcon } from '../icons'
@@ -111,8 +111,8 @@ export function NotifiSubscriptionModal({
       if (account != null && chainId != null) {
         const client = newFrontendClient({
           account: { publicKey: account },
-          tenantId: getNotifiDappId(envUtil.checkIsDev()),
-          env: envUtil.checkIsDev() ? 'Development' : 'Production',
+          tenantId: getNotifiDappId(checkIsDev()),
+          env: checkIsDev() ? 'Development' : 'Production',
           walletBlockchain: getBlockchainConfigFromChain(chainId),
         })
 
