@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import {
   NotifiFrontendClient,
-  newFrontendClient,
   Uint8SignMessageFunction,
   SignMessageParams,
   CardConfigItemV1,
@@ -10,11 +9,7 @@ import {
   EventTypeItem,
   BroadcastEventTypeItem,
 } from '@notifi-network/notifi-frontend-client'
-import {
-  getBlockchainConfigFromChain,
-  txAtom,
-  getNotifiDappId,
-} from '@huma-finance/shared'
+import { getBlockchainConfigFromChain, txAtom } from '@huma-finance/shared'
 import { ethers } from 'ethers'
 import {
   Box,
@@ -34,6 +29,7 @@ import { LoadingModal } from '../LoadingModal'
 import { CheckIcon } from '../icons'
 import { resetState } from '../../store/widgets.reducers'
 import { useAppDispatch } from '../../hooks/useRedux'
+import { useNotifiClient } from '../../hooks/useNotifi'
 
 type Props = {
   handleSuccess: () => void
@@ -100,30 +96,15 @@ export function NotifiSubscriptionModal({
   const reset = useResetAtom(txAtom)
   const dispatch = useAppDispatch()
   const { account, chainId, provider } = useWeb3React()
-  const [notifiClient, setNotifiClient] = useState<NotifiFrontendClient>()
   const [showSuccessScreen, setShowSuccessScreen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
-
-  useEffect(() => {
-    const initializeClient = async () => {
-      if (account != null && chainId != null) {
-        const client = newFrontendClient({
-          account: { publicKey: account },
-          tenantId: getNotifiDappId(envUtil.checkIsDev()),
-          env: envUtil.checkIsDev() ? 'Development' : 'Production',
-          walletBlockchain: getBlockchainConfigFromChain(chainId),
-        })
-
-        await client.initialize()
-
-        setNotifiClient(client)
-      }
-    }
-
-    initializeClient()
-  }, [account, chainId])
+  const { notifiClient } = useNotifiClient(
+    account,
+    chainId,
+    envUtil.checkIsDev(),
+  )
 
   const signMessage: Uint8SignMessageFunction = async (
     message: Uint8Array,
