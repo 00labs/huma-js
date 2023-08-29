@@ -193,7 +193,7 @@ export function NotifiSubscriptionModal({
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
-      margin-top: 48px;
+      margin-top: ${theme.spacing(6)};
     `,
     inputField: css`
       width: 90%;
@@ -204,12 +204,12 @@ export function NotifiSubscriptionModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     check: css`
       width: 100%;
       ${theme.cssMixins.rowHCentered};
-      margin-top: 82px;
+      margin-top: ${theme.spacing(10)};
     `,
   }
 
@@ -235,7 +235,7 @@ export function NotifiSubscriptionModal({
 
   return (
     <WrapperModal title='Connect Your Email'>
-      <Typography variant='body2' margin='12px 0'>
+      <Typography variant='body2' margin={theme.spacing(1, 0)}>
         Connect your wallet to receive important emails about your account
       </Typography>
       <Box css={styles.inputWrapper}>

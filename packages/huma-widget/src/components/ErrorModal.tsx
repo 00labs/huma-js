@@ -40,12 +40,12 @@ export function ErrorModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     sorry: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: 100px;
-      margin-right: 30px;
+      margin-top: ${theme.spacing(12)};
+      margin-right: ${theme.spacing(4)};
       & > img {
         width: 170px;
       }
@@ -54,7 +54,7 @@ export function ErrorModal({
       box-sizing: border-box;
       width: 100%;
       display: inline-table;
-      padding: 16px 0;
+      padding: ${theme.spacing(2, 0)};
       background: linear-gradient(
           0deg,
           rgba(255, 255, 255, 0.9),
@@ -63,23 +63,23 @@ export function ErrorModal({
         #d32f2f;
       border-radius: 4px;
       position: relative;
-      margin-top: 72px;
+      margin-top: ${theme.spacing(9)};
       height: 79px;
     `,
     errorIcon: css`
       position: absolute;
       font-size: 20px;
       color: #d32f2f;
-      margin: 0 15px;
+      margin: ${theme.spacing(0, 2)};
     `,
     messageWrapper: css`
       color: #541313;
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
-      padding-left: 50px;
+      padding-left: ${theme.spacing(6)};
     `,
     errorMessage: css`
-      margin-top: 4px;
+      margin-top: ${theme.spacing(0.5)};
       font-size: 14px;
       font-family: 'Uni-Neue-Regular';
       color: #541313;
@@ -90,7 +90,7 @@ export function ErrorModal({
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-right: 20px;
+      margin-right: ${theme.spacing(2)};
     `,
     okButton: css`
       & .MuiButtonBase-root {
