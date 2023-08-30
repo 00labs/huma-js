@@ -29,15 +29,15 @@ export function EvaluationEA({
   const styles = {
     iconWrapper: css`
       ${theme.cssMixins.rowCentered};
-      margin-top: 65px;
+      margin-top: ${theme.spacing(8)};
       & > img {
         width: 144px;
       }
     `,
     description: css`
       ${theme.cssMixins.rowCentered};
-      margin-top: 82px;
-      padding: 0 20px;
+      margin-top: ${theme.spacing(10)};
+      padding: ${theme.spacing(0, 2)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;

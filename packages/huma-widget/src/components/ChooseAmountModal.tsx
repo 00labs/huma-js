@@ -67,7 +67,7 @@ export function ChooseAmountModal({
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
-      margin-top: 16px;
+      margin-top: ${theme.spacing(2)};
     `,
     chosenAmountWrapper: css`
       ${theme.cssMixins.rowCentered};
@@ -76,8 +76,8 @@ export function ChooseAmountModal({
       -webkit-text-fill-color: transparent;
       font-weight: 700;
       font-size: 32px;
-      margin-bottom: 10px;
-      margin-top: 30px;
+      margin-bottom: ${theme.spacing(1)};
+      margin-top: ${theme.spacing(4)};
     `,
     chosenAmount: css`
       font-family: 'Inter-Bold';
@@ -85,12 +85,12 @@ export function ChooseAmountModal({
     `,
     chosenAmountSymbol: css`
       font-size: 75%;
-      margin-left: 5px;
+      margin-left: ${theme.spacing(0.5)};
       letter-spacing: 0.1px;
     `,
     inputAmountWrapper: css`
-      margin-bottom: 10px;
-      margin-top: 30px;
+      margin-bottom: ${theme.spacing(1)};
+      margin-top: ${theme.spacing(4)};
     `,
     inputAmount: css`
       ${theme.cssMixins.rowSpaceBetweened};
@@ -103,11 +103,11 @@ export function ChooseAmountModal({
     `,
     amountAvailable: css`
       ${theme.cssMixins.rowVCentered};
-      margin-top: 5px;
-      margin-bottom: 100px;
+      margin-top: ${theme.spacing(0.5)};
+      margin-bottom: ${theme.spacing(12)};
       font-size: 16px;
       & > svg {
-        margin-right: 5px;
+        margin-right: ${theme.spacing(0.5)};
       }
     `,
     tokenIcon: {
@@ -123,7 +123,7 @@ export function ChooseAmountModal({
         font-size: 24px;
       }
       & > svg:first-of-type {
-        margin-bottom: -10px;
+        margin-bottom: ${theme.spacing(-1)};
       }
     `,
     input: css`
@@ -131,7 +131,7 @@ export function ChooseAmountModal({
       -webkit-text-fill-color: ${theme.palette.primary.main};
     `,
     slider: css`
-      margin-bottom: 54px;
+      margin-bottom: ${theme.spacing(7)};
       &.MuiSlider-root {
         height: 8px !important;
         color: #e9e9e9;
@@ -158,7 +158,7 @@ export function ChooseAmountModal({
       color: #423b46;
     `,
     divider: css`
-      margin: 16px 0;
+      margin: ${theme.spacing(2, 0)};
       background: #49505b;
       border-color: #e9e3f1;
     `,
@@ -166,18 +166,18 @@ export function ChooseAmountModal({
       font-family: 'Uni-Neue-Bold';
       width: 100%;
       position: absolute;
-      bottom: ${isXsSize ? 20 : 0}px;
+      bottom: ${theme.spacing(isXsSize ? 2 : 0)};
     `,
     terms: css`
       ${theme.cssMixins.rowHCentered};
       font-weight: 400;
       font-size: 12px;
       color: #a8a1b2;
-      margin-top: 8px;
+      margin-top: ${theme.spacing(1)};
       letter-spacing: 0px;
       width: 100%;
       position: absolute;
-      bottom: -22px;
+      bottom: ${theme.spacing(-3)};
     `,
   }
 

@@ -62,16 +62,16 @@ export function Evaluation({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     content: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: 30px;
+      margin-top: ${theme.spacing(4)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       line-height: 24px;
       color: #49505b;
-      margin-bottom: 65px;
+      margin-bottom: ${theme.spacing(8)};
     `,
     checkWrapper: css`
       ${theme.cssMixins.rowVCentered}
@@ -96,9 +96,9 @@ export function Evaluation({
     congratsWrapper: css`
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
-      padding: 0 16px;
+      padding: ${theme.spacing(0, 2)};
       ${theme.cssMixins.rowVCentered}
-      margin-top: 60px;
+      margin-top: ${theme.spacing(8)};
       height: 52px;
       background: linear-gradient(
           0deg,

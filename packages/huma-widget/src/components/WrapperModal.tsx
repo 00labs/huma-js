@@ -23,11 +23,11 @@ export function WrapperModal({
       ${theme.cssMixins.rowHCentered};
       font-family: 'Uni-Neue-Bold';
       font-size: 20px;
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     content: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: 30px;
+      margin-top: ${theme.spacing(4)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       line-height: 24px;

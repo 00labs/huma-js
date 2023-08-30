@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import {
   CreditEvent,
@@ -17,6 +17,7 @@ import { SuperfluidFactoredList } from './SuperfluidFactoredList'
 import { StreamItem, SuperfluidUpcomingList } from './SuperfluidUpcomingList'
 
 export function SuperfluidFactoring(): React.ReactElement {
+  const theme = useTheme()
   const poolName = POOL_NAME.Superfluid
   const { chainId } = useWeb3React()
   const {
@@ -37,7 +38,7 @@ export function SuperfluidFactoring(): React.ReactElement {
   return (
     <Box css={styles.wrapper}>
       <Box css={styles.title}>Stream Factoring</Box>
-      <Box css={styles.description} marginBottom='47px'>
+      <Box css={styles.description} marginBottom={theme.spacing(6)}>
         {PoolMap.Stream[poolName]?.borrowDesc}
       </Box>
       {poolInfo && (
