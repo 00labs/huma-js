@@ -51,6 +51,17 @@ export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
         nodeUrl: 'https://node1.bundlr.network',
         currency: 'matic',
       }
+    case 44787: // Alfajores
+      return {
+        nodeUrl: 'https://devnet.bundlr.network',
+        currency: '', // Uploads with Celo is not currently supported by Bundlr
+        // TODO: Allow for any currency combination with network
+      }
+    case 42220: // Celo
+      return {
+        nodeUrl: 'https://node1.bundlr.network',
+        currency: '', // Uploads with Celo is not currently supported by Bundlr
+      }
     default:
       return {
         nodeUrl: '',
