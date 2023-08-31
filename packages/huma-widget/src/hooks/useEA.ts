@@ -1,4 +1,5 @@
 import {
+  checkIsDev,
   EAPayload,
   EARejectionError,
   EARejectMessage,
@@ -11,7 +12,6 @@ import { useCallback } from 'react'
 
 import { setApproval, setError } from '../store/widgets.reducers'
 import { WIDGET_STEP } from '../store/widgets.store'
-import { envUtil } from '../utils/env'
 import { useAppDispatch } from './useRedux'
 
 const useEA = () => {
@@ -21,16 +21,12 @@ const useEA = () => {
     isWalletOwnershipVerificationRequired,
     isWalletOwnershipVerified,
     setError: setAuthError,
-  } = useAuthErrorHandling(envUtil.checkIsDev())
+  } = useAuthErrorHandling(checkIsDev())
 
   const checkingEA = useCallback(
     async (payload: EAPayload, nextStep: WIDGET_STEP) => {
       try {
-        const result = await EAService.approve(
-          payload,
-          chainId!,
-          envUtil.checkIsDev(),
-        )
+        const result = await EAService.approve(payload, chainId!, checkIsDev())
         dispatch(setApproval({ ...result, nextStep }))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {

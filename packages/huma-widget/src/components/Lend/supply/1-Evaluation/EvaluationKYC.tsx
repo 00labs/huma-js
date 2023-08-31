@@ -1,5 +1,6 @@
 import {
   CHAINS,
+  checkIsDev,
   configUtil,
   DocSignatureStatus,
   IdentityService,
@@ -15,7 +16,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAppDispatch } from '../../../../hooks/useRedux'
 import { setError } from '../../../../store/widgets.reducers'
-import { envUtil } from '../../../../utils/env'
 import { BottomButton } from '../../../BottomButton'
 import { HumaSnackBar } from '../../../HumaSnackBar'
 import { ApproveLenderImg } from '../../../images'
@@ -84,7 +84,7 @@ export function EvaluationKYC({
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
-  const isDev = envUtil.checkIsDev()
+  const isDev = checkIsDev()
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
   const { isWalletOwnershipVerified, setError: setAuthError } =
