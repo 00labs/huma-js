@@ -49,7 +49,7 @@ export function HumaTable<T>({
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 20px;
+      margin-top: ${theme.spacing(2)};
       font-family: 'Uni-Neue-Regular';
       font-size: 14px;
     `,
@@ -132,7 +132,7 @@ export function HumaTable<T>({
                           sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            marginLeft: index ? '12px' : '0',
+                            marginLeft: theme.spacing(index ? 1 : 0),
                           }}
                         >
                           {row[column.dataIndex]}
@@ -144,7 +144,7 @@ export function HumaTable<T>({
                           sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            marginLeft: index ? '12px' : '0',
+                            marginLeft: theme.spacing(index ? 1 : 0),
                             lineHeight: 0,
                             height: 0,
                           }}
@@ -187,7 +187,7 @@ export function HumaTable<T>({
             MenuProps: {
               sx: {
                 '.MuiTablePagination-menuItem': {
-                  padding: '4px 0',
+                  padding: theme.spacing(1, 0),
                   display: 'flex',
                   justifyContent: 'center',
                   fontSize: '14px',

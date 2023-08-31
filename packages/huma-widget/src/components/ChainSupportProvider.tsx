@@ -1,4 +1,5 @@
 import { supportedChainId } from '@huma-finance/shared'
+import { useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
 
@@ -9,6 +10,7 @@ import { HumaModal, HumaModalHeader } from './humaModal'
 export function ChainSupportProvider({
   children,
 }: WCProps): React.ReactElement | null {
+  const theme = useTheme()
   const { chainId } = useWeb3React()
   const chainSupported = !!supportedChainId(chainId)
   const [chainNotSupportedOpen, setChainNotSupportedOpen] = useState(false)
@@ -35,7 +37,7 @@ export function ChainSupportProvider({
       overflowY='auto'
       onClose={handleClose}
       width='480px'
-      padding='30px 40px'
+      padding={theme.spacing(4, 5)}
       disableBackdropClick
     >
       <HumaModalHeader onClose={handleClose} height={0} />

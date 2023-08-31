@@ -61,17 +61,17 @@ export function ApproveAllowanceModal({
   const styles = {
     iconWrapper: css`
       ${theme.cssMixins.rowCentered};
-      margin-top: 50px;
+      margin-top: ${theme.spacing(6)};
       & > img {
         width: 220px;
       }
     `,
     description: css`
-      margin-top: 34px;
+      margin-top: ${theme.spacing(4)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
-      padding: 0 12px;
+      padding: ${theme.spacing(0, 1)};
     `,
   }
 
