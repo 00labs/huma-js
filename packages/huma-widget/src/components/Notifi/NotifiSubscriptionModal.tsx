@@ -13,7 +13,6 @@ import {
   checkIsDev,
   getBlockchainConfigFromChain,
   txAtom,
-  getNotifiDappId,
 } from '@huma-finance/shared'
 import { ethers } from 'ethers'
 import {
@@ -104,11 +103,7 @@ export function NotifiSubscriptionModal({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
-  const { notifiClient } = useNotifiClient(
-    account,
-    chainId,
-    checkIsDev(),
-  )
+  const { notifiClient } = useNotifiClient(account, chainId, checkIsDev())
 
   const signMessage: Uint8SignMessageFunction = async (
     message: Uint8Array,
