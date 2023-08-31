@@ -29,20 +29,20 @@ export function TxDoneModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     content: css`
       ${theme.cssMixins.colVCentered};
       font-family: 'Uni-Neue-Regular';
       font-size: 18px;
       color: #423b46;
-      margin-top: 64px;
+      margin-top: ${theme.spacing(8)};
       text-align: center;
     `,
     check: css`
       width: 100%;
       ${theme.cssMixins.rowHCentered};
-      margin-top: 82px;
+      margin-top: ${theme.spacing(10)};
     `,
     doneButton: css`
       width: 100%;
@@ -67,7 +67,7 @@ export function TxDoneModal({
       </Box>
       <Box css={styles.content}>
         {content.map((item) => (
-          <Box sx={{ marginTop: '10px' }} key={item}>
+          <Box sx={{ marginTop: theme.spacing(1) }} key={item}>
             {item}
           </Box>
         ))}

@@ -9,7 +9,12 @@ import {
   EventTypeItem,
   BroadcastEventTypeItem,
 } from '@notifi-network/notifi-frontend-client'
-import { getBlockchainConfigFromChain, txAtom } from '@huma-finance/shared'
+import {
+  checkIsDev,
+  getBlockchainConfigFromChain,
+  txAtom,
+  getNotifiDappId,
+} from '@huma-finance/shared'
 import { ethers } from 'ethers'
 import {
   Box,
@@ -23,7 +28,6 @@ import Email from '@mui/icons-material/Email'
 import { useResetAtom } from 'jotai/utils'
 
 import { WrapperModal } from '../WrapperModal'
-import { envUtil } from '../../utils/env'
 import { BottomButton } from '../BottomButton'
 import { LoadingModal } from '../LoadingModal'
 import { CheckIcon } from '../icons'
@@ -103,7 +107,7 @@ export function NotifiSubscriptionModal({
   const { notifiClient } = useNotifiClient(
     account,
     chainId,
-    envUtil.checkIsDev(),
+    checkIsDev(),
   )
 
   const signMessage: Uint8SignMessageFunction = async (
@@ -174,7 +178,7 @@ export function NotifiSubscriptionModal({
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
-      margin-top: 48px;
+      margin-top: ${theme.spacing(6)};
     `,
     inputField: css`
       width: 90%;
@@ -185,12 +189,12 @@ export function NotifiSubscriptionModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     check: css`
       width: 100%;
       ${theme.cssMixins.rowHCentered};
-      margin-top: 82px;
+      margin-top: ${theme.spacing(10)};
     `,
   }
 
@@ -216,7 +220,7 @@ export function NotifiSubscriptionModal({
 
   return (
     <WrapperModal title='Connect Your Email'>
-      <Typography variant='body2' margin='12px 0'>
+      <Typography variant='body2' margin={theme.spacing(1, 0)}>
         Connect your wallet to receive important emails about your account
       </Typography>
       <Box css={styles.inputWrapper}>

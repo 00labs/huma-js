@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import { Alert, Box, Snackbar } from '@mui/material'
+import { Alert, Box, Snackbar, useTheme } from '@mui/material'
 
 type Props = {
   open: boolean
@@ -18,18 +18,20 @@ export function HumaSnackBar({
   severity,
   onClose,
 }: Props) {
+  const theme = useTheme()
+
   const styles = {
     snackbar: css`
-      margin-top: 80px;
+      margin-top: ${theme.spacing(10)};
     `,
     alert: css`
       max-width: 400px;
-      padding: 20px 35px 20px 20px;
+      padding: ${theme.spacing(2, 4, 2, 2)};
       border-radius: 16px;
       overflow: hidden;
     `,
     title: css`
-      margin-bottom: 10px;
+      margin-bottom: ${theme.spacing(1)};
       font-size: 16px;
       font-family: 'Uni-Neue-Bold';
     `,

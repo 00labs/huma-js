@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
+  checkIsDev,
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
   getNotifiDappId,
@@ -8,7 +9,6 @@ import {
   NotifiFrontendClient,
   newFrontendClient,
 } from '@notifi-network/notifi-frontend-client'
-import { envUtil } from '../utils/env'
 
 export const useNotifiClient = (
   account: string | undefined,
@@ -90,7 +90,7 @@ export const useDoesChainSupportNotifi = (
     const checkNotifiChainSupported = async () => {
       if (account != null && chainId != null) {
         setNotifiChainSupported(
-          doesChainSupportNotifi(chainId, envUtil.checkIsDev(), account),
+          doesChainSupportNotifi(chainId, checkIsDev(), account),
         )
       }
     }
