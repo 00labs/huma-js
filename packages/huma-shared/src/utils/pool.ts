@@ -409,6 +409,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           disableBorrow: true,
           detailsPage: true,
+          hidden: true,
         },
       },
     },
