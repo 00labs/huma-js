@@ -48,7 +48,7 @@ export type PoolInfoType = {
     address: string
     symbol: string
     decimals: number
-    icon: 'USDC'
+    icon: string
   }
   assetAddress?: string
   poolName: POOL_NAME
@@ -121,12 +121,12 @@ export const PoolMap: PoolMapType = {
       estAPY: '13%',
     },
     [POOL_NAME.ImpactMarket]: {
-      name: 'impactMarket',
+      name: "impactMarket's Microcredit Pool",
       borrowDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'impactMarkets is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
       lendDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      estAPY: '??%',
+        'impactMarkets is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+      estAPY: '20%',
     },
   },
   [POOL_TYPE.Invoice]: {
@@ -164,6 +164,11 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
     receivablesSubgraph:
       'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-mumbai',
+  },
+  [ChainEnum.Celo]: {
+    subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-celo',
+    receivablesSubgraph:
+      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-celo',
   },
   [ChainEnum.Alfajores]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
@@ -377,6 +382,33 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           borrower: '0xf069014c47387FB0265E66FE637118b11f59958d',
           disableBorrow: true,
+        },
+      },
+    },
+  },
+  [ChainEnum.Celo]: {
+    [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ImpactMarket]: {
+        basePoolConfig: '0x822ed8a0c1083154ceab6f012f978d12375b8738',
+        pool: '0x0aa111db73274c7b1b155dbb9522e927b7747ade',
+        poolFeeManager: '0x7Ec6d7219D61d1B7FFD35938C9a84F4d7D33d966',
+        poolUnderlyingToken: {
+          address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          symbol: 'cUSD',
+          decimals: 18,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.ImpactMarket,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x88cBF77E0FD6BD18d8225E51F45E35105C0C794e',
+          abi: HDT_ABI,
+        },
+        extra: {
+          disableBorrow: true,
+          detailsPage: true,
         },
       },
     },
