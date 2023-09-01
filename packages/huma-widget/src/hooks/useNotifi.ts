@@ -44,11 +44,7 @@ export const useIsFirstTimeNotifiUser = (
   chainId: number | undefined,
 ) => {
   const [isFirstTimeNotifiUser, setIsFirstTimeNotifiUser] = useState(false)
-  const { notifiClient } = useNotifiClient(
-    account,
-    chainId,
-    envUtil.checkIsDev(),
-  )
+  const { notifiClient } = useNotifiClient(account, chainId, checkIsDev())
 
   useEffect(() => {
     const checkIsFirstTimeNotifiUser = async () => {
