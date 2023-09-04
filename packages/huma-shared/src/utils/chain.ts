@@ -87,8 +87,8 @@ export const CHAINS: {
   },
   [ChainEnum.Celo]: {
     id: ChainEnum.Celo,
-    urls: ['https://rpc.ankr.com/celo'],
-    name: 'Celo',
+    urls: ['https://forno.celo.org'],
+    name: 'Celo Mainnet',
     nativeCurrency: CELO,
     explorer: 'https://celoscan.io',
     wait: 1,
