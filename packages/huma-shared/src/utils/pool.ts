@@ -409,6 +409,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           disableBorrow: true,
           detailsPage: true,
+          borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
         },
       },
     },
