@@ -121,11 +121,11 @@ export const PoolMap: PoolMapType = {
       estAPY: '13%',
     },
     [POOL_NAME.ImpactMarket]: {
-      name: "impactMarket's Microcredit Pool",
+      name: 'impactMarket Microcredit Pool',
       borrowDesc:
-        'impactMarkets is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+        'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
       lendDesc:
-        'impactMarkets is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+        'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
       estAPY: '20%',
     },
   },
