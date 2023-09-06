@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import {
   NotifiFrontendClient,
-  newFrontendClient,
   Uint8SignMessageFunction,
   SignMessageParams,
   CardConfigItemV1,
@@ -11,9 +10,9 @@ import {
   BroadcastEventTypeItem,
 } from '@notifi-network/notifi-frontend-client'
 import {
+  checkIsDev,
   getBlockchainConfigFromChain,
   txAtom,
-  getNotifiDappId,
 } from '@huma-finance/shared'
 import { ethers } from 'ethers'
 import {
@@ -28,12 +27,12 @@ import Email from '@mui/icons-material/Email'
 import { useResetAtom } from 'jotai/utils'
 
 import { WrapperModal } from '../WrapperModal'
-import { envUtil } from '../../utils/env'
 import { BottomButton } from '../BottomButton'
 import { LoadingModal } from '../LoadingModal'
 import { CheckIcon } from '../icons'
 import { resetState } from '../../store/widgets.reducers'
 import { useAppDispatch } from '../../hooks/useRedux'
+import { useNotifiClient } from '../../hooks/useNotifi'
 
 type Props = {
   handleSuccess: () => void
@@ -100,30 +99,11 @@ export function NotifiSubscriptionModal({
   const reset = useResetAtom(txAtom)
   const dispatch = useAppDispatch()
   const { account, chainId, provider } = useWeb3React()
-  const [notifiClient, setNotifiClient] = useState<NotifiFrontendClient>()
   const [showSuccessScreen, setShowSuccessScreen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
-
-  useEffect(() => {
-    const initializeClient = async () => {
-      if (account != null && chainId != null) {
-        const client = newFrontendClient({
-          account: { publicKey: account },
-          tenantId: getNotifiDappId(envUtil.checkIsDev()),
-          env: envUtil.checkIsDev() ? 'Development' : 'Production',
-          walletBlockchain: getBlockchainConfigFromChain(chainId),
-        })
-
-        await client.initialize()
-
-        setNotifiClient(client)
-      }
-    }
-
-    initializeClient()
-  }, [account, chainId])
+  const { notifiClient } = useNotifiClient(account, chainId, checkIsDev())
 
   const signMessage: Uint8SignMessageFunction = async (
     message: Uint8Array,
@@ -193,7 +173,7 @@ export function NotifiSubscriptionModal({
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
-      margin-top: 48px;
+      margin-top: ${theme.spacing(6)};
     `,
     inputField: css`
       width: 90%;
@@ -204,12 +184,12 @@ export function NotifiSubscriptionModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     check: css`
       width: 100%;
       ${theme.cssMixins.rowHCentered};
-      margin-top: 82px;
+      margin-top: ${theme.spacing(10)};
     `,
   }
 
@@ -235,7 +215,7 @@ export function NotifiSubscriptionModal({
 
   return (
     <WrapperModal title='Connect Your Email'>
-      <Typography variant='body2' margin='12px 0'>
+      <Typography variant='body2' margin={theme.spacing(1, 0)}>
         Connect your wallet to receive important emails about your account
       </Typography>
       <Box css={styles.inputWrapper}>

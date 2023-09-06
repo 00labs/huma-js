@@ -6,7 +6,7 @@ import {
   PoolInfoType,
   toBigNumber,
 } from '@huma-finance/shared'
-import { Button } from '@mui/material'
+import { Button, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
 
@@ -100,6 +100,7 @@ export function SuperfluidUpcomingList({
   loading,
   handleGetPaid,
 }: Props): React.ReactElement {
+  const theme = useTheme()
   const { account, isActive } = useWeb3React()
   const [streams, setStreams] = useState<StreamItem[] | undefined>()
   const { data } = useQuery<{ streams: Stream[] }>(GET_RECEIVED_STREAMS, {
@@ -154,7 +155,7 @@ export function SuperfluidUpcomingList({
           type='link'
           size='small'
           variant='contained'
-          sx={{ marginTop: '20px' }}
+          sx={{ marginTop: theme.spacing(2) }}
           href='https://app.superfluid.finance/'
           target='_blank'
         >

@@ -23,7 +23,7 @@ export function HumaModal({
   overflow,
   overflowY,
   width = '480px',
-  padding = '30px',
+  padding = '32px',
   disableBackdropClick = false,
 }: HumaModalType): React.ReactElement {
   const { isXsSize } = useMQ()

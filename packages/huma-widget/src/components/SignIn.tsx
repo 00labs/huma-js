@@ -11,24 +11,24 @@ export function SignIn(): React.ReactElement {
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     icon: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: 100px;
-      margin-right: 30px;
+      margin-top: ${theme.spacing(12)};
+      margin-right: ${theme.spacing(4)};
       & > img {
         width: 170px;
       }
     `,
     content: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: 30px;
+      margin-top: ${theme.spacing(4)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       line-height: 24px;
       color: #49505b;
-      margin-bottom: 65px;
+      margin-bottom: ${theme.spacing(8)};
     `,
   }
 

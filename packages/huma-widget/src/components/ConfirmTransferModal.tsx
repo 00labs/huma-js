@@ -33,17 +33,17 @@ export function ConfirmTransferModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      margin-top: -5px;
+      margin-top: ${theme.spacing(-0.5)};
     `,
     description: css`
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #49505b;
-      margin-top: 30px;
+      margin-top: ${theme.spacing(4)};
       text-align: center;
     `,
     transferWrapper: css`
-      margin-top: 75px;
+      margin-top: ${theme.spacing(9)};
     `,
     transfer: css`
       font-family: 'Uni-Neue-Regular';
@@ -55,8 +55,8 @@ export function ConfirmTransferModal({
       font-weight: 500;
       font-size: 16px;
       color: #49505b;
-      padding: 24px 20px;
-      margin-bottom: 9px;
+      padding: ${theme.spacing(3, 2)};
+      margin-bottom: ${theme.spacing(1)};
       position: relative;
       box-sizing: border-box;
     `,
@@ -108,7 +108,7 @@ export function ConfirmTransferModal({
     `,
     usdcIcon: css`
       width: 22px;
-      margin-right: 20px;
+      margin-right: ${theme.spacing(2)};
       & > path:first-of-type {
         fill: #76707e;
       }
@@ -124,7 +124,9 @@ export function ConfirmTransferModal({
       <Box css={styles.transferWrapper}>
         <Box css={styles.transfer}>
           <Box css={styles.transferItem}>
-            <ReceiptIcon css={{ width: '24px', marginRight: '20px' }} />
+            <ReceiptIcon
+              css={{ width: '24px', marginRight: theme.spacing(2) }}
+            />
             {items[0].leftText}
           </Box>
           <ArrowForwardIosIcon

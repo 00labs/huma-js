@@ -6,7 +6,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/00labs/huma-dapp.git"
+    "url": "git+https://github.com/00labs/huma-js.git"
   },
   "types": "dist/index.d.ts",
   "main": "dist/cjs/index.cjs",
@@ -83,12 +83,10 @@
     "prebuild": "tsc -p tsconfig.build.json",
     "build": "rollup -c",
     "cosmos": "cosmos",
+    "prettier": "prettier --write \"src/**/*.{js,ts,tsx,graphql}\"",
     "lint": "eslint --max-warnings=0 \"src/**/*.{js,ts,tsx,graphql}\"",
-    "lint-staged": "lint-staged",
-    "e2e": "cypress run --config baseUrl=http://localhost:8000 --headed --browser chrome --e2e",
     "generateDocs": "jsdoc2md --files \"src/**/*.tsx\" --configure ./jsdoc2md.json > API.md",
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
-    "prettier": "prettier --write \"src/**/*.{js,ts,tsx,graphql}\""
+    "lint-staged": "lint-staged"
   },
   "husky": {
     "hooks": {
@@ -96,7 +94,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,ts,tsx,css,sass,less,graphql}": [
+    "src/**/*.{js,ts,tsx,css,graphql}": [
       "yarn generateDocs",
       "eslint --fix --max-warnings=0",
       "prettier --write",
