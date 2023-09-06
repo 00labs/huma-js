@@ -1,8 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { useWeb3React } from '@web3-react/core'
-import { useHistory } from 'react-router'
 
-import { useParamsSearch } from '../../src/hooks/useParamsSearch'
 import { usePoolInfo } from '../../src/hooks/usePool'
 import { POOL_NAME, POOL_TYPE } from '../../src/utils/pool'
 
