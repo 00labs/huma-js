@@ -15,6 +15,7 @@ export enum POOL_NAME {
   ArfCreditPool1 = 'ArfCreditPool1',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
+  Symplifi = 'Symplifi',
 }
 
 export enum POOL_TYPE {
@@ -126,6 +127,14 @@ export const PoolMap: PoolMapType = {
         'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
       lendDesc:
         'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+      estAPY: '20%',
+    },
+    [POOL_NAME.Symplifi]: {
+      name: 'Symplifi Pool',
+      borrowDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      lendDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       estAPY: '20%',
     },
   },
@@ -467,6 +476,25 @@ export const PoolContractMap: PoolContractMapType = {
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
           address: '0xd5DC108eDC7dFE5f2811Da5ffAed914C99aCBAe8',
+          abi: HDT_ABI,
+        },
+      },
+      [POOL_NAME.Symplifi]: {
+        basePoolConfig: '0x60de6e6727be2cfd0733d790528d7e4ce4049277',
+        pool: '0xCCa17BB13C94E19bAd67a59687D22A68aEe9d7e7',
+        poolFeeManager: '0x4CD872604DA256c752C52541B190E3E482Fd0819',
+        poolUnderlyingToken: {
+          address: '0xb961c37ABDDA55929327fa9d20eBDE6BB8B1348E',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.Symplifi,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x58174E6989AfB9e265b3bB1C981B18096C13D83D',
           abi: HDT_ABI,
         },
       },
