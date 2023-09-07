@@ -16,6 +16,7 @@ import { ReactComponent as AutoPaybackSvg } from './auto-payback.svg'
 import { ReactComponent as ApproveLenderSvg } from './approve-lender.svg'
 import { ReactComponent as DonutSvg } from './donut.svg'
 import { ReactComponent as UsdcSvg } from './usdc.svg'
+import { ReactComponent as CeloSvg } from './celo.svg'
 
 export function HumaIcon(props: SvgIconProps): React.ReactElement {
   return <HumaLogoSvg {...props} />
@@ -85,9 +86,17 @@ export function UsdcIcon(props: SvgIconProps): React.ReactElement {
   return <UsdcSvg {...props} />
 }
 
+export function CeloIcon(props: SvgIconProps): React.ReactElement {
+  return <CeloSvg {...props} />
+}
+
 export function getIcon(icon: string) {
-  if (icon === 'USDC') {
-    return UsdcIcon
-  }
-  return null
+  if (!icon) return null
+
+  return (
+    {
+      USDC: UsdcIcon,
+      Celo: CeloIcon,
+    }[icon] || null
+  )
 }

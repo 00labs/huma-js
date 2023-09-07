@@ -30,9 +30,9 @@ export function UpcomingList<T>({
 
   const getPadding = () => {
     if (isMdSize) {
-      return '0 8px 8px 8px'
+      return theme.spacing(0, 1, 1, 1)
     }
-    return '0 16px 16px 16px'
+    return theme.spacing(0, 2, 2, 2)
   }
 
   const styles = {
@@ -40,7 +40,7 @@ export function UpcomingList<T>({
       font-family: 'Uni-Neue-Black';
       color: ${theme.palette.text.primary};
       font-size: 24px;
-      margin-bottom: 16px;
+      margin-bottom: ${theme.spacing(2)};
     `,
     description: css`
       font-family: 'Uni-Neue-Regular';
@@ -48,7 +48,7 @@ export function UpcomingList<T>({
       font-size: 1rem;
     `,
     tableWrapper: css`
-      margin-top: 24px;
+      margin-top: ${theme.spacing(3)};
       padding: ${getPadding()};
       background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
       border: 1px solid #ffffff;
@@ -59,14 +59,14 @@ export function UpcomingList<T>({
       width: calc(100% - 30px);
       position: absolute;
       top: 0;
-      left: 15px;
+      left: ${theme.spacing(2)};
     `,
   }
 
   return (
     <Box>
       <Box css={styles.title}>{title}</Box>
-      <Box css={styles.description} marginBottom='47px'>
+      <Box css={styles.description} marginBottom={theme.spacing(6)}>
         {!isActive && <Box component='span'>{connectWalletDesc}</Box>}
         {isActive && !items?.length && <Box>{noItemDesc}</Box>}
         {isActive && !!items?.length && (

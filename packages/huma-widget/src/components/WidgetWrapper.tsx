@@ -3,6 +3,7 @@ import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect } from 'react'
 
+import { useTheme } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { resetState, setError } from '../store/widgets.reducers'
 import { selectWidgetState } from '../store/widgets.selectors'
@@ -27,6 +28,7 @@ export function WidgetWrapper({
   handleSuccess,
   children,
 }: WCProps<Props>): React.ReactElement | null {
+  const theme = useTheme()
   const dispatch = useAppDispatch()
   const { step } = useAppSelector(selectWidgetState)
   const [{ state, failReason, txReceipt }] = useAtom(sendTxAtom)
@@ -63,7 +65,7 @@ export function WidgetWrapper({
       overflowY='auto'
       onClose={handleCloseModal}
       width='480px'
-      padding='30px 40px'
+      padding={theme.spacing(4, 5)}
       disableBackdropClick
     >
       <HumaModalHeader onClose={handleCloseModal} height={0} />

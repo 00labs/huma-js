@@ -141,7 +141,7 @@ function getRWReceivableInfo(
     orderDirection: 'desc',
   },
 ): Promise<RealWorldReceivableInfoBase[]> {
-  const url = PoolSubgraphMap[chainId]?.receivablesSubgraph
+  const url = PoolSubgraphMap[chainId]?.subgraph
   if (!url) {
     return Promise.resolve([])
   }

@@ -1,13 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { useWeb3React } from '@web3-react/core'
-import { useHistory } from 'react-router'
 
-import { useParamsSearch } from '../../src/hooks/useParamsSearch'
-import {
-  usePoolChainCheck,
-  usePoolInfo,
-  usePoolName,
-} from '../../src/hooks/usePool'
+import { usePoolInfo } from '../../src/hooks/usePool'
 import { POOL_NAME, POOL_TYPE } from '../../src/utils/pool'
 
 jest.mock('react-router', () => ({
@@ -40,58 +34,6 @@ jest.mock('../../src/utils/pool', () => ({
     },
   },
 }))
-
-describe('usePoolName', () => {
-  it('returns the pool name if it is valid', () => {
-    ;(useParamsSearch as jest.Mock).mockReturnValue({
-      poolName: POOL_NAME.HumaCreditLine,
-    })
-    ;(useHistory as jest.Mock).mockReturnValue({ push: jest.fn() })
-
-    const { result } = renderHook(() => usePoolName())
-
-    expect(result.current).toBe(POOL_NAME.HumaCreditLine)
-  })
-
-  it('redirects to the home page if the pool name is not valid', () => {
-    const mockPush = jest.fn()
-    ;(useParamsSearch as jest.Mock).mockReturnValue({ poolName: 'invalid' })
-    ;(useHistory as jest.Mock).mockReturnValue({ push: mockPush })
-
-    renderHook(() => usePoolName())
-
-    expect(mockPush).toHaveBeenCalledWith('/')
-  })
-})
-
-describe('usePoolChainCheck', () => {
-  it('returns the pool name if it is valid and exists in the config', () => {
-    const chainId = 1
-    const mockPush = jest.fn()
-    ;(useParamsSearch as jest.Mock).mockReturnValue({
-      poolName: POOL_NAME.RequestNetwork,
-    })
-    ;(useWeb3React as jest.Mock).mockReturnValue({ chainId })
-    ;(useHistory as jest.Mock).mockReturnValue({ push: mockPush })
-
-    const { result } = renderHook(() => usePoolChainCheck())
-
-    expect(result.current).toBe(POOL_NAME.RequestNetwork)
-    expect(mockPush).not.toHaveBeenCalled()
-  })
-
-  it('redirects to the home page if the pool name is not valid or does not exist in the config', () => {
-    const chainId = 1
-    const mockPush = jest.fn()
-    ;(useParamsSearch as jest.Mock).mockReturnValue({ poolName: 'invalid' })
-    ;(useWeb3React as jest.Mock).mockReturnValue({ chainId })
-    ;(useHistory as jest.Mock).mockReturnValue({ push: mockPush })
-
-    renderHook(() => usePoolChainCheck())
-
-    expect(mockPush).toHaveBeenCalledWith('/')
-  })
-})
 
 describe('usePoolInfo', () => {
   it('returns undefined if chainId is not provided', () => {

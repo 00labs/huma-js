@@ -8,7 +8,7 @@ import {
   timeUtil,
   useMQ,
 } from '@huma-finance/shared'
-import { Box, css } from '@mui/material'
+import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
 
@@ -64,6 +64,7 @@ export function Activity({
   poolInfo,
   targetEvents,
 }: Props): React.ReactElement | null {
+  const theme = useTheme()
   const { account } = useWeb3React()
   const { decimals } = poolInfo.poolUnderlyingToken
   const [events, setEvents] = useState<ActivityDataType[] | undefined>()
@@ -80,9 +81,9 @@ export function Activity({
 
   const getPadding = () => {
     if (isSmSize) {
-      return '16px 24px'
+      return theme.spacing(2, 3)
     }
-    return '33px 48px'
+    return theme.spacing(4, 6)
   }
 
   useEffect(() => {
@@ -101,13 +102,13 @@ export function Activity({
 
   const styles = {
     wrapper: css`
-      margin-top: 71px;
+      margin-top: ${theme.spacing(9)};
     `,
     title: css`
       font-family: 'Uni-Neue-Black';
       font-size: 24px;
       color: #6b6572;
-      margin-bottom: 14px;
+      margin-bottom: ${theme.spacing(2)};
     `,
     tableWrapper: css`
       background: #ffffff;
