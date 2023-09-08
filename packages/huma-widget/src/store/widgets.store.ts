@@ -38,7 +38,7 @@ export type WidgetState = {
   type?: WIDGET_TYPE
   approval?: Approval
   borrowAmount?: number
-  borrowAmountBN?: string
+  borrowAmountBN?: JSON
   chargedFees?: number
   borrowAmountNet?: number
   remainder?: number

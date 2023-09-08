@@ -62,12 +62,17 @@ type WidgetProps = {
 }
 
 function Widget(props: WCProps<WidgetProps>) {
-  const { children } = props
+  const { children, provider } = props
+
+  let chainId
+  if (provider instanceof JsonRpcProvider) {
+    chainId = provider.network.chainId
+  }
 
   return (
     <ThemeProvider theme={themeHuma}>
       <ReduxProvider store={store}>
-        <Web3Provider {...(props as Web3Props)}>
+        <Web3Provider {...(props as Web3Props)} defaultChainId={chainId}>
           <AtomProvider>
             <ChainSupportProvider>{children}</ChainSupportProvider>
           </AtomProvider>

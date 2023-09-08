@@ -1,6 +1,7 @@
 import { PoolInfoType } from '@huma-finance/shared'
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { BigNumber } from 'ethers'
 
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
@@ -16,7 +17,9 @@ export function ApproveAllowance({
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { borrowAmountBN } = useAppSelector(selectWidgetState)
+  const { borrowAmountBN: borrowAmountBNJson } =
+    useAppSelector(selectWidgetState)
+  const borrowAmountBN = BigNumber.from(borrowAmountBNJson)
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Permit))

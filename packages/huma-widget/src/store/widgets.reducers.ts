@@ -52,7 +52,7 @@ export const widgetSlice = createSlice({
         payload,
       }: PayloadAction<{
         borrowAmount: number
-        borrowAmountBN: string
+        borrowAmountBN: JSON
         chargedFees: number
         nextStep: WIDGET_STEP
         remainder?: number
@@ -96,6 +96,7 @@ export const widgetSlice = createSlice({
         payload,
       }: PayloadAction<{ errorMessage: string; errorReason?: string }>,
     ) => {
+      console.trace()
       state.errorMessage = payload.errorMessage
       state.errorReason = payload.errorReason
       state.step = WIDGET_STEP.Error

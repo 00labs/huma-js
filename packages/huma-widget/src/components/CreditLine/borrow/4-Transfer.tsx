@@ -1,6 +1,7 @@
 import { PoolInfoType, txAtom } from '@huma-finance/shared'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
+import { BigNumber } from 'ethers'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
@@ -15,7 +16,9 @@ type Props = {
 export function Transfer({ poolInfo }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
   const reset = useResetAtom(txAtom)
-  const { borrowAmountBN } = useAppSelector(selectWidgetState)
+  const { borrowAmountBN: borrowAmountBNJson } =
+    useAppSelector(selectWidgetState)
+  const borrowAmountBN = BigNumber.from(borrowAmountBNJson)
 
   const handleSuccess = useCallback(() => {
     reset()
