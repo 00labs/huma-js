@@ -37,6 +37,10 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  RequestNetworkInvoiceFactoringBorrow,
+  RequestNetworkInvoiceFactoringBorrowProps,
+} from './components/RequestNetworkInvoiceFactoring'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -74,6 +78,31 @@ function Widget(props: WCProps<WidgetProps>) {
         </Web3Provider>
       </ReduxProvider>
     </ThemeProvider>
+  )
+}
+
+/**
+ * Invoice factoring pool borrow widget props
+ * @typedef {Object} RequestNetworkInvoiceFactoringBorrowWidgetProps
+ * @property {RequestNetworkInvoiceFactoringBorrowProps} RequestNetworkInvoiceFactoringBorrowProps - Invoice factoring pool borrow props.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type RequestNetworkInvoiceFactoringBorrowWidgetProps =
+  RequestNetworkInvoiceFactoringBorrowProps & WidgetProps
+
+/**
+ * Invoice factoring borrow widget
+ *
+ * @param {RequestNetworkInvoiceFactoringBorrowWidgetProps} props - The invoice factoring pool borrow widget props.
+ * @returns Invoice factoring pool borrow widget component
+ */
+export function RequestNetworkInvoiceFactoringBorrowWidget(
+  props: RequestNetworkInvoiceFactoringBorrowWidgetProps,
+) {
+  return (
+    <Widget {...props}>
+      <RequestNetworkInvoiceFactoringBorrow {...props} />
+    </Widget>
   )
 }
 

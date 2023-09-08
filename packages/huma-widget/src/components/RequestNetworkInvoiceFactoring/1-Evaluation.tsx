@@ -2,10 +2,10 @@ import { useWeb3React } from '@web3-react/core'
 import { PoolInfoType, toBigNumber } from '@huma-finance/shared'
 import React, { useEffect } from 'react'
 
-import useEA from '../../../hooks/useEA'
-import { LoadingModal } from '../../LoadingModal'
-import { WIDGET_STEP } from '../../../store/widgets.store'
-import { SignIn } from '../../SignIn'
+import useEA from '../../hooks/useEA'
+import { LoadingModal } from '../LoadingModal'
+import { WIDGET_STEP } from '../../store/widgets.store'
+import { SignIn } from '../SignIn'
 
 type Props = {
   poolInfo: PoolInfoType

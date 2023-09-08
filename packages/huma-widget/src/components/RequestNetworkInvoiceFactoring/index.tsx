@@ -27,14 +27,14 @@ import { Success } from './6-Success'
 
 /**
  * Invoice factoring pool borrow props
- * @typedef {Object} InvoiceFactoringBorrowProps
+ * @typedef {Object} RequestNetworkInvoiceFactoringBorrowProps
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {POOL_TYPE} poolType The type of the pool.
  * @property {string|BigNumber} tokenId The NFT token id representing invoice.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the invoice pool borrow action is successful.
  */
-export interface InvoiceFactoringBorrowProps {
+export interface RequestNetworkInvoiceFactoringBorrowProps {
   poolName: keyof typeof POOL_NAME
   poolType: keyof typeof POOL_TYPE
   requestId: RequestLogicTypes.RequestId
@@ -42,13 +42,13 @@ export interface InvoiceFactoringBorrowProps {
   handleSuccess?: (blockNumber?: number) => void
 }
 
-export function InvoiceFactoringBorrow({
+export function RequestNetworkInvoiceFactoringBorrow({
   poolName: poolNameStr,
   poolType: poolTypeStr,
   requestId,
   handleClose,
   handleSuccess,
-}: InvoiceFactoringBorrowProps): React.ReactElement | null {
+}: RequestNetworkInvoiceFactoringBorrowProps): React.ReactElement | null {
   const dispatch = useDispatch()
   const { account, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
