@@ -115,9 +115,17 @@ async function declareReceivablePaymentByReferenceId(
     signerAddress,
     referenceId,
   )
+  if (dataId == null) {
+    throw new Error(
+      'Could not find ARWeave Id for this reference Id. Please check your logs for more details.',
+    )
+  }
 
   // Fetch receivables with the same ARWeave Id
-  const tokenId = await getTokenIdByURI(signer, dataId)
+  const tokenId = await getTokenIdByURI(
+    signer,
+    ARWeaveService.getURIFromARWeaveId(dataId),
+  )
   if (tokenId == null) {
     throw new Error(
       'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
@@ -222,7 +230,7 @@ async function createReceivable(
     : undefined
 
   if (!poolInfo) {
-    throw new Error('RealWorldReceivable is not available on this network')
+    throw new Error('This pool is not available on this network')
   }
 
   const contract = getRealWorldReceivableContract(signer, chainId)
