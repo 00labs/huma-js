@@ -101,7 +101,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       )
     } catch (error) {
       expect((error as any).message).toBe(
-        'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
+        'Could not find ARWeave Id for this reference Id. Please check your logs for more details.',
       )
     }
   })
