@@ -8,7 +8,7 @@ import {
   ERC2612_ABI,
   SuperfluidPoolProcessor_ABI,
 } from '@huma-finance/shared'
-import { Contract, ethers } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -39,20 +39,22 @@ export function Permit({
 }: Props): React.ReactElement | null {
   const dispatch = useDispatch()
   const { address: tokenAddress } = poolInfo.poolUnderlyingToken
-  const { borrowAmountBN, stream } = useAppSelector(selectWidgetState)
+  const { borrowAmountBN: borrowAmountBNJson, stream } =
+    useAppSelector(selectWidgetState)
   const { getERC2612PermitMessage, getTradableStreamPermitMessage } =
     useERC2612Permit()
+  const borrowAmountBN = BigNumber.from(borrowAmountBNJson)
 
   const getApproveAllowanceCallData = async () => {
     const erc2612PermitResult = await getERC2612PermitMessage(
       tokenAddress,
       poolInfo.poolProcessor!,
-      borrowAmountBN!,
+      borrowAmountBN.toString()!,
     )
     const tokenContract = new Contract(tokenAddress, ERC2612_ABI) as Erc2612
     return tokenContract.interface.encodeFunctionData('permit', [
       poolInfo.poolProcessor!,
-      borrowAmountBN!,
+      borrowAmountBN.toString()!,
       erc2612PermitResult.nonce,
       erc2612PermitResult.deadline,
       erc2612PermitResult.v,
@@ -103,7 +105,7 @@ export function Permit({
 
     return poolProcessorContract.interface.encodeFunctionData(
       'mintAndDrawdown',
-      [borrower, borrowAmountBN!, poolInfo.assetAddress!, drawdownEncodedData],
+      [borrower, borrowAmountBN, poolInfo.assetAddress!, drawdownEncodedData],
     )
   }
 

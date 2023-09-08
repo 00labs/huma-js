@@ -393,6 +393,25 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
         },
       },
+      [POOL_NAME.HumaCreditLine]: {
+        basePoolConfig: '0x0bb39a0136643d60244070619e2e8ecbddf038ae',
+        pool: '0xB6958E6852E1dA4C2468d8c0286884C68519282a',
+        poolFeeManager: '0xd6fB372Da1c157Ca769dd1bD33D3e59D1B8376d0',
+        poolUnderlyingToken: {
+          address: '0x5F9E8b946472C9bA78491a4AbeA9d3BAccfB28E5',
+          symbol: 'USDC',
+          decimals: 18,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.HumaCreditLine,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x25BB64Ee818fFb2ee04c18D829a3754bDbfb4802',
+          abi: HDT_ABI,
+        },
+      },
     },
   },
   [ChainEnum.Celo]: {
@@ -418,7 +437,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           disableBorrow: true,
           detailsPage: true,
-          borrower: '0xA5bbE69085bAB0E75B71fc3aBdeaC1cBaAf93e4c',
+          borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
         },
       },
     },

@@ -65,7 +65,7 @@ export function ChooseAmount({
       return {
         borrowFlowrate: borrowFlowrate.toString(),
         borrowAmount: Number(newBorrowAmount),
-        borrowAmountBN: newBorrowAmountBN.toString(),
+        borrowAmountBN: newBorrowAmountBN,
       }
     },
     [approval, borrowPeriodInSeconds, currentFlowRate],
@@ -93,7 +93,7 @@ export function ChooseAmount({
     dispatch(
       setBorrowInfo({
         borrowAmount,
-        borrowAmountBN,
+        borrowAmountBN: borrowAmountBN.toJSON(),
         chargedFees,
         nextStep: WIDGET_STEP.ConfirmTransfer,
       }),
