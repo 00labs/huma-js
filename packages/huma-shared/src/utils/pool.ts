@@ -418,7 +418,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           disableBorrow: true,
           detailsPage: true,
-          borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
+          borrower: '0xA5bbE69085bAB0E75B71fc3aBdeaC1cBaAf93e4c',
         },
       },
     },
@@ -496,6 +496,9 @@ export const PoolContractMap: PoolContractMapType = {
         HDT: {
           address: '0x58174E6989AfB9e265b3bB1C981B18096C13D83D',
           abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0x71a4E7F3A2c67BDBa6Ec9F864A830c255A4bF123',
         },
       },
     },
