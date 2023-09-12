@@ -8,6 +8,7 @@ import {
 import { ThemeProvider } from '@mui/material'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { Provider as AtomProvider } from 'jotai'
+import { useEffect, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { ChainSupportProvider } from './components/ChainSupportProvider'
@@ -63,11 +64,17 @@ type WidgetProps = {
 
 function Widget(props: WCProps<WidgetProps>) {
   const { children, provider } = props
+  const [chainId, setChainId] = useState<number | undefined>(undefined)
 
-  let chainId
-  if (provider instanceof JsonRpcProvider) {
-    chainId = provider.network.chainId
-  }
+  useEffect(() => {
+    const getChainId = async () => {
+      if (provider instanceof JsonRpcProvider) {
+        const network = await provider.getNetwork()
+        setChainId(network?.chainId)
+      }
+    }
+    getChainId()
+  }, [provider])
 
   return (
     <ThemeProvider theme={themeHuma}>
