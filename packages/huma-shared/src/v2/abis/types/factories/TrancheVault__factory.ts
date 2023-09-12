@@ -19,17 +19,17 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "exceededMaxJuniorSeniorRatio",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "exceededPoolLiquidityCap",
+    name: "insufficientSharesForRequest",
     type: "error",
   },
   {
     inputs: [],
     name: "invalidTrancheIndex",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "maxSeniorJuniorRatioExceeded",
     type: "error",
   },
   {
@@ -44,7 +44,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "shareHigherThanRequested",
+    name: "poolLiquidityCapExceeded",
     type: "error",
   },
   {
@@ -129,6 +129,31 @@ const _abi = [
       },
     ],
     name: "Initialized",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "withdrawnAmount",
+        type: "uint256",
+      },
+    ],
+    name: "LenderFundDisbursed",
     type: "event",
   },
   {
@@ -339,31 +364,6 @@ const _abi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "withdrawnAmount",
-        type: "uint256",
-      },
-    ],
-    name: "UserDisbursed",
-    type: "event",
-  },
-  {
     inputs: [],
     name: "DEFAULT_ADMIN_ROLE",
     outputs: [
@@ -486,6 +486,38 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "shares",
+        type: "uint256",
+      },
+    ],
+    name: "cancelRedemptionRequest",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "cancellableRedemptionShares",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "shares",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "assets",
         type: "uint256",
       },
@@ -595,19 +627,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "epochManager",
-    outputs: [
-      {
-        internalType: "contract IEpochManager",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -615,7 +634,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "epochMap",
+    name: "epochInfoByEpochId",
     outputs: [
       {
         internalType: "uint64",
@@ -624,12 +643,12 @@ const _abi = [
       },
       {
         internalType: "uint96",
-        name: "totalShareRequested",
+        name: "totalSharesRequested",
         type: "uint96",
       },
       {
         internalType: "uint96",
-        name: "totalShareProcessed",
+        name: "totalSharesProcessed",
         type: "uint96",
       },
       {
@@ -643,7 +662,52 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getRedemptionEpochLength",
+    name: "epochManager",
+    outputs: [
+      {
+        internalType: "contract IEpochManager",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "firstUnprocessedEpochIndex",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getNumEpochsWithRedemption",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "getNumRedemptionRequests",
     outputs: [
       {
         internalType: "uint256",
@@ -668,25 +732,6 @@ const _abi = [
         internalType: "bytes32",
         name: "",
         type: "bytes32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "getUserRedemptionRequestLength",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -862,12 +907,12 @@ const _abi = [
           },
           {
             internalType: "uint96",
-            name: "totalShareRequested",
+            name: "totalSharesRequested",
             type: "uint96",
           },
           {
             internalType: "uint96",
-            name: "totalShareProcessed",
+            name: "totalSharesProcessed",
             type: "uint96",
           },
           {
@@ -900,16 +945,55 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "account",
+        name: "",
         type: "address",
       },
     ],
-    name: "removableRedemptionShares",
+    name: "redemptionDisbursementInfoByLender",
     outputs: [
       {
+        internalType: "uint64",
+        name: "requestsIndex",
+        type: "uint64",
+      },
+      {
+        internalType: "uint96",
+        name: "actualSharesProcessed",
+        type: "uint96",
+      },
+      {
+        internalType: "uint96",
+        name: "actualAmountProcessed",
+        type: "uint96",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
         internalType: "uint256",
-        name: "shares",
+        name: "",
         type: "uint256",
+      },
+    ],
+    name: "redemptionRequestsByLender",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "epochId",
+        type: "uint64",
+      },
+      {
+        internalType: "uint96",
+        name: "numSharesRequested",
+        type: "uint96",
       },
     ],
     stateMutability: "view",
@@ -924,19 +1008,6 @@ const _abi = [
       },
     ],
     name: "removeApprovedLender",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "shares",
-        type: "uint256",
-      },
-    ],
-    name: "removeRedemptionRequest",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1140,12 +1211,12 @@ const _abi = [
           },
           {
             internalType: "uint96",
-            name: "totalShareRequested",
+            name: "totalSharesRequested",
             type: "uint96",
           },
           {
             internalType: "uint96",
-            name: "totalShareProcessed",
+            name: "totalSharesProcessed",
             type: "uint96",
           },
           {
@@ -1155,21 +1226,8 @@ const _abi = [
           },
         ],
         internalType: "struct EpochInfo[]",
-        name: "result",
+        name: "infos",
         type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "unprocessedIndexOfEpochIds",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -1180,64 +1238,6 @@ const _abi = [
     name: "updatePoolConfigData",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userDisburseInfos",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "requestsIndex",
-        type: "uint64",
-      },
-      {
-        internalType: "uint96",
-        name: "partialShareProcessed",
-        type: "uint96",
-      },
-      {
-        internalType: "uint96",
-        name: "partialAmountProcessed",
-        type: "uint96",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "userRedemptionRequests",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "epochId",
-        type: "uint64",
-      },
-      {
-        internalType: "uint96",
-        name: "shareRequested",
-        type: "uint96",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {

@@ -428,7 +428,7 @@ const _abi = [
         type: "uint96[2]",
       },
     ],
-    name: "updateTranchesAssets",
+    name: "updateTrancheAssets",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

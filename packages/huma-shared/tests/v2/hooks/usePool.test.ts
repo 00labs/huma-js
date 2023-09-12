@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { renderHook, waitFor, act } from '@testing-library/react'
-
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
+
+import { useContract, useERC20Contract } from '../../../src/hooks'
 import {
-  useContractValue,
+  useContractValueV2,
+  useLenderApprovedV2,
   useLenderPositionV2,
   usePoolInfoV2,
-  usePoolTotalAssetsV2,
+  usePoolVaultTotalAssetsV2,
+  useTrancheVaultAllowanceV2,
+  useTrancheVaultUnderlyingTokenBalanceV2,
 } from '../../../src/v2/hooks/usePool'
-import { useContract } from '../../../src/hooks'
-
-jest.mock('@web3-react/core', () => ({
-  useWeb3React: jest.fn(),
-}))
 
 jest.mock('../../../src/utils/web3', () => ({
   getContract: jest.fn(),
@@ -26,7 +25,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
         seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
         juniorTrancheVault: '0x1f10865eF0181D8a7e3d31EcDECA7c615954EfEE',
         estAPY: '10-20%',
-        underlyingToken: {
+        poolUnderlyingToken: {
           address: '0x6Dfb932F9fDd38E4B3D2f6AAB0581a05a267C13C',
           symbol: 'USDC',
           decimals: 18,
@@ -40,6 +39,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
 jest.mock('../../../src/hooks', () => ({
   ...jest.requireActual('../../../src/hooks'),
   useContract: jest.fn(),
+  useERC20Contract: jest.fn(),
 }))
 
 describe('usePoolInfoV2', () => {
@@ -73,9 +73,9 @@ describe('usePoolInfoV2', () => {
   })
 })
 
-describe('useContractValue', () => {
+describe('useContractValueV2', () => {
   it('returns default value if contract is not valid', async () => {
-    const { result } = renderHook(() => useContractValue(null, 'method'))
+    const { result } = renderHook(() => useContractValueV2(null, 'method'))
 
     await waitFor(() => {
       expect(result.current[0]).toBeUndefined()
@@ -91,7 +91,7 @@ describe('useContractValue', () => {
     }
 
     const { result } = renderHook(() =>
-      useContractValue(contract as any, 'method'),
+      useContractValueV2(contract as any, 'method'),
     )
 
     await waitFor(() => {
@@ -120,7 +120,7 @@ describe('useContractValue', () => {
     const params = 'account'
 
     const { result } = renderHook(() =>
-      useContractValue(contract as any, 'method', params),
+      useContractValueV2(contract as any, 'method', params),
     )
 
     await waitFor(() => {
@@ -130,7 +130,7 @@ describe('useContractValue', () => {
   })
 })
 
-describe('usePoolTotalAssetsV2', () => {
+describe('usePoolVaultTotalAssetsV2', () => {
   it('should return the total assets value and refresh function', async () => {
     const chainId = 5
     ;(useContract as jest.Mock).mockReturnValue({
@@ -138,7 +138,7 @@ describe('usePoolTotalAssetsV2', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolTotalAssetsV2('HumaCreditLineV2' as any, chainId),
+      usePoolVaultTotalAssetsV2('HumaCreditLineV2' as any, chainId),
     )
 
     await waitFor(() => {
@@ -150,8 +150,41 @@ describe('usePoolTotalAssetsV2', () => {
   })
 })
 
-describe('useLenderPositionV2', () => {
+describe('useLenderApprovedV2', () => {
   it('should return the senior/junior balances value and refresh function', async () => {
+    const chainId = 5
+    const account = '0x123'
+    ;(useContract as jest.Mock).mockReturnValue({
+      LENDER_ROLE: jest.fn().mockReturnValue('LENDER_ROLE'),
+      hasRole: jest
+        .fn()
+        .mockResolvedValueOnce(false)
+        .mockResolvedValueOnce(true),
+    })
+
+    const { result } = renderHook(() =>
+      useLenderApprovedV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        account,
+        chainId,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toBe(false)
+    })
+    act(() => {
+      result.current[1]()
+    })
+    await waitFor(() => {
+      expect(result.current[0]).toBe(true)
+    })
+  })
+})
+
+describe('useLenderPositionV2', () => {
+  it('should return the lender position value and refresh function', async () => {
     const chainId = 5
     const account = '0x123'
     ;(useContract as jest.Mock).mockReturnValue({
@@ -159,11 +192,71 @@ describe('useLenderPositionV2', () => {
     })
 
     const { result } = renderHook(() =>
-      useLenderPositionV2('HumaCreditLineV2' as any, account, chainId),
+      useLenderPositionV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        account,
+        chainId,
+      ),
     )
 
     await waitFor(() => {
-      expect(result.current.seniorBalance).toEqual(BigNumber.from(100))
+      expect(result.current[0]).toEqual(BigNumber.from(100))
+    })
+    await waitFor(() => {
+      expect(typeof result.current[1]).toBe('function')
+    })
+  })
+})
+
+describe('useTrancheVaultUnderlyingTokenBalanceV2', () => {
+  it('should return the vault allowance value and refresh function', async () => {
+    const chainId = 5
+    const account = '0x123'
+    ;(useERC20Contract as jest.Mock).mockReturnValue({
+      allowance: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useTrancheVaultAllowanceV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        account,
+        chainId,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(100))
+    })
+    await waitFor(() => {
+      expect(typeof result.current[1]).toBe('function')
+    })
+  })
+})
+
+describe('useTrancheVaultAllowanceV2', () => {
+  it('should return the vault allowance value and refresh function', async () => {
+    const chainId = 5
+    const account = '0x123'
+    ;(useERC20Contract as jest.Mock).mockReturnValue({
+      balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useTrancheVaultUnderlyingTokenBalanceV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        account,
+        chainId,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(100))
+    })
+    await waitFor(() => {
+      expect(typeof result.current[1]).toBe('function')
     })
   })
 })

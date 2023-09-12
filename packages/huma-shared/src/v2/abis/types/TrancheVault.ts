@@ -29,8 +29,8 @@ import type {
 
 export type EpochInfoStruct = {
   epochId: PromiseOrValue<BigNumberish>;
-  totalShareRequested: PromiseOrValue<BigNumberish>;
-  totalShareProcessed: PromiseOrValue<BigNumberish>;
+  totalSharesRequested: PromiseOrValue<BigNumberish>;
+  totalSharesProcessed: PromiseOrValue<BigNumberish>;
   totalAmountProcessed: PromiseOrValue<BigNumberish>;
 };
 
@@ -41,8 +41,8 @@ export type EpochInfoStructOutput = [
   BigNumber
 ] & {
   epochId: BigNumber;
-  totalShareRequested: BigNumber;
-  totalShareProcessed: BigNumber;
+  totalSharesRequested: BigNumber;
+  totalSharesProcessed: BigNumber;
   totalAmountProcessed: BigNumber;
 };
 
@@ -55,17 +55,20 @@ export interface TrancheVaultInterface extends utils.Interface {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "cancelRedemptionRequest(uint256)": FunctionFragment;
+    "cancellableRedemptionShares(address)": FunctionFragment;
     "convertToShares(uint256)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "deposit(uint256,address)": FunctionFragment;
     "disburse(address)": FunctionFragment;
     "epochIds(uint256)": FunctionFragment;
+    "epochInfoByEpochId(uint256)": FunctionFragment;
     "epochManager()": FunctionFragment;
-    "epochMap(uint256)": FunctionFragment;
-    "getRedemptionEpochLength()": FunctionFragment;
+    "firstUnprocessedEpochIndex()": FunctionFragment;
+    "getNumEpochsWithRedemption()": FunctionFragment;
+    "getNumRedemptionRequests(address)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
-    "getUserRedemptionRequestLength(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
@@ -76,9 +79,9 @@ export interface TrancheVaultInterface extends utils.Interface {
     "poolConfig()": FunctionFragment;
     "poolVault()": FunctionFragment;
     "processEpochs((uint64,uint96,uint96,uint96)[],uint256,uint256)": FunctionFragment;
-    "removableRedemptionShares(address)": FunctionFragment;
+    "redemptionDisbursementInfoByLender(address)": FunctionFragment;
+    "redemptionRequestsByLender(address,uint256)": FunctionFragment;
     "removeApprovedLender(address)": FunctionFragment;
-    "removeRedemptionRequest(uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "setPoolConfig(address)": FunctionFragment;
@@ -91,10 +94,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "underlyingToken()": FunctionFragment;
     "unprocessedEpochInfos()": FunctionFragment;
-    "unprocessedIndexOfEpochIds()": FunctionFragment;
     "updatePoolConfigData()": FunctionFragment;
-    "userDisburseInfos(address)": FunctionFragment;
-    "userRedemptionRequests(address,uint256)": FunctionFragment;
     "withdrawableAssets(address)": FunctionFragment;
   };
 
@@ -107,17 +107,20 @@ export interface TrancheVaultInterface extends utils.Interface {
       | "allowance"
       | "approve"
       | "balanceOf"
+      | "cancelRedemptionRequest"
+      | "cancellableRedemptionShares"
       | "convertToShares"
       | "decimals"
       | "decreaseAllowance"
       | "deposit"
       | "disburse"
       | "epochIds"
+      | "epochInfoByEpochId"
       | "epochManager"
-      | "epochMap"
-      | "getRedemptionEpochLength"
+      | "firstUnprocessedEpochIndex"
+      | "getNumEpochsWithRedemption"
+      | "getNumRedemptionRequests"
       | "getRoleAdmin"
-      | "getUserRedemptionRequestLength"
       | "grantRole"
       | "hasRole"
       | "increaseAllowance"
@@ -128,9 +131,9 @@ export interface TrancheVaultInterface extends utils.Interface {
       | "poolConfig"
       | "poolVault"
       | "processEpochs"
-      | "removableRedemptionShares"
+      | "redemptionDisbursementInfoByLender"
+      | "redemptionRequestsByLender"
       | "removeApprovedLender"
-      | "removeRedemptionRequest"
       | "renounceRole"
       | "revokeRole"
       | "setPoolConfig"
@@ -143,10 +146,7 @@ export interface TrancheVaultInterface extends utils.Interface {
       | "transferFrom"
       | "underlyingToken"
       | "unprocessedEpochInfos"
-      | "unprocessedIndexOfEpochIds"
       | "updatePoolConfigData"
-      | "userDisburseInfos"
-      | "userRedemptionRequests"
       | "withdrawableAssets"
   ): FunctionFragment;
 
@@ -179,6 +179,14 @@ export interface TrancheVaultInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "cancelRedemptionRequest",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "cancellableRedemptionShares",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "convertToShares",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -200,24 +208,28 @@ export interface TrancheVaultInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "epochInfoByEpochId",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "epochManager",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "epochMap",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "firstUnprocessedEpochIndex",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getRedemptionEpochLength",
+    functionFragment: "getNumEpochsWithRedemption",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getNumRedemptionRequests",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getUserRedemptionRequestLength",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "grantRole",
@@ -260,16 +272,16 @@ export interface TrancheVaultInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "removableRedemptionShares",
+    functionFragment: "redemptionDisbursementInfoByLender",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redemptionRequestsByLender",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "removeApprovedLender",
     values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeRedemptionRequest",
-    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -321,20 +333,8 @@ export interface TrancheVaultInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "unprocessedIndexOfEpochIds",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "updatePoolConfigData",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userDisburseInfos",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userRedemptionRequests",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawableAssets",
@@ -361,6 +361,14 @@ export interface TrancheVaultInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "cancelRedemptionRequest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "cancellableRedemptionShares",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "convertToShares",
     data: BytesLike
   ): Result;
@@ -373,20 +381,27 @@ export interface TrancheVaultInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "disburse", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "epochIds", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "epochInfoByEpochId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "epochManager",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "epochMap", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getRedemptionEpochLength",
+    functionFragment: "firstUnprocessedEpochIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getNumEpochsWithRedemption",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getNumRedemptionRequests",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "getRoleAdmin",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getUserRedemptionRequestLength",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
@@ -412,15 +427,15 @@ export interface TrancheVaultInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "removableRedemptionShares",
+    functionFragment: "redemptionDisbursementInfoByLender",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "redemptionRequestsByLender",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "removeApprovedLender",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeRedemptionRequest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -463,19 +478,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unprocessedIndexOfEpochIds",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "updatePoolConfigData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "userDisburseInfos",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "userRedemptionRequests",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -487,6 +490,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "EpochsProcessed(uint256,uint256,uint256,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
+    "LenderFundDisbursed(address,address,uint256)": EventFragment;
     "LiquidityDeposited(address,uint256,uint256)": EventFragment;
     "PoolConfigCacheUpdated(address)": EventFragment;
     "PoolConfigChanged(address,address)": EventFragment;
@@ -496,12 +500,12 @@ export interface TrancheVaultInterface extends utils.Interface {
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
-    "UserDisbursed(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EpochsProcessed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LenderFundDisbursed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LiquidityDeposited"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolConfigCacheUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolConfigChanged"): EventFragment;
@@ -511,7 +515,6 @@ export interface TrancheVaultInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserDisbursed"): EventFragment;
 }
 
 export interface ApprovalEventObject {
@@ -545,6 +548,19 @@ export interface InitializedEventObject {
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+
+export interface LenderFundDisbursedEventObject {
+  account: string;
+  receiver: string;
+  withdrawnAmount: BigNumber;
+}
+export type LenderFundDisbursedEvent = TypedEvent<
+  [string, string, BigNumber],
+  LenderFundDisbursedEventObject
+>;
+
+export type LenderFundDisbursedEventFilter =
+  TypedEventFilter<LenderFundDisbursedEvent>;
 
 export interface LiquidityDepositedEventObject {
   account: string;
@@ -657,18 +673,6 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface UserDisbursedEventObject {
-  account: string;
-  receiver: string;
-  withdrawnAmount: BigNumber;
-}
-export type UserDisbursedEvent = TypedEvent<
-  [string, string, BigNumber],
-  UserDisbursedEventObject
->;
-
-export type UserDisbursedEventFilter = TypedEventFilter<UserDisbursedEvent>;
-
 export interface TrancheVault extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -727,6 +731,16 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    cancelRedemptionRequest(
+      shares: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    cancellableRedemptionShares(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { shares: BigNumber }>;
+
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -756,31 +770,33 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    epochManager(overrides?: CallOverrides): Promise<[string]>;
-
-    epochMap(
+    epochInfoByEpochId(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
         epochId: BigNumber;
-        totalShareRequested: BigNumber;
-        totalShareProcessed: BigNumber;
+        totalSharesRequested: BigNumber;
+        totalSharesProcessed: BigNumber;
         totalAmountProcessed: BigNumber;
       }
     >;
 
-    getRedemptionEpochLength(overrides?: CallOverrides): Promise<[BigNumber]>;
+    epochManager(overrides?: CallOverrides): Promise<[string]>;
+
+    firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getNumRedemptionRequests(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
-
-    getUserRedemptionRequestLength(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     grantRole(
       role: PromiseOrValue<BytesLike>,
@@ -828,18 +844,30 @@ export interface TrancheVault extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    removableRedemptionShares(
-      account: PromiseOrValue<string>,
+    redemptionDisbursementInfoByLender(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { shares: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        requestsIndex: BigNumber;
+        actualSharesProcessed: BigNumber;
+        actualAmountProcessed: BigNumber;
+      }
+    >;
+
+    redemptionRequestsByLender(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        epochId: BigNumber;
+        numSharesRequested: BigNumber;
+      }
+    >;
 
     removeApprovedLender(
       lender: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    removeRedemptionRequest(
-      shares: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -890,32 +918,11 @@ export interface TrancheVault extends BaseContract {
 
     unprocessedEpochInfos(
       overrides?: CallOverrides
-    ): Promise<[EpochInfoStructOutput[]] & { result: EpochInfoStructOutput[] }>;
-
-    unprocessedIndexOfEpochIds(overrides?: CallOverrides): Promise<[BigNumber]>;
+    ): Promise<[EpochInfoStructOutput[]] & { infos: EpochInfoStructOutput[] }>;
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    userDisburseInfos(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        requestsIndex: BigNumber;
-        partialShareProcessed: BigNumber;
-        partialAmountProcessed: BigNumber;
-      }
-    >;
-
-    userRedemptionRequests(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { epochId: BigNumber; shareRequested: BigNumber }
-    >;
 
     withdrawableAssets(
       account: PromiseOrValue<string>,
@@ -954,6 +961,16 @@ export interface TrancheVault extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  cancelRedemptionRequest(
+    shares: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  cancellableRedemptionShares(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   convertToShares(
     assets: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -983,31 +1000,33 @@ export interface TrancheVault extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  epochManager(overrides?: CallOverrides): Promise<string>;
-
-  epochMap(
+  epochInfoByEpochId(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber, BigNumber, BigNumber] & {
       epochId: BigNumber;
-      totalShareRequested: BigNumber;
-      totalShareProcessed: BigNumber;
+      totalSharesRequested: BigNumber;
+      totalSharesProcessed: BigNumber;
       totalAmountProcessed: BigNumber;
     }
   >;
 
-  getRedemptionEpochLength(overrides?: CallOverrides): Promise<BigNumber>;
+  epochManager(overrides?: CallOverrides): Promise<string>;
+
+  firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getNumRedemptionRequests(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getRoleAdmin(
     role: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
-
-  getUserRedemptionRequestLength(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   grantRole(
     role: PromiseOrValue<BytesLike>,
@@ -1055,18 +1074,30 @@ export interface TrancheVault extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  removableRedemptionShares(
-    account: PromiseOrValue<string>,
+  redemptionDisbursementInfoByLender(
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      requestsIndex: BigNumber;
+      actualSharesProcessed: BigNumber;
+      actualAmountProcessed: BigNumber;
+    }
+  >;
+
+  redemptionRequestsByLender(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      epochId: BigNumber;
+      numSharesRequested: BigNumber;
+    }
+  >;
 
   removeApprovedLender(
     lender: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  removeRedemptionRequest(
-    shares: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1119,30 +1150,9 @@ export interface TrancheVault extends BaseContract {
     overrides?: CallOverrides
   ): Promise<EpochInfoStructOutput[]>;
 
-  unprocessedIndexOfEpochIds(overrides?: CallOverrides): Promise<BigNumber>;
-
   updatePoolConfigData(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  userDisburseInfos(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      requestsIndex: BigNumber;
-      partialShareProcessed: BigNumber;
-      partialAmountProcessed: BigNumber;
-    }
-  >;
-
-  userRedemptionRequests(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & { epochId: BigNumber; shareRequested: BigNumber }
-  >;
 
   withdrawableAssets(
     account: PromiseOrValue<string>,
@@ -1181,6 +1191,16 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    cancelRedemptionRequest(
+      shares: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    cancellableRedemptionShares(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1210,31 +1230,33 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    epochManager(overrides?: CallOverrides): Promise<string>;
-
-    epochMap(
+    epochInfoByEpochId(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
         epochId: BigNumber;
-        totalShareRequested: BigNumber;
-        totalShareProcessed: BigNumber;
+        totalSharesRequested: BigNumber;
+        totalSharesProcessed: BigNumber;
         totalAmountProcessed: BigNumber;
       }
     >;
 
-    getRedemptionEpochLength(overrides?: CallOverrides): Promise<BigNumber>;
+    epochManager(overrides?: CallOverrides): Promise<string>;
+
+    firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNumRedemptionRequests(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    getUserRedemptionRequestLength(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     grantRole(
       role: PromiseOrValue<BytesLike>,
@@ -1282,18 +1304,30 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    removableRedemptionShares(
-      account: PromiseOrValue<string>,
+    redemptionDisbursementInfoByLender(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        requestsIndex: BigNumber;
+        actualSharesProcessed: BigNumber;
+        actualAmountProcessed: BigNumber;
+      }
+    >;
+
+    redemptionRequestsByLender(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        epochId: BigNumber;
+        numSharesRequested: BigNumber;
+      }
+    >;
 
     removeApprovedLender(
       lender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    removeRedemptionRequest(
-      shares: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1346,28 +1380,7 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<EpochInfoStructOutput[]>;
 
-    unprocessedIndexOfEpochIds(overrides?: CallOverrides): Promise<BigNumber>;
-
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>;
-
-    userDisburseInfos(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        requestsIndex: BigNumber;
-        partialShareProcessed: BigNumber;
-        partialAmountProcessed: BigNumber;
-      }
-    >;
-
-    userRedemptionRequests(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { epochId: BigNumber; shareRequested: BigNumber }
-    >;
 
     withdrawableAssets(
       account: PromiseOrValue<string>,
@@ -1402,6 +1415,17 @@ export interface TrancheVault extends BaseContract {
 
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
+
+    "LenderFundDisbursed(address,address,uint256)"(
+      account?: PromiseOrValue<string> | null,
+      receiver?: null,
+      withdrawnAmount?: null
+    ): LenderFundDisbursedEventFilter;
+    LenderFundDisbursed(
+      account?: PromiseOrValue<string> | null,
+      receiver?: null,
+      withdrawnAmount?: null
+    ): LenderFundDisbursedEventFilter;
 
     "LiquidityDeposited(address,uint256,uint256)"(
       account?: PromiseOrValue<string> | null,
@@ -1495,17 +1519,6 @@ export interface TrancheVault extends BaseContract {
       to?: PromiseOrValue<string> | null,
       value?: null
     ): TransferEventFilter;
-
-    "UserDisbursed(address,address,uint256)"(
-      account?: PromiseOrValue<string> | null,
-      receiver?: null,
-      withdrawnAmount?: null
-    ): UserDisbursedEventFilter;
-    UserDisbursed(
-      account?: PromiseOrValue<string> | null,
-      receiver?: null,
-      withdrawnAmount?: null
-    ): UserDisbursedEventFilter;
   };
 
   estimateGas: {
@@ -1540,6 +1553,16 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    cancelRedemptionRequest(
+      shares: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    cancellableRedemptionShares(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1569,22 +1592,24 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    epochManager(overrides?: CallOverrides): Promise<BigNumber>;
-
-    epochMap(
+    epochInfoByEpochId(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getRedemptionEpochLength(overrides?: CallOverrides): Promise<BigNumber>;
+    epochManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoleAdmin(
-      role: PromiseOrValue<BytesLike>,
+    firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNumRedemptionRequests(
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getUserRedemptionRequestLength(
-      account: PromiseOrValue<string>,
+    getRoleAdmin(
+      role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1634,18 +1659,19 @@ export interface TrancheVault extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    removableRedemptionShares(
-      account: PromiseOrValue<string>,
+    redemptionDisbursementInfoByLender(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    redemptionRequestsByLender(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     removeApprovedLender(
       lender: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    removeRedemptionRequest(
-      shares: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1696,21 +1722,8 @@ export interface TrancheVault extends BaseContract {
 
     unprocessedEpochInfos(overrides?: CallOverrides): Promise<BigNumber>;
 
-    unprocessedIndexOfEpochIds(overrides?: CallOverrides): Promise<BigNumber>;
-
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    userDisburseInfos(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userRedemptionRequests(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     withdrawableAssets(
@@ -1753,6 +1766,16 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    cancelRedemptionRequest(
+      shares: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    cancellableRedemptionShares(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1782,24 +1805,28 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    epochManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    epochMap(
+    epochInfoByEpochId(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getRedemptionEpochLength(
+    epochManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    firstUnprocessedEpochIndex(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getNumEpochsWithRedemption(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getNumRedemptionRequests(
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getUserRedemptionRequestLength(
-      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1849,18 +1876,19 @@ export interface TrancheVault extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    removableRedemptionShares(
-      account: PromiseOrValue<string>,
+    redemptionDisbursementInfoByLender(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    redemptionRequestsByLender(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     removeApprovedLender(
       lender: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    removeRedemptionRequest(
-      shares: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1913,23 +1941,8 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    unprocessedIndexOfEpochIds(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    userDisburseInfos(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userRedemptionRequests(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawableAssets(
