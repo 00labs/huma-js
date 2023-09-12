@@ -41,6 +41,7 @@ export enum ChainEnum {
   Mumbai = 80001,
   Celo = 42220,
   Alfajores = 44787,
+  Localhost = 31337,
 }
 
 export const CHAINS: {
@@ -68,6 +69,17 @@ export const CHAINS: {
     id: ChainEnum.Goerli,
     urls: ['https://rpc.ankr.com/eth_goerli'],
     name: 'Goerli',
+    nativeCurrency: ETH,
+    explorer: 'https://goerli.etherscan.io',
+    wait: 1,
+    requestAPIUrl: 'https://dev.goerli.rnreader.huma.finance',
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+  [ChainEnum.Localhost]: {
+    id: ChainEnum.Localhost,
+    urls: ['http://localhost:8545'],
+    name: 'Localhost',
     nativeCurrency: ETH,
     explorer: 'https://goerli.etherscan.io',
     wait: 1,
