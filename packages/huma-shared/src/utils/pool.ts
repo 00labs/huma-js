@@ -313,6 +313,40 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
     },
+    [POOL_TYPE.Stream]: {
+      [POOL_NAME.Superfluid]: {
+        basePoolConfig: '0x22C024496036A8e97F93E14efa0d8379192bb22c',
+        pool: '0xF713B5203Cb6f3223830De218c2ed89Ee654b94B',
+        poolProcessor: '0x6E2f33b6d3F1E2048d078984f7FFF847C0Ed3bEd',
+        poolFeeManager: '0xd5FD3F917cf8901BeB102d81504033C748c87F19',
+        poolUnderlyingToken: {
+          address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        assetAddress: '0xa8B0362cfE0c8e4fd1D74c3512348d6f48d71080',
+        poolName: POOL_NAME.Superfluid,
+        poolType: POOL_TYPE.Stream,
+        poolAbi: STEAM_FACTORING_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        poolAssetAbi: TRADABLE_STREAM_ABI,
+        HDT: {
+          address: '0xe3b9dC648BD35dd4ac8267468e91181810A35B60',
+          abi: HDT_ABI,
+        },
+        extra: {
+          subgraph: 'https://subgraph.satsuma-prod.com/superfluid/matic/api',
+          superTokens: [
+            {
+              id: '0xcaa7349cea390f89641fe306d93591f87595dc1f',
+              symbol: 'USDCx',
+              decimals: 18,
+            },
+          ],
+        },
+      },
+    },
   },
   [ChainEnum.Goerli]: {
     [POOL_TYPE.CreditLine]: {
