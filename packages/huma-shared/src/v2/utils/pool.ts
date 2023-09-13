@@ -1,7 +1,7 @@
-import { ChainEnum, POOL_NAME, configUtil } from 'utils'
-
+import { ChainEnum, configUtil, POOL_NAME } from '../../utils'
 import POOL_ABI from '../abis/Pool.json'
 import poolMetadataLocalhost from '../metadata/Localhost.json'
+import poolMetadataMumbai from '../metadata/Mumbai.json'
 
 export type PoolInfoV2 = {
   poolName: POOL_NAME
@@ -27,6 +27,7 @@ export type PoolsInfoV2 = {
 
 const poolsInfoV2 = {
   [ChainEnum.Localhost]: poolMetadataLocalhost as unknown,
+  [ChainEnum.Mumbai]: poolMetadataMumbai as unknown,
 } as PoolsInfoV2
 
 const getPoolsInfoV2 = () => {
@@ -48,5 +49,10 @@ export const getChainPoolNamesV2 = (chainId: number | undefined) => {
   if (chainId === undefined) {
     chainId = configUtil.DEFAULT_CHAIN_ID
   }
-  return Object.keys(poolsInfoV2[chainId]) as POOL_NAME[]
+  if (!poolsInfoV2[chainId]) {
+    return []
+  }
+  return Object.keys(poolsInfoV2[chainId]).map((poolName) => ({
+    poolName: poolName as POOL_NAME,
+  }))
 }

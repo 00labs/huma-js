@@ -4,7 +4,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   useAccountStats,
-  usePoolInfoV2,
+  usePoolInfo,
 } from '@huma-finance/shared'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -50,7 +50,7 @@ export function InvoiceFactoringBorrow({
   const { account } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfoV2(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [accountStats] = useAccountStats(poolName, poolType, account)
 

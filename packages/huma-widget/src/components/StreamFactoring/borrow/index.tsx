@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { POOL_NAME, POOL_TYPE, usePoolInfoV2 } from '@huma-finance/shared'
+import { POOL_NAME, POOL_TYPE, usePoolInfo } from '@huma-finance/shared'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -40,7 +40,7 @@ export function StreamFactoringBorrow({
 }: StreamFactoringBorrowProps): React.ReactElement | null {
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const poolInfo = usePoolInfoV2(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
 
   useEffect(() => {
