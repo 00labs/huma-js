@@ -5,7 +5,7 @@ import {
   useLenderApproved,
   useLenderPosition,
   usePoolAllowance,
-  usePoolInfo,
+  usePoolInfoV2,
   usePoolUnderlyingTokenBalance,
   useWithdrawlLockoutInSeconds,
 } from '@huma-finance/shared'
@@ -55,7 +55,7 @@ export function LendSupply({
   const { account, chainId } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfoV2(poolName, poolType)
   const { decimals } = poolInfo?.poolUnderlyingToken || {}
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const { allowance } = usePoolAllowance(poolName, poolType, account)

@@ -10,6 +10,7 @@ import { configUtil } from './config'
 export enum POOL_NAME {
   RequestNetwork = 'RequestNetwork',
   HumaCreditLine = 'HumaCreditLine',
+  HumaCreditLineV2 = 'HumaCreditLineV2',
   Superfluid = 'Superfluid',
   Jia = 'Jia',
   ArfCreditPool1 = 'ArfCreditPool1',

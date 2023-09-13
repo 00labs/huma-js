@@ -4,7 +4,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   useAccountStats,
-  usePoolInfo,
+  usePoolInfoV2,
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -54,7 +54,7 @@ export function CreditLineBorrow({
   const { account, chainId } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfoV2(poolName, poolType)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [accountStats, refreshAccountStats] = useAccountStats(
     poolName,

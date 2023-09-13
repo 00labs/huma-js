@@ -2,7 +2,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   useAccountStats,
-  usePoolInfo,
+  usePoolInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumberish } from 'ethers'
@@ -46,7 +46,7 @@ export function CreditLineApprove({
   const { account } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfoV2(poolName, poolType)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [accountStats] = useAccountStats(poolName, poolType, account)
   const { creditRecord } = accountStats

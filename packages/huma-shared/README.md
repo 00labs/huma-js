@@ -23,8 +23,14 @@ You will also see any lint errors in the console.
 
 Builds the package for production to the `build` folder.\
 
-### `yarn contracts:compile:abi`
+### `yarn abi-type`
 
 Generate static typings to /abis/types for contracts after updating abi files.
+
+See the section about [TypeChain](https://github.com/dethcrypto/TypeChain) for more information.
+
+### `yarn abi-type-v2`
+
+Generate static typings to /abis/v2/types for contracts after updating abi v2 files.
 
 See the section about [TypeChain](https://github.com/dethcrypto/TypeChain) for more information.
