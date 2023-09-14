@@ -647,3 +647,9 @@ export function getPoolInfoForPoolAddress(
 
   return foundPoolInfo
 }
+
+export function isPoolName(
+  poolName: string | undefined,
+): poolName is POOL_NAME {
+  return Object.keys(POOL_NAME).includes(String(poolName))
+}

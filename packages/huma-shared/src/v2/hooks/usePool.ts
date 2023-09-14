@@ -3,14 +3,16 @@ import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import { useContract, useForceRefresh } from '../../hooks'
-import { POOL_NAME } from '../../utils'
+import { isChainEnum, POOL_NAME } from '../../utils'
 import { Pool } from '../abis/types/Pool'
-import { POOLS_INFO_V2, PoolInfoV2 } from '../utils/pool'
+import { PoolInfoV2, POOLS_INFO_V2 } from '../utils/pool'
 
 export const usePoolInfoV2 = (poolName: POOL_NAME): PoolInfoV2 | undefined => {
   const { chainId } = useWeb3React()
-  const poolInfo = chainId ? POOLS_INFO_V2[chainId]?.[poolName] : undefined
-  return poolInfo
+  if (isChainEnum(chainId)) {
+    return POOLS_INFO_V2[chainId]?.[poolName]
+  }
+  return undefined
 }
 
 function usePoolContract<T extends Contract>(poolName: POOL_NAME) {

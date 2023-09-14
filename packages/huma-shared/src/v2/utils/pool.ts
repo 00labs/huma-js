@@ -1,7 +1,7 @@
-import { ChainEnum, configUtil, POOL_NAME } from '../../utils'
+import { ChainEnum, POOL_NAME, isChainEnum, isPoolName } from '../../utils'
 import POOL_ABI from '../abis/Pool.json'
-import poolMetadataLocalhost from '../metadata/Localhost.json'
-import poolMetadataMumbai from '../metadata/Mumbai.json'
+import { LOCALHOST_METADATA } from '../metadata/Localhost'
+import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
 export type PoolInfoV2 = {
   poolName: POOL_NAME
@@ -19,40 +19,52 @@ export type PoolInfoV2 = {
   lendDesc: string
 }
 
+export type PoolsMetadataV2 = {
+  [poolName in POOL_NAME]?: Omit<PoolInfoV2, 'poolName' | 'poolAbi'>
+}
+
 export type PoolsInfoV2 = {
-  [chainId: number]: {
+  [chainId in ChainEnum]: {
     [poolName in POOL_NAME]?: PoolInfoV2
   }
 }
 
 const poolsInfoV2 = {
-  [ChainEnum.Localhost]: poolMetadataLocalhost as unknown,
-  [ChainEnum.Mumbai]: poolMetadataMumbai as unknown,
+  [ChainEnum.Localhost]: LOCALHOST_METADATA,
+  [ChainEnum.Mumbai]: MUMBAI_METADATA,
 } as PoolsInfoV2
 
-const getPoolsInfoV2 = () => {
-  Object.keys(poolsInfoV2).forEach((_chainId) => {
-    const chainId = Number(_chainId) as ChainEnum
-    const chainPoolsInfoV2 = poolsInfoV2[chainId]
-    Object.keys(chainPoolsInfoV2).forEach((_poolName) => {
-      const poolName = _poolName as POOL_NAME
-      const poolInfoV2 = chainPoolsInfoV2[poolName]!
-      poolInfoV2.poolName = poolName
-      poolInfoV2.poolAbi = POOL_ABI
+const getPoolsInfoV2 = (): PoolsInfoV2 => {
+  Object.values(poolsInfoV2).forEach((chainPoolsInfoV2) => {
+    Object.keys(chainPoolsInfoV2).forEach((poolName) => {
+      if (isPoolName(poolName)) {
+        const poolInfoV2 = chainPoolsInfoV2[poolName]!
+        poolInfoV2.poolName = poolName
+        poolInfoV2.poolAbi = POOL_ABI
+      }
     })
   })
   return poolsInfoV2
 }
 export const POOLS_INFO_V2 = getPoolsInfoV2()
 
-export const getChainPoolNamesV2 = (chainId: number | undefined) => {
-  if (chainId === undefined) {
-    chainId = configUtil.DEFAULT_CHAIN_ID
+export const getChainPoolNamesV2 = (
+  chainId: number | undefined,
+): POOL_NAME[] | undefined => {
+  if (!chainId) {
+    return undefined
   }
-  if (!poolsInfoV2[chainId]) {
+
+  if (!isChainEnum(chainId) || !poolsInfoV2[chainId]) {
     return []
   }
-  return Object.keys(poolsInfoV2[chainId]).map((poolName) => ({
-    poolName: poolName as POOL_NAME,
-  }))
+
+  const poolNames: POOL_NAME[] = []
+  Object.keys(poolsInfoV2[chainId]).forEach((poolName) => {
+    if (isPoolName(poolName)) {
+      poolNames.push(poolName)
+    }
+  })
+
+  return poolNames
 }

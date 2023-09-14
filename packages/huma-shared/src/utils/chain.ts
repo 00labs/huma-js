@@ -35,7 +35,6 @@ interface ExtendedChainInformation extends BasicChainInformation {
 }
 
 export enum ChainEnum {
-  // Mainnet = 1,
   Polygon = 137,
   Goerli = 5,
   Mumbai = 80001,
@@ -47,14 +46,6 @@ export enum ChainEnum {
 export const CHAINS: {
   [chainId: number]: BasicChainInformation | ExtendedChainInformation
 } = {
-  // [ChainEnum.Mainnet]: {
-  //   urls: [],
-  //   name: 'Mainnet',
-  //   nativeCurrency: ETH,
-  //   icon: EthereumIcon,
-  //   explorer: 'https://etherscan.io',
-  //   wait: 6,
-  // },
   [ChainEnum.Polygon]: {
     id: ChainEnum.Polygon,
     urls: ['https://polygon-rpc.com/'],
@@ -117,6 +108,12 @@ export const CHAINS: {
     isTestnet: true,
     icon: 'Celo',
   },
+}
+
+export function isChainEnum(
+  chainId: number | string | undefined,
+): chainId is keyof typeof ChainEnum {
+  return Object.keys(ChainEnum).includes(String(chainId))
 }
 
 function isExtendedChainInformation(
