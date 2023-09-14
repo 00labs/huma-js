@@ -332,7 +332,7 @@ export const PoolContractMap: PoolContractMapType = {
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         poolAssetAbi: TRADABLE_STREAM_ABI,
         HDT: {
-          address: '0xe3b9dC648BD35dd4ac8267468e91181810A35B60',
+          address: '0x30b1f6bca8c6c742ede0ccb4eceb22af4cba58ef',
           abi: HDT_ABI,
         },
         extra: {
