@@ -3,7 +3,8 @@ import { PoolsMetadataV2 } from '../utils'
 export const LOCALHOST_METADATA: PoolsMetadataV2 = {
   HumaCreditLineV2: {
     pool: '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
-    estAPY: '10-20%',
+    seniorAPY: '10-20%',
+    juniorAPY: '10-20%',
     underlyingToken: {
       address: '0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f',
       symbol: 'USDC',

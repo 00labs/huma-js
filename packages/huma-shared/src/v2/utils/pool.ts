@@ -13,7 +13,8 @@ export type PoolInfoV2 = {
     decimals: number
     icon: string
   }
-  estAPY: string
+  seniorAPY: string
+  juniorAPY: string
   title: string
   borrowDesc: string
   lendDesc: string

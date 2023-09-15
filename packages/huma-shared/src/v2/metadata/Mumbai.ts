@@ -2,10 +2,11 @@ import { PoolsMetadataV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsMetadataV2 = {
   HumaCreditLineV2: {
-    pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
-    estAPY: '10-20%',
+    pool: '0x848f821669b8F60e002A972FAc4A309042392782',
+    seniorAPY: '10-20%',
+    juniorAPY: '10-20%',
     underlyingToken: {
-      address: '0x6Dfb932F9fDd38E4B3D2f6AAB0581a05a267C13C',
+      address: '0xa3d366fB6617a6763704291FD0C15410E8e40603',
       symbol: 'USDC',
       decimals: 18,
       icon: 'USDC',
