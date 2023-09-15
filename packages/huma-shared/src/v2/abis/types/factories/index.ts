@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Pool__factory } from "./Pool__factory";
+export { TrancheVault__factory } from "./TrancheVault__factory";

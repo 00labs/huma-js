@@ -3,6 +3,8 @@ import { PoolsMetadataV2 } from '../utils'
 export const LOCALHOST_METADATA: PoolsMetadataV2 = {
   HumaCreditLineV2: {
     pool: '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
+    seniorTrancheVault: '0xD0141E899a65C95a556fE2B27e5982A6DE7fDD7A',
+    juniorTrancheVault: '0x07882Ae1ecB7429a84f1D53048d35c4bB2056877',
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
     underlyingToken: {

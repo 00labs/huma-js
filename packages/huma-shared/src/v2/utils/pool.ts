@@ -1,12 +1,18 @@
 import { ChainEnum, POOL_NAME, isChainEnum, isPoolName } from '../../utils'
 import POOL_ABI from '../abis/Pool.json'
+import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import { LOCALHOST_METADATA } from '../metadata/Localhost'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
+
+export type VaultType = 'senior' | 'junior'
 
 export type PoolInfoV2 = {
   poolName: POOL_NAME
   pool: string
   poolAbi: unknown
+  seniorTrancheVault: string
+  juniorTrancheVault: string
+  trancheVaultAbi: unknown
   underlyingToken: {
     address: string
     symbol: string
@@ -21,7 +27,10 @@ export type PoolInfoV2 = {
 }
 
 export type PoolsMetadataV2 = {
-  [poolName in POOL_NAME]?: Omit<PoolInfoV2, 'poolName' | 'poolAbi'>
+  [poolName in POOL_NAME]?: Omit<
+    PoolInfoV2,
+    'poolName' | 'poolAbi' | 'trancheVaultAbi'
+  >
 }
 
 export type PoolsInfoV2 = {
@@ -42,6 +51,7 @@ const getPoolsInfoV2 = (): PoolsInfoV2 => {
         const poolInfoV2 = chainPoolsInfoV2[poolName]!
         poolInfoV2.poolName = poolName
         poolInfoV2.poolAbi = POOL_ABI
+        poolInfoV2.trancheVaultAbi = TRANCHE_VAULT_ABI
       }
     })
   })
