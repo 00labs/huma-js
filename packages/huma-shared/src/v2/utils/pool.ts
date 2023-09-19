@@ -70,12 +70,5 @@ export const getChainPoolNamesV2 = (
     return []
   }
 
-  const poolNames: POOL_NAME[] = []
-  Object.keys(poolsInfoV2[chainId]).forEach((poolName) => {
-    if (isPoolName(poolName)) {
-      poolNames.push(poolName)
-    }
-  })
-
-  return poolNames
+  return Object.keys(poolsInfoV2[chainId]) as POOL_NAME[]
 }
