@@ -1,4 +1,4 @@
-import Bundlr from '@bundlr-network/client'
+import Bundlr from '@bundlr-network/client/build/cjs/node/bundlr'
 import type {
   FundResponse,
   UploadResponse,
