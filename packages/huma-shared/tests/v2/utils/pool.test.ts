@@ -1,5 +1,5 @@
 import { ChainEnum } from '../../../src/utils'
-import { getChainPoolNamesV2, POOLS_INFO_V2 } from '../../../src/v2/utils'
+import { getChainPoolNamesV2, CHAIN_POOLS_INFO_V2 } from '../../../src/v2/utils'
 
 jest.mock('../../../src/v2/metadata/Localhost', () => ({
   LOCALHOST_METADATA: {
@@ -33,7 +33,7 @@ jest.mock('../../../src/v2/metadata/Mumbai', () => ({
 
 describe('getPoolsInfoV2', () => {
   it('should return the poolsInfoV2 object', () => {
-    const result = POOLS_INFO_V2
+    const result = CHAIN_POOLS_INFO_V2
 
     expect(result[ChainEnum.Localhost].HumaCreditLineV2).toEqual({
       poolName: 'HumaCreditLineV2',

@@ -5,14 +5,14 @@ import { useContract, useForceRefresh } from '../../hooks'
 import { isChainEnum, POOL_NAME } from '../../utils'
 import { TrancheVault } from '../abis/types'
 import { Pool } from '../abis/types/Pool'
-import { PoolInfoV2, POOLS_INFO_V2, VaultType } from '../utils/pool'
+import { PoolInfoV2, CHAIN_POOLS_INFO_V2, VaultType } from '../utils/pool'
 
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,
   chainId?: number,
 ): PoolInfoV2 | undefined => {
   if (isChainEnum(chainId)) {
-    return POOLS_INFO_V2[chainId]?.[poolName]
+    return CHAIN_POOLS_INFO_V2[chainId]?.[poolName]
   }
   return undefined
 }
