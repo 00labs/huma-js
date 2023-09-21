@@ -9,10 +9,13 @@ import {
 } from '../../src/utils/pool'
 
 describe('getPoolInfo', () => {
-  it('returns null if chainId is undefined', () => {
-    expect(
-      getPoolInfo(undefined, POOL_TYPE.Stream, POOL_NAME.Superfluid),
-    ).toBeNull()
+  it('returns default if chainId is undefined', () => {
+    const poolInfo = getPoolInfo(
+      undefined,
+      POOL_TYPE.Stream,
+      POOL_NAME.Superfluid,
+    )
+    expect(poolInfo?.pool).toBe('0xF713B5203Cb6f3223830De218c2ed89Ee654b94B')
   })
 
   it('returns null if poolType or poolName is not found', () => {
