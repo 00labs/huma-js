@@ -26,25 +26,20 @@ export type PoolInfoV2 = {
   lendDesc: string
 }
 
-export type PoolsMetadataV2 = {
-  [poolName in POOL_NAME]?: Omit<
-    PoolInfoV2,
-    'poolName' | 'poolAbi' | 'trancheVaultAbi'
-  >
+export type PoolsInfoV2 = {
+  [poolName in POOL_NAME]?: PoolInfoV2
 }
 
-export type PoolsInfoV2 = {
-  [chainId in ChainEnum]: {
-    [poolName in POOL_NAME]?: PoolInfoV2
-  }
+export type ChainPoolsInfoV2 = {
+  [chainId in ChainEnum]: PoolsInfoV2
 }
 
 const poolsInfoV2 = {
   [ChainEnum.Localhost]: LOCALHOST_METADATA,
   [ChainEnum.Mumbai]: MUMBAI_METADATA,
-} as PoolsInfoV2
+} as ChainPoolsInfoV2
 
-const getPoolsInfoV2 = (): PoolsInfoV2 => {
+const getPoolsInfoV2 = (): ChainPoolsInfoV2 => {
   Object.values(poolsInfoV2).forEach((chainPoolsInfoV2) => {
     Object.keys(chainPoolsInfoV2).forEach((poolName) => {
       if (isPoolName(poolName)) {
