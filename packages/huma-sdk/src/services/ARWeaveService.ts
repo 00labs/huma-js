@@ -77,14 +77,14 @@ export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
  * @function
  * @memberof ARWeaveService
  * @param {BundlrConfig} config - The configuration for the Bundlr network.
- * @param {string} signer - The private key of the wallet to use Bundlr with.
+ * @param {string} privateKey - The private key of the wallet to use Bundlr with.
  * @returns The Bundlr instance
  */
-async function getBundlrInstance(config: BundlrConfig, signer: string) {
+async function getBundlrInstance(config: BundlrConfig, privateKey: string) {
   const bundlr = new Bundlr(
     config.nodeUrl,
     config.currency,
-    signer,
+    privateKey,
     config.providerUrl
       ? {
           providerUrl: config.providerUrl,
@@ -105,20 +105,20 @@ async function getBundlrInstance(config: BundlrConfig, signer: string) {
  * @function
  * @memberof ARWeaveService
  * @param {BundlrConfig} config - The configuration for the Bundlr network.
- * @param {string} signer - The private key of the wallet to send funds from.
+ * @param {string} privateKey - The private key of the wallet to send funds from.
  * @param {number} amount - The amount to fund, denoted in whatever currency specified by the config (e.g. MATIC, ETH)
  * @returns {Promise<FundResponse>} - The fund response.
  */
 async function prefundBundlr(
   config: BundlrConfig,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  signer: string,
+  privateKey: string,
   amount: number,
 ): Promise<FundResponse> {
   const bundlr = new Bundlr(
     config.nodeUrl,
     config.currency,
-    signer,
+    privateKey,
     config.providerUrl
       ? {
           providerUrl: config.providerUrl,
@@ -140,9 +140,7 @@ async function prefundBundlr(
  * @function
  * @memberof ARWeaveService
  * @param {BundlrConfig} config - Configuration object for the Bundlr instance.
- * @param {Web3Provider | string} signerOrPrivateKey - Wallet object used for interacting with the Bundlr instance.
- *         If calling from a browser, this should be a `Web3Provider` instance. If calling from a Node.js
- *         environment, this should be a private key string.
+ * @param {string} privateKey - Private key used for interacting with the Bundlr instance.
  * @param {Record<string, unknown>} data - The data to store in the Bundlr instance.
  * @param {Array<{ name: string, value: string }>} tags - Array of tag objects with `name` and `value` properties.
  * @param {boolean} [lazyFund=true] - Optional flag to fund the Bundlr instance lazily. If set to `false`, the
@@ -151,7 +149,7 @@ async function prefundBundlr(
  */
 async function storeData(
   config: BundlrConfig,
-  signerOrPrivateKey: Web3Provider | string,
+  privateKey: Web3Provider | string,
   data: Record<string, unknown>,
   tags: { name: string; value: string }[],
   lazyFund: boolean = true,
@@ -159,7 +157,7 @@ async function storeData(
   const bundlr = new Bundlr(
     config.nodeUrl,
     config.currency,
-    signerOrPrivateKey,
+    privateKey,
     config.providerUrl
       ? {
           providerUrl: config.providerUrl,

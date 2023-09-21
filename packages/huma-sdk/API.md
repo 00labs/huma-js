@@ -137,9 +137,9 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 
 * [ARWeaveService](#ARWeaveService) : <code>object</code>
     * [.getBundlrNetworkConfig(chainId)](#ARWeaveService.getBundlrNetworkConfig) ⇒ <code>BundlrConfig</code>
-    * [.getBundlrInstance(config, signer)](#ARWeaveService.getBundlrInstance) ⇒
-    * [.prefundBundlr(config, signer, amount)](#ARWeaveService.prefundBundlr) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
-    * [.storeData(config, signerOrPrivateKey, data, tags, [lazyFund])](#ARWeaveService.storeData) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
+    * [.getBundlrInstance(config, privateKey)](#ARWeaveService.getBundlrInstance) ⇒
+    * [.prefundBundlr(config, privateKey, amount)](#ARWeaveService.prefundBundlr) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
+    * [.storeData(config, privateKey, data, tags, [lazyFund])](#ARWeaveService.storeData) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
     * [.queryForMetadata(chainId, sender, referenceId)](#ARWeaveService.queryForMetadata) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.fetchMetadataFromUrl(url)](#ARWeaveService.fetchMetadataFromUrl) ⇒ <code>Promise.&lt;JSON&gt;</code>
     * [.getURIFromARWeaveId(arweaveId)](#ARWeaveService.getURIFromARWeaveId) ⇒ <code>string</code>
@@ -161,7 +161,7 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 
 <a name="ARWeaveService.getBundlrInstance"></a>
 
-### ARWeaveService.getBundlrInstance(config, signer) ⇒
+### ARWeaveService.getBundlrInstance(config, privateKey) ⇒
 <p>Get a Bundlr instance for a specific network</p>
 
 **Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
@@ -170,11 +170,11 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 | Param | Type | Description |
 | --- | --- | --- |
 | config | <code>BundlrConfig</code> | <p>The configuration for the Bundlr network.</p> |
-| signer | <code>string</code> | <p>The private key of the wallet to use Bundlr with.</p> |
+| privateKey | <code>string</code> | <p>The private key of the wallet to use Bundlr with.</p> |
 
 <a name="ARWeaveService.prefundBundlr"></a>
 
-### ARWeaveService.prefundBundlr(config, signer, amount) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
+### ARWeaveService.prefundBundlr(config, privateKey, amount) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
 <p>Prefund the Bundlr network with the specified amount. Required if not lazy funding.
 Important note: The amount is denominated in the base unit of currency for that network.
 If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
@@ -187,12 +187,12 @@ If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
 | Param | Type | Description |
 | --- | --- | --- |
 | config | <code>BundlrConfig</code> | <p>The configuration for the Bundlr network.</p> |
-| signer | <code>string</code> | <p>The private key of the wallet to send funds from.</p> |
+| privateKey | <code>string</code> | <p>The private key of the wallet to send funds from.</p> |
 | amount | <code>number</code> | <p>The amount to fund, denoted in whatever currency specified by the config (e.g. MATIC, ETH)</p> |
 
 <a name="ARWeaveService.storeData"></a>
 
-### ARWeaveService.storeData(config, signerOrPrivateKey, data, tags, [lazyFund]) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
+### ARWeaveService.storeData(config, privateKey, data, tags, [lazyFund]) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
 <p>Store data on ARWeave using the Bundlr Network.</p>
 
 **Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
@@ -201,7 +201,7 @@ If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | config | <code>BundlrConfig</code> |  | <p>Configuration object for the Bundlr instance.</p> |
-| signerOrPrivateKey | <code>Web3Provider</code> \| <code>string</code> |  | <p>Wallet object used for interacting with the Bundlr instance. If calling from a browser, this should be a <code>Web3Provider</code> instance. If calling from a Node.js environment, this should be a private key string.</p> |
+| privateKey | <code>string</code> |  | <p>Private key used for interacting with the Bundlr instance.</p> |
 | data | <code>Record.&lt;string, unknown&gt;</code> |  | <p>The data to store in the Bundlr instance.</p> |
 | tags | <code>Array.&lt;{name: string, value: string}&gt;</code> |  | <p>Array of tag objects with <code>name</code> and <code>value</code> properties.</p> |
 | [lazyFund] | <code>boolean</code> | <code>true</code> | <p>Optional flag to fund the Bundlr instance lazily. If set to <code>false</code>, the Bundlr node should already be funded or else uploads will fail.</p> |
@@ -294,10 +294,10 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.declareReceivablePaymentByReferenceId(signer, referenceId, paymentAmount, [gasOpts])](#ReceivableService.declareReceivablePaymentByReferenceId) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
     * [.declareReceivablePaymentByTokenId(signer, receivableTokenId, paymentAmount, [gasOpts])](#ReceivableService.declareReceivablePaymentByTokenId) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
     * [.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts])](#ReceivableService.createReceivable) ⇒ <code>Promise.&lt;(TransactionResponse\|null)&gt;</code>
-    * [.uploadOrFetchMetadataURI(signerOrProvider, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund])](#ReceivableService.uploadOrFetchMetadataURI) ⇒ <code>Promise.&lt;string&gt;</code>
-    * [.createReceivableWithMetadata(signerOrProvider, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts])](#ReceivableService.createReceivableWithMetadata) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
-    * [.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType, pagination)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
-    * [.getTotalCountOfReceivables(signerOrProvider, owner)](#ReceivableService.getTotalCountOfReceivables) ⇒ <code>Promise.&lt;number&gt;</code>
+    * [.uploadOrFetchMetadataURI(signer, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund])](#ReceivableService.uploadOrFetchMetadataURI) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [.createReceivableWithMetadata(signer, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts])](#ReceivableService.createReceivableWithMetadata) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+    * [.loadReceivablesOfOwnerWithMetadata(signer, owner, poolName, poolType, pagination)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+    * [.getTotalCountOfReceivables(signer, owner)](#ReceivableService.getTotalCountOfReceivables) ⇒ <code>Promise.&lt;number&gt;</code>
 
 <a name="ReceivableService.getTokenIdByURI"></a>
 
@@ -383,7 +383,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.uploadOrFetchMetadataURI"></a>
 
-### ReceivableService.uploadOrFetchMetadataURI(signerOrProvider, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund]) ⇒ <code>Promise.&lt;string&gt;</code>
+### ReceivableService.uploadOrFetchMetadataURI(signer, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund]) ⇒ <code>Promise.&lt;string&gt;</code>
 <p>Uploads metadata onto ARWeave (or fetches the existing metadata with the same reference Id) and returns the ARWeave URL</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
@@ -393,8 +393,8 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| signerOrProvider | <code>Web3Provider</code> \| <code>ethers.Signer</code> |  | <p>If calling this function from a browser, this function expects a Web3Provider. If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included from server calls.</p> |
-| privateKey | <code>string</code> \| <code>null</code> |  | <p>Private key of the wallet used to upload metadata to ARWeave. Only required if calling this function from a server.</p> |
+| signer | <code>ethers.Signer</code> |  | <p>An ethers.signer instance used to de-dupe metadata uploads.</p> |
+| privateKey | <code>string</code> |  | <p>Private key of the wallet used to upload metadata to ARWeave.</p> |
 | chainId | <code>number</code> |  | <p>The chain ID to mint the receivable token on and pay ARWeave funds from.</p> |
 | poolName | <code>POOL\_NAME</code> |  | <p>The pool name. Used to lookup the pool address to pay to.</p> |
 | poolType | <code>POOL\_TYPE</code> |  | <p>The pool type. Used to lookup the pool address to pay to.</p> |
@@ -405,7 +405,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.createReceivableWithMetadata"></a>
 
-### ReceivableService.createReceivableWithMetadata(signerOrProvider, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+### ReceivableService.createReceivableWithMetadata(signer, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
 <p>Creates a RealWorldReceivable token with metadata uploaded onto ARWeave</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
@@ -415,8 +415,8 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| signerOrProvider | <code>Web3Provider</code> \| <code>ethers.Signer</code> |  | <p>If calling this function from a browser, this function expects a Web3Provider. If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included from server calls.</p> |
-| privateKey | <code>string</code> \| <code>null</code> |  | <p>Private key of the wallet used to upload metadata to ARWeave. Only required if calling this function from a server.</p> |
+| signer | <code>ethers.Signer</code> |  | <p>An ethers.signer instance used to de-dupe metadata uploads.</p> |
+| privateKey | <code>string</code> |  | <p>Private key of the wallet used to upload metadata to ARWeave.</p> |
 | chainId | <code>number</code> |  | <p>The chain ID to mint the receivable token on and pay ARWeave funds from.</p> |
 | poolName | <code>POOL\_NAME</code> |  | <p>The pool name. Used to lookup the pool address to pay to.</p> |
 | poolType | <code>POOL\_TYPE</code> |  | <p>The pool type. Used to lookup the pool address to pay to.</p> |
@@ -431,7 +431,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.loadReceivablesOfOwnerWithMetadata"></a>
 
-### ReceivableService.loadReceivablesOfOwnerWithMetadata(signerOrProvider, owner, poolName, poolType, pagination) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+### ReceivableService.loadReceivablesOfOwnerWithMetadata(signer, owner, poolName, poolType, pagination) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
 <p>Loads all RWRs belonging to the specified owner, including the RWR metadata</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
@@ -441,7 +441,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 | Param | Type | Description |
 | --- | --- | --- |
-| signerOrProvider | <code>Web3Provider</code> \| <code>ethers.Signer</code> | <p>If calling this function from a browser, this function expects a Web3Provider. If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included from server calls.</p> |
+| signer | <code>ethers.Signer</code> | <p>An ethers.signer instance used to de-dupe metadata uploads.</p> |
 | owner | <code>string</code> | <p>The receivable token owner to query from.</p> |
 | poolName | <code>POOL\_NAME</code> | <p>The pool name. Used to lookup the pool address to pay to.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The pool type. Used to lookup the pool address to pay to.</p> |
@@ -449,7 +449,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.getTotalCountOfReceivables"></a>
 
-### ReceivableService.getTotalCountOfReceivables(signerOrProvider, owner) ⇒ <code>Promise.&lt;number&gt;</code>
+### ReceivableService.getTotalCountOfReceivables(signer, owner) ⇒ <code>Promise.&lt;number&gt;</code>
 <p>Get the total count of all RWRs belonging to the specified owner</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
@@ -459,7 +459,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 | Param | Type | Description |
 | --- | --- | --- |
-| signerOrProvider | <code>Web3Provider</code> \| <code>ethers.Signer</code> | <p>If calling this function from a browser, this function expects a Web3Provider. If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included from server calls.</p> |
+| signer | <code>ethers.Signer</code> | <p>An ethers.signer instance used to de-dupe metadata uploads.</p> |
 | owner | <code>string</code> | <p>The receivable token owner to query from.</p> |
 
 <a name="SubgraphService"></a>

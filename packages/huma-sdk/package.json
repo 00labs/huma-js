@@ -22,7 +22,7 @@
     "test:badges": "yarn run test:coverage && yarn jest-coverage-badges"
   },
   "dependencies": {
-    "@bundlr-network/client": "0.11.9",
+    "@bundlr-network/client": "0.11.17",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.6.0",
     "@ethersproject/constants": "^5.7.0",

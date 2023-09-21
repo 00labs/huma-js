@@ -1,4 +1,4 @@
-import { TransactionResponse, Web3Provider } from '@ethersproject/providers'
+import { TransactionResponse } from '@ethersproject/providers'
 import { BigNumberish, ethers, Overrides } from 'ethers'
 import {
   POOL_NAME,
@@ -46,22 +46,22 @@ async function getTokenIdByURI(
   // Fetch receivables with the same ARWeave Id
   const receivablesQuery = gql`
     query ReceivablesByURIQuery($owner: String!, $uri: String!) {
-      receivables(where: { owner: $owner, uri: $uri }) {
+      rwreceivables(where: { owner: $owner, tokenUri: $uri }) {
         ...ReceivableFields
       }
     }
 
-    fragment ReceivableFields on Receivable {
+    fragment ReceivableFields on RWReceivable {
       tokenId
     }
   `
 
-  const receivableSubgraph = PoolSubgraphMap[chainId]?.receivablesSubgraph
+  const receivableSubgraph = PoolSubgraphMap[chainId]?.subgraph
   if (!receivableSubgraph) {
     throw new Error('No receivable subgraph exists for this chain')
   }
 
-  const receivablesData: { receivables: Receivable[] } = await request(
+  const receivablesData: { rwreceivables: Receivable[] } = await request(
     receivableSubgraph,
     receivablesQuery,
     {
@@ -70,18 +70,18 @@ async function getTokenIdByURI(
     },
   )
 
-  if (!receivablesData?.receivables?.length) {
+  if (!receivablesData?.rwreceivables?.length) {
     console.log('No receivables found with this URI.')
     return null
   }
-  if (receivablesData?.receivables?.length > 1) {
+  if (receivablesData?.rwreceivables?.length > 1) {
     throw new Error(
       `This owner has multiple receivables with the same URI, so we don't know which to use. Please burn 
         unnecessary receivables. If paying, you can pay the correct token manually using declareReceivablePaymentByTokenId`,
     )
   }
 
-  return receivablesData?.receivables[0]?.tokenId
+  return receivablesData?.rwreceivables[0]?.tokenId
 }
 
 /**
@@ -256,10 +256,8 @@ async function createReceivable(
  * @async
  * @function
  * @memberof ReceivableService
- * @param {Web3Provider | ethers.Signer} signerOrProvider - If calling this function from a browser, this function expects a Web3Provider.
- *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
- *      from server calls.
- * @param {string | null} privateKey - Private key of the wallet used to upload metadata to ARWeave. Only required if calling this function from a server.
+ * @param {ethers.Signer} signer - An ethers.signer instance used to de-dupe metadata uploads.
+ * @param {string} privateKey - Private key of the wallet used to upload metadata to ARWeave.
  * @param {number} chainId - The chain ID to mint the receivable token on and pay ARWeave funds from.
  * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
  * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
@@ -272,8 +270,8 @@ async function createReceivable(
  * @returns {Promise<string>} - The ARWeave metadata URI.
  */
 async function uploadOrFetchMetadataURI(
-  signerOrProvider: Web3Provider | ethers.Signer,
-  privateKey: string | null,
+  signer: ethers.Signer,
+  privateKey: string,
   chainId: number,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
@@ -287,10 +285,6 @@ async function uploadOrFetchMetadataURI(
   }
 
   // Check to see if metadata with referenceId has already been minted
-  const signer =
-    signerOrProvider instanceof Web3Provider
-      ? signerOrProvider.getSigner()
-      : signerOrProvider
   const signerAddress = await signer.getAddress()
   const dataId = await ARWeaveService.queryForMetadata(
     chainId,
@@ -324,7 +318,7 @@ async function uploadOrFetchMetadataURI(
 
     const response = await ARWeaveService.storeData(
       config,
-      signerOrProvider instanceof Web3Provider ? signerOrProvider : privateKey!,
+      privateKey,
       metadata,
       tags,
       lazyFund,
@@ -344,10 +338,8 @@ async function uploadOrFetchMetadataURI(
  * @async
  * @function
  * @memberof ReceivableService
- * @param {Web3Provider | ethers.Signer} signerOrProvider - If calling this function from a browser, this function expects a Web3Provider.
- *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
- *      from server calls.
- * @param {string | null} privateKey - Private key of the wallet used to upload metadata to ARWeave. Only required if calling this function from a server.
+ * @param {ethers.Signer} signer - An ethers.signer instance used to de-dupe metadata uploads.
+ * @param {string} privateKey - Private key of the wallet used to upload metadata to ARWeave.
  * @param {number} chainId - The chain ID to mint the receivable token on and pay ARWeave funds from.
  * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
  * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
@@ -364,8 +356,8 @@ async function uploadOrFetchMetadataURI(
  * @returns {Promise<TransactionResponse>} - The transaction receipt.
  */
 async function createReceivableWithMetadata(
-  signerOrProvider: Web3Provider | ethers.Signer,
-  privateKey: string | null,
+  signer: ethers.Signer,
+  privateKey: string,
   chainId: number,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
@@ -383,13 +375,8 @@ async function createReceivableWithMetadata(
   }
 
   // Check to see if metadata with referenceId has already been minted
-  const signer =
-    signerOrProvider instanceof Web3Provider
-      ? signerOrProvider.getSigner()
-      : signerOrProvider
-
   const metadataURI = await uploadOrFetchMetadataURI(
-    signerOrProvider,
+    signer,
     privateKey,
     chainId,
     poolName,
@@ -418,9 +405,7 @@ async function createReceivableWithMetadata(
  * @async
  * @function
  * @memberof ReceivableService
- * @param {Web3Provider | ethers.Signer} signerOrProvider - If calling this function from a browser, this function expects a Web3Provider.
- *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
- *      from server calls.
+ * @param {ethers.Signer} signer - An ethers.signer instance used to de-dupe metadata uploads.
  * @param {string} owner - The receivable token owner to query from.
  * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
  * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
@@ -428,7 +413,7 @@ async function createReceivableWithMetadata(
  * @returns {Promise<RealWorldReceivableInfo[]>} - An array of receivables owned by the owner for the pool.
  */
 async function loadReceivablesOfOwnerWithMetadata<T>(
-  signerOrProvider: Web3Provider | ethers.Signer,
+  signer: ethers.Signer,
   owner: string,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
@@ -438,7 +423,7 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
     throw new Error('Invalid owner address')
   }
 
-  const chainId = await getChainIdFromSignerOrProvider(signerOrProvider)
+  const chainId = await getChainIdFromSignerOrProvider(signer)
   if (!chainId) {
     throw new Error('No Chain Id found')
   }
@@ -470,26 +455,24 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
  * @async
  * @function
  * @memberof ReceivableService
- * @param {Web3Provider | ethers.Signer} signerOrProvider - If calling this function from a browser, this function expects a Web3Provider.
- *      If calling this function from a server, this function expects an ethers Signer. Note that privateKey only needs to be included
- *      from server calls.
+ * @param {ethers.Signer} signer - An ethers.signer instance used to de-dupe metadata uploads.
  * @param {string} owner - The receivable token owner to query from.
  * @returns {Promise<number>} - Total count of receivables owned by the owner for the pool.
  */
 async function getTotalCountOfReceivables(
-  signerOrProvider: Web3Provider | ethers.Signer,
+  signer: ethers.Signer,
   owner: string,
 ): Promise<number> {
   if (!ethers.utils.isAddress(owner)) {
     throw new Error('Invalid owner address')
   }
 
-  const chainId = await getChainIdFromSignerOrProvider(signerOrProvider)
+  const chainId = await getChainIdFromSignerOrProvider(signer)
   if (!chainId) {
     throw new Error('No Chain Id found')
   }
 
-  const rwrContract = getRealWorldReceivableContract(signerOrProvider, chainId)
+  const rwrContract = getRealWorldReceivableContract(signer, chainId)
   if (!rwrContract) {
     throw new Error('Could not find RealWorldReceivable contract')
   }
