@@ -337,7 +337,8 @@ export const PoolContractMap: PoolContractMapType = {
           abi: HDT_ABI,
         },
         extra: {
-          subgraph: 'https://subgraph.satsuma-prod.com/superfluid/matic/api',
+          subgraph:
+            'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-matic',
           superTokens: [
             {
               id: '0xcaa7349cea390f89641fe306d93591f87595dc1f',
