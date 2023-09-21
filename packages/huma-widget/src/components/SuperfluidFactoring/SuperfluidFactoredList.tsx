@@ -50,9 +50,9 @@ export function SuperfluidFactoredList({
   const setItem = useCallback(
     () =>
       Promise.resolve({
-        name: poolInfo?.extra?.superTokens?.[0].symbol ?? '',
+        name: poolInfo?.extra?.superToken?.symbol ?? '',
       }),
-    [poolInfo?.extra?.superTokens],
+    [poolInfo?.extra?.superToken],
   )
 
   return (
