@@ -64,7 +64,7 @@ export type PoolInfoType = {
   }
   extra?: {
     subgraph?: string
-    superTokens?: { id: string; symbol: string; decimals: number }[]
+    superToken?: { id: string; symbol: string; decimals: number }
     borrower?: string // For single borrower pools
     rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
     hidden?: boolean // For pools that shouldn't be displayed in the UI
@@ -339,13 +339,11 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           subgraph:
             'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-matic',
-          superTokens: [
-            {
-              id: '0xcaa7349cea390f89641fe306d93591f87595dc1f',
-              symbol: 'USDCx',
-              decimals: 18,
-            },
-          ],
+          superToken: {
+            id: '0xcaa7349cea390f89641fe306d93591f87595dc1f',
+            symbol: 'USDCx',
+            decimals: 18,
+          },
         },
       },
     },
@@ -548,13 +546,11 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           subgraph:
             'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-mumbai',
-          superTokens: [
-            {
-              id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
-              symbol: 'fUSDCx',
-              decimals: 18,
-            },
-          ],
+          superToken: {
+            id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
+            symbol: 'fUSDCx',
+            decimals: 18,
+          },
         },
       },
     },
@@ -636,6 +632,8 @@ export const SupplementaryContractsMap: {
   }
 } = {
   [ChainEnum.Polygon]: {
+    [SupplementaryContracts.MultiSend]:
+      '0xDa21D2Be30353EC6Aa5AcD37999806cCefaa4C6A',
     [SupplementaryContracts.RealWorldReceivable]:
       '0xCf67CcEaC38b5E1880d62b5DB531Ab1E77614E3D',
   },

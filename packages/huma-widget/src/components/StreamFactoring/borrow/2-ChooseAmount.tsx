@@ -28,12 +28,14 @@ export function ChooseAmount({
   const [chargedFees, setChargedFees] = useState(0)
   const [currentAmount, setCurrentAmount] = useState(0)
   const borrowPeriodInSeconds = approval!.terms.intervalInDays * 24 * 60 * 60
+  const superTokenDecimals = poolInfo.extra?.superToken?.decimals!
+  const underlyingTokenDecimals = poolInfo.poolUnderlyingToken.decimals!
 
   const getBorrowFlowrateAndAmount = useCallback(
     (borrowAmount: number) => {
       const currentFlowRateBN = toBigNumber(currentFlowRate)
       const borrowAmountBN = toBigNumber(
-        upScale(borrowAmount, approval!.token.decimal),
+        upScale(borrowAmount, superTokenDecimals),
       )
 
       const totalAmountInBorrowPeriod = currentFlowRateBN.mul(
@@ -57,18 +59,24 @@ export function ChooseAmount({
       const newBorrowAmountBN = borrowFlowrate
         .mul(totalAmountInBorrowPeriod)
         .div(currentFlowRateBN)
-      const newBorrowAmount = downScale(
-        newBorrowAmountBN,
-        approval!.token.decimal,
+      const newBorrowAmount = downScale(newBorrowAmountBN, superTokenDecimals)
+      const newBorrowAmountUnderlyingTokenBN = toBigNumber(
+        upScale(newBorrowAmount, underlyingTokenDecimals),
       )
 
       return {
         borrowFlowrate: borrowFlowrate.toString(),
         borrowAmount: Number(newBorrowAmount),
-        borrowAmountBN: newBorrowAmountBN,
+        borrowAmountBN: newBorrowAmountUnderlyingTokenBN,
       }
     },
-    [approval, borrowPeriodInSeconds, currentFlowRate],
+    [
+      approval,
+      borrowPeriodInSeconds,
+      currentFlowRate,
+      superTokenDecimals,
+      underlyingTokenDecimals,
+    ],
   )
 
   const handleChangeAmount = useCallback(

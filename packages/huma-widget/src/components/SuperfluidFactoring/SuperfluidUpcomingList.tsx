@@ -106,7 +106,9 @@ export function SuperfluidUpcomingList({
   const { data } = useQuery<{ streams: Stream[] }>(GET_RECEIVED_STREAMS, {
     variables: {
       receiver: account ? account.toLowerCase() : undefined,
-      tokenIds: poolInfo?.extra?.superTokens?.map((item) => item.id) ?? [],
+      tokenIds: poolInfo?.extra?.superToken
+        ? [poolInfo.extra.superToken.id]
+        : [],
     },
   })
 
