@@ -8,7 +8,7 @@ import BN from 'bignumber.js'
 
 import { ARWeaveService, BundlrConfig } from '../../src/services/ARWeaveService'
 
-jest.mock('@bundlr-network/client/build/cjs/node/bundlr', () => {
+jest.mock('@bundlr-network/client', () => {
   class Bundlr {
     nodeUrl: string
 
