@@ -35,25 +35,17 @@ interface ExtendedChainInformation extends BasicChainInformation {
 }
 
 export enum ChainEnum {
-  // Mainnet = 1,
   Polygon = 137,
   Goerli = 5,
   Mumbai = 80001,
   Celo = 42220,
   Alfajores = 44787,
+  Localhost = 31337,
 }
 
 export const CHAINS: {
   [chainId: number]: BasicChainInformation | ExtendedChainInformation
 } = {
-  // [ChainEnum.Mainnet]: {
-  //   urls: [],
-  //   name: 'Mainnet',
-  //   nativeCurrency: ETH,
-  //   icon: EthereumIcon,
-  //   explorer: 'https://etherscan.io',
-  //   wait: 6,
-  // },
   [ChainEnum.Polygon]: {
     id: ChainEnum.Polygon,
     urls: ['https://polygon-rpc.com/'],
@@ -68,6 +60,17 @@ export const CHAINS: {
     id: ChainEnum.Goerli,
     urls: ['https://rpc.ankr.com/eth_goerli'],
     name: 'Goerli',
+    nativeCurrency: ETH,
+    explorer: 'https://goerli.etherscan.io',
+    wait: 1,
+    requestAPIUrl: 'https://dev.goerli.rnreader.huma.finance',
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+  [ChainEnum.Localhost]: {
+    id: ChainEnum.Localhost,
+    urls: ['http://localhost:8545'],
+    name: 'Localhost',
     nativeCurrency: ETH,
     explorer: 'https://goerli.etherscan.io',
     wait: 1,
@@ -105,6 +108,12 @@ export const CHAINS: {
     isTestnet: true,
     icon: 'Celo',
   },
+}
+
+export function isChainEnum(
+  chainId: number | string | undefined,
+): chainId is keyof typeof ChainEnum {
+  return Object.keys(ChainEnum).includes(String(chainId))
 }
 
 function isExtendedChainInformation(

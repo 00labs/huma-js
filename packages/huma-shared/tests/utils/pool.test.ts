@@ -5,6 +5,7 @@ import {
   POOL_TYPE,
   getPoolInfo,
   getPoolInfoForPoolAddress,
+  isPoolName,
   usePools,
 } from '../../src/utils/pool'
 
@@ -74,4 +75,16 @@ test('getPoolInfoForPoolAddress', () => {
   )
 
   expect(poolInfo).toBeNull()
+})
+
+describe('isPoolName', () => {
+  it('should return true for valid poolName', () => {
+    expect(isPoolName('ImpactMarket')).toBe(true)
+    expect(isPoolName('Superfluid')).toBe(true)
+  })
+
+  it('should return false for invalid poolName', () => {
+    expect(isPoolName('InvalidPool')).toBe(false)
+    expect(isPoolName(undefined)).toBe(false)
+  })
 })

@@ -11,6 +11,7 @@ import { ChainEnum } from './chain'
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
 export const JSON_RPC_FALLBACK_ENDPOINTS: Record<ChainEnum, string[]> = {
+  [ChainEnum.Localhost]: ['http://localhost:8545'],
   [ChainEnum.Goerli]: ['https://rpc.ankr.com/eth_goerli'],
   [ChainEnum.Mumbai]: ['https://rpc.ankr.com/polygon_mumbai'],
   [ChainEnum.Polygon]: ['https://polygon-rpc.com/'],
