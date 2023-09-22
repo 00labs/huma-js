@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jest/no-conditional-expect */
 import {
   ChainEnum,
@@ -5,9 +6,30 @@ import {
   findChainIdByName,
   getAddChainParameters,
   getWalletAddressAbbr,
+  isChainEnum,
   supportedChainId,
   URLS,
 } from '../../src/utils/chain'
+
+describe('isChainEnum', () => {
+  it('should return true for valid chainId', () => {
+    expect(isChainEnum(137)).toBe(true)
+    expect(isChainEnum('5')).toBe(true)
+  })
+
+  it('should return false for invalid chainId', () => {
+    expect(isChainEnum(999)).toBe(false)
+    expect(isChainEnum('invalid')).toBe(false)
+  })
+
+  it('should return false for undefined chainId', () => {
+    expect(isChainEnum(undefined)).toBe(false)
+  })
+
+  it('should return false for null chainId', () => {
+    expect(isChainEnum(null as any)).toBe(false)
+  })
+})
 
 describe('getAddChainParameters', () => {
   it('returns the chain parameters if the chain information is extended', () => {
