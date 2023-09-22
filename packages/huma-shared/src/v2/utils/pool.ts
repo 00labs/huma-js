@@ -1,18 +1,29 @@
-import { ChainEnum, isChainEnum, POOL_NAME } from '../../utils'
-import { LOCALHOST_METADATA } from '../metadata/Localhost'
+import {
+  ChainEnum,
+  LenderApprovalProvider,
+  POOL_NAME,
+  isChainEnum,
+} from '../../utils'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
 export type VaultType = 'senior' | 'junior'
+
+export enum FirstLossCoverIndex {
+  borrower = 0,
+  affiliate = 1,
+}
 
 export type PoolInfoV2 = {
   chainId: ChainEnum
   poolName: POOL_NAME
   pool: string
   poolAbi: unknown
+  poolSafe: string
+  poolSafeAbi: unknown
   seniorTrancheVault: string
   juniorTrancheVault: string
   trancheVaultAbi: unknown
-  underlyingToken: {
+  poolUnderlyingToken: {
     address: string
     symbol: string
     decimals: number
@@ -23,6 +34,12 @@ export type PoolInfoV2 = {
   title: string
   borrowDesc: string
   lendDesc: string
+  lenderApprovalProvider?: LenderApprovalProvider
+  industry?:
+    | 'Supply Chain Financing'
+    | 'Remittance Financing'
+    | 'Green Financing'
+    | 'Invoice Factoring'
 }
 
 export type PoolsInfoV2 = {
@@ -34,7 +51,6 @@ export type ChainPoolsInfoV2 = {
 }
 
 export const CHAIN_POOLS_INFO_V2 = {
-  [ChainEnum.Localhost]: LOCALHOST_METADATA,
   [ChainEnum.Mumbai]: MUMBAI_METADATA,
 } as ChainPoolsInfoV2
 
