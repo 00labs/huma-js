@@ -2,15 +2,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
 
-import { useContract, useERC20Contract } from '../../../src/hooks'
+import { useContract } from '../../../src/hooks'
 import {
   useContractValueV2,
   useLenderApprovedV2,
   useLenderPositionV2,
   usePoolInfoV2,
   usePoolVaultTotalAssetsV2,
-  useTrancheVaultAllowanceV2,
-  useTrancheVaultUnderlyingTokenBalanceV2,
 } from '../../../src/v2/hooks/usePool'
 
 jest.mock('../../../src/utils/web3', () => ({
@@ -193,58 +191,6 @@ describe('useLenderPositionV2', () => {
 
     const { result } = renderHook(() =>
       useLenderPositionV2(
-        'HumaCreditLineV2' as any,
-        'senior',
-        account,
-        chainId,
-      ),
-    )
-
-    await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(100))
-    })
-    await waitFor(() => {
-      expect(typeof result.current[1]).toBe('function')
-    })
-  })
-})
-
-describe('useTrancheVaultUnderlyingTokenBalanceV2', () => {
-  it('should return the vault allowance value and refresh function', async () => {
-    const chainId = 5
-    const account = '0x123'
-    ;(useERC20Contract as jest.Mock).mockReturnValue({
-      allowance: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
-    })
-
-    const { result } = renderHook(() =>
-      useTrancheVaultAllowanceV2(
-        'HumaCreditLineV2' as any,
-        'senior',
-        account,
-        chainId,
-      ),
-    )
-
-    await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(100))
-    })
-    await waitFor(() => {
-      expect(typeof result.current[1]).toBe('function')
-    })
-  })
-})
-
-describe('useTrancheVaultAllowanceV2', () => {
-  it('should return the vault allowance value and refresh function', async () => {
-    const chainId = 5
-    const account = '0x123'
-    ;(useERC20Contract as jest.Mock).mockReturnValue({
-      balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
-    })
-
-    const { result } = renderHook(() =>
-      useTrancheVaultUnderlyingTokenBalanceV2(
         'HumaCreditLineV2' as any,
         'senior',
         account,
