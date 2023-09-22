@@ -10,6 +10,7 @@ import { configUtil } from './config'
 export enum POOL_NAME {
   RequestNetwork = 'RequestNetwork',
   HumaCreditLine = 'HumaCreditLine',
+  HumaCreditLineV2 = 'HumaCreditLineV2',
   Superfluid = 'Superfluid',
   Jia = 'Jia',
   ArfCreditPool1 = 'ArfCreditPool1',
@@ -713,4 +714,10 @@ export function getPoolInfoForPoolAddress(
   })
 
   return foundPoolInfo
+}
+
+export function isPoolName(
+  poolName: string | undefined,
+): poolName is POOL_NAME {
+  return Object.keys(POOL_NAME).includes(String(poolName))
 }
