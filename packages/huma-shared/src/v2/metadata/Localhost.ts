@@ -1,3 +1,4 @@
+import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME } from '../../utils/pool'
 import POOL_ABI from '../abis/Pool.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
@@ -5,6 +6,7 @@ import { PoolsInfoV2 } from '../utils'
 
 export const LOCALHOST_METADATA: PoolsInfoV2 = {
   HumaCreditLineV2: {
+    chainId: ChainEnum.Localhost,
     poolName: POOL_NAME.HumaCreditLineV2,
     pool: '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
     poolAbi: POOL_ABI,
