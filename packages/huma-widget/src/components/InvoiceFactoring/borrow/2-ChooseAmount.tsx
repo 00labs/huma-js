@@ -1,10 +1,6 @@
-import {
-  AccountStats,
-  PoolInfoType,
-  upScale,
-  useFeeManager,
-} from '@huma-finance/shared'
+import { AccountStats, PoolInfoType, useFeeManager } from '@huma-finance/shared'
 import React, { useCallback, useState } from 'react'
+import { BigNumber } from 'ethers'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
@@ -57,7 +53,9 @@ export function ChooseAmount({
     dispatch(
       setBorrowInfo({
         borrowAmount: currentAmount,
-        borrowAmountBN: upScale(currentAmount, approval?.token.decimal),
+        borrowAmountBN: BigNumber.from(currentAmount)
+          .mul(BigNumber.from(10).pow(BigNumber.from(approval?.token.decimal)))
+          .toJSON(),
         chargedFees,
         remainder: Number(remainder!),
         nextStep: WIDGET_STEP.ConfirmTransfer,

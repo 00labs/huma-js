@@ -15,6 +15,7 @@ export enum POOL_NAME {
   ArfCreditPool1 = 'ArfCreditPool1',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
+  Symplifi = 'Symplifi',
 }
 
 export enum POOL_TYPE {
@@ -121,11 +122,19 @@ export const PoolMap: PoolMapType = {
       estAPY: '13%',
     },
     [POOL_NAME.ImpactMarket]: {
-      name: "impactMarket's Microcredit Pool",
+      name: 'impactMarket Microcredit Pool',
       borrowDesc:
-        'impactMarkets is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+        'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
       lendDesc:
-        'impactMarkets is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+        'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
+      estAPY: '20%',
+    },
+    [POOL_NAME.Symplifi]: {
+      name: 'Symplifi Pool',
+      borrowDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      lendDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       estAPY: '20%',
     },
   },
@@ -361,6 +370,25 @@ export const PoolContractMap: PoolContractMapType = {
   },
   [ChainEnum.Alfajores]: {
     [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ArfCreditPool1]: {
+        basePoolConfig: '0xae72d424f746ca5c5a4457d7dca15abf2ffd40bb',
+        pool: '0x8408faD2cdb181c21AD7Fa5eF6e7B8d5e6b4Eb82',
+        poolFeeManager: '0x8605305fd932a82DD8FEA7662D3990a52C8FC8Fc',
+        poolUnderlyingToken: {
+          address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ArfCreditPool1,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x788574e3Dd5aB0B9B77900E5b16A3dbEA03c6A9F',
+          abi: HDT_ABI,
+        },
+      },
       [POOL_NAME.ImpactMarket]: {
         basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
         pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
@@ -382,6 +410,25 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           borrower: '0xf069014c47387FB0265E66FE637118b11f59958d',
           disableBorrow: true,
+        },
+      },
+      [POOL_NAME.HumaCreditLine]: {
+        basePoolConfig: '0x0bb39a0136643d60244070619e2e8ecbddf038ae',
+        pool: '0xB6958E6852E1dA4C2468d8c0286884C68519282a',
+        poolFeeManager: '0xd6fB372Da1c157Ca769dd1bD33D3e59D1B8376d0',
+        poolUnderlyingToken: {
+          address: '0x5F9E8b946472C9bA78491a4AbeA9d3BAccfB28E5',
+          symbol: 'USDC',
+          decimals: 18,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.HumaCreditLine,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x25BB64Ee818fFb2ee04c18D829a3754bDbfb4802',
+          abi: HDT_ABI,
         },
       },
     },
@@ -468,6 +515,28 @@ export const PoolContractMap: PoolContractMapType = {
         HDT: {
           address: '0xd5DC108eDC7dFE5f2811Da5ffAed914C99aCBAe8',
           abi: HDT_ABI,
+        },
+      },
+      [POOL_NAME.Symplifi]: {
+        basePoolConfig: '0x60de6e6727be2cfd0733d790528d7e4ce4049277',
+        pool: '0xCCa17BB13C94E19bAd67a59687D22A68aEe9d7e7',
+        poolFeeManager: '0x4CD872604DA256c752C52541B190E3E482Fd0819',
+        poolUnderlyingToken: {
+          address: '0xb961c37ABDDA55929327fa9d20eBDE6BB8B1348E',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.Symplifi,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x58174E6989AfB9e265b3bB1C981B18096C13D83D',
+          abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0x71a4E7F3A2c67BDBa6Ec9F864A830c255A4bF123',
         },
       },
     },

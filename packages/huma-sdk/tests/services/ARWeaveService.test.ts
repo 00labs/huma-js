@@ -110,7 +110,8 @@ describe('getBundlrInstance', () => {
       providerUrl:
         'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     }
-    const signer = 'privateKey'
+    const signer =
+      '0000000000000000000000000000000000000000000000000000000000000000'
 
     const bundlrInstance = await ARWeaveService.getBundlrInstance(
       config,
@@ -124,10 +125,11 @@ describe('getBundlrInstance', () => {
 
   it('should create a Bundlr instance without a providerUrl if not provided in the config', async () => {
     const config = {
-      nodeUrl: 'https://devnet.bundlr.network',
+      nodeUrl: 'https://bundlr.network',
       currency: 'ethereum',
     }
-    const signer = 'privateKey'
+    const signer =
+      '0000000000000000000000000000000000000000000000000000000000000000'
 
     const bundlrInstance = await ARWeaveService.getBundlrInstance(
       config,
@@ -148,7 +150,8 @@ describe('prefundBundlr', () => {
       providerUrl:
         'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     }
-    const signer = '0x123'
+    const signer =
+      '0000000000000000000000000000000000000000000000000000000000000000'
     const amount = 10
 
     const result = await ARWeaveService.prefundBundlr(config, signer, amount)
@@ -156,17 +159,17 @@ describe('prefundBundlr', () => {
     expect(result).toEqual(BigNumber.from(String(amount * amount ** 18)))
   })
 
-  it('should prefund the Bundlr network if providerUrl is empty', async () => {
+  it('should not prefund the Bundlr network if providerUrl is empty', async () => {
     const config: BundlrConfig = {
       nodeUrl: 'https://devnet.bundlr.network',
       currency: 'ethereum',
       providerUrl: '',
     }
-    const signer = '0x123'
+    const signer =
+      '0000000000000000000000000000000000000000000000000000000000000000'
     const amount = 10
 
     const result = await ARWeaveService.prefundBundlr(config, signer, amount)
-
     expect(result).toEqual(BigNumber.from(String(amount * amount ** 18)))
   })
 })
@@ -181,7 +184,8 @@ describe('storeData', () => {
       providerUrl:
         'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     }
-    const signer = '0x123'
+    const signer =
+      '0000000000000000000000000000000000000000000000000000000000000000'
     // byteLength 15
     const data = { key: 'value' }
     const tags = [{ name: 'tag1', value: 'value1' }]
@@ -206,7 +210,8 @@ describe('storeData', () => {
 describe('queryForMetadata', () => {
   it('should query for metadata from the Arweave network', async () => {
     const chainId = 5
-    const sender = '0x123'
+    const sender =
+      '0000000000000000000000000000000000000000000000000000000000000000'
     const referenceId = 'ref1'
 
     // Mock the request function to resolve with specific data

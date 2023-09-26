@@ -1,12 +1,12 @@
 import {
   AccountStats,
   PoolInfoType,
-  upScale,
   useCLFeeManager,
   useCLPoolAllowance,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useState } from 'react'
+import { BigNumber } from 'ethers'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
@@ -48,7 +48,9 @@ export function ChooseAmount({
     dispatch(
       setBorrowInfo({
         borrowAmount: currentAmount,
-        borrowAmountBN: upScale(currentAmount, decimals),
+        borrowAmountBN: BigNumber.from(currentAmount)
+          .mul(BigNumber.from(10).pow(decimals))
+          .toJSON(),
         chargedFees,
         nextStep,
       }),

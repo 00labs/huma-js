@@ -101,7 +101,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       )
     } catch (error) {
       expect((error as any).message).toBe(
-        'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
+        'Could not find ARWeave Id for this reference Id. Please check your logs for more details.',
       )
     }
   })
@@ -213,7 +213,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       'ARWeave id',
     )
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: ['receivable1', 'receivable2'],
+      rwreceivables: ['receivable1', 'receivable2'],
     })
 
     const signer = {
@@ -247,7 +247,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       'ARWeave id',
     )
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: 12 }],
+      rwreceivables: [{ tokenId: 12 }],
     })
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
 
@@ -281,7 +281,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
       'ARWeave id',
     )
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: null }],
+      rwreceivables: [{ tokenId: null }],
     })
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
 
@@ -316,7 +316,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
     )
     ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue('uri')
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: 'receivable1' }],
+      rwreceivables: [{ tokenId: 'receivable1' }],
     })
     ;(getDefaultGasOptions as jest.Mock).mockResolvedValue({})
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
@@ -650,7 +650,7 @@ describe('createReceivableWithMetadata', () => {
     ;(ARWeaveService.storeData as jest.Mock).mockReturnValue({})
     const signer = { getAddress: jest.fn().mockResolvedValue('0x123') } as any
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: null }],
+      rwreceivables: [{ tokenId: null }],
     })
 
     const privateKey = '0xabc'
@@ -701,7 +701,7 @@ describe('createReceivableWithMetadata', () => {
     ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue('uri')
     const signer = { getAddress: jest.fn().mockResolvedValue('0x123') } as any
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: 'receivable1' }],
+      rwreceivables: [{ tokenId: 'receivable1' }],
     })
 
     const privateKey = '0xabc'
@@ -770,7 +770,7 @@ describe('createReceivableWithMetadata', () => {
       }),
     })
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: null }],
+      rwreceivables: [{ tokenId: null }],
     })
 
     const signer = { getAddress: jest.fn().mockResolvedValue('0x123') } as any
@@ -817,7 +817,7 @@ describe('createReceivableWithMetadata', () => {
       createRealWorldReceivable: () => true,
     })
     ;(request as jest.Mock).mockResolvedValue({
-      receivables: [{ tokenId: null }],
+      rwreceivables: [{ tokenId: null }],
     })
 
     const signer = { getAddress: jest.fn().mockResolvedValue('0xNull') } as any
