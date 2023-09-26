@@ -370,6 +370,25 @@ export const PoolContractMap: PoolContractMapType = {
   },
   [ChainEnum.Alfajores]: {
     [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ArfCreditPool1]: {
+        basePoolConfig: '0xae72d424f746ca5c5a4457d7dca15abf2ffd40bb',
+        pool: '0x8408faD2cdb181c21AD7Fa5eF6e7B8d5e6b4Eb82',
+        poolFeeManager: '0x8605305fd932a82DD8FEA7662D3990a52C8FC8Fc',
+        poolUnderlyingToken: {
+          address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ArfCreditPool1,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x788574e3Dd5aB0B9B77900E5b16A3dbEA03c6A9F',
+          abi: HDT_ABI,
+        },
+      },
       [POOL_NAME.ImpactMarket]: {
         basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
         pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
