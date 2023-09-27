@@ -6,7 +6,7 @@ import {
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useState } from 'react'
-import { BigNumber } from 'ethers'
+import { ethers } from 'ethers'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
@@ -45,11 +45,12 @@ export function ChooseAmount({
     const nextStep = approved
       ? WIDGET_STEP.Transfer
       : WIDGET_STEP.ApproveAllowance
+
     dispatch(
       setBorrowInfo({
         borrowAmount: currentAmount,
-        borrowAmountBN: BigNumber.from(currentAmount)
-          .mul(BigNumber.from(10).pow(decimals))
+        borrowAmountBN: ethers.utils
+          .parseUnits(currentAmount.toString(), decimals)
           .toJSON(),
         chargedFees,
         nextStep,
