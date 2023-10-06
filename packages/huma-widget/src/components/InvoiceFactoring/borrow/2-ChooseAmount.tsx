@@ -1,6 +1,6 @@
 import { AccountStats, PoolInfoType, useFeeManager } from '@huma-finance/shared'
 import React, { useCallback, useState } from 'react'
-import { BigNumber } from 'ethers'
+import { ethers } from 'ethers'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
@@ -53,8 +53,8 @@ export function ChooseAmount({
     dispatch(
       setBorrowInfo({
         borrowAmount: currentAmount,
-        borrowAmountBN: BigNumber.from(currentAmount)
-          .mul(BigNumber.from(10).pow(BigNumber.from(approval?.token.decimal)))
+        borrowAmountBN: ethers.utils
+          .parseUnits(currentAmount.toString(), approval?.token.decimal)
           .toJSON(),
         chargedFees,
         remainder: Number(remainder!),
