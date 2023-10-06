@@ -459,6 +459,29 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
         },
       },
+      [POOL_NAME.ArfCreditPool1]: {
+        basePoolConfig: '0x388525cE9fC784A657c73Fb5d70FBc1fa5a53d31',
+        pool: '0xc88BD9aa20d6353B43e7d159b67546eD5b7A1808',
+        poolFeeManager: '0x5D762498a60a302FBD85A9c1FF2e65B67baBabc6',
+        poolUnderlyingToken: {
+          address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          symbol: 'cUSD',
+          decimals: 18,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.ArfCreditPool1,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0xFf518eb9B4328d37e28C61AAe74079cD4cC7058A',
+          abi: HDT_ABI,
+        },
+        extra: {
+          disableBorrow: true,
+          detailsPage: true,
+        },
+      },
     },
   },
   [ChainEnum.Mumbai]: {
