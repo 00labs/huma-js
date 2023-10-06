@@ -1,6 +1,6 @@
 {
   "name": "@huma-finance/widgets",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "publishConfig": {
     "access": "public"
   },
@@ -30,8 +30,8 @@
     "@ethersproject/experimental": "^5.7.0",
     "@ethersproject/providers": "^5.6.0",
     "@ethersproject/units": "^5.6.0",
-    "@huma-finance/sdk": "^0.0.44",
-    "@huma-finance/shared": "^0.0.44",
+    "@huma-finance/sdk": "^0.0.45",
+    "@huma-finance/shared": "^0.0.45",
     "@mui/icons-material": "^5.3.0",
     "@mui/material": "^5.0.6",
     "@mui/styles": "^5.0.2",
