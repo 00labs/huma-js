@@ -16,6 +16,7 @@ export enum POOL_NAME {
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
   Symplifi = 'Symplifi',
+  Bulla = 'Bulla',
 }
 
 export enum POOL_TYPE {
@@ -135,6 +136,14 @@ export const PoolMap: PoolMapType = {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       lendDesc:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      estAPY: '20%',
+    },
+    [POOL_NAME.Bulla]: {
+      name: 'Bulla Finance Lending Pool',
+      borrowDesc:
+        'The Bulla Finance Lending Pool offers invoice factoring on-chain.',
+      lendDesc:
+        'The Bulla Finance Lending Pool offers invoice factoring on-chain.',
       estAPY: '20%',
     },
   },
@@ -282,6 +291,30 @@ export const PoolContractMap: PoolContractMapType = {
         },
         extra: {
           borrower: '0xd581AEDAB50a0431D52829F03d42d0C61bc36119',
+          disableBorrow: true,
+          detailsPage: true,
+        },
+      },
+      [POOL_NAME.Bulla]: {
+        basePoolConfig: '0x4AC443e87211B940C9e7c4c6801d24C34bD9f227',
+        pool: '0x3EBc1f0644A69c565957EF7cEb5AEafE94Eb6FcE',
+        poolFeeManager: '0x989F1194d637A928628a2d8204990E35d198b6D0',
+        poolUnderlyingToken: {
+          address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ArfCreditPool1,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0xA8aCE4AFe8801363489E1a6308031FdF84332702',
+          abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0xEA57a8A51377752fFddaa3db4d13CE8F97677F2D',
           disableBorrow: true,
           detailsPage: true,
         },
