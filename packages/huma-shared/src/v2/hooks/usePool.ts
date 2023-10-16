@@ -6,6 +6,8 @@ import { isChainEnum, POOL_NAME } from '../../utils'
 import { PoolInfoV2, CHAIN_POOLS_INFO_V2, VaultType } from '../utils/pool'
 import { PoolVault, TrancheVault } from '../abis/types'
 
+export type FALLBACK_PROVIDERS = { [chainId: number]: string }
+
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,
   chainId: number | undefined,
@@ -19,27 +21,47 @@ export const usePoolInfoV2 = (
 function usePoolVaultContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContract<PoolVault>(poolInfo?.poolVault, poolInfo?.poolVaultAbi)
+  return useContract<PoolVault>(
+    poolInfo?.poolVault,
+    poolInfo?.poolVaultAbi,
+    true,
+    chainId,
+    fallbackProviders,
+  )
 }
 
 export function usePoolUnderlyingTokenContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useERC20Contract(poolInfo?.poolUnderlyingToken.address)
+  return useERC20Contract(
+    poolInfo?.poolUnderlyingToken.address,
+    true,
+    chainId,
+    fallbackProviders,
+  )
 }
 
 export function useTrancheVaultContractV2(
   poolName: POOL_NAME,
   vaultType: VaultType,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const contractAddr = poolInfo?.[`${vaultType}TrancheVault`]
-  return useContract<TrancheVault>(contractAddr, poolInfo?.trancheVaultAbi)
+  return useContract<TrancheVault>(
+    contractAddr,
+    poolInfo?.trancheVaultAbi,
+    true,
+    chainId,
+    fallbackProviders,
+  )
 }
 
 export function useContractValueV2<T = BigNumber>(
@@ -80,8 +102,13 @@ export function useContractValueV2<T = BigNumber>(
 export function usePoolVaultTotalAssetsV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
-  const poolVaultContract = usePoolVaultContractV2(poolName, chainId)
+  const poolVaultContract = usePoolVaultContractV2(
+    poolName,
+    chainId,
+    fallbackProviders,
+  )
   const [value, refresh] = useContractValueV2(poolVaultContract, 'totalAssets')
   return [value, refresh]
 }
@@ -90,11 +117,13 @@ export function useTrancheVaultAssetsV2(
   poolName: POOL_NAME,
   vaultType: VaultType,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
   const trancheVaultContract = useTrancheVaultContractV2(
     poolName,
     vaultType,
     chainId,
+    fallbackProviders,
   )
   const [value, refresh] = useContractValueV2(
     trancheVaultContract,
@@ -108,10 +137,16 @@ export function useLenderApprovedV2(
   vaultType: VaultType,
   account: string | undefined,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ): [Boolean | undefined, () => void] {
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
-  const vaultContract = useTrancheVaultContractV2(poolName, vaultType, chainId)
+  const vaultContract = useTrancheVaultContractV2(
+    poolName,
+    vaultType,
+    chainId,
+    fallbackProviders,
+  )
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,8 +169,14 @@ export function useLenderPositionV2(
   vaultType: VaultType,
   account: string | undefined,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
-  const vaultContract = useTrancheVaultContractV2(poolName, vaultType, chainId)
+  const vaultContract = useTrancheVaultContractV2(
+    poolName,
+    vaultType,
+    chainId,
+    fallbackProviders,
+  )
   const [balance, refresh] = useContractValueV2(
     vaultContract,
     'balanceOf',
@@ -149,10 +190,15 @@ export function usePoolVaultAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ): [BigNumber, () => void] {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const spender = poolInfo?.poolVault
-  const contract = usePoolUnderlyingTokenContractV2(poolName, chainId)
+  const contract = usePoolUnderlyingTokenContractV2(
+    poolName,
+    chainId,
+    fallbackProviders,
+  )
   const [allowance = BigNumber.from(0), refresh] = useContractValueV2(
     contract,
     'allowance',
@@ -166,8 +212,13 @@ export function usePoolUnderlyingTokenBalanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
+  fallbackProviders?: FALLBACK_PROVIDERS,
 ): [BigNumber, () => void] {
-  const contract = usePoolUnderlyingTokenContractV2(poolName, chainId)
+  const contract = usePoolUnderlyingTokenContractV2(
+    poolName,
+    chainId,
+    fallbackProviders,
+  )
   const [balance = BigNumber.from(0), refresh] = useContractValueV2(
     contract,
     'balanceOf',
