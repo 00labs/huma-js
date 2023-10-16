@@ -693,7 +693,9 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
+    inputs: [],
+    name: 'firstUnprocessedEpochIndex',
+    outputs: [
       {
         components: [
           {
@@ -732,8 +734,6 @@ const _abi = [
         type: 'uint256',
       },
     ],
-    name: 'executeEpochs',
-    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -1041,13 +1041,29 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'lender',
+        name: '',
         type: 'address',
       },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    name: 'removeApprovedLender',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'redemptionRequestsByLender',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: 'epochId',
+        type: 'uint64',
+      },
+      {
+        internalType: 'uint96',
+        name: 'numSharesRequested',
+        type: 'uint96',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {

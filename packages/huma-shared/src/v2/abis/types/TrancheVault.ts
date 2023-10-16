@@ -66,7 +66,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     'epochIds(uint256)': FunctionFragment
     'epochInfoByEpochId(uint256)': FunctionFragment
     'epochManager()': FunctionFragment
-    'executeEpochs((uint64,uint96,uint96,uint96)[],uint256,uint256)': FunctionFragment
+    'firstUnprocessedEpochIndex()': FunctionFragment
     'firstUnprocessedEpochIndex()': FunctionFragment
     'getNumEpochsWithRedemption()': FunctionFragment
     'getNumRedemptionRequests(address)': FunctionFragment
@@ -83,7 +83,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     'poolSafe()': FunctionFragment
     'redemptionDisbursementInfoByLender(address)': FunctionFragment
     'redemptionRequestsByLender(address,uint256)': FunctionFragment
-    'removeApprovedLender(address)': FunctionFragment
+    'redemptionRequestsByLender(address,uint256)': FunctionFragment
     'renounceRole(bytes32,address)': FunctionFragment
     'revokeRole(bytes32,address)': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
@@ -121,8 +121,8 @@ export interface TrancheVaultInterface extends utils.Interface {
       | 'epochIds'
       | 'epochInfoByEpochId'
       | 'epochManager'
-      | 'executeEpochs'
-      | 'firstUnprocessedEpochIndex'
+      | 'firstUnprocessedEpochIndex()'
+      | 'firstUnprocessedEpochIndex()'
       | 'getNumEpochsWithRedemption'
       | 'getNumRedemptionRequests'
       | 'getRoleAdmin'
@@ -137,8 +137,8 @@ export interface TrancheVaultInterface extends utils.Interface {
       | 'poolConfig'
       | 'poolSafe'
       | 'redemptionDisbursementInfoByLender'
-      | 'redemptionRequestsByLender'
-      | 'removeApprovedLender'
+      | 'redemptionRequestsByLender(address,uint256)'
+      | 'redemptionRequestsByLender(address,uint256)'
       | 'renounceRole'
       | 'revokeRole'
       | 'setPoolConfig'
@@ -226,15 +226,11 @@ export interface TrancheVaultInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'executeEpochs',
-    values: [
-      EpochInfoStruct[],
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-    ],
+    functionFragment: 'firstUnprocessedEpochIndex()',
+    values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'firstUnprocessedEpochIndex',
+    functionFragment: 'firstUnprocessedEpochIndex()',
     values?: undefined,
   ): string
   encodeFunctionData(
@@ -287,12 +283,12 @@ export interface TrancheVaultInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'redemptionRequestsByLender',
+    functionFragment: 'redemptionRequestsByLender(address,uint256)',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'removeApprovedLender',
-    values: [PromiseOrValue<string>],
+    functionFragment: 'redemptionRequestsByLender(address,uint256)',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'renounceRole',
@@ -405,11 +401,11 @@ export interface TrancheVaultInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'executeEpochs',
+    functionFragment: 'firstUnprocessedEpochIndex()',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'firstUnprocessedEpochIndex',
+    functionFragment: 'firstUnprocessedEpochIndex()',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -451,11 +447,11 @@ export interface TrancheVaultInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'redemptionRequestsByLender',
+    functionFragment: 'redemptionRequestsByLender(address,uint256)',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'removeApprovedLender',
+    functionFragment: 'redemptionRequestsByLender(address,uint256)',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -807,14 +803,13 @@ export interface TrancheVault extends BaseContract {
 
     epochManager(overrides?: CallOverrides): Promise<[string]>
 
-    executeEpochs(
-      epochsProcessed: EpochInfoStruct[],
-      sharesProcessed: PromiseOrValue<BigNumberish>,
-      amountProcessed: PromiseOrValue<BigNumberish>,
+    'firstUnprocessedEpochIndex()'(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<[BigNumber]>
+    'firstUnprocessedEpochIndex()'(
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<[BigNumber]>
 
@@ -883,7 +878,7 @@ export interface TrancheVault extends BaseContract {
       }
     >
 
-    redemptionRequestsByLender(
+    'redemptionRequestsByLender(address,uint256)'(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
@@ -894,10 +889,16 @@ export interface TrancheVault extends BaseContract {
       }
     >
 
-    removeApprovedLender(
-      lender: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
+    'redemptionRequestsByLender(address,uint256)'(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        epochId: BigNumber
+        numSharesRequested: BigNumber
+      }
+    >
 
     renounceRole(
       role: PromiseOrValue<BytesLike>,
@@ -1054,14 +1055,11 @@ export interface TrancheVault extends BaseContract {
 
   epochManager(overrides?: CallOverrides): Promise<string>
 
-  executeEpochs(
-    epochsProcessed: EpochInfoStruct[],
-    sharesProcessed: PromiseOrValue<BigNumberish>,
-    amountProcessed: PromiseOrValue<BigNumberish>,
+  'firstUnprocessedEpochIndex()'(
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<BigNumber>
+  'firstUnprocessedEpochIndex()'(overrides?: CallOverrides): Promise<BigNumber>
 
   getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -1130,7 +1128,7 @@ export interface TrancheVault extends BaseContract {
     }
   >
 
-  redemptionRequestsByLender(
+  'redemptionRequestsByLender(address,uint256)'(
     arg0: PromiseOrValue<string>,
     arg1: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
@@ -1141,10 +1139,16 @@ export interface TrancheVault extends BaseContract {
     }
   >
 
-  removeApprovedLender(
-    lender: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
+  'redemptionRequestsByLender(address,uint256)'(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      epochId: BigNumber
+      numSharesRequested: BigNumber
+    }
+  >
 
   renounceRole(
     role: PromiseOrValue<BytesLike>,
@@ -1299,14 +1303,17 @@ export interface TrancheVault extends BaseContract {
 
     epochManager(overrides?: CallOverrides): Promise<string>
 
-    executeEpochs(
-      epochsProcessed: EpochInfoStruct[],
-      sharesProcessed: PromiseOrValue<BigNumberish>,
-      amountProcessed: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
+    'firstUnprocessedEpochIndex()'(overrides?: CallOverrides): Promise<
+      [EpochInfoStructOutput[], BigNumber, BigNumber] & {
+        epochsProcessed: EpochInfoStructOutput[]
+        sharesProcessed: BigNumber
+        amountProcessed: BigNumber
+      }
+    >
 
-    firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<BigNumber>
+    'firstUnprocessedEpochIndex()'(
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -1375,7 +1382,7 @@ export interface TrancheVault extends BaseContract {
       }
     >
 
-    redemptionRequestsByLender(
+    'redemptionRequestsByLender(address,uint256)'(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
@@ -1386,10 +1393,16 @@ export interface TrancheVault extends BaseContract {
       }
     >
 
-    removeApprovedLender(
-      lender: PromiseOrValue<string>,
+    'redemptionRequestsByLender(address,uint256)'(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<void>
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        epochId: BigNumber
+        numSharesRequested: BigNumber
+      }
+    >
 
     renounceRole(
       role: PromiseOrValue<BytesLike>,
@@ -1669,14 +1682,13 @@ export interface TrancheVault extends BaseContract {
 
     epochManager(overrides?: CallOverrides): Promise<BigNumber>
 
-    executeEpochs(
-      epochsProcessed: EpochInfoStruct[],
-      sharesProcessed: PromiseOrValue<BigNumberish>,
-      amountProcessed: PromiseOrValue<BigNumberish>,
+    'firstUnprocessedEpochIndex()'(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    firstUnprocessedEpochIndex(overrides?: CallOverrides): Promise<BigNumber>
+    'firstUnprocessedEpochIndex()'(
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     getNumEpochsWithRedemption(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -1739,15 +1751,16 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    redemptionRequestsByLender(
+    'redemptionRequestsByLender(address,uint256)'(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    removeApprovedLender(
-      lender: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    'redemptionRequestsByLender(address,uint256)'(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>
 
     renounceRole(
@@ -1895,14 +1908,11 @@ export interface TrancheVault extends BaseContract {
 
     epochManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    executeEpochs(
-      epochsProcessed: EpochInfoStruct[],
-      sharesProcessed: PromiseOrValue<BigNumberish>,
-      amountProcessed: PromiseOrValue<BigNumberish>,
+    'firstUnprocessedEpochIndex()'(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    firstUnprocessedEpochIndex(
+    'firstUnprocessedEpochIndex()'(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -1969,15 +1979,16 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    redemptionRequestsByLender(
+    'redemptionRequestsByLender(address,uint256)'(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    removeApprovedLender(
-      lender: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    'redemptionRequestsByLender(address,uint256)'(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
     renounceRole(
