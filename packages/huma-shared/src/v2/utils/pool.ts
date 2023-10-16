@@ -2,6 +2,7 @@ import {
   ChainEnum,
   LenderApprovalProvider,
   POOL_NAME,
+  POOL_TYPE,
   isChainEnum,
 } from '../../utils'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
@@ -16,6 +17,7 @@ export enum FirstLossCoverIndex {
 export type PoolInfoV2 = {
   chainId: ChainEnum
   poolName: POOL_NAME
+  poolType: POOL_TYPE
   pool: string
   poolAbi: unknown
   poolSafe: string
@@ -32,8 +34,7 @@ export type PoolInfoV2 = {
   seniorAPY: string
   juniorAPY: string
   title: string
-  borrowDesc: string
-  lendDesc: string
+  desc: string
   lenderApprovalProvider?: LenderApprovalProvider
   industry?:
     | 'Supply Chain Financing'

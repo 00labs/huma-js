@@ -354,7 +354,6 @@ export const PoolContractMap: PoolContractMapType = {
             provider: 'Securitize',
           },
           detailsPage: true,
-          hidden: true,
         },
       },
     },

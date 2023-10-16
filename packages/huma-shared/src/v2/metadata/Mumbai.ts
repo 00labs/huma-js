@@ -1,5 +1,5 @@
 import { ChainEnum } from '../../utils/chain'
-import { POOL_NAME } from '../../utils/pool'
+import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import POOL_ABI from '../abis/Pool.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
@@ -9,6 +9,7 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
   HumaCreditLineV2: {
     chainId: ChainEnum.Mumbai,
     poolName: POOL_NAME.HumaCreditLineV2,
+    poolType: POOL_TYPE.CreditLine,
     pool: '0x3E638f5A36C885c68f0F05143cbb617affA29e4e',
     poolAbi: POOL_ABI,
     poolSafeAbi: POOL_SAFE_ABI,
@@ -25,9 +26,6 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
       icon: 'USDC',
     },
     title: 'Huma Credit Line V2',
-    borrowDesc:
-      'Credit lines backed by your future crypto income. Only available to the members of partner DAOs during beta.',
-    lendDesc:
-      'Earn active yield by participating in credit lines backed by on-chain income. Only available to the members of partner DAOs during beta.',
+    desc: 'Earn active yield by participating in credit lines backed by on-chain income. Only available to the members of partner DAOs during beta.',
   },
 }
