@@ -371,6 +371,25 @@ export const PoolContractMap: PoolContractMapType = {
   },
   [ChainEnum.Alfajores]: {
     [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ArfCreditPool1]: {
+        basePoolConfig: '0xae72d424f746ca5c5a4457d7dca15abf2ffd40bb',
+        pool: '0x8408faD2cdb181c21AD7Fa5eF6e7B8d5e6b4Eb82',
+        poolFeeManager: '0x8605305fd932a82DD8FEA7662D3990a52C8FC8Fc',
+        poolUnderlyingToken: {
+          address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ArfCreditPool1,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x788574e3Dd5aB0B9B77900E5b16A3dbEA03c6A9F',
+          abi: HDT_ABI,
+        },
+      },
       [POOL_NAME.ImpactMarket]: {
         basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
         pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
@@ -439,6 +458,29 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
           borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
+        },
+      },
+      [POOL_NAME.ArfCreditPool1]: {
+        basePoolConfig: '0x388525cE9fC784A657c73Fb5d70FBc1fa5a53d31',
+        pool: '0xc88BD9aa20d6353B43e7d159b67546eD5b7A1808',
+        poolFeeManager: '0x5D762498a60a302FBD85A9c1FF2e65B67baBabc6',
+        poolUnderlyingToken: {
+          address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          symbol: 'cUSD',
+          decimals: 18,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.ArfCreditPool1,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0xFf518eb9B4328d37e28C61AAe74079cD4cC7058A',
+          abi: HDT_ABI,
+        },
+        extra: {
+          disableBorrow: true,
+          detailsPage: true,
         },
       },
     },

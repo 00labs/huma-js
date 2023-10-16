@@ -1,4 +1,9 @@
-import { ChainEnum, isChainEnum, POOL_NAME } from '../../utils'
+import {
+  ChainEnum,
+  LenderApprovalProvider,
+  POOL_NAME,
+  isChainEnum,
+} from '../../utils'
 import { LOCALHOST_METADATA } from '../metadata/Localhost'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
@@ -9,10 +14,12 @@ export type PoolInfoV2 = {
   poolName: POOL_NAME
   pool: string
   poolAbi: unknown
+  poolVault: string
+  poolVaultAbi: unknown
   seniorTrancheVault: string
   juniorTrancheVault: string
   trancheVaultAbi: unknown
-  underlyingToken: {
+  poolUnderlyingToken: {
     address: string
     symbol: string
     decimals: number
@@ -23,6 +30,7 @@ export type PoolInfoV2 = {
   title: string
   borrowDesc: string
   lendDesc: string
+  lenderApprovalProvider?: LenderApprovalProvider
 }
 
 export type PoolsInfoV2 = {
