@@ -6,5 +6,6 @@ export { Pool__factory } from './Pool__factory'
 export { TrancheVault__factory } from './TrancheVault__factory'
 =======
 export { Pool__factory } from "./Pool__factory";
+export { PoolVault__factory } from "./PoolVault__factory";
 export { TrancheVault__factory } from "./TrancheVault__factory";
 >>>>>>> ff9b4d4 (Add local network (#46))
