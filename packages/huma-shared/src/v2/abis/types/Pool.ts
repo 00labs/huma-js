@@ -50,7 +50,7 @@ export interface PoolInterface extends utils.Interface {
     "tranchesLosses()": FunctionFragment;
     "tranchesPolicy()": FunctionFragment;
     "updatePoolConfigData()": FunctionFragment;
-    "updateTranchesAssets(uint96[2])": FunctionFragment;
+    "updateTrancheAssets(uint96[2])": FunctionFragment;
   };
 
   getFunction(
@@ -76,7 +76,7 @@ export interface PoolInterface extends utils.Interface {
       | "tranchesLosses"
       | "tranchesPolicy"
       | "updatePoolConfigData"
-      | "updateTranchesAssets"
+      | "updateTrancheAssets"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "credit", values?: undefined): string;
@@ -155,7 +155,7 @@ export interface PoolInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "updateTranchesAssets",
+    functionFragment: "updateTrancheAssets",
     values: [[PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]]
   ): string;
 
@@ -223,7 +223,7 @@ export interface PoolInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateTranchesAssets",
+    functionFragment: "updateTrancheAssets",
     data: BytesLike
   ): Result;
 
@@ -423,7 +423,7 @@ export interface Pool extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    updateTranchesAssets(
+    updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -508,7 +508,7 @@ export interface Pool extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  updateTranchesAssets(
+  updateTrancheAssets(
     assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -585,7 +585,7 @@ export interface Pool extends BaseContract {
 
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>;
 
-    updateTranchesAssets(
+    updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: CallOverrides
     ): Promise<void>;
@@ -709,7 +709,7 @@ export interface Pool extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    updateTranchesAssets(
+    updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -785,7 +785,7 @@ export interface Pool extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateTranchesAssets(
+    updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

@@ -2,7 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Pool } from "./Pool";
+export type { PoolVault } from "./PoolVault";
 export type { TrancheVault } from "./TrancheVault";
 export * as factories from "./factories";
 export { Pool__factory } from "./factories/Pool__factory";
+export { PoolVault__factory } from "./factories/PoolVault__factory";
 export { TrancheVault__factory } from "./factories/TrancheVault__factory";

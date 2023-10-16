@@ -32,6 +32,7 @@ import {
   InvoiceFactoringPaymentProps,
 } from './components/InvoiceFactoring/payment'
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
+import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
 import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
@@ -217,6 +218,28 @@ export function LendSupplyWidget(props: LendSupplyWidgetProps) {
   return (
     <Widget {...props}>
       <LendSupply {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Lend pool supply widget props V2
+ * @typedef {Object} LendSupplyWidgetPropsV2
+ * @property {LendSupplyPropsV2} LendSupplyPropsV2 - Lend pool supply props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type LendSupplyWidgetPropsV2 = LendSupplyPropsV2 & WidgetProps
+
+/**
+ * Lend supply widget V2
+ *
+ * @param {LendSupplyWidgetPropsV2} props - The lend pool supply widget props V2.
+ * @returns Lend pool supply widget component V2
+ */
+export function LendSupplyWidgetV2(props: LendSupplyWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <LendSupplyV2 {...props} />
     </Widget>
   )
 }
