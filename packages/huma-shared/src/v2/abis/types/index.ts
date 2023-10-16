@@ -9,8 +9,10 @@ export { Pool__factory } from './factories/Pool__factory'
 export { TrancheVault__factory } from './factories/TrancheVault__factory'
 =======
 export type { Pool } from "./Pool";
+export type { PoolVault } from "./PoolVault";
 export type { TrancheVault } from "./TrancheVault";
 export * as factories from "./factories";
 export { Pool__factory } from "./factories/Pool__factory";
+export { PoolVault__factory } from "./factories/PoolVault__factory";
 export { TrancheVault__factory } from "./factories/TrancheVault__factory";
 >>>>>>> ff9b4d4 (Add local network (#46))

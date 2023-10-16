@@ -79,17 +79,17 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "exceededMaxJuniorSeniorRatio",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "exceededPoolLiquidityCap",
+    name: "insufficientSharesForRequest",
     type: "error",
   },
   {
     inputs: [],
     name: "invalidTrancheIndex",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "maxSeniorJuniorRatioExceeded",
     type: "error",
   },
   {
@@ -104,7 +104,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "shareHigherThanRequested",
+    name: "poolLiquidityCapExceeded",
     type: "error",
   },
   {
@@ -278,6 +278,31 @@ const _abi = [
     name: 'LiquidityDeposited',
     type: 'event',
 =======
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "withdrawnAmount",
+        type: "uint256",
+      },
+    ],
+    name: "LenderFundDisbursed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: "address",
         name: "account",
         type: "address",
@@ -640,6 +665,7 @@ const _abi = [
 >>>>>>> ff9b4d4 (Add local network (#46))
   },
   {
+<<<<<<< HEAD
     anonymous: false,
     inputs: [
       {
@@ -712,6 +738,8 @@ const _abi = [
     type: "event",
   },
   {
+=======
+>>>>>>> cb726dd (Lender deposit v2 (#52))
     inputs: [],
     name: "DEFAULT_ADMIN_ROLE",
     outputs: [
@@ -953,6 +981,38 @@ const _abi = [
     type: 'function',
 =======
         internalType: "uint256",
+        name: "shares",
+        type: "uint256",
+      },
+    ],
+    name: "cancelRedemptionRequest",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "cancellableRedemptionShares",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "shares",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "assets",
         type: "uint256",
       },
@@ -1151,6 +1211,7 @@ const _abi = [
     type: "function",
   },
   {
+<<<<<<< HEAD
     inputs: [],
     name: "epochManager",
     outputs: [
@@ -1165,6 +1226,8 @@ const _abi = [
 >>>>>>> ff9b4d4 (Add local network (#46))
   },
   {
+=======
+>>>>>>> cb726dd (Lender deposit v2 (#52))
     inputs: [
       {
 <<<<<<< HEAD
@@ -1217,7 +1280,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "epochMap",
+    name: "epochInfoByEpochId",
     outputs: [
       {
         internalType: "uint64",
@@ -1226,12 +1289,12 @@ const _abi = [
       },
       {
         internalType: "uint96",
-        name: "totalShareRequested",
+        name: "totalSharesRequested",
         type: "uint96",
       },
       {
         internalType: "uint96",
-        name: "totalShareProcessed",
+        name: "totalSharesProcessed",
         type: "uint96",
       },
       {
@@ -1245,12 +1308,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getRedemptionEpochLength",
+    name: "epochManager",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "contract IEpochManager",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -1258,8 +1321,11 @@ const _abi = [
 >>>>>>> ff9b4d4 (Add local network (#46))
   },
   {
-    inputs: [
+    inputs: [],
+    name: "firstUnprocessedEpochIndex",
+    outputs: [
       {
+<<<<<<< HEAD
 <<<<<<< HEAD
         internalType: 'bytes32',
         name: 'role',
@@ -1280,14 +1346,24 @@ const _abi = [
         internalType: "bytes32",
         name: "role",
         type: "bytes32",
+=======
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+>>>>>>> cb726dd (Lender deposit v2 (#52))
       },
     ],
-    name: "getRoleAdmin",
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getNumEpochsWithRedemption",
     outputs: [
       {
-        internalType: "bytes32",
+        internalType: "uint256",
         name: "",
-        type: "bytes32",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -1319,7 +1395,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "getUserRedemptionRequestLength",
+    name: "getNumRedemptionRequests",
     outputs: [
       {
         internalType: "uint256",
@@ -1350,6 +1426,25 @@ const _abi = [
     stateMutability: 'nonpayable',
     type: 'function',
 =======
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+    ],
+    name: "getRoleAdmin",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes32",
         name: "role",
         type: "bytes32",
@@ -1696,12 +1791,12 @@ const _abi = [
           },
           {
             internalType: "uint96",
-            name: "totalShareRequested",
+            name: "totalSharesRequested",
             type: "uint96",
           },
           {
             internalType: "uint96",
-            name: "totalShareProcessed",
+            name: "totalSharesProcessed",
             type: "uint96",
           },
           {
@@ -1752,16 +1847,26 @@ const _abi = [
     type: 'function',
 =======
         internalType: "address",
-        name: "account",
+        name: "",
         type: "address",
       },
     ],
-    name: "removableRedemptionShares",
+    name: "redemptionDisbursementInfoByLender",
     outputs: [
       {
-        internalType: "uint256",
-        name: "shares",
-        type: "uint256",
+        internalType: "uint64",
+        name: "requestsIndex",
+        type: "uint64",
+      },
+      {
+        internalType: "uint96",
+        name: "actualSharesProcessed",
+        type: "uint96",
+      },
+      {
+        internalType: "uint96",
+        name: "actualAmountProcessed",
+        type: "uint96",
       },
     ],
     stateMutability: "view",
@@ -1783,19 +1888,36 @@ const _abi = [
     type: 'function',
 =======
         internalType: "address",
-        name: "lender",
+        name: "",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
-    name: "removeApprovedLender",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "redemptionRequestsByLender",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "epochId",
+        type: "uint64",
+      },
+      {
+        internalType: "uint96",
+        name: "numSharesRequested",
+        type: "uint96",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
 >>>>>>> ff9b4d4 (Add local network (#46))
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
 <<<<<<< HEAD
         internalType: 'uint256',
         name: 'shares',
@@ -1810,9 +1932,14 @@ const _abi = [
         internalType: "uint256",
         name: "shares",
         type: "uint256",
+=======
+        internalType: "address",
+        name: "lender",
+        type: "address",
+>>>>>>> cb726dd (Lender deposit v2 (#52))
       },
     ],
-    name: "removeRedemptionRequest",
+    name: "removeApprovedLender",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -2250,12 +2377,12 @@ const _abi = [
           },
           {
             internalType: "uint96",
-            name: "totalShareRequested",
+            name: "totalSharesRequested",
             type: "uint96",
           },
           {
             internalType: "uint96",
-            name: "totalShareProcessed",
+            name: "totalSharesProcessed",
             type: "uint96",
           },
           {
@@ -2265,21 +2392,8 @@ const _abi = [
           },
         ],
         internalType: "struct EpochInfo[]",
-        name: "result",
+        name: "infos",
         type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "unprocessedIndexOfEpochIds",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -2324,6 +2438,7 @@ const _abi = [
     type: 'function',
 =======
         internalType: "address",
+<<<<<<< HEAD
         name: "",
         type: "address",
       },
@@ -2441,6 +2556,8 @@ export class TrancheVault__factory {
     return new Contract(address, _abi, signerOrProvider) as TrancheVault
 =======
         internalType: "address",
+=======
+>>>>>>> cb726dd (Lender deposit v2 (#52))
         name: "account",
         type: "address",
       },
