@@ -10,6 +10,7 @@ import { MUMBAI_METADATA } from '../metadata/Mumbai'
 export type VaultType = 'senior' | 'junior'
 
 export type PoolInfoV2 = {
+  chainId: ChainEnum
   poolName: POOL_NAME
   pool: string
   poolAbi: unknown

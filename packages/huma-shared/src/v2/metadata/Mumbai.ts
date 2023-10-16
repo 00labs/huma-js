@@ -1,3 +1,4 @@
+import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME } from '../../utils/pool'
 import POOL_ABI from '../abis/Pool.json'
 import POOL_VAULT_ABI from '../abis/PoolVault.json'
@@ -6,6 +7,7 @@ import { PoolsInfoV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsInfoV2 = {
   HumaCreditLineV2: {
+    chainId: ChainEnum.Mumbai,
     poolName: POOL_NAME.HumaCreditLineV2,
     pool: '0x9cb69C20FBf67d2fFe13dFF770231e8cbb653AEE',
     poolAbi: POOL_ABI,
