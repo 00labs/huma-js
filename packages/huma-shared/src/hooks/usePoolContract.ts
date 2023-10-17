@@ -13,7 +13,7 @@ import {
 import { BaseFeeManager } from '../abis/types/BaseFeeManager'
 import { CreditState } from '../utils/credit'
 import { downScale, toBigNumber, upScale } from '../utils/number'
-import { POOL_NAME, POOL_TYPE } from '../utils/pool'
+import { POOL_NAME, POOL_TYPE, getPoolInfo } from '../utils/pool'
 import { useContract, useERC20Contract } from './useContract'
 import { useForceRefresh } from './useForceRefresh'
 import { usePoolInfo } from './usePool'
@@ -432,6 +432,45 @@ export function useLenderPosition(
   return [position, refresh]
 }
 
+export function useLenderPositionCrossChain(
+  chainId: number | undefined,
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  providers: { [chainId: number]: string },
+  account?: string,
+): [BigNumber | undefined, () => void] {
+  const poolInfo = getPoolInfo(chainId, poolType, poolName)
+  const contract = useContract<HDT>(
+    poolInfo?.HDT?.address,
+    poolInfo?.HDT?.abi,
+    true,
+    chainId,
+    providers,
+  )
+  const [position, setPosition] = useState<BigNumber>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && account && poolInfo) {
+        const position = await contract.withdrawableFundsOf(account)
+        const oneCentUSD = BigNumber.from(
+          upScale('0.01', poolInfo.poolUnderlyingToken.decimals),
+        )
+        // if position is less than one cent USD, consider it 0
+        if (position.lt(oneCentUSD)) {
+          setPosition(BigNumber.from(0))
+        } else {
+          setPosition(position)
+        }
+      }
+    }
+    fetchData()
+  }, [account, contract, poolInfo, refreshCount])
+
+  return [position, refresh]
+}
+
 export function useLenderApproved(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
@@ -493,4 +532,33 @@ export function useLastDepositTime(
   }, [account, contract])
 
   return lockoutSeconds
+}
+
+export function usePoolAprCrossChain(
+  chainId: number | undefined,
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  providers: { [chainId: number]: string },
+) {
+  const poolInfo = getPoolInfo(chainId, poolType, poolName)
+  const contract = useContract<BasePoolConfig>(
+    poolInfo?.basePoolConfig,
+    poolInfo?.basePoolConfigAbi,
+    true,
+    chainId,
+    providers,
+  )
+  const [apr, setApr] = useState<number>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract) {
+        const aprInBps = await contract.poolAprInBps()
+        setApr(aprInBps.toNumber() / 10000)
+      }
+    }
+    fetchData()
+  }, [contract])
+
+  return apr
 }

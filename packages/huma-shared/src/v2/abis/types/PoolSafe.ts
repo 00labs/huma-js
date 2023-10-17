@@ -27,81 +27,70 @@ import type {
   PromiseOrValue,
 } from './common'
 
-export interface PoolVaultInterface extends utils.Interface {
+export interface PoolSafeInterface extends utils.Interface {
   functions: {
-    'addPlatformFeesReserve(uint256)': FunctionFragment
-    'asset()': FunctionFragment
     'deposit(address,uint256)': FunctionFragment
-    'getAvailableLiquidity()': FunctionFragment
-    'getAvailableReservation()': FunctionFragment
-    'getPoolAssets()': FunctionFragment
+    'getAvailableLiquidityForFees()': FunctionFragment
+    'getPoolLiquidity()': FunctionFragment
     'initialize(address)': FunctionFragment
+    'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
-    'reserves()': FunctionFragment
+    'poolFeeManager()': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
-    'setRedemptionReserve(uint256)': FunctionFragment
-    'totalAssets()': FunctionFragment
+    'totalLiquidity()': FunctionFragment
+    'underlyingToken()': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
     'withdraw(address,uint256)': FunctionFragment
-    'withdrawFees(address,uint256)': FunctionFragment
   }
 
   getFunction(
     nameOrSignatureOrTopic:
-      | 'addPlatformFeesReserve'
-      | 'asset'
       | 'deposit'
-      | 'getAvailableLiquidity'
-      | 'getAvailableReservation'
-      | 'getPoolAssets'
+      | 'getAvailableLiquidityForFees'
+      | 'getPoolLiquidity'
       | 'initialize'
+      | 'pool'
       | 'poolConfig'
-      | 'reserves'
+      | 'poolFeeManager'
       | 'setPoolConfig'
-      | 'setRedemptionReserve'
-      | 'totalAssets'
+      | 'totalLiquidity'
+      | 'underlyingToken'
       | 'updatePoolConfigData'
-      | 'withdraw'
-      | 'withdrawFees',
+      | 'withdraw',
   ): FunctionFragment
 
-  encodeFunctionData(
-    functionFragment: 'addPlatformFeesReserve',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(functionFragment: 'asset', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'deposit',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'getAvailableLiquidity',
+    functionFragment: 'getAvailableLiquidityForFees',
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'getAvailableReservation',
-    values?: undefined,
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getPoolAssets',
+    functionFragment: 'getPoolLiquidity',
     values?: undefined,
   ): string
   encodeFunctionData(
     functionFragment: 'initialize',
     values: [PromiseOrValue<string>],
   ): string
+  encodeFunctionData(functionFragment: 'pool', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
-  encodeFunctionData(functionFragment: 'reserves', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'poolFeeManager',
+    values?: undefined,
+  ): string
   encodeFunctionData(
     functionFragment: 'setPoolConfig',
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'setRedemptionReserve',
-    values: [PromiseOrValue<BigNumberish>],
+    functionFragment: 'totalLiquidity',
+    values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'totalAssets',
+    functionFragment: 'underlyingToken',
     values?: undefined,
   ): string
   encodeFunctionData(
@@ -112,50 +101,40 @@ export interface PoolVaultInterface extends utils.Interface {
     functionFragment: 'withdraw',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
-  encodeFunctionData(
-    functionFragment: 'withdrawFees',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
-  ): string
 
-  decodeFunctionResult(
-    functionFragment: 'addPlatformFeesReserve',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(functionFragment: 'asset', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'getAvailableLiquidity',
+    functionFragment: 'getAvailableLiquidityForFees',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'getAvailableReservation',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getPoolAssets',
+    functionFragment: 'getPoolLiquidity',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'pool', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'reserves', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'poolFeeManager',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
     functionFragment: 'setPoolConfig',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'setRedemptionReserve',
+    functionFragment: 'totalLiquidity',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(functionFragment: 'totalAssets', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'underlyingToken',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
     functionFragment: 'updatePoolConfigData',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'withdrawFees',
-    data: BytesLike,
-  ): Result
 
   events: {
     'Initialized(uint8)': EventFragment
@@ -198,12 +177,12 @@ export type PoolConfigChangedEvent = TypedEvent<
 export type PoolConfigChangedEventFilter =
   TypedEventFilter<PoolConfigChangedEvent>
 
-export interface PoolVault extends BaseContract {
+export interface PoolSafe extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
   attach(addressOrName: string): this
   deployed(): Promise<this>
 
-  interface: PoolVaultInterface
+  interface: PoolSafeInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -225,58 +204,41 @@ export interface PoolVault extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    asset(overrides?: CallOverrides): Promise<[string]>
-
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    getAvailableLiquidity(
+    getAvailableLiquidityForFees(
       overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { assets: BigNumber }>
+    ): Promise<[BigNumber] & { liquidity: BigNumber }>
 
-    getAvailableReservation(
+    getPoolLiquidity(
       overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { assets: BigNumber }>
-
-    getPoolAssets(
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { assets: BigNumber }>
+    ): Promise<[BigNumber] & { liquidity: BigNumber }>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
+    pool(overrides?: CallOverrides): Promise<[string]>
+
     poolConfig(overrides?: CallOverrides): Promise<[string]>
 
-    reserves(overrides?: CallOverrides): Promise<
-      [BigNumber, BigNumber] & {
-        forRedemption: BigNumber
-        forPlatformFees: BigNumber
-      }
-    >
+    poolFeeManager(overrides?: CallOverrides): Promise<[string]>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    totalAssets(
+    totalLiquidity(
       overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { assets: BigNumber }>
+    ): Promise<[BigNumber] & { liquidity: BigNumber }>
+
+    underlyingToken(overrides?: CallOverrides): Promise<[string]>
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -287,20 +249,7 @@ export interface PoolVault extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
-
-    withdrawFees(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
   }
-
-  addPlatformFeesReserve(
-    reserve: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  asset(overrides?: CallOverrides): Promise<string>
 
   deposit(
     from: PromiseOrValue<string>,
@@ -308,37 +257,29 @@ export interface PoolVault extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  getAvailableLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+  getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
 
-  getAvailableReservation(overrides?: CallOverrides): Promise<BigNumber>
-
-  getPoolAssets(overrides?: CallOverrides): Promise<BigNumber>
+  getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
   initialize(
     _poolConfig: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
+  pool(overrides?: CallOverrides): Promise<string>
+
   poolConfig(overrides?: CallOverrides): Promise<string>
 
-  reserves(overrides?: CallOverrides): Promise<
-    [BigNumber, BigNumber] & {
-      forRedemption: BigNumber
-      forPlatformFees: BigNumber
-    }
-  >
+  poolFeeManager(overrides?: CallOverrides): Promise<string>
 
   setPoolConfig(
     _poolConfig: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setRedemptionReserve(
-    reserve: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
+  totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
-  totalAssets(overrides?: CallOverrides): Promise<BigNumber>
+  underlyingToken(overrides?: CallOverrides): Promise<string>
 
   updatePoolConfigData(
     overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -350,67 +291,40 @@ export interface PoolVault extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  withdrawFees(
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   callStatic: {
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    asset(overrides?: CallOverrides): Promise<string>
-
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
 
-    getAvailableLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
 
-    getAvailableReservation(overrides?: CallOverrides): Promise<BigNumber>
-
-    getPoolAssets(overrides?: CallOverrides): Promise<BigNumber>
+    getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
+    pool(overrides?: CallOverrides): Promise<string>
+
     poolConfig(overrides?: CallOverrides): Promise<string>
 
-    reserves(overrides?: CallOverrides): Promise<
-      [BigNumber, BigNumber] & {
-        forRedemption: BigNumber
-        forPlatformFees: BigNumber
-      }
-    >
+    poolFeeManager(overrides?: CallOverrides): Promise<string>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
+    totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>
+    underlyingToken(overrides?: CallOverrides): Promise<string>
 
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>
 
     withdraw(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    withdrawFees(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
@@ -439,57 +353,41 @@ export interface PoolVault extends BaseContract {
   }
 
   estimateGas: {
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    asset(overrides?: CallOverrides): Promise<BigNumber>
-
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    getAvailableLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
 
-    getAvailableReservation(overrides?: CallOverrides): Promise<BigNumber>
-
-    getPoolAssets(overrides?: CallOverrides): Promise<BigNumber>
+    getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
+    pool(overrides?: CallOverrides): Promise<BigNumber>
+
     poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
-    reserves(overrides?: CallOverrides): Promise<BigNumber>
+    poolFeeManager(overrides?: CallOverrides): Promise<BigNumber>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
+    totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>
+    underlyingToken(overrides?: CallOverrides): Promise<BigNumber>
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     withdraw(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    withdrawFees(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -497,61 +395,43 @@ export interface PoolVault extends BaseContract {
   }
 
   populateTransaction: {
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    asset(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    getAvailableLiquidity(
+    getAvailableLiquidityForFees(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    getAvailableReservation(
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
-    getPoolAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getPoolLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
+    pool(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
     poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    reserves(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    poolFeeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
+    totalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     withdraw(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    withdrawFees(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },

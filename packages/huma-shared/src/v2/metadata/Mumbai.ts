@@ -1,7 +1,7 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME } from '../../utils/pool'
 import POOL_ABI from '../abis/Pool.json'
-import POOL_VAULT_ABI from '../abis/PoolVault.json'
+import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import { PoolsInfoV2 } from '../utils'
 
@@ -9,17 +9,17 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
   HumaCreditLineV2: {
     chainId: ChainEnum.Mumbai,
     poolName: POOL_NAME.HumaCreditLineV2,
-    pool: '0x9cb69C20FBf67d2fFe13dFF770231e8cbb653AEE',
+    pool: '0x3E638f5A36C885c68f0F05143cbb617affA29e4e',
     poolAbi: POOL_ABI,
-    poolVaultAbi: POOL_VAULT_ABI,
-    seniorTrancheVault: '0x7e4eac8B81f4E6Cd9E32CEFd169c06C5f5199587',
-    juniorTrancheVault: '0xCf3d123B662fd4dD813483b0703fa63503aa1fbc',
+    poolSafeAbi: POOL_SAFE_ABI,
+    seniorTrancheVault: '0x3DC3b427b75672f6738D036F68B3146DAA1CaFc1',
+    juniorTrancheVault: '0xD76d80992B8698D6D8e3ef166c3879a1d8574a90',
     trancheVaultAbi: TRANCHE_VAULT_ABI,
-    poolVault: '0xc228409Dc45adf03846998Ab05354B6DD5A25196',
+    poolSafe: '0xd05e4bE51758b987b959924D7E8b4Cb728c386Fd',
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
     poolUnderlyingToken: {
-      address: '0x58CEc4659aA7A236A117B739AfCAa2425A7d99A6',
+      address: '0xee822415dcE6e3Ca8Ac43499FdA91744bd9Ad16A',
       symbol: 'USDC',
       decimals: 6,
       icon: 'USDC',

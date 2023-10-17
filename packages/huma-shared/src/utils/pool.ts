@@ -55,6 +55,11 @@ export type PoolInfoType = {
   assetAddress?: string
   poolName: POOL_NAME
   poolType: POOL_TYPE
+  industry?:
+    | 'Supply Chain Financing'
+    | 'Remittance Financing'
+    | 'Green Financing'
+    | 'Invoice Factoring'
   poolAbi: unknown
   basePoolConfigAbi: unknown
   poolAssetAbi?: unknown
@@ -73,6 +78,10 @@ export type PoolInfoType = {
     detailsPage?: boolean
   }
 }
+
+export type PoolInfo = {
+  chainId: ChainEnum
+} & PoolInfoType
 
 export type PoolSubgraphMapType = {
   [chainId: number]: {
@@ -222,6 +231,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.Jia,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Supply Chain Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -251,6 +261,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -275,6 +286,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.BSOS,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Green Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -302,6 +314,7 @@ export const PoolContractMap: PoolContractMapType = {
         assetAddress: '0xA9930c8e4638D9a96a3B73e7ABe73a636F986323',
         poolName: POOL_NAME.RequestNetwork,
         poolType: POOL_TYPE.Invoice,
+        industry: 'Invoice Factoring',
         poolAbi: RECEIVABLE_FACTORING_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -340,6 +353,7 @@ export const PoolContractMap: PoolContractMapType = {
             provider: 'Securitize',
           },
           detailsPage: true,
+          hidden: true,
         },
       },
     },
@@ -357,6 +371,7 @@ export const PoolContractMap: PoolContractMapType = {
         assetAddress: '0xC2AC172a293d68f548ea343414584aA37eb29Dcd',
         poolName: POOL_NAME.RequestNetwork,
         poolType: POOL_TYPE.Invoice,
+        industry: 'Invoice Factoring',
         poolAbi: RECEIVABLE_FACTORING_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -383,6 +398,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -402,6 +418,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ImpactMarket,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Invoice Factoring',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -448,6 +465,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ImpactMarket,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Invoice Factoring',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -472,6 +490,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -501,6 +520,7 @@ export const PoolContractMap: PoolContractMapType = {
         assetAddress: '0xAEA5908A082F5667aEA425AEACE8dF6aEDb03694',
         poolName: POOL_NAME.Superfluid,
         poolType: POOL_TYPE.Stream,
+        industry: 'Invoice Factoring',
         poolAbi: STEAM_FACTORING_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         poolAssetAbi: TRADABLE_STREAM_ABI,
@@ -534,6 +554,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {

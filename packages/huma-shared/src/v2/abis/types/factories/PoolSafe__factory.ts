@@ -4,7 +4,7 @@
 
 import { Contract, Signer, utils } from 'ethers'
 import type { Provider } from '@ethersproject/providers'
-import type { PoolVault, PoolVaultInterface } from '../PoolVault'
+import type { PoolSafe, PoolSafeInterface } from '../PoolSafe'
 
 const _abi = [
   {
@@ -60,32 +60,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'reserve',
-        type: 'uint256',
-      },
-    ],
-    name: 'addPlatformFeesReserve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'asset',
-    outputs: [
-      {
-        internalType: 'contract IERC20',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'address',
         name: 'from',
         type: 'address',
@@ -103,11 +77,11 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'getAvailableLiquidity',
+    name: 'getAvailableLiquidityForFees',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'assets',
+        name: 'liquidity',
         type: 'uint256',
       },
     ],
@@ -116,24 +90,11 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'getAvailableReservation',
+    name: 'getPoolLiquidity',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'assets',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getPoolAssets',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'assets',
+        name: 'liquidity',
         type: 'uint256',
       },
     ],
@@ -155,6 +116,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'pool',
+    outputs: [
+      {
+        internalType: 'contract IPool',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'poolConfig',
     outputs: [
       {
@@ -168,17 +142,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'reserves',
+    name: 'poolFeeManager',
     outputs: [
       {
-        internalType: 'uint96',
-        name: 'forRedemption',
-        type: 'uint96',
-      },
-      {
-        internalType: 'uint96',
-        name: 'forPlatformFees',
-        type: 'uint96',
+        internalType: 'contract IPoolFeeManager',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -198,26 +167,26 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
+    inputs: [],
+    name: 'totalLiquidity',
+    outputs: [
       {
         internalType: 'uint256',
-        name: 'reserve',
+        name: 'liquidity',
         type: 'uint256',
       },
     ],
-    name: 'setRedemptionReserve',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'totalAssets',
+    name: 'underlyingToken',
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'assets',
-        type: 'uint256',
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -248,35 +217,17 @@ const _abi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'withdrawFees',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
 ] as const
 
-export class PoolVault__factory {
+export class PoolSafe__factory {
   static readonly abi = _abi
-  static createInterface(): PoolVaultInterface {
-    return new utils.Interface(_abi) as PoolVaultInterface
+  static createInterface(): PoolSafeInterface {
+    return new utils.Interface(_abi) as PoolSafeInterface
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider,
-  ): PoolVault {
-    return new Contract(address, _abi, signerOrProvider) as PoolVault
+  ): PoolSafe {
+    return new Contract(address, _abi, signerOrProvider) as PoolSafe
   }
 }

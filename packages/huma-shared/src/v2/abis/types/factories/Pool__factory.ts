@@ -139,6 +139,25 @@ const _abi = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'ready',
+        type: 'bool',
+      },
+    ],
+    name: 'PoolReadyForFirstLossCoverWithdrawal',
+    type: 'event',
+  },
+  {
     inputs: [],
     name: 'credit',
     outputs: [
@@ -196,7 +215,7 @@ const _abi = [
     name: 'feeManager',
     outputs: [
       {
-        internalType: 'contract IPlatformFeeManager',
+        internalType: 'contract IPoolFeeManager',
         name: '',
         type: 'address',
       },
@@ -207,17 +226,48 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'coverAddress',
+        type: 'address',
+      },
+      {
         internalType: 'uint256',
-        name: '',
+        name: 'poolAssets',
         type: 'uint256',
       },
     ],
-    name: 'firstLossCovers',
+    name: 'getFirstLossCoverAvailableCap',
     outputs: [
       {
-        internalType: 'contract IFirstLossCover',
+        internalType: 'uint256',
+        name: 'availableCap',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getFirstLossCovers',
+    outputs: [
+      {
+        internalType: 'contract IFirstLossCover[]',
         name: '',
-        type: 'address',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getReservedAssetsForFirstLossCovers',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'reservedAssets',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -264,10 +314,10 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'poolOwnerOrEAFirstLossCover',
+    name: 'poolSafe',
     outputs: [
       {
-        internalType: 'contract IFirstLossCover',
+        internalType: 'contract IPoolSafe',
         name: '',
         type: 'address',
       },
@@ -277,12 +327,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'poolVault',
+    name: 'readyForFirstLossCoverWithdrawal',
     outputs: [
       {
-        internalType: 'contract IPoolVault',
+        internalType: 'bool',
         name: '',
-        type: 'address',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -317,12 +367,19 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'amounts',
-        type: 'uint256',
+        internalType: 'bool',
+        name: 'ready',
+        type: 'bool',
       },
     ],
-    name: 'submitRedemptionRequest',
+    name: 'setReadyForFirstLossCoverWithdrawal',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'syncFirstLossCovers',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -428,7 +485,7 @@ const _abi = [
         type: 'uint96[2]',
       },
     ],
-    name: 'updateTrancheAssets',
+    name: 'updateTranchesAssets',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

@@ -14,7 +14,7 @@ export function ApproveAllowance({
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const spender = poolInfo.poolVault
+  const spender = poolInfo.poolSafe
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Transfer))

@@ -12,6 +12,8 @@ import {
   useLastDepositTime,
   useLenderApproved,
   useLenderPosition,
+  useLenderPositionCrossChain,
+  usePoolAprCrossChain,
   usePoolAllowance,
   usePoolBalance,
   usePoolTotalSupply,
@@ -19,7 +21,7 @@ import {
   usePoolUnderlyingTokenBalance,
   useWithdrawlLockoutInSeconds,
 } from '../../src/hooks/usePoolContract'
-import { POOL_NAME, POOL_TYPE } from '../../src/utils/pool'
+import { POOL_NAME, POOL_TYPE, getPoolInfo } from '../../src/utils/pool'
 import { CreditState } from '../../src/utils/credit'
 import { toBigNumber } from '../../src/utils/number'
 
@@ -54,6 +56,7 @@ jest.mock('../../src/utils/pool', () => ({
       },
     },
   },
+  getPoolInfo: jest.fn(),
 }))
 
 describe('usePoolUnderlyingTokenBalance', () => {
@@ -947,6 +950,107 @@ describe('useLenderPosition', () => {
   })
 })
 
+describe('useLenderPositionCrossChain', () => {
+  it('returns undefined if contract is not valid', async () => {
+    ;(getPoolInfo as jest.Mock).mockReturnValue({
+      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      poolAbi: [],
+    })
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useLenderPositionCrossChain(
+        1,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        [],
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toBeUndefined()
+    })
+  })
+
+  it('returns undefined if account is not valid', async () => {
+    ;(getPoolInfo as jest.Mock).mockReturnValue({
+      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      poolAbi: [],
+    })
+    ;(useContract as jest.Mock).mockReturnValue({
+      withdrawableFundsOf: jest.fn(),
+    })
+
+    const { result } = renderHook(() =>
+      useLenderPositionCrossChain(
+        1,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        [],
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toBeUndefined()
+    })
+  })
+
+  it('returns undefined if poolInfo is not valid', async () => {
+    ;(getPoolInfo as jest.Mock).mockReturnValue(null)
+    ;(useContract as jest.Mock).mockReturnValue({
+      withdrawableFundsOf: jest.fn().mockResolvedValue(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useLenderPositionCrossChain(
+        1,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        [],
+        'account',
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toBeUndefined()
+    })
+  })
+
+  it('returns lender position', async () => {
+    ;(getPoolInfo as jest.Mock).mockReturnValue({
+      poolUnderlyingToken: {
+        decimals: 6,
+      },
+    })
+    ;(useContract as jest.Mock).mockReturnValue({
+      withdrawableFundsOf: jest
+        .fn()
+        .mockResolvedValueOnce(BigNumber.from(100))
+        .mockResolvedValueOnce(BigNumber.from(1000000)),
+    })
+
+    const { result } = renderHook(() =>
+      useLenderPositionCrossChain(
+        1,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        [],
+        'account',
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(0))
+    })
+
+    result.current[1]()
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(1000000))
+    })
+  })
+})
+
 describe('useLenderApproved', () => {
   it('returns undefined if contract is not valid', async () => {
     ;(useWeb3React as jest.Mock).mockReturnValue({
@@ -1134,6 +1238,49 @@ describe('useLastDepositTime', () => {
 
     await waitFor(() => {
       expect(result.current).toEqual(100)
+    })
+  })
+})
+
+describe('usePoolAPR', () => {
+  it('returns undefined if contract is not valid', async () => {
+    ;(getPoolInfo as jest.Mock).mockReturnValue({
+      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      poolAbi: [],
+    })
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      usePoolAprCrossChain(
+        1,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        [],
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBeUndefined()
+    })
+  })
+
+  it('returns pool apr', async () => {
+    ;(getPoolInfo as jest.Mock).mockReturnValue({})
+    ;(useContract as jest.Mock).mockReturnValue({
+      poolAprInBps: jest.fn().mockResolvedValue(BigNumber.from(1500)),
+    })
+
+    const { result } = renderHook(() =>
+      usePoolAprCrossChain(
+        1,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        [],
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toEqual(0.15)
     })
   })
 })

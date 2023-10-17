@@ -1,22 +1,22 @@
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
-import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
-import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import { isChainEnum, POOL_NAME } from '../../utils'
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
+import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import {
-  PoolInfoV2,
-  CHAIN_POOLS_INFO_V2,
-  VaultType,
-  FirstLossCoverIndex,
-} from '../utils/pool'
-import {
-  PoolVault,
-  TrancheVault,
-  PoolConfig,
   FirstLossCover,
+  PoolConfig,
+  PoolSafe,
+  TrancheVault,
 } from '../abis/types'
+import {
+  CHAIN_POOLS_INFO_V2,
+  FirstLossCoverIndex,
+  PoolInfoV2,
+  VaultType,
+} from '../utils/pool'
 
 export type FALLBACK_PROVIDERS = { [chainId: number]: string }
 
@@ -30,15 +30,15 @@ export const usePoolInfoV2 = (
   return undefined
 }
 
-function usePoolVaultContractV2(
+function usePoolSafeContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
   fallbackProviders: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContract<PoolVault>(
-    poolInfo?.poolVault,
-    poolInfo?.poolVaultAbi,
+  return useContract<PoolSafe>(
+    poolInfo?.poolSafe,
+    poolInfo?.poolSafeAbi,
     true,
     chainId,
     fallbackProviders,
@@ -52,9 +52,9 @@ function usePoolConfigContractV2(
 ) {
   const [poolConfig, setPoolConfig] = useState<string | undefined>()
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const poolContract = useContract<PoolVault>(
-    poolInfo?.poolVault,
-    poolInfo?.poolVaultAbi,
+  const poolContract = useContract<PoolSafe>(
+    poolInfo?.poolSafe,
+    poolInfo?.poolSafeAbi,
     true,
     chainId,
     fallbackProviders,
@@ -216,17 +216,17 @@ export function useFirstLossCoverTotalAssetsV2(
   return [assets, refresh]
 }
 
-export function usePoolVaultTotalAssetsV2(
+export function usePoolSafeTotalAssetsV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
   fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
-  const poolVaultContract = usePoolVaultContractV2(
+  const poolSafeContract = usePoolSafeContractV2(
     poolName,
     chainId,
     fallbackProviders,
   )
-  const [value, refresh] = useContractValueV2(poolVaultContract, 'totalAssets')
+  const [value, refresh] = useContractValueV2(poolSafeContract, 'totalAssets')
   return [value, refresh]
 }
 
@@ -303,14 +303,14 @@ export function useLenderPositionV2(
   return [balance, refresh]
 }
 
-export function usePoolVaultAllowanceV2(
+export function usePoolSafeAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
   fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber, () => void] {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const spender = poolInfo?.poolVault
+  const spender = poolInfo?.poolSafe
   const contract = usePoolUnderlyingTokenContractV2(
     poolName,
     chainId,
