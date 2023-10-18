@@ -2,281 +2,281 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers'
-import type { Provider } from '@ethersproject/providers'
-import type { PoolVault, PoolVaultInterface } from '../PoolVault'
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
+import type { PoolVault, PoolVaultInterface } from "../PoolVault";
 
 const _abi = [
   {
     inputs: [],
-    name: 'zeroAddressProvided',
-    type: 'error',
+    name: "zeroAddressProvided",
+    type: "error",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: 'uint8',
-        name: 'version',
-        type: 'uint8',
+        internalType: "uint8",
+        name: "version",
+        type: "uint8",
       },
     ],
-    name: 'Initialized',
-    type: 'event',
+    name: "Initialized",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'poolConfig',
-        type: 'address',
+        internalType: "address",
+        name: "poolConfig",
+        type: "address",
       },
     ],
-    name: 'PoolConfigCacheUpdated',
-    type: 'event',
+    name: "PoolConfigCacheUpdated",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'newPoolConfig',
-        type: 'address',
+        internalType: "address",
+        name: "newPoolConfig",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'address',
-        name: 'oldPoolConfig',
-        type: 'address',
+        internalType: "address",
+        name: "oldPoolConfig",
+        type: "address",
       },
     ],
-    name: 'PoolConfigChanged',
-    type: 'event',
+    name: "PoolConfigChanged",
+    type: "event",
   },
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'reserve',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "reserve",
+        type: "uint256",
       },
     ],
-    name: 'addPlatformFeesReserve',
+    name: "addPlatformFeesReserve",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'asset',
+    name: "asset",
     outputs: [
       {
-        internalType: 'contract IERC20',
-        name: '',
-        type: 'address',
+        internalType: "contract IERC20",
+        name: "",
+        type: "address",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
+        internalType: "address",
+        name: "from",
+        type: "address",
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
     ],
-    name: 'deposit',
+    name: "deposit",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'getAvailableLiquidity',
+    name: "getAvailableLiquidity",
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'assets',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "assets",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'getAvailableReservation',
+    name: "getAvailableReservation",
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'assets',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "assets",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'getPoolAssets',
+    name: "getPoolAssets",
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'assets',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "assets",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'contract PoolConfig',
-        name: '_poolConfig',
-        type: 'address',
+        internalType: "contract PoolConfig",
+        name: "_poolConfig",
+        type: "address",
       },
     ],
-    name: 'initialize',
+    name: "initialize",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'poolConfig',
+    name: "poolConfig",
     outputs: [
       {
-        internalType: 'contract PoolConfig',
-        name: '',
-        type: 'address',
+        internalType: "contract PoolConfig",
+        name: "",
+        type: "address",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'reserves',
+    name: "reserves",
     outputs: [
       {
-        internalType: 'uint96',
-        name: 'forRedemption',
-        type: 'uint96',
+        internalType: "uint96",
+        name: "forRedemption",
+        type: "uint96",
       },
       {
-        internalType: 'uint96',
-        name: 'forPlatformFees',
-        type: 'uint96',
+        internalType: "uint96",
+        name: "forPlatformFees",
+        type: "uint96",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'contract PoolConfig',
-        name: '_poolConfig',
-        type: 'address',
+        internalType: "contract PoolConfig",
+        name: "_poolConfig",
+        type: "address",
       },
     ],
-    name: 'setPoolConfig',
+    name: "setPoolConfig",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'reserve',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "reserve",
+        type: "uint256",
       },
     ],
-    name: 'setRedemptionReserve',
+    name: "setRedemptionReserve",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'totalAssets',
+    name: "totalAssets",
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'assets',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "assets",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'updatePoolConfigData',
+    name: "updatePoolConfigData",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: "address",
+        name: "to",
+        type: "address",
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
     ],
-    name: 'withdraw',
+    name: "withdraw",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: "address",
+        name: "to",
+        type: "address",
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
     ],
-    name: 'withdrawFees',
+    name: "withdrawFees",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
-] as const
+] as const;
 
 export class PoolVault__factory {
-  static readonly abi = _abi
+  static readonly abi = _abi;
   static createInterface(): PoolVaultInterface {
-    return new utils.Interface(_abi) as PoolVaultInterface
+    return new utils.Interface(_abi) as PoolVaultInterface;
   }
   static connect(
     address: string,
-    signerOrProvider: Signer | Provider,
+    signerOrProvider: Signer | Provider
   ): PoolVault {
-    return new Contract(address, _abi, signerOrProvider) as PoolVault
+    return new Contract(address, _abi, signerOrProvider) as PoolVault;
   }
 }

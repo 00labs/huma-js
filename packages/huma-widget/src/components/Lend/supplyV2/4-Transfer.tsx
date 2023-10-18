@@ -34,6 +34,7 @@ export function Transfer({
     poolInfo.poolName,
     vaultType,
     chainId,
+    {},
   )
 
   const handleSuccess = useCallback(() => {
