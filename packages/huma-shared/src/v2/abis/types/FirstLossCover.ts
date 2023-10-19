@@ -12,1672 +12,1651 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers'
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "./common";
+} from './common'
 
 export declare namespace FirstLossCoverStorage {
   export type LossCoverConfigStruct = {
-    poolCapCoverageInBps: PromiseOrValue<BigNumberish>;
-    poolValueCoverageInBps: PromiseOrValue<BigNumberish>;
-  };
+    poolCapCoverageInBps: PromiseOrValue<BigNumberish>
+    poolValueCoverageInBps: PromiseOrValue<BigNumberish>
+  }
 
   export type LossCoverConfigStructOutput = [number, number] & {
-    poolCapCoverageInBps: number;
-    poolValueCoverageInBps: number;
-  };
+    poolCapCoverageInBps: number
+    poolValueCoverageInBps: number
+  }
 
   export type LossCoverPayoutConfigStruct = {
-    coverRateInBps: PromiseOrValue<BigNumberish>;
-    coverCap: PromiseOrValue<BigNumberish>;
-    liquidityCap: PromiseOrValue<BigNumberish>;
-  };
+    coverRateInBps: PromiseOrValue<BigNumberish>
+    coverCap: PromiseOrValue<BigNumberish>
+    liquidityCap: PromiseOrValue<BigNumberish>
+  }
 
   export type LossCoverPayoutConfigStructOutput = [
     number,
     BigNumber,
-    BigNumber
-  ] & { coverRateInBps: number; coverCap: BigNumber; liquidityCap: BigNumber };
+    BigNumber,
+  ] & { coverRateInBps: number; coverCap: BigNumber; liquidityCap: BigNumber }
 }
 
 export interface FirstLossCoverInterface extends utils.Interface {
   functions: {
-    "_calcLossRecover(uint256,uint256)": FunctionFragment;
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "availableCoverCapacity()": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "calcLossCover(uint256,uint256)": FunctionFragment;
-    "calcLossRecover(uint256)": FunctionFragment;
-    "convertToAssets(uint256)": FunctionFragment;
-    "convertToShares(uint256)": FunctionFragment;
-    "coverLoss(uint256,uint256)": FunctionFragment;
-    "coveredLoss()": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "depositCover(uint256)": FunctionFragment;
-    "depositCoverWithAffiliateFees(uint256,address)": FunctionFragment;
-    "depositCoverWithTrancheVaultTokens(address,uint256)": FunctionFragment;
-    "distributeProfit(uint256)": FunctionFragment;
-    "getMaxCoverConfig()": FunctionFragment;
-    "getOperatorConfig(address)": FunctionFragment;
-    "getPayoutConfig()": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string,address)": FunctionFragment;
-    "initialize(address)": FunctionFragment;
-    "isSufficient(address)": FunctionFragment;
-    "name()": FunctionFragment;
-    "pool()": FunctionFragment;
-    "poolConfig()": FunctionFragment;
-    "poolSafe()": FunctionFragment;
-    "profitEscrow()": FunctionFragment;
-    "recoverLoss(uint256)": FunctionFragment;
-    "redeemCover(uint256,address)": FunctionFragment;
-    "setOperator(address,(uint16,uint16))": FunctionFragment;
-    "setPayoutConfig((uint16,uint96,uint96))": FunctionFragment;
-    "setPoolConfig(address)": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalAssets()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-    "underlyingToken()": FunctionFragment;
-    "updatePoolConfigData()": FunctionFragment;
-  };
+    '_calcLossRecover(uint256,uint256)': FunctionFragment
+    'allowance(address,address)': FunctionFragment
+    'approve(address,uint256)': FunctionFragment
+    'availableCoverCapacity()': FunctionFragment
+    'balanceOf(address)': FunctionFragment
+    'calcLossCover(uint256,uint256)': FunctionFragment
+    'calcLossRecover(uint256)': FunctionFragment
+    'convertToAssets(uint256)': FunctionFragment
+    'convertToShares(uint256)': FunctionFragment
+    'coverLoss(uint256,uint256)': FunctionFragment
+    'coveredLoss()': FunctionFragment
+    'decimals()': FunctionFragment
+    'decreaseAllowance(address,uint256)': FunctionFragment
+    'depositCover(uint256)': FunctionFragment
+    'depositCoverWithAffiliateFees(uint256,address)': FunctionFragment
+    'depositCoverWithTrancheVaultTokens(address,uint256)': FunctionFragment
+    'distributeProfit(uint256)': FunctionFragment
+    'getMaxCoverConfig()': FunctionFragment
+    'getOperatorConfig(address)': FunctionFragment
+    'getPayoutConfig()': FunctionFragment
+    'increaseAllowance(address,uint256)': FunctionFragment
+    'initialize(string,string,address)': FunctionFragment
+    'initialize(address)': FunctionFragment
+    'isSufficient(address)': FunctionFragment
+    'name()': FunctionFragment
+    'pool()': FunctionFragment
+    'poolConfig()': FunctionFragment
+    'poolSafe()': FunctionFragment
+    'profitEscrow()': FunctionFragment
+    'recoverLoss(uint256)': FunctionFragment
+    'redeemCover(uint256,address)': FunctionFragment
+    'setOperator(address,(uint16,uint16))': FunctionFragment
+    'setPayoutConfig((uint16,uint96,uint96))': FunctionFragment
+    'setPoolConfig(address)': FunctionFragment
+    'symbol()': FunctionFragment
+    'totalAssets()': FunctionFragment
+    'totalSupply()': FunctionFragment
+    'transfer(address,uint256)': FunctionFragment
+    'transferFrom(address,address,uint256)': FunctionFragment
+    'underlyingToken()': FunctionFragment
+    'updatePoolConfigData()': FunctionFragment
+  }
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "_calcLossRecover"
-      | "allowance"
-      | "approve"
-      | "availableCoverCapacity"
-      | "balanceOf"
-      | "calcLossCover"
-      | "calcLossRecover"
-      | "convertToAssets"
-      | "convertToShares"
-      | "coverLoss"
-      | "coveredLoss"
-      | "decimals"
-      | "decreaseAllowance"
-      | "depositCover"
-      | "depositCoverWithAffiliateFees"
-      | "depositCoverWithTrancheVaultTokens"
-      | "distributeProfit"
-      | "getMaxCoverConfig"
-      | "getOperatorConfig"
-      | "getPayoutConfig"
-      | "increaseAllowance"
-      | "initialize(string,string,address)"
-      | "initialize(address)"
-      | "isSufficient"
-      | "name"
-      | "pool"
-      | "poolConfig"
-      | "poolSafe"
-      | "profitEscrow"
-      | "recoverLoss"
-      | "redeemCover"
-      | "setOperator"
-      | "setPayoutConfig"
-      | "setPoolConfig"
-      | "symbol"
-      | "totalAssets"
-      | "totalSupply"
-      | "transfer"
-      | "transferFrom"
-      | "underlyingToken"
-      | "updatePoolConfigData"
-  ): FunctionFragment;
+      | '_calcLossRecover'
+      | 'allowance'
+      | 'approve'
+      | 'availableCoverCapacity'
+      | 'balanceOf'
+      | 'calcLossCover'
+      | 'calcLossRecover'
+      | 'convertToAssets'
+      | 'convertToShares'
+      | 'coverLoss'
+      | 'coveredLoss'
+      | 'decimals'
+      | 'decreaseAllowance'
+      | 'depositCover'
+      | 'depositCoverWithAffiliateFees'
+      | 'depositCoverWithTrancheVaultTokens'
+      | 'distributeProfit'
+      | 'getMaxCoverConfig'
+      | 'getOperatorConfig'
+      | 'getPayoutConfig'
+      | 'increaseAllowance'
+      | 'initialize(string,string,address)'
+      | 'initialize(address)'
+      | 'isSufficient'
+      | 'name'
+      | 'pool'
+      | 'poolConfig'
+      | 'poolSafe'
+      | 'profitEscrow'
+      | 'recoverLoss'
+      | 'redeemCover'
+      | 'setOperator'
+      | 'setPayoutConfig'
+      | 'setPoolConfig'
+      | 'symbol'
+      | 'totalAssets'
+      | 'totalSupply'
+      | 'transfer'
+      | 'transferFrom'
+      | 'underlyingToken'
+      | 'updatePoolConfigData',
+  ): FunctionFragment
 
   encodeFunctionData(
-    functionFragment: "_calcLossRecover",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: '_calcLossRecover',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "allowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
+    functionFragment: 'allowance',
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "approve",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'approve',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "availableCoverCapacity",
-    values?: undefined
-  ): string;
+    functionFragment: 'availableCoverCapacity',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
-  ): string;
+    functionFragment: 'balanceOf',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "calcLossCover",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'calcLossCover',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "calcLossRecover",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'calcLossRecover',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "convertToAssets",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'convertToAssets',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "convertToShares",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'convertToShares',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "coverLoss",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'coverLoss',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "coveredLoss",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+    functionFragment: 'coveredLoss',
+    values?: undefined,
+  ): string
+  encodeFunctionData(functionFragment: 'decimals', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'decreaseAllowance',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "depositCover",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'depositCover',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "depositCoverWithAffiliateFees",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
+    functionFragment: 'depositCoverWithAffiliateFees',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "depositCoverWithTrancheVaultTokens",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'depositCoverWithTrancheVaultTokens',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "distributeProfit",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'distributeProfit',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "getMaxCoverConfig",
-    values?: undefined
-  ): string;
+    functionFragment: 'getMaxCoverConfig',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "getOperatorConfig",
-    values: [PromiseOrValue<string>]
-  ): string;
+    functionFragment: 'getOperatorConfig',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "getPayoutConfig",
-    values?: undefined
-  ): string;
+    functionFragment: 'getPayoutConfig',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'increaseAllowance',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "initialize(string,string,address)",
+    functionFragment: 'initialize(string,string,address)',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>
-    ]
-  ): string;
+      PromiseOrValue<string>,
+    ],
+  ): string
   encodeFunctionData(
-    functionFragment: "initialize(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
+    functionFragment: 'initialize(address)',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "isSufficient",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "pool", values?: undefined): string;
+    functionFragment: 'isSufficient',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(functionFragment: 'name', values?: undefined): string
+  encodeFunctionData(functionFragment: 'pool', values?: undefined): string
+  encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
+  encodeFunctionData(functionFragment: 'poolSafe', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "poolConfig",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "poolSafe", values?: undefined): string;
+    functionFragment: 'profitEscrow',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "profitEscrow",
-    values?: undefined
-  ): string;
+    functionFragment: 'recoverLoss',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "recoverLoss",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'redeemCover',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "redeemCover",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setOperator",
+    functionFragment: 'setOperator',
     values: [
       PromiseOrValue<string>,
-      FirstLossCoverStorage.LossCoverConfigStruct
-    ]
-  ): string;
+      FirstLossCoverStorage.LossCoverConfigStruct,
+    ],
+  ): string
   encodeFunctionData(
-    functionFragment: "setPayoutConfig",
-    values: [FirstLossCoverStorage.LossCoverPayoutConfigStruct]
-  ): string;
+    functionFragment: 'setPayoutConfig',
+    values: [FirstLossCoverStorage.LossCoverPayoutConfigStruct],
+  ): string
   encodeFunctionData(
-    functionFragment: "setPoolConfig",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+    functionFragment: 'setPoolConfig',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "totalAssets",
-    values?: undefined
-  ): string;
+    functionFragment: 'totalAssets',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
+    functionFragment: 'totalSupply',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "transfer",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'transfer',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "transferFrom",
+    functionFragment: 'transferFrom',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
+      PromiseOrValue<BigNumberish>,
+    ],
+  ): string
   encodeFunctionData(
-    functionFragment: "underlyingToken",
-    values?: undefined
-  ): string;
+    functionFragment: 'underlyingToken',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "updatePoolConfigData",
-    values?: undefined
-  ): string;
+    functionFragment: 'updatePoolConfigData',
+    values?: undefined,
+  ): string
 
   decodeFunctionResult(
-    functionFragment: "_calcLossRecover",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+    functionFragment: '_calcLossRecover',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "availableCoverCapacity",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+    functionFragment: 'availableCoverCapacity',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "calcLossCover",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'calcLossCover',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "calcLossRecover",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'calcLossRecover',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "convertToAssets",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'convertToAssets',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "convertToShares",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "coverLoss", data: BytesLike): Result;
+    functionFragment: 'convertToShares',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'coverLoss', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'coveredLoss', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "coveredLoss",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+    functionFragment: 'decreaseAllowance',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'depositCover',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "depositCover",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'depositCoverWithAffiliateFees',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "depositCoverWithAffiliateFees",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'depositCoverWithTrancheVaultTokens',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "depositCoverWithTrancheVaultTokens",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'distributeProfit',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "distributeProfit",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'getMaxCoverConfig',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "getMaxCoverConfig",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'getOperatorConfig',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "getOperatorConfig",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'getPayoutConfig',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "getPayoutConfig",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'increaseAllowance',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'initialize(string,string,address)',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "initialize(string,string,address)",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'initialize(address)',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "initialize(address)",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'isSufficient',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'pool', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'poolSafe', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "isSufficient",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pool", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poolConfig", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poolSafe", data: BytesLike): Result;
+    functionFragment: 'profitEscrow',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'recoverLoss', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'redeemCover', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'setOperator', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "profitEscrow",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'setPayoutConfig',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "recoverLoss",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'setPoolConfig',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'totalAssets', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "redeemCover",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'transferFrom',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "setOperator",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'underlyingToken',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "setPayoutConfig",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setPoolConfig",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalAssets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "underlyingToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updatePoolConfigData",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'updatePoolConfigData',
+    data: BytesLike,
+  ): Result
 
   events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "CoverDeposited(address,uint256,uint256)": EventFragment;
-    "CoverRedeemed(address,address,uint256,uint256)": EventFragment;
-    "Initialized(uint8)": EventFragment;
-    "LossCovered(uint256,uint256,uint256,uint256)": EventFragment;
-    "LossRecovered(uint256,uint256,uint256,uint256)": EventFragment;
-    "OperatorSet(address,uint256,uint256)": EventFragment;
-    "PayoutConfigSet(uint256,uint256,uint256)": EventFragment;
-    "PoolConfigCacheUpdated(address)": EventFragment;
-    "PoolConfigChanged(address,address)": EventFragment;
-    "ProfitDistributed(uint256,uint256)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
-  };
+    'Approval(address,address,uint256)': EventFragment
+    'CoverDeposited(address,uint256,uint256)': EventFragment
+    'CoverRedeemed(address,address,uint256,uint256)': EventFragment
+    'Initialized(uint8)': EventFragment
+    'LossCovered(uint256,uint256,uint256,uint256)': EventFragment
+    'LossRecovered(uint256,uint256,uint256,uint256)': EventFragment
+    'OperatorSet(address,uint256,uint256)': EventFragment
+    'PayoutConfigSet(uint256,uint256,uint256)': EventFragment
+    'PoolConfigCacheUpdated(address)': EventFragment
+    'PoolConfigChanged(address,address)': EventFragment
+    'ProfitDistributed(uint256,uint256)': EventFragment
+    'Transfer(address,address,uint256)': EventFragment
+  }
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CoverDeposited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CoverRedeemed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LossCovered"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LossRecovered"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OperatorSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PayoutConfigSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolConfigCacheUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolConfigChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ProfitDistributed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CoverDeposited'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CoverRedeemed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'LossCovered'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'LossRecovered'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'OperatorSet'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PayoutConfigSet'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'ProfitDistributed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
 }
 
 export interface ApprovalEventObject {
-  owner: string;
-  spender: string;
-  value: BigNumber;
+  owner: string
+  spender: string
+  value: BigNumber
 }
 export type ApprovalEvent = TypedEvent<
   [string, string, BigNumber],
   ApprovalEventObject
->;
+>
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
 
 export interface CoverDepositedEventObject {
-  account: string;
-  assets: BigNumber;
-  shares: BigNumber;
+  account: string
+  assets: BigNumber
+  shares: BigNumber
 }
 export type CoverDepositedEvent = TypedEvent<
   [string, BigNumber, BigNumber],
   CoverDepositedEventObject
->;
+>
 
-export type CoverDepositedEventFilter = TypedEventFilter<CoverDepositedEvent>;
+export type CoverDepositedEventFilter = TypedEventFilter<CoverDepositedEvent>
 
 export interface CoverRedeemedEventObject {
-  by: string;
-  receiver: string;
-  shares: BigNumber;
-  assets: BigNumber;
+  by: string
+  receiver: string
+  shares: BigNumber
+  assets: BigNumber
 }
 export type CoverRedeemedEvent = TypedEvent<
   [string, string, BigNumber, BigNumber],
   CoverRedeemedEventObject
->;
+>
 
-export type CoverRedeemedEventFilter = TypedEventFilter<CoverRedeemedEvent>;
+export type CoverRedeemedEventFilter = TypedEventFilter<CoverRedeemedEvent>
 
 export interface InitializedEventObject {
-  version: number;
+  version: number
 }
-export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>
 
-export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
 export interface LossCoveredEventObject {
-  covered: BigNumber;
-  remaining: BigNumber;
-  totalAssets: BigNumber;
-  coveredLoss: BigNumber;
+  covered: BigNumber
+  remaining: BigNumber
+  totalAssets: BigNumber
+  coveredLoss: BigNumber
 }
 export type LossCoveredEvent = TypedEvent<
   [BigNumber, BigNumber, BigNumber, BigNumber],
   LossCoveredEventObject
->;
+>
 
-export type LossCoveredEventFilter = TypedEventFilter<LossCoveredEvent>;
+export type LossCoveredEventFilter = TypedEventFilter<LossCoveredEvent>
 
 export interface LossRecoveredEventObject {
-  recovered: BigNumber;
-  remaining: BigNumber;
-  totalAssets: BigNumber;
-  coveredLoss: BigNumber;
+  recovered: BigNumber
+  remaining: BigNumber
+  totalAssets: BigNumber
+  coveredLoss: BigNumber
 }
 export type LossRecoveredEvent = TypedEvent<
   [BigNumber, BigNumber, BigNumber, BigNumber],
   LossRecoveredEventObject
->;
+>
 
-export type LossRecoveredEventFilter = TypedEventFilter<LossRecoveredEvent>;
+export type LossRecoveredEventFilter = TypedEventFilter<LossRecoveredEvent>
 
 export interface OperatorSetEventObject {
-  account: string;
-  poolCapCoverageInBps: BigNumber;
-  poolValueCoverageInBps: BigNumber;
+  account: string
+  poolCapCoverageInBps: BigNumber
+  poolValueCoverageInBps: BigNumber
 }
 export type OperatorSetEvent = TypedEvent<
   [string, BigNumber, BigNumber],
   OperatorSetEventObject
->;
+>
 
-export type OperatorSetEventFilter = TypedEventFilter<OperatorSetEvent>;
+export type OperatorSetEventFilter = TypedEventFilter<OperatorSetEvent>
 
 export interface PayoutConfigSetEventObject {
-  coverRateInBps: BigNumber;
-  coverCap: BigNumber;
-  liquidityCap: BigNumber;
+  coverRateInBps: BigNumber
+  coverCap: BigNumber
+  liquidityCap: BigNumber
 }
 export type PayoutConfigSetEvent = TypedEvent<
   [BigNumber, BigNumber, BigNumber],
   PayoutConfigSetEventObject
->;
+>
 
-export type PayoutConfigSetEventFilter = TypedEventFilter<PayoutConfigSetEvent>;
+export type PayoutConfigSetEventFilter = TypedEventFilter<PayoutConfigSetEvent>
 
 export interface PoolConfigCacheUpdatedEventObject {
-  poolConfig: string;
+  poolConfig: string
 }
 export type PoolConfigCacheUpdatedEvent = TypedEvent<
   [string],
   PoolConfigCacheUpdatedEventObject
->;
+>
 
 export type PoolConfigCacheUpdatedEventFilter =
-  TypedEventFilter<PoolConfigCacheUpdatedEvent>;
+  TypedEventFilter<PoolConfigCacheUpdatedEvent>
 
 export interface PoolConfigChangedEventObject {
-  newPoolConfig: string;
-  oldPoolConfig: string;
+  newPoolConfig: string
+  oldPoolConfig: string
 }
 export type PoolConfigChangedEvent = TypedEvent<
   [string, string],
   PoolConfigChangedEventObject
->;
+>
 
 export type PoolConfigChangedEventFilter =
-  TypedEventFilter<PoolConfigChangedEvent>;
+  TypedEventFilter<PoolConfigChangedEvent>
 
 export interface ProfitDistributedEventObject {
-  profit: BigNumber;
-  totalAssets: BigNumber;
+  profit: BigNumber
+  totalAssets: BigNumber
 }
 export type ProfitDistributedEvent = TypedEvent<
   [BigNumber, BigNumber],
   ProfitDistributedEventObject
->;
+>
 
 export type ProfitDistributedEventFilter =
-  TypedEventFilter<ProfitDistributedEvent>;
+  TypedEventFilter<ProfitDistributedEvent>
 
 export interface TransferEventObject {
-  from: string;
-  to: string;
-  value: BigNumber;
+  from: string
+  to: string
+  value: BigNumber
 }
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber],
   TransferEventObject
->;
+>
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
 export interface FirstLossCover extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this
+  attach(addressOrName: string): this
+  deployed(): Promise<this>
 
-  interface: FirstLossCoverInterface;
+  interface: FirstLossCoverInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TEvent>>
 
   listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
+    eventFilter?: TypedEventFilter<TEvent>,
+  ): Array<TypedListener<TEvent>>
+  listeners(eventName?: string): Array<Listener>
   removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+    eventFilter: TypedEventFilter<TEvent>,
+  ): this
+  removeAllListeners(eventName?: string): this
+  off: OnEvent<this>
+  on: OnEvent<this>
+  once: OnEvent<this>
+  removeListener: OnEvent<this>
 
   functions: {
     _calcLossRecover(
       coveredLoss: PromiseOrValue<BigNumberish>,
       recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber] & {
-        remainingRecovery: BigNumber;
-        recoveredAmount: BigNumber;
+        remainingRecovery: BigNumber
+        recoveredAmount: BigNumber
       }
-    >;
+    >
 
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     approve(
       spender: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     availableCoverCapacity(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { coverCapacity: BigNumber }>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { coverCapacity: BigNumber }>
 
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     calcLossCover(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { remainingLoss: BigNumber }>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { remainingLoss: BigNumber }>
 
     calcLossRecover(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { remainingRecovery: BigNumber }>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { remainingRecovery: BigNumber }>
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     coverLoss(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    coveredLoss(overrides?: CallOverrides): Promise<[BigNumber]>;
+    coveredLoss(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    decimals(overrides?: CallOverrides): Promise<[number]>;
+    decimals(overrides?: CallOverrides): Promise<[number]>
 
     decreaseAllowance(
       spender: PromiseOrValue<string>,
       subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     depositCover(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     depositCoverWithAffiliateFees(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     depositCoverWithTrancheVaultTokens(
       trancheVaultAddress: PromiseOrValue<string>,
       tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     distributeProfit(
       profit: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     getMaxCoverConfig(
-      overrides?: CallOverrides
-    ): Promise<[FirstLossCoverStorage.LossCoverConfigStructOutput]>;
+      overrides?: CallOverrides,
+    ): Promise<[FirstLossCoverStorage.LossCoverConfigStructOutput]>
 
     getOperatorConfig(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[FirstLossCoverStorage.LossCoverConfigStructOutput]>;
+      overrides?: CallOverrides,
+    ): Promise<[FirstLossCoverStorage.LossCoverConfigStructOutput]>
 
     getPayoutConfig(
-      overrides?: CallOverrides
-    ): Promise<[FirstLossCoverStorage.LossCoverPayoutConfigStructOutput]>;
+      overrides?: CallOverrides,
+    ): Promise<[FirstLossCoverStorage.LossCoverPayoutConfigStructOutput]>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    "initialize(string,string,address)"(
+    'initialize(string,string,address)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    "initialize(address)"(
+    'initialize(address)'(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     isSufficient(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>
 
-    name(overrides?: CallOverrides): Promise<[string]>;
+    name(overrides?: CallOverrides): Promise<[string]>
 
-    pool(overrides?: CallOverrides): Promise<[string]>;
+    pool(overrides?: CallOverrides): Promise<[string]>
 
-    poolConfig(overrides?: CallOverrides): Promise<[string]>;
+    poolConfig(overrides?: CallOverrides): Promise<[string]>
 
-    poolSafe(overrides?: CallOverrides): Promise<[string]>;
+    poolSafe(overrides?: CallOverrides): Promise<[string]>
 
-    profitEscrow(overrides?: CallOverrides): Promise<[string]>;
+    profitEscrow(overrides?: CallOverrides): Promise<[string]>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     redeemCover(
       shares: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     setOperator(
       account: PromiseOrValue<string>,
       config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     setPayoutConfig(
       config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    symbol(overrides?: CallOverrides): Promise<[string]>;
+    symbol(overrides?: CallOverrides): Promise<[string]>
 
-    totalAssets(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalAssets(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
 
     transfer(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    underlyingToken(overrides?: CallOverrides): Promise<[string]>;
+    underlyingToken(overrides?: CallOverrides): Promise<[string]>
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-  };
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+  }
 
   _calcLossRecover(
     coveredLoss: PromiseOrValue<BigNumberish>,
     recoveryAmount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [BigNumber, BigNumber] & {
-      remainingRecovery: BigNumber;
-      recoveredAmount: BigNumber;
+      remainingRecovery: BigNumber
+      recoveredAmount: BigNumber
     }
-  >;
+  >
 
   allowance(
     owner: PromiseOrValue<string>,
     spender: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   approve(
     spender: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>;
+  availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>
 
   balanceOf(
     account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   calcLossCover(
     poolAssets: PromiseOrValue<BigNumberish>,
     loss: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   calcLossRecover(
     recovery: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   convertToAssets(
     shares: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   convertToShares(
     assets: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   coverLoss(
     poolAssets: PromiseOrValue<BigNumberish>,
     loss: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  coveredLoss(overrides?: CallOverrides): Promise<BigNumber>;
+  coveredLoss(overrides?: CallOverrides): Promise<BigNumber>
 
-  decimals(overrides?: CallOverrides): Promise<number>;
+  decimals(overrides?: CallOverrides): Promise<number>
 
   decreaseAllowance(
     spender: PromiseOrValue<string>,
     subtractedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   depositCover(
     assets: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   depositCoverWithAffiliateFees(
     assets: PromiseOrValue<BigNumberish>,
     receiver: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   depositCoverWithTrancheVaultTokens(
     trancheVaultAddress: PromiseOrValue<string>,
     tokenAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   distributeProfit(
     profit: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   getMaxCoverConfig(
-    overrides?: CallOverrides
-  ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>;
+    overrides?: CallOverrides,
+  ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
 
   getOperatorConfig(
     account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>;
+    overrides?: CallOverrides,
+  ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
 
   getPayoutConfig(
-    overrides?: CallOverrides
-  ): Promise<FirstLossCoverStorage.LossCoverPayoutConfigStructOutput>;
+    overrides?: CallOverrides,
+  ): Promise<FirstLossCoverStorage.LossCoverPayoutConfigStructOutput>
 
   increaseAllowance(
     spender: PromiseOrValue<string>,
     addedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  "initialize(string,string,address)"(
+  'initialize(string,string,address)'(
     name: PromiseOrValue<string>,
     symbol: PromiseOrValue<string>,
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  "initialize(address)"(
+  'initialize(address)'(
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   isSufficient(
     account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+    overrides?: CallOverrides,
+  ): Promise<boolean>
 
-  name(overrides?: CallOverrides): Promise<string>;
+  name(overrides?: CallOverrides): Promise<string>
 
-  pool(overrides?: CallOverrides): Promise<string>;
+  pool(overrides?: CallOverrides): Promise<string>
 
-  poolConfig(overrides?: CallOverrides): Promise<string>;
+  poolConfig(overrides?: CallOverrides): Promise<string>
 
-  poolSafe(overrides?: CallOverrides): Promise<string>;
+  poolSafe(overrides?: CallOverrides): Promise<string>
 
-  profitEscrow(overrides?: CallOverrides): Promise<string>;
+  profitEscrow(overrides?: CallOverrides): Promise<string>
 
   recoverLoss(
     recovery: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   redeemCover(
     shares: PromiseOrValue<BigNumberish>,
     receiver: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   setOperator(
     account: PromiseOrValue<string>,
     config: FirstLossCoverStorage.LossCoverConfigStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   setPayoutConfig(
     config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   setPoolConfig(
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  symbol(overrides?: CallOverrides): Promise<string>;
+  symbol(overrides?: CallOverrides): Promise<string>
 
-  totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
+  totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
   transfer(
     to: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   transferFrom(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  underlyingToken(overrides?: CallOverrides): Promise<string>;
+  underlyingToken(overrides?: CallOverrides): Promise<string>
 
   updatePoolConfigData(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   callStatic: {
     _calcLossRecover(
       coveredLoss: PromiseOrValue<BigNumberish>,
       recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber] & {
-        remainingRecovery: BigNumber;
-        recoveredAmount: BigNumber;
+        remainingRecovery: BigNumber
+        recoveredAmount: BigNumber
       }
-    >;
+    >
 
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     approve(
       spender: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
-    availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>;
+    availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>
 
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     calcLossCover(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     calcLossRecover(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     coverLoss(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    coveredLoss(overrides?: CallOverrides): Promise<BigNumber>;
+    coveredLoss(overrides?: CallOverrides): Promise<BigNumber>
 
-    decimals(overrides?: CallOverrides): Promise<number>;
+    decimals(overrides?: CallOverrides): Promise<number>
 
     decreaseAllowance(
       spender: PromiseOrValue<string>,
       subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
     depositCover(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     depositCoverWithAffiliateFees(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     depositCoverWithTrancheVaultTokens(
       trancheVaultAddress: PromiseOrValue<string>,
       tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     distributeProfit(
       profit: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     getMaxCoverConfig(
-      overrides?: CallOverrides
-    ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>;
+      overrides?: CallOverrides,
+    ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
 
     getOperatorConfig(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>;
+      overrides?: CallOverrides,
+    ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
 
     getPayoutConfig(
-      overrides?: CallOverrides
-    ): Promise<FirstLossCoverStorage.LossCoverPayoutConfigStructOutput>;
+      overrides?: CallOverrides,
+    ): Promise<FirstLossCoverStorage.LossCoverPayoutConfigStructOutput>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
-    "initialize(string,string,address)"(
+    'initialize(string,string,address)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-    "initialize(address)"(
+    'initialize(address)'(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     isSufficient(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
-    name(overrides?: CallOverrides): Promise<string>;
+    name(overrides?: CallOverrides): Promise<string>
 
-    pool(overrides?: CallOverrides): Promise<string>;
+    pool(overrides?: CallOverrides): Promise<string>
 
-    poolConfig(overrides?: CallOverrides): Promise<string>;
+    poolConfig(overrides?: CallOverrides): Promise<string>
 
-    poolSafe(overrides?: CallOverrides): Promise<string>;
+    poolSafe(overrides?: CallOverrides): Promise<string>
 
-    profitEscrow(overrides?: CallOverrides): Promise<string>;
+    profitEscrow(overrides?: CallOverrides): Promise<string>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     redeemCover(
       shares: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     setOperator(
       account: PromiseOrValue<string>,
       config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     setPayoutConfig(
       config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-    symbol(overrides?: CallOverrides): Promise<string>;
+    symbol(overrides?: CallOverrides): Promise<string>
 
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
+    totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     transfer(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
-    underlyingToken(overrides?: CallOverrides): Promise<string>;
+    underlyingToken(overrides?: CallOverrides): Promise<string>
 
-    updatePoolConfigData(overrides?: CallOverrides): Promise<void>;
-  };
+    updatePoolConfigData(overrides?: CallOverrides): Promise<void>
+  }
 
   filters: {
-    "Approval(address,address,uint256)"(
+    'Approval(address,address,uint256)'(
       owner?: PromiseOrValue<string> | null,
       spender?: PromiseOrValue<string> | null,
-      value?: null
-    ): ApprovalEventFilter;
+      value?: null,
+    ): ApprovalEventFilter
     Approval(
       owner?: PromiseOrValue<string> | null,
       spender?: PromiseOrValue<string> | null,
-      value?: null
-    ): ApprovalEventFilter;
+      value?: null,
+    ): ApprovalEventFilter
 
-    "CoverDeposited(address,uint256,uint256)"(
+    'CoverDeposited(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
       assets?: null,
-      shares?: null
-    ): CoverDepositedEventFilter;
+      shares?: null,
+    ): CoverDepositedEventFilter
     CoverDeposited(
       account?: PromiseOrValue<string> | null,
       assets?: null,
-      shares?: null
-    ): CoverDepositedEventFilter;
+      shares?: null,
+    ): CoverDepositedEventFilter
 
-    "CoverRedeemed(address,address,uint256,uint256)"(
+    'CoverRedeemed(address,address,uint256,uint256)'(
       by?: PromiseOrValue<string> | null,
       receiver?: PromiseOrValue<string> | null,
       shares?: null,
-      assets?: null
-    ): CoverRedeemedEventFilter;
+      assets?: null,
+    ): CoverRedeemedEventFilter
     CoverRedeemed(
       by?: PromiseOrValue<string> | null,
       receiver?: PromiseOrValue<string> | null,
       shares?: null,
-      assets?: null
-    ): CoverRedeemedEventFilter;
+      assets?: null,
+    ): CoverRedeemedEventFilter
 
-    "Initialized(uint8)"(version?: null): InitializedEventFilter;
-    Initialized(version?: null): InitializedEventFilter;
+    'Initialized(uint8)'(version?: null): InitializedEventFilter
+    Initialized(version?: null): InitializedEventFilter
 
-    "LossCovered(uint256,uint256,uint256,uint256)"(
+    'LossCovered(uint256,uint256,uint256,uint256)'(
       covered?: null,
       remaining?: null,
       totalAssets?: null,
-      coveredLoss?: null
-    ): LossCoveredEventFilter;
+      coveredLoss?: null,
+    ): LossCoveredEventFilter
     LossCovered(
       covered?: null,
       remaining?: null,
       totalAssets?: null,
-      coveredLoss?: null
-    ): LossCoveredEventFilter;
+      coveredLoss?: null,
+    ): LossCoveredEventFilter
 
-    "LossRecovered(uint256,uint256,uint256,uint256)"(
+    'LossRecovered(uint256,uint256,uint256,uint256)'(
       recovered?: null,
       remaining?: null,
       totalAssets?: null,
-      coveredLoss?: null
-    ): LossRecoveredEventFilter;
+      coveredLoss?: null,
+    ): LossRecoveredEventFilter
     LossRecovered(
       recovered?: null,
       remaining?: null,
       totalAssets?: null,
-      coveredLoss?: null
-    ): LossRecoveredEventFilter;
+      coveredLoss?: null,
+    ): LossRecoveredEventFilter
 
-    "OperatorSet(address,uint256,uint256)"(
+    'OperatorSet(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
       poolCapCoverageInBps?: null,
-      poolValueCoverageInBps?: null
-    ): OperatorSetEventFilter;
+      poolValueCoverageInBps?: null,
+    ): OperatorSetEventFilter
     OperatorSet(
       account?: PromiseOrValue<string> | null,
       poolCapCoverageInBps?: null,
-      poolValueCoverageInBps?: null
-    ): OperatorSetEventFilter;
+      poolValueCoverageInBps?: null,
+    ): OperatorSetEventFilter
 
-    "PayoutConfigSet(uint256,uint256,uint256)"(
+    'PayoutConfigSet(uint256,uint256,uint256)'(
       coverRateInBps?: null,
       coverCap?: null,
-      liquidityCap?: null
-    ): PayoutConfigSetEventFilter;
+      liquidityCap?: null,
+    ): PayoutConfigSetEventFilter
     PayoutConfigSet(
       coverRateInBps?: null,
       coverCap?: null,
-      liquidityCap?: null
-    ): PayoutConfigSetEventFilter;
+      liquidityCap?: null,
+    ): PayoutConfigSetEventFilter
 
-    "PoolConfigCacheUpdated(address)"(
-      poolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigCacheUpdatedEventFilter;
+    'PoolConfigCacheUpdated(address)'(
+      poolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigCacheUpdatedEventFilter
     PoolConfigCacheUpdated(
-      poolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigCacheUpdatedEventFilter;
+      poolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigCacheUpdatedEventFilter
 
-    "PoolConfigChanged(address,address)"(
+    'PoolConfigChanged(address,address)'(
       newPoolConfig?: PromiseOrValue<string> | null,
-      oldPoolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigChangedEventFilter;
+      oldPoolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigChangedEventFilter
     PoolConfigChanged(
       newPoolConfig?: PromiseOrValue<string> | null,
-      oldPoolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigChangedEventFilter;
+      oldPoolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigChangedEventFilter
 
-    "ProfitDistributed(uint256,uint256)"(
+    'ProfitDistributed(uint256,uint256)'(
       profit?: null,
-      totalAssets?: null
-    ): ProfitDistributedEventFilter;
+      totalAssets?: null,
+    ): ProfitDistributedEventFilter
     ProfitDistributed(
       profit?: null,
-      totalAssets?: null
-    ): ProfitDistributedEventFilter;
+      totalAssets?: null,
+    ): ProfitDistributedEventFilter
 
-    "Transfer(address,address,uint256)"(
+    'Transfer(address,address,uint256)'(
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
-      value?: null
-    ): TransferEventFilter;
+      value?: null,
+    ): TransferEventFilter
     Transfer(
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
-      value?: null
-    ): TransferEventFilter;
-  };
+      value?: null,
+    ): TransferEventFilter
+  }
 
   estimateGas: {
     _calcLossRecover(
       coveredLoss: PromiseOrValue<BigNumberish>,
       recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     approve(
       spender: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>;
+    availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>
 
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     calcLossCover(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     calcLossRecover(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     coverLoss(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    coveredLoss(overrides?: CallOverrides): Promise<BigNumber>;
+    coveredLoss(overrides?: CallOverrides): Promise<BigNumber>
 
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+    decimals(overrides?: CallOverrides): Promise<BigNumber>
 
     decreaseAllowance(
       spender: PromiseOrValue<string>,
       subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     depositCover(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     depositCoverWithAffiliateFees(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     depositCoverWithTrancheVaultTokens(
       trancheVaultAddress: PromiseOrValue<string>,
       tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     distributeProfit(
       profit: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    getMaxCoverConfig(overrides?: CallOverrides): Promise<BigNumber>;
+    getMaxCoverConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     getOperatorConfig(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    getPayoutConfig(overrides?: CallOverrides): Promise<BigNumber>;
+    getPayoutConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    "initialize(string,string,address)"(
+    'initialize(string,string,address)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    "initialize(address)"(
+    'initialize(address)'(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     isSufficient(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    name(overrides?: CallOverrides): Promise<BigNumber>;
+    name(overrides?: CallOverrides): Promise<BigNumber>
 
-    pool(overrides?: CallOverrides): Promise<BigNumber>;
+    pool(overrides?: CallOverrides): Promise<BigNumber>
 
-    poolConfig(overrides?: CallOverrides): Promise<BigNumber>;
+    poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
-    poolSafe(overrides?: CallOverrides): Promise<BigNumber>;
+    poolSafe(overrides?: CallOverrides): Promise<BigNumber>
 
-    profitEscrow(overrides?: CallOverrides): Promise<BigNumber>;
+    profitEscrow(overrides?: CallOverrides): Promise<BigNumber>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     redeemCover(
       shares: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     setOperator(
       account: PromiseOrValue<string>,
       config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     setPayoutConfig(
       config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+    symbol(overrides?: CallOverrides): Promise<BigNumber>
 
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
+    totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     transfer(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    underlyingToken(overrides?: CallOverrides): Promise<BigNumber>;
+    underlyingToken(overrides?: CallOverrides): Promise<BigNumber>
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-  };
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+  }
 
   populateTransaction: {
     _calcLossRecover(
       coveredLoss: PromiseOrValue<BigNumberish>,
       recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     approve(
       spender: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     availableCoverCapacity(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     calcLossCover(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     calcLossRecover(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     convertToShares(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     coverLoss(
       poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    coveredLoss(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    coveredLoss(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     decreaseAllowance(
       spender: PromiseOrValue<string>,
       subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     depositCover(
       assets: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     depositCoverWithAffiliateFees(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     depositCoverWithTrancheVaultTokens(
       trancheVaultAddress: PromiseOrValue<string>,
       tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     distributeProfit(
       profit: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    getMaxCoverConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getMaxCoverConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     getOperatorConfig(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
-    getPayoutConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getPayoutConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    "initialize(string,string,address)"(
+    'initialize(string,string,address)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    "initialize(address)"(
+    'initialize(address)'(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     isSufficient(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    pool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    pool(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    poolSafe(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    poolSafe(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    profitEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    profitEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     redeemCover(
       shares: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     setOperator(
       account: PromiseOrValue<string>,
       config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     setPayoutConfig(
       config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     transfer(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+  }
 }

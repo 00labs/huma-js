@@ -12,254 +12,236 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers'
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "./common";
+} from './common'
 
 export interface PoolInterface extends utils.Interface {
   functions: {
-    "credit()": FunctionFragment;
-    "currentTranchesAssets()": FunctionFragment;
-    "disablePool()": FunctionFragment;
-    "enablePool()": FunctionFragment;
-    "epochManager()": FunctionFragment;
-    "feeManager()": FunctionFragment;
-    "firstLossCovers(uint256)": FunctionFragment;
-    "initialize(address)": FunctionFragment;
-    "isPoolOn()": FunctionFragment;
-    "poolConfig()": FunctionFragment;
-    "poolOwnerOrEAFirstLossCover()": FunctionFragment;
-    "poolVault()": FunctionFragment;
-    "refreshPool()": FunctionFragment;
-    "setPoolConfig(address)": FunctionFragment;
-    "submitRedemptionRequest(uint256)": FunctionFragment;
-    "totalAssets()": FunctionFragment;
-    "trancheTotalAssets(uint256)": FunctionFragment;
-    "tranchesAssets()": FunctionFragment;
-    "tranchesLosses()": FunctionFragment;
-    "tranchesPolicy()": FunctionFragment;
-    "updatePoolConfigData()": FunctionFragment;
-    "updateTrancheAssets(uint96[2])": FunctionFragment;
-  };
+    'credit()': FunctionFragment
+    'currentTranchesAssets()': FunctionFragment
+    'disablePool()': FunctionFragment
+    'enablePool()': FunctionFragment
+    'epochManager()': FunctionFragment
+    'feeManager()': FunctionFragment
+    'firstLossCovers(uint256)': FunctionFragment
+    'initialize(address)': FunctionFragment
+    'isPoolOn()': FunctionFragment
+    'poolConfig()': FunctionFragment
+    'poolOwnerOrEAFirstLossCover()': FunctionFragment
+    'poolVault()': FunctionFragment
+    'refreshPool()': FunctionFragment
+    'setPoolConfig(address)': FunctionFragment
+    'submitRedemptionRequest(uint256)': FunctionFragment
+    'totalAssets()': FunctionFragment
+    'trancheTotalAssets(uint256)': FunctionFragment
+    'tranchesAssets()': FunctionFragment
+    'tranchesLosses()': FunctionFragment
+    'tranchesPolicy()': FunctionFragment
+    'updatePoolConfigData()': FunctionFragment
+    'updateTrancheAssets(uint96[2])': FunctionFragment
+  }
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "credit"
-      | "currentTranchesAssets"
-      | "disablePool"
-      | "enablePool"
-      | "epochManager"
-      | "feeManager"
-      | "firstLossCovers"
-      | "initialize"
-      | "isPoolOn"
-      | "poolConfig"
-      | "poolOwnerOrEAFirstLossCover"
-      | "poolVault"
-      | "refreshPool"
-      | "setPoolConfig"
-      | "submitRedemptionRequest"
-      | "totalAssets"
-      | "trancheTotalAssets"
-      | "tranchesAssets"
-      | "tranchesLosses"
-      | "tranchesPolicy"
-      | "updatePoolConfigData"
-      | "updateTrancheAssets"
-  ): FunctionFragment;
+      | 'credit'
+      | 'currentTranchesAssets'
+      | 'disablePool'
+      | 'enablePool'
+      | 'epochManager'
+      | 'feeManager'
+      | 'firstLossCovers'
+      | 'initialize'
+      | 'isPoolOn'
+      | 'poolConfig'
+      | 'poolOwnerOrEAFirstLossCover'
+      | 'poolVault'
+      | 'refreshPool'
+      | 'setPoolConfig'
+      | 'submitRedemptionRequest'
+      | 'totalAssets'
+      | 'trancheTotalAssets'
+      | 'tranchesAssets'
+      | 'tranchesLosses'
+      | 'tranchesPolicy'
+      | 'updatePoolConfigData'
+      | 'updateTrancheAssets',
+  ): FunctionFragment
 
-  encodeFunctionData(functionFragment: "credit", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'credit', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "currentTranchesAssets",
-    values?: undefined
-  ): string;
+    functionFragment: 'currentTranchesAssets',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "disablePool",
-    values?: undefined
-  ): string;
+    functionFragment: 'disablePool',
+    values?: undefined,
+  ): string
+  encodeFunctionData(functionFragment: 'enablePool', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "enablePool",
-    values?: undefined
-  ): string;
+    functionFragment: 'epochManager',
+    values?: undefined,
+  ): string
+  encodeFunctionData(functionFragment: 'feeManager', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "epochManager",
-    values?: undefined
-  ): string;
+    functionFragment: 'firstLossCovers',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "feeManager",
-    values?: undefined
-  ): string;
+    functionFragment: 'initialize',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(functionFragment: 'isPoolOn', values?: undefined): string
+  encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "firstLossCovers",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'poolOwnerOrEAFirstLossCover',
+    values?: undefined,
+  ): string
+  encodeFunctionData(functionFragment: 'poolVault', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "initialize",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "isPoolOn", values?: undefined): string;
+    functionFragment: 'refreshPool',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "poolConfig",
-    values?: undefined
-  ): string;
+    functionFragment: 'setPoolConfig',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-    functionFragment: "poolOwnerOrEAFirstLossCover",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "poolVault", values?: undefined): string;
+    functionFragment: 'submitRedemptionRequest',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "refreshPool",
-    values?: undefined
-  ): string;
+    functionFragment: 'totalAssets',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "setPoolConfig",
-    values: [PromiseOrValue<string>]
-  ): string;
+    functionFragment: 'trancheTotalAssets',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
-    functionFragment: "submitRedemptionRequest",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'tranchesAssets',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "totalAssets",
-    values?: undefined
-  ): string;
+    functionFragment: 'tranchesLosses',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "trancheTotalAssets",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+    functionFragment: 'tranchesPolicy',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "tranchesAssets",
-    values?: undefined
-  ): string;
+    functionFragment: 'updatePoolConfigData',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "tranchesLosses",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tranchesPolicy",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updatePoolConfigData",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateTrancheAssets",
-    values: [[PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]]
-  ): string;
+    functionFragment: 'updateTrancheAssets',
+    values: [[PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]],
+  ): string
 
-  decodeFunctionResult(functionFragment: "credit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'credit', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "currentTranchesAssets",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'currentTranchesAssets',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'disablePool', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'enablePool', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "disablePool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "enablePool", data: BytesLike): Result;
+    functionFragment: 'epochManager',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'feeManager', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "epochManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
+    functionFragment: 'firstLossCovers',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'isPoolOn', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "firstLossCovers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isPoolOn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poolConfig", data: BytesLike): Result;
+    functionFragment: 'poolOwnerOrEAFirstLossCover',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'poolVault', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'refreshPool', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "poolOwnerOrEAFirstLossCover",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "poolVault", data: BytesLike): Result;
+    functionFragment: 'setPoolConfig',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "refreshPool",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'submitRedemptionRequest',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'totalAssets', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "setPoolConfig",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'trancheTotalAssets',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "submitRedemptionRequest",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'tranchesAssets',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "totalAssets",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'tranchesLosses',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "trancheTotalAssets",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'tranchesPolicy',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "tranchesAssets",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'updatePoolConfigData',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "tranchesLosses",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tranchesPolicy",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updatePoolConfigData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateTrancheAssets",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'updateTrancheAssets',
+    data: BytesLike,
+  ): Result
 
   events: {
-    "Initialized(uint8)": EventFragment;
-    "PoolAssetsRefreshed(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)": EventFragment;
-    "PoolConfigCacheUpdated(address)": EventFragment;
-    "PoolConfigChanged(address,address)": EventFragment;
-    "PoolDisabled(address)": EventFragment;
-    "PoolEnabled(address)": EventFragment;
-  };
+    'Initialized(uint8)': EventFragment
+    'PoolAssetsRefreshed(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)': EventFragment
+    'PoolConfigCacheUpdated(address)': EventFragment
+    'PoolConfigChanged(address,address)': EventFragment
+    'PoolDisabled(address)': EventFragment
+    'PoolEnabled(address)': EventFragment
+  }
 
-  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolAssetsRefreshed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolConfigCacheUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolConfigChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolDisabled"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolEnabled"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolAssetsRefreshed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolDisabled'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolEnabled'): EventFragment
 }
 
 export interface InitializedEventObject {
-  version: number;
+  version: number
 }
-export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>
 
-export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
 export interface PoolAssetsRefreshedEventObject {
-  refreshedTimestamp: BigNumber;
-  profit: BigNumber;
-  loss: BigNumber;
-  lossRecovery: BigNumber;
-  seniorTotalAssets: BigNumber;
-  juniorTotalAssets: BigNumber;
-  seniorTotalLoss: BigNumber;
-  juniorTotalLoss: BigNumber;
+  refreshedTimestamp: BigNumber
+  profit: BigNumber
+  loss: BigNumber
+  lossRecovery: BigNumber
+  seniorTotalAssets: BigNumber
+  juniorTotalAssets: BigNumber
+  seniorTotalLoss: BigNumber
+  juniorTotalLoss: BigNumber
 }
 export type PoolAssetsRefreshedEvent = TypedEvent<
   [
@@ -270,332 +252,326 @@ export type PoolAssetsRefreshedEvent = TypedEvent<
     BigNumber,
     BigNumber,
     BigNumber,
-    BigNumber
+    BigNumber,
   ],
   PoolAssetsRefreshedEventObject
->;
+>
 
 export type PoolAssetsRefreshedEventFilter =
-  TypedEventFilter<PoolAssetsRefreshedEvent>;
+  TypedEventFilter<PoolAssetsRefreshedEvent>
 
 export interface PoolConfigCacheUpdatedEventObject {
-  poolConfig: string;
+  poolConfig: string
 }
 export type PoolConfigCacheUpdatedEvent = TypedEvent<
   [string],
   PoolConfigCacheUpdatedEventObject
->;
+>
 
 export type PoolConfigCacheUpdatedEventFilter =
-  TypedEventFilter<PoolConfigCacheUpdatedEvent>;
+  TypedEventFilter<PoolConfigCacheUpdatedEvent>
 
 export interface PoolConfigChangedEventObject {
-  newPoolConfig: string;
-  oldPoolConfig: string;
+  newPoolConfig: string
+  oldPoolConfig: string
 }
 export type PoolConfigChangedEvent = TypedEvent<
   [string, string],
   PoolConfigChangedEventObject
->;
+>
 
 export type PoolConfigChangedEventFilter =
-  TypedEventFilter<PoolConfigChangedEvent>;
+  TypedEventFilter<PoolConfigChangedEvent>
 
 export interface PoolDisabledEventObject {
-  by: string;
+  by: string
 }
-export type PoolDisabledEvent = TypedEvent<[string], PoolDisabledEventObject>;
+export type PoolDisabledEvent = TypedEvent<[string], PoolDisabledEventObject>
 
-export type PoolDisabledEventFilter = TypedEventFilter<PoolDisabledEvent>;
+export type PoolDisabledEventFilter = TypedEventFilter<PoolDisabledEvent>
 
 export interface PoolEnabledEventObject {
-  by: string;
+  by: string
 }
-export type PoolEnabledEvent = TypedEvent<[string], PoolEnabledEventObject>;
+export type PoolEnabledEvent = TypedEvent<[string], PoolEnabledEventObject>
 
-export type PoolEnabledEventFilter = TypedEventFilter<PoolEnabledEvent>;
+export type PoolEnabledEventFilter = TypedEventFilter<PoolEnabledEvent>
 
 export interface Pool extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this
+  attach(addressOrName: string): this
+  deployed(): Promise<this>
 
-  interface: PoolInterface;
+  interface: PoolInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TEvent>>
 
   listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
+    eventFilter?: TypedEventFilter<TEvent>,
+  ): Array<TypedListener<TEvent>>
+  listeners(eventName?: string): Array<Listener>
   removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+    eventFilter: TypedEventFilter<TEvent>,
+  ): this
+  removeAllListeners(eventName?: string): this
+  off: OnEvent<this>
+  on: OnEvent<this>
+  once: OnEvent<this>
+  removeListener: OnEvent<this>
 
   functions: {
-    credit(overrides?: CallOverrides): Promise<[string]>;
+    credit(overrides?: CallOverrides): Promise<[string]>
 
     currentTranchesAssets(
-      overrides?: CallOverrides
-    ): Promise<[[BigNumber, BigNumber]] & { assets: [BigNumber, BigNumber] }>;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber]] & { assets: [BigNumber, BigNumber] }>
 
     disablePool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     enablePool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    epochManager(overrides?: CallOverrides): Promise<[string]>;
+    epochManager(overrides?: CallOverrides): Promise<[string]>
 
-    feeManager(overrides?: CallOverrides): Promise<[string]>;
+    feeManager(overrides?: CallOverrides): Promise<[string]>
 
     firstLossCovers(
       arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+      overrides?: CallOverrides,
+    ): Promise<[string]>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     isPoolOn(
-      overrides?: CallOverrides
-    ): Promise<[boolean] & { status: boolean }>;
+      overrides?: CallOverrides,
+    ): Promise<[boolean] & { status: boolean }>
 
-    poolConfig(overrides?: CallOverrides): Promise<[string]>;
+    poolConfig(overrides?: CallOverrides): Promise<[string]>
 
-    poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<[string]>;
+    poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<[string]>
 
-    poolVault(overrides?: CallOverrides): Promise<[string]>;
+    poolVault(overrides?: CallOverrides): Promise<[string]>
 
     refreshPool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     submitRedemptionRequest(
       amounts: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-    totalAssets(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalAssets(overrides?: CallOverrides): Promise<[BigNumber]>
 
     trancheTotalAssets(
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
-    tranchesAssets(
-      overrides?: CallOverrides
-    ): Promise<
+    tranchesAssets(overrides?: CallOverrides): Promise<
       [BigNumber, BigNumber, BigNumber] & {
-        seniorTotalAssets: BigNumber;
-        juniorTotalAssets: BigNumber;
-        lastUpdatedTime: BigNumber;
+        seniorTotalAssets: BigNumber
+        juniorTotalAssets: BigNumber
+        lastUpdatedTime: BigNumber
       }
-    >;
+    >
 
     tranchesLosses(
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber] & { seniorLoss: BigNumber; juniorLoss: BigNumber }
-    >;
+    >
 
-    tranchesPolicy(overrides?: CallOverrides): Promise<[string]>;
+    tranchesPolicy(overrides?: CallOverrides): Promise<[string]>
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-  };
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+  }
 
-  credit(overrides?: CallOverrides): Promise<string>;
+  credit(overrides?: CallOverrides): Promise<string>
 
   currentTranchesAssets(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber]>;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber]>
 
   disablePool(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   enablePool(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  epochManager(overrides?: CallOverrides): Promise<string>;
+  epochManager(overrides?: CallOverrides): Promise<string>
 
-  feeManager(overrides?: CallOverrides): Promise<string>;
+  feeManager(overrides?: CallOverrides): Promise<string>
 
   firstLossCovers(
     arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+    overrides?: CallOverrides,
+  ): Promise<string>
 
   initialize(
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  isPoolOn(overrides?: CallOverrides): Promise<boolean>;
+  isPoolOn(overrides?: CallOverrides): Promise<boolean>
 
-  poolConfig(overrides?: CallOverrides): Promise<string>;
+  poolConfig(overrides?: CallOverrides): Promise<string>
 
-  poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<string>;
+  poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<string>
 
-  poolVault(overrides?: CallOverrides): Promise<string>;
+  poolVault(overrides?: CallOverrides): Promise<string>
 
   refreshPool(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   setPoolConfig(
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   submitRedemptionRequest(
     amounts: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-  totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
+  totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
   trancheTotalAssets(
     index: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
-  tranchesAssets(
-    overrides?: CallOverrides
-  ): Promise<
+  tranchesAssets(overrides?: CallOverrides): Promise<
     [BigNumber, BigNumber, BigNumber] & {
-      seniorTotalAssets: BigNumber;
-      juniorTotalAssets: BigNumber;
-      lastUpdatedTime: BigNumber;
+      seniorTotalAssets: BigNumber
+      juniorTotalAssets: BigNumber
+      lastUpdatedTime: BigNumber
     }
-  >;
+  >
 
   tranchesLosses(
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [BigNumber, BigNumber] & { seniorLoss: BigNumber; juniorLoss: BigNumber }
-  >;
+  >
 
-  tranchesPolicy(overrides?: CallOverrides): Promise<string>;
+  tranchesPolicy(overrides?: CallOverrides): Promise<string>
 
   updatePoolConfigData(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   updateTrancheAssets(
     assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   callStatic: {
-    credit(overrides?: CallOverrides): Promise<string>;
+    credit(overrides?: CallOverrides): Promise<string>
 
     currentTranchesAssets(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber]>
 
-    disablePool(overrides?: CallOverrides): Promise<void>;
+    disablePool(overrides?: CallOverrides): Promise<void>
 
-    enablePool(overrides?: CallOverrides): Promise<void>;
+    enablePool(overrides?: CallOverrides): Promise<void>
 
-    epochManager(overrides?: CallOverrides): Promise<string>;
+    epochManager(overrides?: CallOverrides): Promise<string>
 
-    feeManager(overrides?: CallOverrides): Promise<string>;
+    feeManager(overrides?: CallOverrides): Promise<string>
 
     firstLossCovers(
       arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+      overrides?: CallOverrides,
+    ): Promise<string>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-    isPoolOn(overrides?: CallOverrides): Promise<boolean>;
+    isPoolOn(overrides?: CallOverrides): Promise<boolean>
 
-    poolConfig(overrides?: CallOverrides): Promise<string>;
+    poolConfig(overrides?: CallOverrides): Promise<string>
 
-    poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<string>;
+    poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<string>
 
-    poolVault(overrides?: CallOverrides): Promise<string>;
+    poolVault(overrides?: CallOverrides): Promise<string>
 
-    refreshPool(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
+    refreshPool(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     submitRedemptionRequest(
       amounts: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
+    totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
     trancheTotalAssets(
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    tranchesAssets(
-      overrides?: CallOverrides
-    ): Promise<
+    tranchesAssets(overrides?: CallOverrides): Promise<
       [BigNumber, BigNumber, BigNumber] & {
-        seniorTotalAssets: BigNumber;
-        juniorTotalAssets: BigNumber;
-        lastUpdatedTime: BigNumber;
+        seniorTotalAssets: BigNumber
+        juniorTotalAssets: BigNumber
+        lastUpdatedTime: BigNumber
       }
-    >;
+    >
 
     tranchesLosses(
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber] & { seniorLoss: BigNumber; juniorLoss: BigNumber }
-    >;
+    >
 
-    tranchesPolicy(overrides?: CallOverrides): Promise<string>;
+    tranchesPolicy(overrides?: CallOverrides): Promise<string>
 
-    updatePoolConfigData(overrides?: CallOverrides): Promise<void>;
+    updatePoolConfigData(overrides?: CallOverrides): Promise<void>
 
     updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-      overrides?: CallOverrides
-    ): Promise<void>;
-  };
+      overrides?: CallOverrides,
+    ): Promise<void>
+  }
 
   filters: {
-    "Initialized(uint8)"(version?: null): InitializedEventFilter;
-    Initialized(version?: null): InitializedEventFilter;
+    'Initialized(uint8)'(version?: null): InitializedEventFilter
+    Initialized(version?: null): InitializedEventFilter
 
-    "PoolAssetsRefreshed(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)"(
+    'PoolAssetsRefreshed(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'(
       refreshedTimestamp?: null,
       profit?: null,
       loss?: null,
@@ -603,8 +579,8 @@ export interface Pool extends BaseContract {
       seniorTotalAssets?: null,
       juniorTotalAssets?: null,
       seniorTotalLoss?: null,
-      juniorTotalLoss?: null
-    ): PoolAssetsRefreshedEventFilter;
+      juniorTotalLoss?: null,
+    ): PoolAssetsRefreshedEventFilter
     PoolAssetsRefreshed(
       refreshedTimestamp?: null,
       profit?: null,
@@ -613,181 +589,181 @@ export interface Pool extends BaseContract {
       seniorTotalAssets?: null,
       juniorTotalAssets?: null,
       seniorTotalLoss?: null,
-      juniorTotalLoss?: null
-    ): PoolAssetsRefreshedEventFilter;
+      juniorTotalLoss?: null,
+    ): PoolAssetsRefreshedEventFilter
 
-    "PoolConfigCacheUpdated(address)"(
-      poolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigCacheUpdatedEventFilter;
+    'PoolConfigCacheUpdated(address)'(
+      poolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigCacheUpdatedEventFilter
     PoolConfigCacheUpdated(
-      poolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigCacheUpdatedEventFilter;
+      poolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigCacheUpdatedEventFilter
 
-    "PoolConfigChanged(address,address)"(
+    'PoolConfigChanged(address,address)'(
       newPoolConfig?: PromiseOrValue<string> | null,
-      oldPoolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigChangedEventFilter;
+      oldPoolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigChangedEventFilter
     PoolConfigChanged(
       newPoolConfig?: PromiseOrValue<string> | null,
-      oldPoolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigChangedEventFilter;
+      oldPoolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigChangedEventFilter
 
-    "PoolDisabled(address)"(
-      by?: PromiseOrValue<string> | null
-    ): PoolDisabledEventFilter;
-    PoolDisabled(by?: PromiseOrValue<string> | null): PoolDisabledEventFilter;
+    'PoolDisabled(address)'(
+      by?: PromiseOrValue<string> | null,
+    ): PoolDisabledEventFilter
+    PoolDisabled(by?: PromiseOrValue<string> | null): PoolDisabledEventFilter
 
-    "PoolEnabled(address)"(
-      by?: PromiseOrValue<string> | null
-    ): PoolEnabledEventFilter;
-    PoolEnabled(by?: PromiseOrValue<string> | null): PoolEnabledEventFilter;
-  };
+    'PoolEnabled(address)'(
+      by?: PromiseOrValue<string> | null,
+    ): PoolEnabledEventFilter
+    PoolEnabled(by?: PromiseOrValue<string> | null): PoolEnabledEventFilter
+  }
 
   estimateGas: {
-    credit(overrides?: CallOverrides): Promise<BigNumber>;
+    credit(overrides?: CallOverrides): Promise<BigNumber>
 
-    currentTranchesAssets(overrides?: CallOverrides): Promise<BigNumber>;
+    currentTranchesAssets(overrides?: CallOverrides): Promise<BigNumber>
 
     disablePool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     enablePool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    epochManager(overrides?: CallOverrides): Promise<BigNumber>;
+    epochManager(overrides?: CallOverrides): Promise<BigNumber>
 
-    feeManager(overrides?: CallOverrides): Promise<BigNumber>;
+    feeManager(overrides?: CallOverrides): Promise<BigNumber>
 
     firstLossCovers(
       arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    isPoolOn(overrides?: CallOverrides): Promise<BigNumber>;
+    isPoolOn(overrides?: CallOverrides): Promise<BigNumber>
 
-    poolConfig(overrides?: CallOverrides): Promise<BigNumber>;
+    poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
-    poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<BigNumber>;
+    poolOwnerOrEAFirstLossCover(overrides?: CallOverrides): Promise<BigNumber>
 
-    poolVault(overrides?: CallOverrides): Promise<BigNumber>;
+    poolVault(overrides?: CallOverrides): Promise<BigNumber>
 
     refreshPool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     submitRedemptionRequest(
       amounts: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
+    totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
     trancheTotalAssets(
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    tranchesAssets(overrides?: CallOverrides): Promise<BigNumber>;
+    tranchesAssets(overrides?: CallOverrides): Promise<BigNumber>
 
-    tranchesLosses(overrides?: CallOverrides): Promise<BigNumber>;
+    tranchesLosses(overrides?: CallOverrides): Promise<BigNumber>
 
-    tranchesPolicy(overrides?: CallOverrides): Promise<BigNumber>;
+    tranchesPolicy(overrides?: CallOverrides): Promise<BigNumber>
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-  };
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+  }
 
   populateTransaction: {
-    credit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    credit(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     currentTranchesAssets(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     disablePool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     enablePool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    epochManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    epochManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     firstLossCovers(
       arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    isPoolOn(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    isPoolOn(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolOwnerOrEAFirstLossCover(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
-    poolVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    poolVault(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     refreshPool(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     submitRedemptionRequest(
       amounts: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-    totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     trancheTotalAssets(
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
-    tranchesAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    tranchesAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    tranchesLosses(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    tranchesLosses(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    tranchesPolicy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    tranchesPolicy(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     updateTrancheAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+  }
 }
