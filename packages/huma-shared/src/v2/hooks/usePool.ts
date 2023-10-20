@@ -1,10 +1,10 @@
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
-import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
-import { isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
+import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
+import { isChainEnum, POOL_NAME } from '../../utils'
 import {
   FirstLossCover,
   PoolConfig,
