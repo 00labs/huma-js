@@ -2,7 +2,14 @@
 /* tslint:disable */
 /* eslint-disable */
 <<<<<<< HEAD
+<<<<<<< HEAD
 export { Pool__factory } from './Pool__factory'
+=======
+export { FirstLossCover__factory } from './FirstLossCover__factory'
+export { Pool__factory } from './Pool__factory'
+export { PoolConfig__factory } from './PoolConfig__factory'
+export { PoolVault__factory } from './PoolVault__factory'
+>>>>>>> cdafa93 (Page details (#61))
 export { TrancheVault__factory } from './TrancheVault__factory'
 =======
 export { Pool__factory } from "./Pool__factory";
