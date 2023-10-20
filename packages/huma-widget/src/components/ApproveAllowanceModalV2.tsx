@@ -44,6 +44,7 @@ export function ApproveAllowanceModalV2({
   const poolUnderlyingTokenContract = usePoolUnderlyingTokenContractV2(
     poolInfo.poolName,
     chainId,
+    {},
   )
   const reset = useResetAtom(txAtom)
   const [{ state, txHash }, send] = useAtom(sendTxAtom)
