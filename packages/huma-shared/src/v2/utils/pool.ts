@@ -9,6 +9,11 @@ import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
 export type VaultType = 'senior' | 'junior'
 
+export enum FirstLossCoverIndex {
+  borrower = 0,
+  affiliate = 1,
+}
+
 export type PoolInfoV2 = {
   chainId: ChainEnum
   poolName: POOL_NAME

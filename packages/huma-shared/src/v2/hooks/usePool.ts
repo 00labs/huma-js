@@ -1,10 +1,22 @@
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
+import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import { isChainEnum, POOL_NAME } from '../../utils'
-import { PoolInfoV2, CHAIN_POOLS_INFO_V2, VaultType } from '../utils/pool'
-import { PoolVault, TrancheVault } from '../abis/types'
+import {
+  PoolInfoV2,
+  CHAIN_POOLS_INFO_V2,
+  VaultType,
+  FirstLossCoverIndex,
+} from '../utils/pool'
+import {
+  PoolVault,
+  TrancheVault,
+  PoolConfig,
+  FirstLossCover,
+} from '../abis/types'
 
 export type FALLBACK_PROVIDERS = { [chainId: number]: string }
 
@@ -21,7 +33,7 @@ export const usePoolInfoV2 = (
 function usePoolVaultContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   return useContract<PoolVault>(
@@ -33,10 +45,46 @@ function usePoolVaultContractV2(
   )
 }
 
+function usePoolConfigContractV2(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  fallbackProviders: FALLBACK_PROVIDERS,
+) {
+  const [poolConfig, setPoolConfig] = useState<string | undefined>()
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const poolContract = useContract<PoolVault>(
+    poolInfo?.poolVault,
+    poolInfo?.poolVaultAbi,
+    true,
+    chainId,
+    fallbackProviders,
+  )
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setPoolConfig(await poolContract?.poolConfig())
+      } catch (err) {
+        setPoolConfig(undefined)
+      }
+    }
+
+    fetchData()
+  }, [poolName, chainId, fallbackProviders, poolContract])
+
+  return useContract<PoolConfig>(
+    poolConfig,
+    POOL_CONFIG_V2_ABI,
+    true,
+    chainId,
+    fallbackProviders,
+  )
+}
+
 export function usePoolUnderlyingTokenContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   return useERC20Contract(
@@ -51,13 +99,49 @@ export function useTrancheVaultContractV2(
   poolName: POOL_NAME,
   vaultType: VaultType,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const contractAddr = poolInfo?.[`${vaultType}TrancheVault`]
   return useContract<TrancheVault>(
     contractAddr,
     poolInfo?.trancheVaultAbi,
+    true,
+    chainId,
+    fallbackProviders,
+  )
+}
+
+export function useFirstLossCoverContractV2(
+  poolName: POOL_NAME,
+  firstLossCoverType: FirstLossCoverIndex,
+  chainId: number | undefined,
+  fallbackProviders: FALLBACK_PROVIDERS,
+) {
+  const poolConfig = usePoolConfigContractV2(
+    poolName,
+    chainId,
+    fallbackProviders,
+  )
+  const [firstLossCover, setFirstLossCover] = useState<string | undefined>()
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setFirstLossCover(
+          await poolConfig?.getFirstLossCover(firstLossCoverType),
+        )
+      } catch (err) {
+        setFirstLossCover(undefined)
+      }
+    }
+
+    fetchData()
+  }, [poolName, chainId, fallbackProviders, poolConfig, firstLossCoverType])
+
+  return useContract<FirstLossCover>(
+    firstLossCover,
+    FIRST_LOSS_COVER_ABI,
     true,
     chainId,
     fallbackProviders,
@@ -99,10 +183,43 @@ export function useContractValueV2<T = BigNumber>(
   return [value, refresh]
 }
 
+export function useFirstLossCoverTotalAssetsV2(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  fallbackProviders: FALLBACK_PROVIDERS,
+): [BigNumber | undefined, () => void] {
+  const flcBorrowerContract = useFirstLossCoverContractV2(
+    poolName,
+    FirstLossCoverIndex.borrower,
+    chainId,
+    fallbackProviders,
+  )
+  const flcAffiliateContract = useFirstLossCoverContractV2(
+    poolName,
+    FirstLossCoverIndex.affiliate,
+    chainId,
+    fallbackProviders,
+  )
+  const [assets, setAssets] = useState<BigNumber>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const borrowerAssets = await flcBorrowerContract?.totalAssets()
+      const affiliateAssets = await flcAffiliateContract?.totalAssets()
+
+      setAssets(borrowerAssets?.add(affiliateAssets ?? 0))
+    }
+    fetchData()
+  }, [refreshCount, flcBorrowerContract, flcAffiliateContract])
+
+  return [assets, refresh]
+}
+
 export function usePoolVaultTotalAssetsV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
   const poolVaultContract = usePoolVaultContractV2(
     poolName,
@@ -117,7 +234,7 @@ export function useTrancheVaultAssetsV2(
   poolName: POOL_NAME,
   vaultType: VaultType,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
   const trancheVaultContract = useTrancheVaultContractV2(
     poolName,
@@ -137,7 +254,7 @@ export function useLenderApprovedV2(
   vaultType: VaultType,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ): [Boolean | undefined, () => void] {
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
@@ -169,7 +286,7 @@ export function useLenderPositionV2(
   vaultType: VaultType,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber | undefined, () => void] {
   const vaultContract = useTrancheVaultContractV2(
     poolName,
@@ -190,7 +307,7 @@ export function usePoolVaultAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber, () => void] {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const spender = poolInfo?.poolVault
@@ -212,7 +329,7 @@ export function usePoolUnderlyingTokenBalanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders?: FALLBACK_PROVIDERS,
+  fallbackProviders: FALLBACK_PROVIDERS,
 ): [BigNumber, () => void] {
   const contract = usePoolUnderlyingTokenContractV2(
     poolName,

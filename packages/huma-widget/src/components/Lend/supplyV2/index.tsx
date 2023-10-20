@@ -56,8 +56,13 @@ export function LendSupplyV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const decimals = poolInfo?.poolUnderlyingToken.decimals
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [allowance] = usePoolVaultAllowanceV2(poolName, account, chainId)
-  const [balance] = usePoolUnderlyingTokenBalanceV2(poolName, account, chainId)
+  const [allowance] = usePoolVaultAllowanceV2(poolName, account, chainId, {})
+  const [balance] = usePoolUnderlyingTokenBalanceV2(
+    poolName,
+    account,
+    chainId,
+    {},
+  )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const [lenderApproved] = useLenderApprovedV2(
@@ -65,12 +70,14 @@ export function LendSupplyV2({
     vaultType,
     account,
     chainId,
+    {},
   )
   const [, refreshLenderPosition] = useLenderPositionV2(
     poolName,
     vaultType,
     account,
     chainId,
+    {},
   )
 
   useEffect(() => {
