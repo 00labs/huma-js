@@ -8,6 +8,7 @@ export const useActiveRoute = (routes: {
 }): Partial<{
   path: string
   isRoot?: boolean | undefined
+  isLendDetails?: boolean | undefined
 }> => {
   const location = useLocation()
   const activeRoute = useMemo(

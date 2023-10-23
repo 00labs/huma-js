@@ -13,6 +13,7 @@ export enum POOL_NAME {
   Superfluid = 'Superfluid',
   Jia = 'Jia',
   ArfCreditPool1 = 'ArfCreditPool1',
+  ArfUSDCMigrationTest = 'ArfUSDCMigrationTest',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
   Symplifi = 'Symplifi',
@@ -521,6 +522,25 @@ export const PoolContractMap: PoolContractMapType = {
       },
     },
     [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ArfUSDCMigrationTest]: {
+        basePoolConfig: '0xe8338a5e3e58b425249f82594c82b42c2df4c5e9',
+        pool: '0xbb1b50e1ec5835b3c58944e820e7a5e136141ddc',
+        poolFeeManager: '0x9f667f613C16542aC8b1e502F4D796774F623D86',
+        poolUnderlyingToken: {
+          address: '0x0FA8781a83E46826621b3BC094Ea2A0212e71B23',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ArfUSDCMigrationTest,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x8bce02521622222Ee13D1Ce2c5E4CCab52ce24Bb',
+          abi: HDT_ABI,
+        },
+      },
       [POOL_NAME.ArfCreditPool1]: {
         basePoolConfig: '0xc7E7d40F2D2B8E93E53727ECBec0Bf5683AFb7C4',
         pool: '0x51d996A8B0956F532663eB4fEe5fEC5a6eE81c63',
@@ -605,6 +625,10 @@ export const SupplementaryContractsMap: {
       '0xDc908153Deb70f23ef54C015F622D6E7E6F96E55',
     [SupplementaryContracts.TestUSDC]:
       '0x50dc34a634f3e29cfbad79e9cecd2759a6ba8eae',
+  },
+  [ChainEnum.Celo]: {
+    [SupplementaryContracts.RealWorldReceivable]:
+      '0xfc256098C6c63836ac71F7057c68b74165fF9cbb',
   },
 }
 
