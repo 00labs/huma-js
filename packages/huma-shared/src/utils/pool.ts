@@ -527,7 +527,7 @@ export const PoolContractMap: PoolContractMapType = {
         pool: '0xbb1b50e1ec5835b3c58944e820e7a5e136141ddc',
         poolFeeManager: '0x9f667f613C16542aC8b1e502F4D796774F623D86',
         poolUnderlyingToken: {
-          address: '0x0FA8781a83E46826621b3BC094Ea2A0212e71B23',
+          address: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
           symbol: 'USDC',
           decimals: 6,
           icon: 'USDC',
