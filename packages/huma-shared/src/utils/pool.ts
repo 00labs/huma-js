@@ -626,6 +626,10 @@ export const SupplementaryContractsMap: {
     [SupplementaryContracts.TestUSDC]:
       '0x50dc34a634f3e29cfbad79e9cecd2759a6ba8eae',
   },
+  [ChainEnum.Celo]: {
+    [SupplementaryContracts.RealWorldReceivable]:
+      '0xfc256098C6c63836ac71F7057c68b74165fF9cbb',
+  },
 }
 
 export function getPoolInfo(
