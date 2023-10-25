@@ -1,5 +1,6 @@
 import {
   PoolInfoV2,
+  usePoolUnderlyingTokenDetailsV2,
   useTrancheVaultContractV2,
   VaultType,
 } from '@huma-finance/shared'
@@ -25,7 +26,11 @@ export function Transfer({
   const dispatch = useAppDispatch()
   const { chainId, account } = useWeb3React()
   const { supplyAmount } = useAppSelector(selectWidgetState)
-  const { decimals } = poolInfo.poolUnderlyingToken
+  const { decimals } = usePoolUnderlyingTokenDetailsV2(
+    poolInfo.poolName,
+    poolInfo.chainId,
+    {},
+  )
   const supplyBigNumber = ethers.utils.parseUnits(
     String(supplyAmount),
     decimals,

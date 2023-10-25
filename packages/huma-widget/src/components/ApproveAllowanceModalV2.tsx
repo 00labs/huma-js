@@ -6,6 +6,7 @@ import {
   TxStateType,
   useMount,
   usePoolUnderlyingTokenContractV2,
+  usePoolUnderlyingTokenDetailsV2,
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
@@ -39,8 +40,11 @@ export function ApproveAllowanceModalV2({
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const { provider, account, chainId } = useWeb3React()
-  const { poolUnderlyingToken } = poolInfo
-  const { symbol } = poolUnderlyingToken
+  const { symbol } = usePoolUnderlyingTokenDetailsV2(
+    poolInfo.poolName,
+    poolInfo.chainId,
+    {},
+  )
   const poolUnderlyingTokenContract = usePoolUnderlyingTokenContractV2(
     poolInfo.poolName,
     chainId,

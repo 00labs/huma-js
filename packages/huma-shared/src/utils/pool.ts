@@ -42,6 +42,7 @@ export type LenderApprovalProvider = {
 }
 
 export type PoolInfoType = {
+  chainId: ChainEnum
   basePoolConfig: string
   pool: string
   poolProcessor?: string
@@ -191,6 +192,7 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Polygon]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.HumaCreditLine]: {
+        chainId: ChainEnum.Polygon,
         basePoolConfig: '0x39f7D6040EC30B62c508723e2EDb822413837527',
         pool: '0xAb3dc5221F373Dd879BEc070058c775A0f6Af759',
         poolFeeManager: '0x65C5535735581039c5711A9d7c223cff9384334F',
@@ -211,6 +213,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: { hidden: true },
       },
       [POOL_NAME.Jia]: {
+        chainId: ChainEnum.Polygon,
         basePoolConfig: '0x901427A8328139E59EA2401cBD6bB5b1F5e72E37',
         pool: '0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5',
         poolFeeManager: '0x7Ed46Ea23CD1559a77a80F651C2115CDEe55FCD1',
@@ -240,6 +243,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Polygon,
         basePoolConfig: '0x4AC443e87211B940C9e7c4c6801d24C34bD9f227',
         pool: '0x3EBc1f0644A69c565957EF7cEb5AEafE94Eb6FcE',
         poolFeeManager: '0x989F1194d637A928628a2d8204990E35d198b6D0',
@@ -264,6 +268,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.BSOS]: {
+        chainId: ChainEnum.Polygon,
         basePoolConfig: '0x9f536Dc6A2BCf042661C03b4Cc7B21693a499C35',
         pool: '0x95533e56f397152B0013A39586bC97309e9A00a7',
         poolFeeManager: '0xC3bB8745Cc183d97e8c9Ca68587eCD6941Fb4eA6',
@@ -290,6 +295,7 @@ export const PoolContractMap: PoolContractMapType = {
     },
     [POOL_TYPE.Invoice]: {
       [POOL_NAME.RequestNetwork]: {
+        chainId: ChainEnum.Polygon,
         basePoolConfig: '0x98f41d57C06b302AFf999f3F58f4ae7a3F884590',
         pool: '0x58AAF1f9cB10F335111A2129273056bbED251B61',
         poolFeeManager: '0x5B7841b94a3C7246662ef514745b034A6ceaAB15',
@@ -317,6 +323,7 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Goerli]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.HumaCreditLine]: {
+        chainId: ChainEnum.Goerli,
         basePoolConfig: '0x0d7bae0e14aF194e52Ea2472737b24044fe6e929',
         pool: '0xA22D20FB0c9980fb96A9B0B5679C061aeAf5dDE4',
         poolFeeManager: '0x673b3C1094AE941bb4b2eF9377DaFE3bcCc4b003',
@@ -345,6 +352,7 @@ export const PoolContractMap: PoolContractMapType = {
     },
     [POOL_TYPE.Invoice]: {
       [POOL_NAME.RequestNetwork]: {
+        chainId: ChainEnum.Goerli,
         basePoolConfig: '0xBa779F41ae414dEc63265D79a02DED47fbe007a5',
         pool: '0x11672c0bBFF498c72BC2200f42461c0414855042',
         poolFeeManager: '0x7BA6B8eBC9b09c228582814D44D4a0F2B6B0B9E4',
@@ -372,6 +380,7 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Alfajores]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Alfajores,
         basePoolConfig: '0xae72d424f746ca5c5a4457d7dca15abf2ffd40bb',
         pool: '0x8408faD2cdb181c21AD7Fa5eF6e7B8d5e6b4Eb82',
         poolFeeManager: '0x8605305fd932a82DD8FEA7662D3990a52C8FC8Fc',
@@ -391,6 +400,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ImpactMarket]: {
+        chainId: ChainEnum.Alfajores,
         basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
         pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
         poolFeeManager: '0xbF8B9F511533C8cc4bcAf1B27E9f8CF2b1e1cdD5',
@@ -414,6 +424,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.HumaCreditLine]: {
+        chainId: ChainEnum.Alfajores,
         basePoolConfig: '0x0bb39a0136643d60244070619e2e8ecbddf038ae',
         pool: '0xB6958E6852E1dA4C2468d8c0286884C68519282a',
         poolFeeManager: '0xd6fB372Da1c157Ca769dd1bD33D3e59D1B8376d0',
@@ -437,6 +448,7 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Celo]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.ImpactMarket]: {
+        chainId: ChainEnum.Celo,
         basePoolConfig: '0x822ed8a0c1083154ceab6f012f978d12375b8738',
         pool: '0x0aa111db73274c7b1b155dbb9522e927b7747ade',
         poolFeeManager: '0x7Ec6d7219D61d1B7FFD35938C9a84F4d7D33d966',
@@ -461,6 +473,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Celo,
         basePoolConfig: '0x388525cE9fC784A657c73Fb5d70FBc1fa5a53d31',
         pool: '0xc88BD9aa20d6353B43e7d159b67546eD5b7A1808',
         poolFeeManager: '0x5D762498a60a302FBD85A9c1FF2e65B67baBabc6',
@@ -488,6 +501,7 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Mumbai]: {
     [POOL_TYPE.Stream]: {
       [POOL_NAME.Superfluid]: {
+        chainId: ChainEnum.Mumbai,
         basePoolConfig: '0xf80AD89c7820d2f933c35370cccfA7B6Cc2c93aa',
         pool: '0xC08AC7Ba5E8633ac6398C317dF1CEBED3A313c8A',
         poolProcessor: '0xb78C28a48eE7E7BdBc93E9Fea2862DB595Bd10a3',
@@ -523,6 +537,7 @@ export const PoolContractMap: PoolContractMapType = {
     },
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Mumbai,
         basePoolConfig: '0xc7E7d40F2D2B8E93E53727ECBec0Bf5683AFb7C4',
         pool: '0x51d996A8B0956F532663eB4fEe5fEC5a6eE81c63',
         poolFeeManager: '0xDe39F0a6Fb305e4B2D4a7621d7e55e783121870B',
@@ -542,6 +557,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.Symplifi]: {
+        chainId: ChainEnum.Mumbai,
         basePoolConfig: '0x60de6e6727be2cfd0733d790528d7e4ce4049277',
         pool: '0xCCa17BB13C94E19bAd67a59687D22A68aEe9d7e7',
         poolFeeManager: '0x4CD872604DA256c752C52541B190E3E482Fd0819',

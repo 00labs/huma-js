@@ -86,13 +86,65 @@ export function usePoolUnderlyingTokenContractV2(
   chainId: number | undefined,
   fallbackProviders: FALLBACK_PROVIDERS,
 ) {
-  const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useERC20Contract(
-    poolInfo?.poolUnderlyingToken.address,
-    true,
+  const poolConfig = usePoolConfigContractV2(
+    poolName,
     chainId,
     fallbackProviders,
   )
+  const [poolUnderlyingToken, setPoolUnderlyingToken] = useState<
+    string | undefined
+  >()
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setPoolUnderlyingToken(await poolConfig?.underlyingToken())
+      } catch (err) {
+        setPoolUnderlyingToken(undefined)
+      }
+    }
+
+    fetchData()
+  }, [poolName, chainId, fallbackProviders, poolConfig])
+
+  return useERC20Contract(poolUnderlyingToken, true, chainId, fallbackProviders)
+}
+
+export function usePoolUnderlyingTokenDetailsV2(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  fallbackProviders: FALLBACK_PROVIDERS,
+): {
+  address: string | undefined
+  decimals: number | undefined
+  symbol: string | undefined
+} {
+  const poolUnderlyingTokenContract = usePoolUnderlyingTokenContractV2(
+    poolName,
+    chainId,
+    fallbackProviders,
+  )
+  const [address, setAddress] = useState<string | undefined>()
+  const [symbol, setSymbol] = useState<string | undefined>()
+  const [decimals, setDecimals] = useState<number | undefined>()
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setAddress(poolUnderlyingTokenContract?.address)
+        setDecimals(await poolUnderlyingTokenContract?.decimals())
+        setSymbol(await poolUnderlyingTokenContract?.symbol())
+      } catch (err) {
+        setAddress(undefined)
+        setDecimals(undefined)
+        setSymbol(undefined)
+      }
+    }
+
+    fetchData()
+  }, [poolName, chainId, fallbackProviders, poolUnderlyingTokenContract])
+
+  return { address, decimals, symbol }
 }
 
 export function useTrancheVaultContractV2(

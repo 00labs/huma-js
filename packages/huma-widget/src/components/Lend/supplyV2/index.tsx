@@ -6,6 +6,7 @@ import {
   usePoolVaultAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
   VaultType,
+  usePoolUnderlyingTokenDetailsV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -54,7 +55,11 @@ export function LendSupplyV2({
   const { account, chainId } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const decimals = poolInfo?.poolUnderlyingToken.decimals
+  const { decimals, symbol } = usePoolUnderlyingTokenDetailsV2(
+    poolName,
+    chainId,
+    {},
+  )
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [allowance] = usePoolVaultAllowanceV2(poolName, account, chainId, {})
   const [balance] = usePoolUnderlyingTokenBalanceV2(
@@ -115,7 +120,7 @@ export function LendSupplyV2({
     <WidgetWrapper
       isOpen
       isLoading={lenderApproved === undefined}
-      loadingTitle={`Supply ${poolInfo.poolUnderlyingToken.symbol}`}
+      loadingTitle={`Supply ${symbol}`}
       handleClose={handleClose}
       handleSuccess={handleSupplySuccess}
     >
@@ -127,7 +132,7 @@ export function LendSupplyV2({
           poolInfo={poolInfo}
           allowance={allowance}
           underlyingTokenBalance={ethers.utils.formatUnits(balance, decimals)}
-          withdrawlLockoutSeconds={0}
+          withdrawalLockoutSeconds={0}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (

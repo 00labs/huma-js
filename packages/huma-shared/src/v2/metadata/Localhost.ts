@@ -18,12 +18,6 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     trancheVaultAbi: TRANCHE_VAULT_ABI,
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    poolUnderlyingToken: {
-      address: '0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f',
-      symbol: 'USDC',
-      decimals: 18,
-      icon: 'USDC',
-    },
     title: 'Huma Credit Line V2',
     borrowDesc:
       'Credit lines backed by your future crypto income. Only available to the members of partner DAOs during beta.',

@@ -18,12 +18,6 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     poolVault: '0xc228409Dc45adf03846998Ab05354B6DD5A25196',
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    poolUnderlyingToken: {
-      address: '0x58CEc4659aA7A236A117B739AfCAa2425A7d99A6',
-      symbol: 'USDC',
-      decimals: 6,
-      icon: 'USDC',
-    },
     title: 'Huma Credit Line V2',
     borrowDesc:
       'Credit lines backed by your future crypto income. Only available to the members of partner DAOs during beta.',
