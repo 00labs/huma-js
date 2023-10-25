@@ -90,7 +90,7 @@ export function CeloIcon(props: SvgIconProps): React.ReactElement {
   return <CeloSvg {...props} />
 }
 
-export function getIcon(icon: string) {
+export function getIcon(icon?: string) {
   if (!icon) return null
 
   return (

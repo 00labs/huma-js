@@ -5,6 +5,7 @@ import {
   PoolInfoV2,
   sendTxAtom,
   TRANSFER_ABI,
+  usePoolUnderlyingTokenDetailsV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
@@ -24,9 +25,12 @@ export function Success({
   hasNextStep,
 }: Props): React.ReactElement {
   const { account } = useWeb3React()
-  const { poolUnderlyingToken } = poolInfo
   const [{ txReceipt }] = useAtom(sendTxAtom)
-  const { symbol, decimals, address } = poolUnderlyingToken
+  const { symbol, decimals, address } = usePoolUnderlyingTokenDetailsV2(
+    poolInfo.poolName,
+    poolInfo.chainId,
+    {},
+  )
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
 
   useEffect(() => {

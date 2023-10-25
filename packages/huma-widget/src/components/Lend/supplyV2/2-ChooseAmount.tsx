@@ -3,6 +3,7 @@ import {
   timeUtil,
   toBigNumber,
   upScale,
+  usePoolUnderlyingTokenDetailsV2,
 } from '@huma-finance/shared'
 import { BigNumber } from 'ethers'
 import React, { useCallback, useState } from 'react'
@@ -15,24 +16,27 @@ import { getIcon } from '../../icons'
 
 type Props = {
   allowance: BigNumber
-  withdrawlLockoutSeconds: number | undefined
+  withdrawalLockoutSeconds: number | undefined
   underlyingTokenBalance: string
   poolInfo: PoolInfoV2
 }
 
 export function ChooseAmount({
   allowance,
-  withdrawlLockoutSeconds,
+  withdrawalLockoutSeconds,
   underlyingTokenBalance,
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { poolUnderlyingToken } = poolInfo
-  const { symbol, decimals } = poolUnderlyingToken
+  const { symbol, decimals } = usePoolUnderlyingTokenDetailsV2(
+    poolInfo.poolName,
+    poolInfo.chainId,
+    {},
+  )
   const [currentAmount, setCurrentAmount] = useState(0)
   const depositAmount = upScale<number>(currentAmount, decimals)
   const needApprove = toBigNumber(depositAmount).gt(allowance)
-  const withdrawlLockoutDays = timeUtil.secondsToDays(withdrawlLockoutSeconds)
+  const withdrawalLockoutDays = timeUtil.secondsToDays(withdrawalLockoutSeconds)
 
   const handleChangeAmount = useCallback(
     (newAmount: number) => {
@@ -48,11 +52,12 @@ export function ChooseAmount({
       : WIDGET_STEP.Transfer
     dispatch(setStep(step))
   }, [dispatch, needApprove])
+
   return (
     <ChooseAmountModal
       title={`Supply ${symbol}`}
       description1='Choose Amount'
-      description2={`Depositors need to wait for ${withdrawlLockoutDays.toFixed(
+      description2={`Depositors need to wait for ${withdrawalLockoutDays.toFixed(
         0,
       )} days before withdrawal`}
       sliderMax={Number(underlyingTokenBalance)}
@@ -62,7 +67,7 @@ export function ChooseAmount({
       handleAction={handleAction}
       actionText={needApprove ? 'approve allowance' : 'supply'}
       type='input'
-      tokenIcon={getIcon(poolInfo.poolUnderlyingToken.icon)!}
+      tokenIcon={getIcon(symbol) ?? undefined}
       hideTerms
     />
   )

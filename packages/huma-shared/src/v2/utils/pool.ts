@@ -23,14 +23,14 @@ export type PoolInfoV2 = {
   seniorTrancheVault: string
   juniorTrancheVault: string
   trancheVaultAbi: unknown
+  seniorAPY: string
+  juniorAPY: string
   poolUnderlyingToken: {
     address: string
     symbol: string
     decimals: number
     icon: string
   }
-  seniorAPY: string
-  juniorAPY: string
   title: string
   borrowDesc: string
   lendDesc: string

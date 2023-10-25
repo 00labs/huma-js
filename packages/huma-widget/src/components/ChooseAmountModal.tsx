@@ -22,7 +22,7 @@ type Props = {
   description2?: string
   currentAmount: number
   sliderMax: number
-  tokenSymbol: string
+  tokenSymbol?: string
   topLeft?: string
   topRight?: string
   downLeft?: string
@@ -314,7 +314,7 @@ export function ChooseAmountModal({
       </Button>
       {!hideTerms && (
         <Box css={styles.terms}>
-          By clicking {actionText}, you agree to Huma’s Terms of Service.
+          By clicking {actionText}, you agree to Huma's Terms of Service.
         </Box>
       )}
     </WrapperModal>
