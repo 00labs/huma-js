@@ -5,6 +5,7 @@ import {
   upScale,
   useFeeManager,
 } from '@huma-finance/shared'
+import { BigNumber } from 'ethers'
 import React, { useCallback, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -34,16 +35,16 @@ export function ChooseAmount({
   const getBorrowFlowrateAndAmount = useCallback(
     (borrowAmount: number) => {
       const currentFlowRateBN = toBigNumber(currentFlowRate)
-      const borrowAmountBN = toBigNumber(
+      const borrowAmountSuperTokenBN = toBigNumber(
         upScale(borrowAmount, superTokenDecimals),
       )
 
-      const totalAmountInBorrowPeriod = currentFlowRateBN.mul(
+      const totalAmountSuperTokenInBorrowPeriod = currentFlowRateBN.mul(
         borrowPeriodInSeconds,
       )
-      let borrowFlowrate = borrowAmountBN
+      let borrowFlowrate = borrowAmountSuperTokenBN
         .mul(currentFlowRateBN)
-        .div(totalAmountInBorrowPeriod)
+        .div(totalAmountSuperTokenInBorrowPeriod)
         // To ensure enough flowRate due to round down when convert to string
         .add(1)
 
@@ -51,13 +52,18 @@ export function ChooseAmount({
       if (borrowFlowrate.gte(currentFlowRateBN)) {
         borrowFlowrate = currentFlowRateBN.sub(1)
       }
-      if (borrowAmountBN.gte(approval!.terms.creditLimit)) {
+      const creditLimitSuperTokenBN = BigNumber.from(
+        approval!.terms.creditLimit,
+      )
+        .mul(BigNumber.from(10).pow(BigNumber.from(superTokenDecimals)))
+        .div(BigNumber.from(10).pow(BigNumber.from(underlyingTokenDecimals)))
+      if (borrowAmountSuperTokenBN.gte(creditLimitSuperTokenBN)) {
         borrowFlowrate = borrowFlowrate.sub(1)
       }
 
       // As borrowFlowrate adds 1, need to calculate the new accurate borrow amount
       const newBorrowAmountBN = borrowFlowrate
-        .mul(totalAmountInBorrowPeriod)
+        .mul(totalAmountSuperTokenInBorrowPeriod)
         .div(currentFlowRateBN)
       const newBorrowAmount = downScale(newBorrowAmountBN, superTokenDecimals)
       const newBorrowAmountUnderlyingTokenBN = toBigNumber(
