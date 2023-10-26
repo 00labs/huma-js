@@ -5,7 +5,6 @@ import {
   upScale,
   useFeeManager,
 } from '@huma-finance/shared'
-import { BigNumber } from 'ethers'
 import React, { useCallback, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -31,6 +30,8 @@ export function ChooseAmount({
   const borrowPeriodInSeconds = approval!.terms.intervalInDays * 24 * 60 * 60
   const superTokenDecimals = poolInfo.extra?.superToken?.decimals!
   const underlyingTokenDecimals = poolInfo.poolUnderlyingToken.decimals!
+  // To ensure not to borrow all the available flowrate due to contract limitation
+  const borrowMaxAmount = Number(approval!.terms.creditLimitFormatted) - 0.01
 
   const getBorrowFlowrateAndAmount = useCallback(
     (borrowAmount: number) => {
@@ -52,14 +53,6 @@ export function ChooseAmount({
       if (borrowFlowrate.gte(currentFlowRateBN)) {
         borrowFlowrate = currentFlowRateBN.sub(1)
       }
-      const creditLimitSuperTokenBN = BigNumber.from(
-        approval!.terms.creditLimit,
-      )
-        .mul(BigNumber.from(10).pow(BigNumber.from(superTokenDecimals)))
-        .div(BigNumber.from(10).pow(BigNumber.from(underlyingTokenDecimals)))
-      if (borrowAmountSuperTokenBN.gte(creditLimitSuperTokenBN)) {
-        borrowFlowrate = borrowFlowrate.sub(1)
-      }
 
       // As borrowFlowrate adds 1, need to calculate the new accurate borrow amount
       const newBorrowAmountBN = borrowFlowrate
@@ -77,7 +70,6 @@ export function ChooseAmount({
       }
     },
     [
-      approval,
       borrowPeriodInSeconds,
       currentFlowRate,
       superTokenDecimals,
@@ -128,7 +120,7 @@ export function ChooseAmount({
     <ChooseAmountModal
       title='Choose Amount'
       description1='Access up to 100% of your stream flowrate'
-      sliderMax={Number(approval.terms.creditLimitFormatted)}
+      sliderMax={borrowMaxAmount}
       currentAmount={currentAmount}
       tokenSymbol={approval.token.symbol}
       topLeft='Fees'
