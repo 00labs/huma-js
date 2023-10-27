@@ -12,86 +12,23 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers'
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "./common";
+} from './common'
 
 export interface PoolSafeInterface extends utils.Interface {
   functions: {
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    "addPlatformFeesReserve(uint256)": FunctionFragment;
-    "asset()": FunctionFragment;
-    "deposit(address,uint256)": FunctionFragment;
-    "getAvailableLiquidity()": FunctionFragment;
-    "getAvailableReservation()": FunctionFragment;
-    "getPoolAssets()": FunctionFragment;
-    "initialize(address)": FunctionFragment;
-    "poolConfig()": FunctionFragment;
-    "reserves()": FunctionFragment;
-    "setPoolConfig(address)": FunctionFragment;
-    "setRedemptionReserve(uint256)": FunctionFragment;
-    "totalAssets()": FunctionFragment;
-    "updatePoolConfigData()": FunctionFragment;
-    "withdraw(address,uint256)": FunctionFragment;
-    "withdrawFees(address,uint256)": FunctionFragment;
-  };
-
-  getFunction(
-    nameOrSignatureOrTopic:
-      | "addPlatformFeesReserve"
-      | "asset"
-      | "deposit"
-      | "getAvailableLiquidity"
-      | "getAvailableReservation"
-      | "getPoolAssets"
-      | "initialize"
-      | "poolConfig"
-      | "reserves"
-      | "setPoolConfig"
-      | "setRedemptionReserve"
-      | "totalAssets"
-      | "updatePoolConfigData"
-      | "withdraw"
-      | "withdrawFees"
-  ): FunctionFragment;
-
-  encodeFunctionData(
-    functionFragment: "addPlatformFeesReserve",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "asset", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "deposit",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAvailableLiquidity",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAvailableReservation",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPoolAssets",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [PromiseOrValue<string>]
-  ): string;
-=======
     'deposit(address,uint256)': FunctionFragment
     'getAvailableLiquidityForFees()': FunctionFragment
     'getPoolLiquidity()': FunctionFragment
@@ -144,22 +81,11 @@ export interface PoolSafeInterface extends utils.Interface {
     functionFragment: 'poolFeeManager',
     values?: undefined,
   ): string
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
   encodeFunctionData(
-    functionFragment: "poolConfig",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "reserves", values?: undefined): string;
+    functionFragment: 'setPoolConfig',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    functionFragment: "setPoolConfig",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setRedemptionReserve",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-=======
     functionFragment: 'totalLiquidity',
     values?: undefined,
   ): string
@@ -167,51 +93,11 @@ export interface PoolSafeInterface extends utils.Interface {
     functionFragment: 'underlyingToken',
     values?: undefined,
   ): string
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
   encodeFunctionData(
-    functionFragment: "totalAssets",
-    values?: undefined
-  ): string;
+    functionFragment: 'updatePoolConfigData',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    functionFragment: "updatePoolConfigData",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawFees",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-
-  decodeFunctionResult(
-    functionFragment: "addPlatformFeesReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "asset", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getAvailableLiquidity",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAvailableReservation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getPoolAssets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poolConfig", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "reserves", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setPoolConfig",
-    data: BytesLike
-  ): Result;
-=======
     functionFragment: 'withdraw',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
@@ -232,26 +118,11 @@ export interface PoolSafeInterface extends utils.Interface {
     functionFragment: 'poolFeeManager',
     data: BytesLike,
   ): Result
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
   decodeFunctionResult(
-    functionFragment: "setRedemptionReserve",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'setPoolConfig',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    functionFragment: "totalAssets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updatePoolConfigData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawFees",
-    data: BytesLike
-  ): Result;
-=======
     functionFragment: 'totalLiquidity',
     data: BytesLike,
   ): Result
@@ -264,114 +135,81 @@ export interface PoolSafeInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
   events: {
-    "Initialized(uint8)": EventFragment;
-    "PoolConfigCacheUpdated(address)": EventFragment;
-    "PoolConfigChanged(address,address)": EventFragment;
-  };
+    'Initialized(uint8)': EventFragment
+    'PoolConfigCacheUpdated(address)': EventFragment
+    'PoolConfigChanged(address,address)': EventFragment
+  }
 
-  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolConfigCacheUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolConfigChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
 }
 
 export interface InitializedEventObject {
-  version: number;
+  version: number
 }
-export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>
 
-export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
 export interface PoolConfigCacheUpdatedEventObject {
-  poolConfig: string;
+  poolConfig: string
 }
 export type PoolConfigCacheUpdatedEvent = TypedEvent<
   [string],
   PoolConfigCacheUpdatedEventObject
->;
+>
 
 export type PoolConfigCacheUpdatedEventFilter =
-  TypedEventFilter<PoolConfigCacheUpdatedEvent>;
+  TypedEventFilter<PoolConfigCacheUpdatedEvent>
 
 export interface PoolConfigChangedEventObject {
-  newPoolConfig: string;
-  oldPoolConfig: string;
+  newPoolConfig: string
+  oldPoolConfig: string
 }
 export type PoolConfigChangedEvent = TypedEvent<
   [string, string],
   PoolConfigChangedEventObject
->;
+>
 
 export type PoolConfigChangedEventFilter =
-  TypedEventFilter<PoolConfigChangedEvent>;
+  TypedEventFilter<PoolConfigChangedEvent>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-export interface PoolVault extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
-
-  interface: PoolVaultInterface;
-=======
 export interface PoolSafe extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
   attach(addressOrName: string): this
   deployed(): Promise<this>
 
   interface: PoolSafeInterface
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TEvent>>
 
   listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
+    eventFilter?: TypedEventFilter<TEvent>,
+  ): Array<TypedListener<TEvent>>
+  listeners(eventName?: string): Array<Listener>
   removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+    eventFilter: TypedEventFilter<TEvent>,
+  ): this
+  removeAllListeners(eventName?: string): this
+  off: OnEvent<this>
+  on: OnEvent<this>
+  once: OnEvent<this>
+  removeListener: OnEvent<this>
 
   functions: {
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    asset(overrides?: CallOverrides): Promise<[string]>;
-
-=======
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    getAvailableLiquidity(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { assets: BigNumber }>;
-
-    getAvailableReservation(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { assets: BigNumber }>;
-
-    getPoolAssets(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { assets: BigNumber }>;
-=======
     getAvailableLiquidityForFees(
       overrides?: CallOverrides,
     ): Promise<[BigNumber] & { liquidity: BigNumber }>
@@ -379,451 +217,224 @@ export interface PoolSafe extends BaseContract {
     getPoolLiquidity(
       overrides?: CallOverrides,
     ): Promise<[BigNumber] & { liquidity: BigNumber }>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    poolConfig(overrides?: CallOverrides): Promise<[string]>;
-
-    reserves(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        forRedemption: BigNumber;
-        forPlatformFees: BigNumber;
-      }
-    >;
-=======
     pool(overrides?: CallOverrides): Promise<[string]>
 
     poolConfig(overrides?: CallOverrides): Promise<[string]>
 
     poolFeeManager(overrides?: CallOverrides): Promise<[string]>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    totalAssets(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { assets: BigNumber }>;
-=======
     totalLiquidity(
       overrides?: CallOverrides,
     ): Promise<[BigNumber] & { liquidity: BigNumber }>
 
     underlyingToken(overrides?: CallOverrides): Promise<[string]>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     withdraw(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    withdrawFees(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-  };
-
-  addPlatformFeesReserve(
-    reserve: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  asset(overrides?: CallOverrides): Promise<string>;
-
-=======
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
   }
 
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
   deposit(
     from: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-  getAvailableLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getAvailableReservation(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getPoolAssets(overrides?: CallOverrides): Promise<BigNumber>;
-=======
   getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
 
   getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
   initialize(
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-  poolConfig(overrides?: CallOverrides): Promise<string>;
-
-  reserves(
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & {
-      forRedemption: BigNumber;
-      forPlatformFees: BigNumber;
-    }
-  >;
-=======
   pool(overrides?: CallOverrides): Promise<string>
 
   poolConfig(overrides?: CallOverrides): Promise<string>
 
   poolFeeManager(overrides?: CallOverrides): Promise<string>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
   setPoolConfig(
     _poolConfig: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-  setRedemptionReserve(
-    reserve: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
-=======
   totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
   underlyingToken(overrides?: CallOverrides): Promise<string>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
   updatePoolConfigData(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   withdraw(
     to: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-  withdrawFees(
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   callStatic: {
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    asset(overrides?: CallOverrides): Promise<string>;
-
-=======
-  callStatic: {
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    getAvailableLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getAvailableReservation(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getPoolAssets(overrides?: CallOverrides): Promise<BigNumber>;
-=======
     getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
 
     getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    poolConfig(overrides?: CallOverrides): Promise<string>;
-
-    reserves(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        forRedemption: BigNumber;
-        forPlatformFees: BigNumber;
-      }
-    >;
-=======
     pool(overrides?: CallOverrides): Promise<string>
 
     poolConfig(overrides?: CallOverrides): Promise<string>
 
     poolFeeManager(overrides?: CallOverrides): Promise<string>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
-=======
     totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<string>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
-    updatePoolConfigData(overrides?: CallOverrides): Promise<void>;
+    updatePoolConfigData(overrides?: CallOverrides): Promise<void>
 
     withdraw(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdrawFees(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-  };
-=======
       overrides?: CallOverrides,
     ): Promise<void>
   }
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
   filters: {
-    "Initialized(uint8)"(version?: null): InitializedEventFilter;
-    Initialized(version?: null): InitializedEventFilter;
+    'Initialized(uint8)'(version?: null): InitializedEventFilter
+    Initialized(version?: null): InitializedEventFilter
 
-    "PoolConfigCacheUpdated(address)"(
-      poolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigCacheUpdatedEventFilter;
+    'PoolConfigCacheUpdated(address)'(
+      poolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigCacheUpdatedEventFilter
     PoolConfigCacheUpdated(
-      poolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigCacheUpdatedEventFilter;
+      poolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigCacheUpdatedEventFilter
 
-    "PoolConfigChanged(address,address)"(
+    'PoolConfigChanged(address,address)'(
       newPoolConfig?: PromiseOrValue<string> | null,
-      oldPoolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigChangedEventFilter;
+      oldPoolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigChangedEventFilter
     PoolConfigChanged(
       newPoolConfig?: PromiseOrValue<string> | null,
-      oldPoolConfig?: PromiseOrValue<string> | null
-    ): PoolConfigChangedEventFilter;
-  };
+      oldPoolConfig?: PromiseOrValue<string> | null,
+    ): PoolConfigChangedEventFilter
+  }
 
   estimateGas: {
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    asset(overrides?: CallOverrides): Promise<BigNumber>;
-
-=======
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    getAvailableLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getAvailableReservation(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getPoolAssets(overrides?: CallOverrides): Promise<BigNumber>;
-=======
     getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
 
     getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    poolConfig(overrides?: CallOverrides): Promise<BigNumber>;
-
-    reserves(overrides?: CallOverrides): Promise<BigNumber>;
-=======
     pool(overrides?: CallOverrides): Promise<BigNumber>
 
     poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     poolFeeManager(overrides?: CallOverrides): Promise<BigNumber>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
-=======
     totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<BigNumber>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     withdraw(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    withdrawFees(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-  };
-
-  populateTransaction: {
-    addPlatformFeesReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    asset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-=======
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
   }
 
   populateTransaction: {
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    getAvailableLiquidity(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getAvailableReservation(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPoolAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-=======
     getAvailableLiquidityForFees(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
     getPoolLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    reserves(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-=======
     pool(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolFeeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-    setRedemptionReserve(
-      reserve: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-=======
     totalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 
     updatePoolConfigData(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     withdraw(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
-<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/PoolVault.ts
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    withdrawFees(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-  };
-=======
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
   }
->>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/PoolSafe.ts
 }
