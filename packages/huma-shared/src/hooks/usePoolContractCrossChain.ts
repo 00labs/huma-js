@@ -1,7 +1,8 @@
+import { MaxUint256 } from '@ethersproject/constants'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 
-import { MaxUint256 } from '@ethersproject/constants'
 import {
   BaseCreditPool,
   BasePoolConfig,
@@ -11,29 +12,28 @@ import {
 import { CreditState } from '../utils/credit'
 import { downScale, upScale } from '../utils/number'
 import { getPoolInfo, POOL_NAME, POOL_TYPE } from '../utils/pool'
-import { useContract, useERC20Contract } from './useContract'
+import { getContract, getERC20Contract } from '../utils/web3'
 import { useForceRefresh } from './useForceRefresh'
 import { AccountStats } from './usePoolContract'
 
 export function usePoolBalanceCrossChain(
-  chainId: number | undefined,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  providers: { [chainId: number]: string },
+  chainId: number | undefined,
+  provider: JsonRpcProvider,
 ): [BigNumber | undefined, () => void] {
-  const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const poolUnderlyingTokenContract = useERC20Contract(
-    poolInfo?.poolUnderlyingToken?.address,
-    true,
-    chainId,
-    providers,
-  )
   const [balance, setBalance] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
+  const poolInfo = getPoolInfo(chainId, poolType, poolName)
+  const poolUnderlyingTokenContract = getContract(
+    poolInfo?.poolUnderlyingToken.address,
+    chainId,
+    provider,
+  )
 
   useEffect(() => {
     const fetchData = async () => {
-      if (poolUnderlyingTokenContract && poolInfo) {
+      if (poolInfo && poolUnderlyingTokenContract) {
         const result = await poolUnderlyingTokenContract.balanceOf(
           poolInfo.pool,
         )
@@ -47,19 +47,17 @@ export function usePoolBalanceCrossChain(
 }
 
 export function useLenderPositionCrossChain(
-  chainId: number | undefined,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  providers: { [chainId: number]: string },
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider,
 ): [BigNumber | undefined, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = useContract<HDT>(
+  const contract = getContract<HDT>(
     poolInfo?.HDT?.address,
     poolInfo?.HDT?.abi,
-    true,
-    chainId,
-    providers,
+    provider,
   )
   const [position, setPosition] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
@@ -86,18 +84,16 @@ export function useLenderPositionCrossChain(
 }
 
 export function usePoolAprCrossChain(
-  chainId: number | undefined,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  providers: { [chainId: number]: string },
+  chainId: number | undefined,
+  provider: JsonRpcProvider,
 ) {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = useContract<BasePoolConfig>(
+  const contract = getContract<BasePoolConfig>(
     poolInfo?.basePoolConfig,
     poolInfo?.basePoolConfigAbi,
-    true,
-    chainId,
-    providers,
+    provider,
   )
   const [apr, setApr] = useState<number>()
 
@@ -115,19 +111,17 @@ export function usePoolAprCrossChain(
 }
 
 export function useBorrowerApprovedCrossChain(
-  chainId: number | undefined,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
   account: string | undefined,
-  providers: { [chainId: number]: string },
+  provider: JsonRpcProvider,
 ): [boolean | undefined, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = useContract<BaseCreditPool>(
+  const contract = getContract<BaseCreditPool>(
     poolInfo?.pool,
     poolInfo?.poolAbi,
-    true,
-    chainId,
-    providers,
+    provider,
   )
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
@@ -146,25 +140,23 @@ export function useBorrowerApprovedCrossChain(
 }
 
 export function useAccountStatsCrossChain(
-  chainId: number | undefined,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
   account: string | undefined,
-  providers: { [chainId: number]: string },
+  provider: JsonRpcProvider,
 ): [AccountStats, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const poolContract = useContract<ReceivableFactoringPool>(
+  const poolContract = getContract<ReceivableFactoringPool>(
     poolInfo?.pool,
     poolInfo?.poolAbi,
-    true,
-    chainId,
-    providers,
+    provider,
   )
   const [poolBalance] = usePoolBalanceCrossChain(
-    chainId,
     poolName,
     poolType,
-    providers,
+    chainId,
+    provider,
   )
   const [accountStats, setAccountStats] = useState<AccountStats>({
     creditRecord: undefined,
@@ -237,18 +229,16 @@ export function useAccountStatsCrossChain(
 }
 
 export function usePoolAllowanceCrossChain(
-  chainId: number | undefined,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
   account: string | undefined,
-  providers: { [chainId: number]: string },
+  provider: JsonRpcProvider,
 ) {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = useERC20Contract(
-    poolInfo?.poolUnderlyingToken?.address,
-    true,
-    chainId,
-    providers,
+  const contract = getERC20Contract(
+    poolInfo?.poolUnderlyingToken.address,
+    provider,
   )
   const [allowance, setAllowance] = useState<BigNumber>(BigNumber.from(0))
   const [approved, setApproved] = useState<boolean>(false)
@@ -269,3 +259,56 @@ export function usePoolAllowanceCrossChain(
 
   return { approved, allowance, loaded, refresh }
 }
+
+export function usePoolTotalSupplyCrossChain(
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider,
+): [BigNumber | undefined, () => void] {
+  const poolInfo = getPoolInfo(chainId, poolType, poolName)
+  const contract = getContract<HDT>(
+    poolInfo?.HDT?.address,
+    poolInfo?.HDT?.abi,
+    provider,
+  )
+  const [totalSupply, setTotalSupply] = useState<BigNumber>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (chainId && contract) {
+        const result = await contract.totalSupply()
+        setTotalSupply(result)
+      }
+    }
+    fetchData()
+  }, [chainId, contract, poolName, poolType, refreshCount])
+
+  return [totalSupply, refresh]
+}
+
+// export function useLenderApprovedCrossChain(
+//   poolName: POOL_NAME,
+//   poolType: POOL_TYPE,
+//   chainId: number | undefined,
+//   account: string | undefined,
+//   provider: JsonRpcProvider,
+// ): [boolean | undefined, () => void] {
+//   const poolInfo = getPoolInfo(chainId, poolType, poolName)
+//   const contract = useContract<BaseCreditPool>(poolName, poolType)
+//   const [approved, setApproved] = useState<boolean>()
+//   const [refreshCount, refresh] = useForceRefresh()
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (contract && account) {
+//         const approved = await contract.isApprovedLender(account)
+//         setApproved(approved)
+//       }
+//     }
+//     fetchData()
+//   }, [account, contract, refreshCount])
+
+//   return [approved, refresh]
+// }
