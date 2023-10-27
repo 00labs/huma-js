@@ -37,14 +37,14 @@ export function Success({
           const { from, to, value } = event.args
           if (
             from.toLowerCase() === account?.toLowerCase() &&
-            to.toLowerCase() === poolInfo.poolVault.toLowerCase()
+            to.toLowerCase() === poolInfo.poolSafe.toLowerCase()
           ) {
             setSupplyAmount(downScale(value.toString(), decimals))
           }
         })
       }
     }
-  }, [account, address, decimals, poolInfo.poolVault, txReceipt])
+  }, [account, address, decimals, poolInfo.poolSafe, txReceipt])
 
   const content = [
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,

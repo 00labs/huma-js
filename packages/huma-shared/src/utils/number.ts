@@ -2,15 +2,12 @@ import { BigNumber, ethers } from 'ethers'
 import { isEmpty } from './common'
 import { scientificToDecimal } from './scientificToDecimal'
 
-const moneyFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 0,
-})
-
 const numberFormatter = new Intl.NumberFormat('en-US')
 
-export const formatMoney = (num: number | string | undefined) => {
+export const formatMoney = (
+  num: number | string | undefined,
+  notation?: Intl.NumberFormatOptions['notation'],
+) => {
   if (isEmpty(num) || Number.isNaN(num)) {
     return num
   }
@@ -20,6 +17,14 @@ export const formatMoney = (num: number | string | undefined) => {
   if (numCast > 1_000) {
     numCast = Math.round(numCast)
   }
+
+  const moneyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    notation,
+  })
+
   return moneyFormatter.format(numCast)
 }
 

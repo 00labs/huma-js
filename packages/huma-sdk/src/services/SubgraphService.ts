@@ -196,6 +196,55 @@ function getRWReceivableInfo(
   })
 }
 
+type PoolStats = {
+  id: string
+  amountCreditOriginated: number
+  amountCreditRepaid: number
+  amountCreditDefaulted: number
+}
+
+/**
+ * Returns the pool's stats.
+ *
+ * @memberof SubgraphService
+ * @param {number} chainId - The ID of the chain.
+ * @param {string} pool - The address of the pool.
+ * @returns {Promise<{PoolStats}>} The pool's stats info.
+ */
+function getPoolStats(
+  chainId: number,
+  pool: string,
+): Promise<PoolStats | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  const PoolStatsQuery = `
+  query {
+    poolStat(id:"${pool?.toLowerCase()}") {
+      id
+      amountCreditOriginated
+      amountCreditRepaid
+      amountCreditDefaulted
+    }
+  }
+`
+
+  return requestPost<{
+    errors?: unknown
+    data: { poolStat: PoolStats }
+  }>(url, JSON.stringify({ query: PoolStatsQuery }), {
+    withCredentials: false,
+  }).then((res) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return undefined
+    }
+    return res.data.poolStat
+  })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -205,4 +254,5 @@ export const SubgraphService = {
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
+  getPoolStats,
 }

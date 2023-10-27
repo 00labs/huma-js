@@ -3,7 +3,7 @@ import {
   useLenderApprovedV2,
   useLenderPositionV2,
   usePoolInfoV2,
-  usePoolVaultAllowanceV2,
+  usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
   VaultType,
 } from '@huma-finance/shared'
@@ -56,7 +56,7 @@ export function LendSupplyV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const decimals = poolInfo?.poolUnderlyingToken.decimals
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [allowance] = usePoolVaultAllowanceV2(poolName, account, chainId, {})
+  const [allowance] = usePoolSafeAllowanceV2(poolName, account, chainId, {})
   const [balance] = usePoolUnderlyingTokenBalanceV2(
     poolName,
     account,

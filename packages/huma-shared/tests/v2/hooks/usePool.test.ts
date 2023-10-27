@@ -8,7 +8,7 @@ import {
   useLenderApprovedV2,
   useLenderPositionV2,
   usePoolInfoV2,
-  usePoolVaultTotalAssetsV2,
+  usePoolSafeTotalAssetsV2,
 } from '../../../src/v2/hooks/usePool'
 
 jest.mock('../../../src/utils/web3', () => ({
@@ -128,7 +128,7 @@ describe('useContractValueV2', () => {
   })
 })
 
-describe('usePoolVaultTotalAssetsV2', () => {
+describe('usePoolSafeTotalAssetsV2', () => {
   it('should return the total assets value and refresh function', async () => {
     const chainId = 5
     ;(useContract as jest.Mock).mockReturnValue({
@@ -136,7 +136,7 @@ describe('usePoolVaultTotalAssetsV2', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolVaultTotalAssetsV2('HumaCreditLineV2' as any, chainId),
+      usePoolSafeTotalAssetsV2('HumaCreditLineV2' as any, chainId),
     )
 
     await waitFor(() => {

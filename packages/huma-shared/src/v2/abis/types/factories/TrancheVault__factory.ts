@@ -952,6 +952,25 @@ const _abi = [
       {
 <<<<<<< HEAD
         internalType: 'uint256',
+        name: 'shares',
+        type: 'uint256',
+      },
+    ],
+    name: 'convertToAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'assets',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
         name: 'assets',
         type: 'uint256',
       },
@@ -1307,6 +1326,51 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'uint64',
+            name: 'epochId',
+            type: 'uint64',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalSharesRequested',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalSharesProcessed',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalAmountProcessed',
+            type: 'uint96',
+          },
+        ],
+        internalType: 'struct EpochInfo[]',
+        name: 'epochsProcessed',
+        type: 'tuple[]',
+      },
+      {
+        internalType: 'uint256',
+        name: 'sharesProcessed',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amountProcessed',
+        type: 'uint256',
+      },
+    ],
+    name: 'executeEpochs',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: "epochManager",
     outputs: [
@@ -1625,6 +1689,25 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'assets',
+        type: 'uint256',
+      },
+    ],
+    name: 'makeInitialDeposit',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'shares',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'name',
     outputs: [
@@ -1665,10 +1748,10 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'poolVault',
+    name: 'poolSafe',
     outputs: [
       {
-        internalType: 'contract IPoolVault',
+        internalType: 'contract IPoolSafe',
         name: '',
         type: 'address',
       },
@@ -1742,6 +1825,7 @@ const _abi = [
   {
     inputs: [
       {
+<<<<<<< HEAD
         components: [
           {
 <<<<<<< HEAD
@@ -1830,6 +1914,8 @@ const _abi = [
     inputs: [
       {
 <<<<<<< HEAD
+=======
+>>>>>>> 2821eb8 (pool list page (#60))
         internalType: 'address',
         name: 'account',
         type: 'address',
@@ -2080,6 +2166,25 @@ const _abi = [
       {
         internalType: 'uint256',
         name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'totalAssetsOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'assets',
         type: 'uint256',
       },
     ],
@@ -2344,7 +2449,11 @@ const _abi = [
           },
         ],
         internalType: 'struct EpochInfo[]',
+<<<<<<< HEAD
         name: 'result',
+=======
+        name: 'epochInfos',
+>>>>>>> 2821eb8 (pool list page (#60))
         type: 'tuple[]',
       },
     ],
