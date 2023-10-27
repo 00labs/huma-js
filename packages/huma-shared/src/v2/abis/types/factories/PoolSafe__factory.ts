@@ -2,9 +2,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type { PoolVault, PoolVaultInterface } from "../PoolVault";
+=======
+import { Contract, Signer, utils } from 'ethers'
+import type { Provider } from '@ethersproject/providers'
+import type { PoolSafe, PoolSafeInterface } from '../PoolSafe'
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
 
 const _abi = [
   {
@@ -60,6 +66,7 @@ const _abi = [
   {
     inputs: [
       {
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
         internalType: "uint256",
         name: "reserve",
         type: "uint256",
@@ -89,6 +96,11 @@ const _abi = [
         internalType: "address",
         name: "from",
         type: "address",
+=======
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
       },
       {
         internalType: "uint256",
@@ -103,12 +115,21 @@ const _abi = [
   },
   {
     inputs: [],
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
     name: "getAvailableLiquidity",
     outputs: [
       {
         internalType: "uint256",
         name: "assets",
         type: "uint256",
+=======
+    name: 'getAvailableLiquidityForFees',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'liquidity',
+        type: 'uint256',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
       },
     ],
     stateMutability: "view",
@@ -116,6 +137,7 @@ const _abi = [
   },
   {
     inputs: [],
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
     name: "getAvailableReservation",
     outputs: [
       {
@@ -135,6 +157,14 @@ const _abi = [
         internalType: "uint256",
         name: "assets",
         type: "uint256",
+=======
+    name: 'getPoolLiquidity',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'liquidity',
+        type: 'uint256',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
       },
     ],
     stateMutability: "view",
@@ -155,12 +185,21 @@ const _abi = [
   },
   {
     inputs: [],
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
     name: "poolConfig",
     outputs: [
       {
         internalType: "contract PoolConfig",
         name: "",
         type: "address",
+=======
+    name: 'pool',
+    outputs: [
+      {
+        internalType: 'contract IPool',
+        name: '',
+        type: 'address',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
       },
     ],
     stateMutability: "view",
@@ -168,17 +207,40 @@ const _abi = [
   },
   {
     inputs: [],
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
     name: "reserves",
     outputs: [
       {
         internalType: "uint96",
         name: "forRedemption",
         type: "uint96",
-      },
+=======
+    name: 'poolConfig',
+    outputs: [
       {
+        internalType: 'contract PoolConfig',
+        name: '',
+        type: 'address',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'poolFeeManager',
+    outputs: [
+      {
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
         internalType: "uint96",
         name: "forPlatformFees",
         type: "uint96",
+=======
+        internalType: 'contract IPoolFeeManager',
+        name: '',
+        type: 'address',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
       },
     ],
     stateMutability: "view",
@@ -198,8 +260,11 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: 'totalLiquidity',
+    outputs: [
       {
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
         internalType: "uint256",
         name: "reserve",
         type: "uint256",
@@ -218,6 +283,24 @@ const _abi = [
         internalType: "uint256",
         name: "assets",
         type: "uint256",
+=======
+        internalType: 'uint256',
+        name: 'liquidity',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'underlyingToken',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
       },
     ],
     stateMutability: "view",
@@ -248,6 +331,7 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+<<<<<<< HEAD:packages/huma-shared/src/v2/abis/types/factories/PoolVault__factory.ts
   {
     inputs: [
       {
@@ -278,5 +362,19 @@ export class PoolVault__factory {
     signerOrProvider: Signer | Provider
   ): PoolVault {
     return new Contract(address, _abi, signerOrProvider) as PoolVault;
+=======
+] as const
+
+export class PoolSafe__factory {
+  static readonly abi = _abi
+  static createInterface(): PoolSafeInterface {
+    return new utils.Interface(_abi) as PoolSafeInterface
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider,
+  ): PoolSafe {
+    return new Contract(address, _abi, signerOrProvider) as PoolSafe
+>>>>>>> 2821eb8 (pool list page (#60)):packages/huma-shared/src/v2/abis/types/factories/PoolSafe__factory.ts
   }
 }
