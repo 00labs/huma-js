@@ -23,7 +23,7 @@ export function Transfer({
   vaultType,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { chainId, account } = useWeb3React()
+  const { chainId, account, provider } = useWeb3React()
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.poolUnderlyingToken
   const supplyBigNumber = ethers.utils.parseUnits(
@@ -34,7 +34,7 @@ export function Transfer({
     poolInfo.poolName,
     vaultType,
     chainId,
-    {},
+    provider,
   )
 
   const handleSuccess = useCallback(() => {

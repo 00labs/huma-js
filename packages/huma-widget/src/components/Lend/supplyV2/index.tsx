@@ -51,17 +51,22 @@ export function LendSupplyV2({
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account, chainId } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const decimals = poolInfo?.poolUnderlyingToken.decimals
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [allowance] = usePoolSafeAllowanceV2(poolName, account, chainId, {})
+  const [allowance] = usePoolSafeAllowanceV2(
+    poolName,
+    account,
+    chainId,
+    provider,
+  )
   const [balance] = usePoolUnderlyingTokenBalanceV2(
     poolName,
     account,
     chainId,
-    {},
+    provider,
   )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
@@ -70,14 +75,14 @@ export function LendSupplyV2({
     vaultType,
     account,
     chainId,
-    {},
+    provider,
   )
   const [, refreshLenderPosition] = useLenderPositionV2(
     poolName,
     vaultType,
     account,
     chainId,
-    {},
+    provider,
   )
 
   useEffect(() => {

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
 
-import { useContract } from '../../../src/hooks'
+import { useContractCrossChain } from '../../../src/hooks/useContractCrossChain'
 import {
   useContractValueV2,
   useLenderApprovedV2,
@@ -11,12 +12,13 @@ import {
   usePoolSafeTotalAssetsV2,
 } from '../../../src/v2/hooks/usePool'
 
-jest.mock('../../../src/utils/web3', () => ({
-  getContract: jest.fn(),
+jest.mock('../../../src/hooks/useContractCrossChain', () => ({
+  useContractCrossChain: jest.fn(),
+  useERC20ContractCrossChain: jest.fn(),
 }))
 
 jest.mock('../../../src/v2/utils/pool', () => ({
-  POOLS_INFO_V2: {
+  CHAIN_POOLS_INFO_V2: {
     5: {
       HumaCreditLineV2: {
         pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
@@ -34,12 +36,6 @@ jest.mock('../../../src/v2/utils/pool', () => ({
   },
 }))
 
-jest.mock('../../../src/hooks', () => ({
-  ...jest.requireActual('../../../src/hooks'),
-  useContract: jest.fn(),
-  useERC20Contract: jest.fn(),
-}))
-
 describe('usePoolInfoV2', () => {
   it('should return the poolInfo for a valid poolName and chainId', () => {
     const chainId = 5
@@ -49,7 +45,7 @@ describe('usePoolInfoV2', () => {
       seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
       juniorTrancheVault: '0x1f10865eF0181D8a7e3d31EcDECA7c615954EfEE',
       estAPY: '10-20%',
-      underlyingToken: {
+      poolUnderlyingToken: {
         address: '0x6Dfb932F9fDd38E4B3D2f6AAB0581a05a267C13C',
         symbol: 'USDC',
         decimals: 18,
@@ -131,12 +127,16 @@ describe('useContractValueV2', () => {
 describe('usePoolSafeTotalAssetsV2', () => {
   it('should return the total assets value and refresh function', async () => {
     const chainId = 5
-    ;(useContract as jest.Mock).mockReturnValue({
+    ;(useContractCrossChain as jest.Mock).mockReturnValue({
       totalAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
     const { result } = renderHook(() =>
-      usePoolSafeTotalAssetsV2('HumaCreditLineV2' as any, chainId, []),
+      usePoolSafeTotalAssetsV2(
+        'HumaCreditLineV2' as any,
+        chainId,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -152,7 +152,7 @@ describe('useLenderApprovedV2', () => {
   it('should return the senior/junior balances value and refresh function', async () => {
     const chainId = 5
     const account = '0x123'
-    ;(useContract as jest.Mock).mockReturnValue({
+    ;(useContractCrossChain as jest.Mock).mockReturnValue({
       LENDER_ROLE: jest.fn().mockReturnValue('LENDER_ROLE'),
       hasRole: jest
         .fn()
@@ -166,7 +166,7 @@ describe('useLenderApprovedV2', () => {
         'senior',
         account,
         chainId,
-        [],
+        new JsonRpcProvider(),
       ),
     )
 
@@ -186,7 +186,7 @@ describe('useLenderPositionV2', () => {
   it('should return the lender position value and refresh function', async () => {
     const chainId = 5
     const account = '0x123'
-    ;(useContract as jest.Mock).mockReturnValue({
+    ;(useContractCrossChain as jest.Mock).mockReturnValue({
       balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
@@ -196,7 +196,7 @@ describe('useLenderPositionV2', () => {
         'senior',
         account,
         chainId,
-        [],
+        new JsonRpcProvider(),
       ),
     )
 

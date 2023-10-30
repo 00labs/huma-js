@@ -1,7 +1,12 @@
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
-import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
+import { useForceRefresh } from '../../hooks'
+import {
+  useContractCrossChain,
+  useERC20ContractCrossChain,
+} from '../../hooks/useContractCrossChain'
 import { isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
@@ -33,31 +38,27 @@ export const usePoolInfoV2 = (
 function usePoolSafeContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContract<PoolSafe>(
+  return useContractCrossChain<PoolSafe>(
     poolInfo?.poolSafe,
     poolInfo?.poolSafeAbi,
-    true,
-    chainId,
-    fallbackProviders,
+    provider,
   )
 }
 
 function usePoolConfigContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const [poolConfig, setPoolConfig] = useState<string | undefined>()
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const poolContract = useContract<PoolSafe>(
+  const poolContract = useContractCrossChain<PoolSafe>(
     poolInfo?.poolSafe,
     poolInfo?.poolSafeAbi,
-    true,
-    chainId,
-    fallbackProviders,
+    provider,
   )
 
   useEffect(() => {
@@ -70,28 +71,24 @@ function usePoolConfigContractV2(
     }
 
     fetchData()
-  }, [poolName, chainId, fallbackProviders, poolContract])
+  }, [poolContract])
 
-  return useContract<PoolConfig>(
+  return useContractCrossChain<PoolConfig>(
     poolConfig,
     POOL_CONFIG_V2_ABI,
-    true,
-    chainId,
-    fallbackProviders,
+    provider,
   )
 }
 
 export function usePoolUnderlyingTokenContractV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useERC20Contract(
+  return useERC20ContractCrossChain(
     poolInfo?.poolUnderlyingToken.address,
-    true,
-    chainId,
-    fallbackProviders,
+    provider,
   )
 }
 
@@ -99,16 +96,14 @@ export function useTrancheVaultContractV2(
   poolName: POOL_NAME,
   vaultType: VaultType,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const contractAddr = poolInfo?.[`${vaultType}TrancheVault`]
-  return useContract<TrancheVault>(
+  return useContractCrossChain<TrancheVault>(
     contractAddr,
     poolInfo?.trancheVaultAbi,
-    true,
-    chainId,
-    fallbackProviders,
+    provider,
   )
 }
 
@@ -116,13 +111,9 @@ export function useFirstLossCoverContractV2(
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolConfig = usePoolConfigContractV2(
-    poolName,
-    chainId,
-    fallbackProviders,
-  )
+  const poolConfig = usePoolConfigContractV2(poolName, chainId, provider)
   const [firstLossCover, setFirstLossCover] = useState<string | undefined>()
 
   useEffect(() => {
@@ -137,14 +128,12 @@ export function useFirstLossCoverContractV2(
     }
 
     fetchData()
-  }, [poolName, chainId, fallbackProviders, poolConfig, firstLossCoverType])
+  }, [firstLossCoverType, poolConfig])
 
-  return useContract<FirstLossCover>(
+  return useContractCrossChain<FirstLossCover>(
     firstLossCover,
     FIRST_LOSS_COVER_ABI,
-    true,
-    chainId,
-    fallbackProviders,
+    provider,
   )
 }
 
@@ -186,19 +175,19 @@ export function useContractValueV2<T = BigNumber>(
 export function useFirstLossCoverTotalAssetsV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const flcBorrowerContract = useFirstLossCoverContractV2(
     poolName,
     FirstLossCoverIndex.borrower,
     chainId,
-    fallbackProviders,
+    provider,
   )
   const flcAffiliateContract = useFirstLossCoverContractV2(
     poolName,
     FirstLossCoverIndex.affiliate,
     chainId,
-    fallbackProviders,
+    provider,
   )
   const [assets, setAssets] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
@@ -219,13 +208,9 @@ export function useFirstLossCoverTotalAssetsV2(
 export function usePoolSafeTotalAssetsV2(
   poolName: POOL_NAME,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
-  const poolSafeContract = usePoolSafeContractV2(
-    poolName,
-    chainId,
-    fallbackProviders,
-  )
+  const poolSafeContract = usePoolSafeContractV2(poolName, chainId, provider)
   const [value, refresh] = useContractValueV2(poolSafeContract, 'totalAssets')
   return [value, refresh]
 }
@@ -234,13 +219,13 @@ export function useTrancheVaultAssetsV2(
   poolName: POOL_NAME,
   vaultType: VaultType,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const trancheVaultContract = useTrancheVaultContractV2(
     poolName,
     vaultType,
     chainId,
-    fallbackProviders,
+    provider,
   )
   const [value, refresh] = useContractValueV2(
     trancheVaultContract,
@@ -254,7 +239,7 @@ export function useLenderApprovedV2(
   vaultType: VaultType,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [Boolean | undefined, () => void] {
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
@@ -262,7 +247,7 @@ export function useLenderApprovedV2(
     poolName,
     vaultType,
     chainId,
-    fallbackProviders,
+    provider,
   )
 
   useEffect(() => {
@@ -286,13 +271,13 @@ export function useLenderPositionV2(
   vaultType: VaultType,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const vaultContract = useTrancheVaultContractV2(
     poolName,
     vaultType,
     chainId,
-    fallbackProviders,
+    provider,
   )
   const [balance, refresh] = useContractValueV2(
     vaultContract,
@@ -307,15 +292,11 @@ export function usePoolSafeAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber, () => void] {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const spender = poolInfo?.poolSafe
-  const contract = usePoolUnderlyingTokenContractV2(
-    poolName,
-    chainId,
-    fallbackProviders,
-  )
+  const contract = usePoolUnderlyingTokenContractV2(poolName, chainId, provider)
   const [allowance = BigNumber.from(0), refresh] = useContractValueV2(
     contract,
     'allowance',
@@ -329,13 +310,9 @@ export function usePoolUnderlyingTokenBalanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   chainId: number | undefined,
-  fallbackProviders: FALLBACK_PROVIDERS,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber, () => void] {
-  const contract = usePoolUnderlyingTokenContractV2(
-    poolName,
-    chainId,
-    fallbackProviders,
-  )
+  const contract = usePoolUnderlyingTokenContractV2(poolName, chainId, provider)
   const [balance = BigNumber.from(0), refresh] = useContractValueV2(
     contract,
     'balanceOf',
