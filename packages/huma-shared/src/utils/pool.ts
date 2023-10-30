@@ -66,6 +66,7 @@ export type PoolInfoType = {
     subgraph?: string
     superTokens?: { id: string; symbol: string; decimals: number }[]
     borrower?: string // For single borrower pools
+    rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
     hidden?: boolean // For pools that shouldn't be displayed in the UI
     order?: number // Ordering in the pool list. Null values are sorted last.
     disableBorrow?: boolean
@@ -458,6 +459,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
           borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
+          rwrUploader: '0x4c6388346f2a3af2d64461339a5cdd3a3d63ccf5',
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
