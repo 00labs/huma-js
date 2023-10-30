@@ -12,9 +12,12 @@ import {
 import { CreditState } from '../utils/credit'
 import { downScale, upScale } from '../utils/number'
 import { getPoolInfo, POOL_NAME, POOL_TYPE } from '../utils/pool'
-import { getContract, getERC20Contract } from '../utils/web3'
 import { useForceRefresh } from './useForceRefresh'
 import { AccountStats } from './usePoolContract'
+import {
+  useContractCrossChain,
+  useERC20ContractCrossChain,
+} from './useContractCrossChain'
 
 export function usePoolBalanceCrossChain(
   poolName: POOL_NAME,
@@ -25,9 +28,8 @@ export function usePoolBalanceCrossChain(
   const [balance, setBalance] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const poolUnderlyingTokenContract = getContract(
+  const poolUnderlyingTokenContract = useERC20ContractCrossChain(
     poolInfo?.poolUnderlyingToken.address,
-    chainId,
     provider,
   )
 
@@ -54,7 +56,7 @@ export function useLenderPositionCrossChain(
   provider: JsonRpcProvider,
 ): [BigNumber | undefined, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = getContract<HDT>(
+  const contract = useContractCrossChain<HDT>(
     poolInfo?.HDT?.address,
     poolInfo?.HDT?.abi,
     provider,
@@ -90,7 +92,7 @@ export function usePoolAprCrossChain(
   provider: JsonRpcProvider,
 ) {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = getContract<BasePoolConfig>(
+  const contract = useContractCrossChain<BasePoolConfig>(
     poolInfo?.basePoolConfig,
     poolInfo?.basePoolConfigAbi,
     provider,
@@ -118,7 +120,7 @@ export function useBorrowerApprovedCrossChain(
   provider: JsonRpcProvider,
 ): [boolean | undefined, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = getContract<BaseCreditPool>(
+  const contract = useContractCrossChain<BaseCreditPool>(
     poolInfo?.pool,
     poolInfo?.poolAbi,
     provider,
@@ -147,7 +149,7 @@ export function useAccountStatsCrossChain(
   provider: JsonRpcProvider,
 ): [AccountStats, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const poolContract = getContract<ReceivableFactoringPool>(
+  const poolContract = useContractCrossChain<ReceivableFactoringPool>(
     poolInfo?.pool,
     poolInfo?.poolAbi,
     provider,
@@ -236,7 +238,7 @@ export function usePoolAllowanceCrossChain(
   provider: JsonRpcProvider,
 ) {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = getERC20Contract(
+  const contract = useERC20ContractCrossChain(
     poolInfo?.poolUnderlyingToken.address,
     provider,
   )
@@ -267,7 +269,7 @@ export function usePoolTotalSupplyCrossChain(
   provider: JsonRpcProvider,
 ): [BigNumber | undefined, () => void] {
   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-  const contract = getContract<HDT>(
+  const contract = useContractCrossChain<HDT>(
     poolInfo?.HDT?.address,
     poolInfo?.HDT?.abi,
     provider,
@@ -288,27 +290,31 @@ export function usePoolTotalSupplyCrossChain(
   return [totalSupply, refresh]
 }
 
-// export function useLenderApprovedCrossChain(
-//   poolName: POOL_NAME,
-//   poolType: POOL_TYPE,
-//   chainId: number | undefined,
-//   account: string | undefined,
-//   provider: JsonRpcProvider,
-// ): [boolean | undefined, () => void] {
-//   const poolInfo = getPoolInfo(chainId, poolType, poolName)
-//   const contract = useContract<BaseCreditPool>(poolName, poolType)
-//   const [approved, setApproved] = useState<boolean>()
-//   const [refreshCount, refresh] = useForceRefresh()
+export function useLenderApprovedCrossChain(
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider,
+): [boolean | undefined, () => void] {
+  const poolInfo = getPoolInfo(chainId, poolType, poolName)
+  const contract = useContractCrossChain<BaseCreditPool>(
+    poolInfo?.pool,
+    poolInfo?.poolAbi,
+    provider,
+  )
+  const [approved, setApproved] = useState<boolean>()
+  const [refreshCount, refresh] = useForceRefresh()
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       if (contract && account) {
-//         const approved = await contract.isApprovedLender(account)
-//         setApproved(approved)
-//       }
-//     }
-//     fetchData()
-//   }, [account, contract, refreshCount])
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && account) {
+        const approved = await contract.isApprovedLender(account)
+        setApproved(approved)
+      }
+    }
+    fetchData()
+  }, [account, contract, refreshCount])
 
-//   return [approved, refresh]
-// }
+  return [approved, refresh]
+}
