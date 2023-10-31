@@ -20,7 +20,7 @@ import {
   CHAIN_POOLS_INFO_V2,
   FirstLossCoverIndex,
   PoolInfoV2,
-  VaultType,
+  TrancheType,
 } from '../utils/pool'
 
 export type FALLBACK_PROVIDERS = { [chainId: number]: string }
@@ -94,16 +94,18 @@ export function usePoolUnderlyingTokenContractV2(
 
 export function useTrancheVaultContractV2(
   poolName: POOL_NAME,
-  vaultType: VaultType,
+  trancheType: TrancheType,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const contractAddr = poolInfo?.[`${vaultType}TrancheVault`]
+  const contractAddr = poolInfo?.[`${trancheType}TrancheVault`]
   return useContractCrossChain<TrancheVault>(
     contractAddr,
     poolInfo?.trancheVaultAbi,
     provider,
+    account,
   )
 }
 
@@ -217,13 +219,13 @@ export function usePoolSafeTotalAssetsV2(
 
 export function useTrancheVaultAssetsV2(
   poolName: POOL_NAME,
-  vaultType: VaultType,
+  trancheType: TrancheType,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const trancheVaultContract = useTrancheVaultContractV2(
     poolName,
-    vaultType,
+    trancheType,
     chainId,
     provider,
   )
@@ -236,7 +238,7 @@ export function useTrancheVaultAssetsV2(
 
 export function useLenderApprovedV2(
   poolName: POOL_NAME,
-  vaultType: VaultType,
+  trancheType: TrancheType,
   account: string | undefined,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
@@ -245,7 +247,7 @@ export function useLenderApprovedV2(
   const [refreshCount, refresh] = useForceRefresh()
   const vaultContract = useTrancheVaultContractV2(
     poolName,
-    vaultType,
+    trancheType,
     chainId,
     provider,
   )
@@ -268,14 +270,14 @@ export function useLenderApprovedV2(
 
 export function useLenderPositionV2(
   poolName: POOL_NAME,
-  vaultType: VaultType,
+  trancheType: TrancheType,
   account: string | undefined,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const vaultContract = useTrancheVaultContractV2(
     poolName,
-    vaultType,
+    trancheType,
     chainId,
     provider,
   )

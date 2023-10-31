@@ -7,7 +7,7 @@ import {
 } from '../../utils'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
-export type VaultType = 'senior' | 'junior'
+export type TrancheType = 'senior' | 'junior'
 
 export enum FirstLossCoverIndex {
   borrower = 0,

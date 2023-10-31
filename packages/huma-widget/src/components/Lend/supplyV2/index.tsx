@@ -1,36 +1,26 @@
-import {
-  POOL_NAME,
-  usePoolInfoV2,
-  usePoolSafeAllowanceV2,
-  usePoolUnderlyingTokenBalanceV2,
-} from '@huma-finance/shared'
+import { POOL_NAME, TrancheType, usePoolInfoV2 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import {
-  useDoesChainSupportNotifi,
-  useIsFirstTimeNotifiUser,
-} from '../../../hooks/useNotifi'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
+import { ChooseTranche } from './1-ChooseTranche'
 import { Evaluation } from './2-Evaluation'
 import { ChooseAmount } from './3-ChooseAmount'
 import { ApproveAllowance } from './4-ApproveAllowance'
+import { Transfer } from './5-Transfer'
 import { Success } from './6-Success'
 import { Notifications } from './7-Notifications'
-import { ChooseTranche } from './1-ChooseTranche'
 
 /**
  * Lend pool supply props
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {VaultType} vaultType The vault type: senior or junior.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
@@ -40,48 +30,23 @@ export interface LendSupplyPropsV2 {
   handleSuccess?: (blockNumber?: number) => void
 }
 
-export type TrancheType = 'senior' | 'junior'
-
 export function LendSupplyV2({
   poolName: poolNameStr,
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account, chainId, provider } = useWeb3React()
+  const { chainId } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const decimals = poolInfo?.poolUnderlyingToken.decimals
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
-  const [allowance] = usePoolSafeAllowanceV2(
-    poolName,
-    account,
-    chainId,
-    provider,
-  )
-  const [balance] = usePoolUnderlyingTokenBalanceV2(
-    poolName,
-    account,
-    chainId,
-    provider,
-  )
-  const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
 
   useEffect(() => {
     if (!step) {
       dispatch(setStep(WIDGET_STEP.ChooseTranche))
     }
   }, [dispatch, step])
-
-  const setupNotificationsOrClose = useCallback(() => {
-    if (isFirstTimeNotifiUser && notifiChainSupported) {
-      dispatch(setStep(WIDGET_STEP.Notifications))
-    } else {
-      handleClose()
-    }
-  }, [dispatch, handleClose, isFirstTimeNotifiUser, notifiChainSupported])
 
   if (!poolInfo) {
     return null
@@ -105,25 +70,16 @@ export function LendSupplyV2({
         <Evaluation poolInfo={poolInfo} handleClose={handleClose} />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
-        <ChooseAmount
-          poolInfo={poolInfo}
-          allowance={allowance}
-          underlyingTokenBalance={ethers.utils.formatUnits(balance, decimals)}
-          withdrawlLockoutSeconds={0}
-        />
+        <ChooseAmount poolInfo={poolInfo} selectedTranche={selectedTranche} />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (
         <ApproveAllowance poolInfo={poolInfo} />
       )}
-      {/* {step === WIDGET_STEP.Transfer && (
-        <Transfer poolInfo={poolInfo} vaultType={vaultType} />
-      )} */}
+      {step === WIDGET_STEP.Transfer && selectedTranche && (
+        <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
+      )}
       {step === WIDGET_STEP.Done && (
-        <Success
-          poolInfo={poolInfo}
-          handleAction={setupNotificationsOrClose}
-          hasNextStep={isFirstTimeNotifiUser}
-        />
+        <Success poolInfo={poolInfo} handleAction={handleClose} />
       )}
       {step === WIDGET_STEP.Notifications && (
         <Notifications handleAction={handleClose} />

@@ -1,6 +1,7 @@
 import {
-  PoolInfoV2,
   openInNewTab,
+  PoolInfoV2,
+  TrancheType,
   useLenderApprovedV2,
 } from '@huma-finance/shared'
 import {
@@ -15,12 +16,12 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import React from 'react'
 
-import { TrancheType } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
+import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   poolInfo: PoolInfoV2
@@ -51,6 +52,8 @@ export function ChooseTranche({
     chainId,
     provider,
   )
+  const isLoading =
+    lenderApprovedSenior === undefined || lenderApprovedJunior === undefined
 
   const styles = {
     subTitle: css`
@@ -105,6 +108,10 @@ export function ChooseTranche({
       value: 'junior',
     },
   ]
+
+  if (isLoading) {
+    return <LoadingModal title={`Supply ${poolUnderlyingToken.symbol}`} />
+  }
 
   return (
     <WrapperModal title={`Supply ${poolUnderlyingToken.symbol}`}>
