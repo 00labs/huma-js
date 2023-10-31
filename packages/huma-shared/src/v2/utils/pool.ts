@@ -14,6 +14,12 @@ export enum FirstLossCoverIndex {
   affiliate = 1,
 }
 
+export type KYCCopy = {
+  title: string
+  description: string
+  buttonText?: string
+}
+
 export type PoolInfoV2 = {
   chainId: ChainEnum
   poolName: POOL_NAME
@@ -41,6 +47,15 @@ export type PoolInfoV2 = {
     | 'Remittance Financing'
     | 'Green Financing'
     | 'Invoice Factoring'
+  KYC?: {
+    provider: 'Securitize'
+    signInRequired: KYCCopy
+    verifyIdentity: KYCCopy
+    emailSignatureLink: KYCCopy
+    resendSignatureLink: KYCCopy
+    docUnderReview: KYCCopy
+  }
+  supplyLink?: string
 }
 
 export type PoolsInfoV2 = {
