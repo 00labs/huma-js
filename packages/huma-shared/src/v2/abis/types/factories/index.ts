@@ -4,9 +4,6 @@
 export { FirstLossCover__factory } from './FirstLossCover__factory'
 export { Pool__factory } from './Pool__factory'
 export { PoolConfig__factory } from './PoolConfig__factory'
-<<<<<<< HEAD
 export { PoolSafe__factory } from './PoolSafe__factory'
-=======
->>>>>>> cdafa93 (Page details (#61))
 export { PoolVault__factory } from './PoolVault__factory'
 export { TrancheVault__factory } from './TrancheVault__factory'

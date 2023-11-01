@@ -4,19 +4,13 @@
 export type { FirstLossCover } from './FirstLossCover'
 export type { Pool } from './Pool'
 export type { PoolConfig } from './PoolConfig'
-<<<<<<< HEAD
 export type { PoolSafe } from './PoolSafe'
-=======
->>>>>>> cdafa93 (Page details (#61))
 export type { PoolVault } from './PoolVault'
 export type { TrancheVault } from './TrancheVault'
 export * as factories from './factories'
 export { FirstLossCover__factory } from './factories/FirstLossCover__factory'
 export { Pool__factory } from './factories/Pool__factory'
 export { PoolConfig__factory } from './factories/PoolConfig__factory'
-<<<<<<< HEAD
 export { PoolSafe__factory } from './factories/PoolSafe__factory'
-=======
->>>>>>> cdafa93 (Page details (#61))
 export { PoolVault__factory } from './factories/PoolVault__factory'
 export { TrancheVault__factory } from './factories/TrancheVault__factory'

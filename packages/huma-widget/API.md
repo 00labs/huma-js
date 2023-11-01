@@ -14,6 +14,8 @@
 To be used when re-enabling autopay and other pool actions that require allowance.</p></dd>
 <dt><a href="#LendSupplyWidget">LendSupplyWidget(props)</a> ⇒</dt>
 <dd><p>Lend supply widget</p></dd>
+<dt><a href="#LendSupplyWidgetV2">LendSupplyWidgetV2(props)</a> ⇒</dt>
+<dd><p>Lend supply widget V2</p></dd>
 <dt><a href="#LendWithdrawWidget">LendWithdrawWidget(props)</a> ⇒</dt>
 <dd><p>Lend withdraw widget</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
@@ -35,6 +37,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Invoice factoring pool payment props</p></dd>
 <dt><a href="#LendSupplyProps">LendSupplyProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
+<dt><a href="#LendSupplyPropsV2">LendSupplyPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendWithdrawProps">LendWithdrawProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw props</p></dd>
 <dt><a href="#JsonRpcConnectionMap">JsonRpcConnectionMap</a> : <code>Object</code></dt>
@@ -53,6 +57,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Credit line allowance approval widget props</p></dd>
 <dt><a href="#LendSupplyWidgetProps">LendSupplyWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props</p></dd>
+<dt><a href="#LendSupplyWidgetPropsV2">LendSupplyWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props V2</p></dd>
 <dt><a href="#LendWithdrawWidgetProps">LendWithdrawWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw widget props</p></dd>
 </dl>
@@ -129,6 +135,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>LendSupplyWidgetProps</code>](#LendSupplyWidgetProps) | <p>The lend pool supply widget props.</p> |
+
+<a name="LendSupplyWidgetV2"></a>
+
+## LendSupplyWidgetV2(props) ⇒
+<p>Lend supply widget V2</p>
+
+**Kind**: global function  
+**Returns**: <p>Lend pool supply widget component V2</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>LendSupplyWidgetPropsV2</code>](#LendSupplyWidgetPropsV2) | <p>The lend pool supply widget props V2.</p> |
 
 <a name="LendWithdrawWidget"></a>
 
@@ -244,6 +262,21 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="LendSupplyPropsV2"></a>
+
+## LendSupplyPropsV2 : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| vaultType | <code>VaultType</code> | <p>The vault type: senior or junior.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
@@ -364,6 +397,19 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | LendSupplyProps | [<code>LendSupplyProps</code>](#LendSupplyProps) | <p>Lend pool supply props.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="LendSupplyWidgetPropsV2"></a>
+
+## LendSupplyWidgetPropsV2 : <code>Object</code>
+<p>Lend pool supply widget props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| LendSupplyPropsV2 | [<code>LendSupplyPropsV2</code>](#LendSupplyPropsV2) | <p>Lend pool supply props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendWithdrawWidgetProps"></a>

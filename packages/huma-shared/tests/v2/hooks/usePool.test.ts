@@ -136,7 +136,7 @@ describe('usePoolSafeTotalAssetsV2', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolSafeTotalAssetsV2('HumaCreditLineV2' as any, chainId),
+      usePoolSafeTotalAssetsV2('HumaCreditLineV2' as any, chainId, {}),
     )
 
     await waitFor(() => {
@@ -166,6 +166,7 @@ describe('useLenderApprovedV2', () => {
         'senior',
         account,
         chainId,
+        {},
       ),
     )
 
@@ -195,6 +196,7 @@ describe('useLenderPositionV2', () => {
         'senior',
         account,
         chainId,
+        {},
       ),
     )
 
