@@ -2,11 +2,7 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
-import { useForceRefresh } from '../../hooks'
-import {
-  useContractCrossChain,
-  useERC20ContractCrossChain,
-} from '../../hooks/useContractCrossChain'
+import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import { isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
@@ -41,7 +37,7 @@ function usePoolSafeContractV2(
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContractCrossChain<PoolSafe>(
+  return useContract<PoolSafe>(
     poolInfo?.poolSafe,
     poolInfo?.poolSafeAbi,
     provider,
@@ -55,7 +51,7 @@ function usePoolConfigContractV2(
 ) {
   const [poolConfig, setPoolConfig] = useState<string | undefined>()
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const poolContract = useContractCrossChain<PoolSafe>(
+  const poolContract = useContract<PoolSafe>(
     poolInfo?.poolSafe,
     poolInfo?.poolSafeAbi,
     provider,
@@ -73,11 +69,7 @@ function usePoolConfigContractV2(
     fetchData()
   }, [poolContract])
 
-  return useContractCrossChain<PoolConfig>(
-    poolConfig,
-    POOL_CONFIG_V2_ABI,
-    provider,
-  )
+  return useContract<PoolConfig>(poolConfig, POOL_CONFIG_V2_ABI, provider)
 }
 
 export function usePoolUnderlyingTokenContractV2(
@@ -86,10 +78,7 @@ export function usePoolUnderlyingTokenContractV2(
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useERC20ContractCrossChain(
-    poolInfo?.poolUnderlyingToken.address,
-    provider,
-  )
+  return useERC20Contract(poolInfo?.poolUnderlyingToken.address, provider)
 }
 
 export function useTrancheVaultContractV2(
@@ -101,7 +90,7 @@ export function useTrancheVaultContractV2(
 ) {
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const contractAddr = poolInfo?.[`${trancheType}TrancheVault`]
-  return useContractCrossChain<TrancheVault>(
+  return useContract<TrancheVault>(
     contractAddr,
     poolInfo?.trancheVaultAbi,
     provider,
@@ -132,7 +121,7 @@ export function useFirstLossCoverContractV2(
     fetchData()
   }, [firstLossCoverType, poolConfig])
 
-  return useContractCrossChain<FirstLossCover>(
+  return useContract<FirstLossCover>(
     firstLossCover,
     FIRST_LOSS_COVER_ABI,
     provider,

@@ -1,8 +1,8 @@
-import { MaxUint256 } from '@ethersproject/constants'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 
+import { MaxUint256 } from '@ethersproject/constants'
 import { useContract, useERC20Contract } from '../../src/hooks/useContract'
 import { usePoolInfo } from '../../src/hooks/usePool'
 import {
@@ -13,19 +13,16 @@ import {
   useLenderApproved,
   useLenderPosition,
   usePoolAllowance,
+  usePoolApr,
   usePoolBalance,
   usePoolTotalSupply,
   usePoolTotalValue,
   usePoolUnderlyingTokenBalance,
   useWithdrawlLockoutInSeconds,
 } from '../../src/hooks/usePoolContract'
-import { CreditState } from '../../src/utils/credit'
 import { toBigNumber } from '../../src/utils/number'
 import { POOL_NAME, POOL_TYPE } from '../../src/utils/pool'
-
-jest.mock('@web3-react/core', () => ({
-  useWeb3React: jest.fn(),
-}))
+import { CreditState } from '../../src/utils/credit'
 
 jest.mock('../../src/hooks/usePool', () => ({
   usePoolInfo: jest.fn(),
@@ -59,14 +56,15 @@ jest.mock('../../src/utils/pool', () => ({
 
 describe('usePoolUnderlyingTokenBalance', () => {
   it('returns default value if PoolUnderlyingTokenContract is not valid', () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({})
     ;(usePoolInfo as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
       usePoolUnderlyingTokenBalance(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -74,7 +72,6 @@ describe('usePoolUnderlyingTokenBalance', () => {
   })
 
   it('returns default value if account is not provided', () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({})
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -88,6 +85,9 @@ describe('usePoolUnderlyingTokenBalance', () => {
       usePoolUnderlyingTokenBalance(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -95,7 +95,6 @@ describe('usePoolUnderlyingTokenBalance', () => {
   })
 
   it('returns the balance if account and contract are provided', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({})
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -109,7 +108,9 @@ describe('usePoolUnderlyingTokenBalance', () => {
       usePoolUnderlyingTokenBalance(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -121,9 +122,6 @@ describe('usePoolUnderlyingTokenBalance', () => {
 
 describe('usePoolTotalValue', () => {
   it('returns undefined if chainId is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: null,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -133,7 +131,12 @@ describe('usePoolTotalValue', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolTotalValue(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolTotalValue(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -142,9 +145,6 @@ describe('usePoolTotalValue', () => {
   })
 
   it('returns undefined if poolContract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -152,7 +152,12 @@ describe('usePoolTotalValue', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolTotalValue(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolTotalValue(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -161,9 +166,6 @@ describe('usePoolTotalValue', () => {
   })
 
   it('returns the total value', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -176,7 +178,12 @@ describe('usePoolTotalValue', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolTotalValue(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolTotalValue(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -195,9 +202,6 @@ describe('usePoolTotalValue', () => {
 
 describe('usePoolTotalSupply', () => {
   it('returns undefined if chainId is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: null,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       HDT: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -209,7 +213,12 @@ describe('usePoolTotalSupply', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolTotalSupply(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolTotalSupply(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -218,9 +227,6 @@ describe('usePoolTotalSupply', () => {
   })
 
   it('returns undefined if HDTContract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       HDT: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -230,7 +236,12 @@ describe('usePoolTotalSupply', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolTotalSupply(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolTotalSupply(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -239,9 +250,6 @@ describe('usePoolTotalSupply', () => {
   })
 
   it('returns the total supply', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       HDT: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -256,7 +264,12 @@ describe('usePoolTotalSupply', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolTotalSupply(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolTotalSupply(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -275,9 +288,6 @@ describe('usePoolTotalSupply', () => {
 
 describe('usePoolBalance', () => {
   it('returns undefined if chainId is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: null,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -288,7 +298,12 @@ describe('usePoolBalance', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolBalance(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolBalance(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -297,9 +312,6 @@ describe('usePoolBalance', () => {
   })
 
   it('returns undefined if poolUnderlyingTokenContract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -308,7 +320,12 @@ describe('usePoolBalance', () => {
     ;(useERC20Contract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolBalance(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolBalance(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -317,9 +334,6 @@ describe('usePoolBalance', () => {
   })
 
   it('returns undefined if pool address is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -330,7 +344,12 @@ describe('usePoolBalance', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolBalance(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolBalance(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -339,9 +358,6 @@ describe('usePoolBalance', () => {
   })
 
   it('returns the pool balance', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -355,7 +371,12 @@ describe('usePoolBalance', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolBalance(POOL_NAME.RequestNetwork, POOL_TYPE.Invoice),
+      usePoolBalance(
+        POOL_NAME.RequestNetwork,
+        POOL_TYPE.Invoice,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -385,7 +406,6 @@ describe('useAccountStats', () => {
   }
 
   it('returns initial state if poolContract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({})
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -393,7 +413,13 @@ describe('useAccountStats', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useAccountStats(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useAccountStats(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        undefined,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -402,7 +428,6 @@ describe('useAccountStats', () => {
   })
 
   it('returns initial state if account is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({})
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         decimals: 6,
@@ -415,7 +440,13 @@ describe('useAccountStats', () => {
     })
 
     const { result } = renderHook(() =>
-      useAccountStats(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useAccountStats(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -424,7 +455,6 @@ describe('useAccountStats', () => {
   })
 
   it('returns initial state if poolInfo is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({})
     ;(usePoolInfo as jest.Mock).mockReturnValue(null)
     ;(useContract as jest.Mock).mockReturnValue({
       creditRecord: jest.fn(),
@@ -436,7 +466,9 @@ describe('useAccountStats', () => {
       useAccountStats(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -446,9 +478,6 @@ describe('useAccountStats', () => {
   })
 
   it('returns the account stats', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolUnderlyingToken: {
@@ -497,7 +526,9 @@ describe('useAccountStats', () => {
       useAccountStats(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -535,9 +566,6 @@ describe('useAccountStats', () => {
 
 describe('useCreditRecord', () => {
   it('returns false if poolContract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -545,7 +573,13 @@ describe('useCreditRecord', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useCreditRecord(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useCreditRecord(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     const isApproved = await result.current.checkIsApproved()
@@ -554,9 +588,6 @@ describe('useCreditRecord', () => {
   })
 
   it('returns false if account is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -567,7 +598,13 @@ describe('useCreditRecord', () => {
     }))
 
     const { result } = renderHook(() =>
-      useCreditRecord(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useCreditRecord(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     const isApproved = await result.current.checkIsApproved()
@@ -575,9 +612,6 @@ describe('useCreditRecord', () => {
   })
 
   it('returns the approval status if account and contract are provided', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -597,7 +631,9 @@ describe('useCreditRecord', () => {
       useCreditRecord(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -611,15 +647,17 @@ describe('useCreditRecord', () => {
 
 describe('useFeeManager', () => {
   it('returns fees undefined and getFeesCharged 0 if contract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolFeeManager: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     })
     ;(useContract as jest.Mock).mockReturnValue(null)
     const { result } = renderHook(() =>
-      useFeeManager(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useFeeManager(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -632,9 +670,6 @@ describe('useFeeManager', () => {
   })
 
   it('returns fees and getFeesCharged 0 if requestedLoan is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolFeeManager: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     })
@@ -650,7 +685,12 @@ describe('useFeeManager', () => {
       getFees: jest.fn().mockResolvedValue(mockFees),
     })
     const { result } = renderHook(() =>
-      useFeeManager(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useFeeManager(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -664,9 +704,6 @@ describe('useFeeManager', () => {
   })
 
   it('returns fees and getFeesCharged 0 if poolInfo is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue(null)
 
     const mockFees = {
@@ -680,7 +717,12 @@ describe('useFeeManager', () => {
       getFees: jest.fn().mockResolvedValue(mockFees),
     })
     const { result } = renderHook(() =>
-      useFeeManager(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useFeeManager(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -693,9 +735,6 @@ describe('useFeeManager', () => {
   })
 
   it('returns fees and getFeesCharged', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolFeeManager: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolUnderlyingToken: {
@@ -714,7 +753,12 @@ describe('useFeeManager', () => {
       getFees: jest.fn().mockResolvedValue(mockFees),
     })
     const { result } = renderHook(() =>
-      useFeeManager(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useFeeManager(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -729,9 +773,6 @@ describe('useFeeManager', () => {
 
 describe('usePoolAllowance', () => {
   it('returns initial state if contract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -739,7 +780,13 @@ describe('usePoolAllowance', () => {
     ;(useERC20Contract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolAllowance(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolAllowance(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -753,16 +800,19 @@ describe('usePoolAllowance', () => {
   })
 
   it('returns initial state if poolInfo is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue(null)
     ;(useERC20Contract as jest.Mock).mockReturnValue({
       allowance: jest.fn().mockResolvedValue(BigNumber.from(100)),
     })
 
     const { result } = renderHook(() =>
-      usePoolAllowance(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      usePoolAllowance(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -776,38 +826,6 @@ describe('usePoolAllowance', () => {
   })
 
   it('returns initial state if account is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
-    ;(usePoolInfo as jest.Mock).mockReturnValue({
-      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      poolAbi: [],
-    })
-    ;(useERC20Contract as jest.Mock).mockReturnValue({
-      allowance: jest
-        .fn()
-        .mockResolvedValueOnce(BigNumber.from(100))
-        .mockResolvedValueOnce(BigNumber.from(MaxUint256)),
-    })
-
-    const { result } = renderHook(() =>
-      usePoolAllowance(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
-    )
-
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        approved: false,
-        allowance: BigNumber.from(0),
-        loaded: false,
-        refresh: expect.any(Function),
-      })
-    })
-  })
-
-  it('returns correct state', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -823,7 +841,41 @@ describe('usePoolAllowance', () => {
       usePoolAllowance(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
+        undefined,
+        new JsonRpcProvider(),
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        approved: false,
+        allowance: BigNumber.from(0),
+        loaded: false,
+        refresh: expect.any(Function),
+      })
+    })
+  })
+
+  it('returns correct state', async () => {
+    ;(usePoolInfo as jest.Mock).mockReturnValue({
+      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      poolAbi: [],
+    })
+    ;(useERC20Contract as jest.Mock).mockReturnValue({
+      allowance: jest
+        .fn()
+        .mockResolvedValueOnce(BigNumber.from(100))
+        .mockResolvedValueOnce(BigNumber.from(MaxUint256)),
+    })
+
+    const { result } = renderHook(() =>
+      usePoolAllowance(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -851,9 +903,6 @@ describe('usePoolAllowance', () => {
 
 describe('useLenderPosition', () => {
   it('returns undefined if contract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -861,7 +910,13 @@ describe('useLenderPosition', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useLenderPosition(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useLenderPosition(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -870,9 +925,6 @@ describe('useLenderPosition', () => {
   })
 
   it('returns undefined if account is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -882,7 +934,13 @@ describe('useLenderPosition', () => {
     })
 
     const { result } = renderHook(() =>
-      useLenderPosition(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useLenderPosition(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -891,9 +949,6 @@ describe('useLenderPosition', () => {
   })
 
   it('returns undefined if poolInfo is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue(null)
     ;(useContract as jest.Mock).mockReturnValue({
       withdrawableFundsOf: jest.fn().mockResolvedValue(BigNumber.from(100)),
@@ -903,7 +958,9 @@ describe('useLenderPosition', () => {
       useLenderPosition(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -913,9 +970,6 @@ describe('useLenderPosition', () => {
   })
 
   it('returns lender position', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       poolUnderlyingToken: {
         decimals: 6,
@@ -932,7 +986,9 @@ describe('useLenderPosition', () => {
       useLenderPosition(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -950,9 +1006,6 @@ describe('useLenderPosition', () => {
 
 describe('useLenderApproved', () => {
   it('returns undefined if contract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -960,7 +1013,13 @@ describe('useLenderApproved', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useLenderApproved(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useLenderApproved(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -969,9 +1028,6 @@ describe('useLenderApproved', () => {
   })
 
   it('returns undefined if account is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -981,7 +1037,13 @@ describe('useLenderApproved', () => {
     })
 
     const { result } = renderHook(() =>
-      useLenderApproved(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useLenderApproved(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        undefined,
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -990,9 +1052,6 @@ describe('useLenderApproved', () => {
   })
 
   it('returns lender approved or not', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -1008,7 +1067,9 @@ describe('useLenderApproved', () => {
       useLenderApproved(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
@@ -1024,9 +1085,6 @@ describe('useLenderApproved', () => {
 
 describe('useWithdrawlLockoutInSeconds', () => {
   it('returns undefined if contract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -1037,6 +1095,8 @@ describe('useWithdrawlLockoutInSeconds', () => {
       useWithdrawlLockoutInSeconds(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
       ),
     )
 
@@ -1046,9 +1106,6 @@ describe('useWithdrawlLockoutInSeconds', () => {
   })
 
   it('returns withdrawlLockoutInSeconds', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -1063,6 +1120,8 @@ describe('useWithdrawlLockoutInSeconds', () => {
       useWithdrawlLockoutInSeconds(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
       ),
     )
 
@@ -1074,9 +1133,6 @@ describe('useWithdrawlLockoutInSeconds', () => {
 
 describe('useLastDepositTime', () => {
   it('returns undefined if contract is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -1084,7 +1140,13 @@ describe('useLastDepositTime', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useLastDepositTime(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
+      useLastDepositTime(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        'account',
+        new JsonRpcProvider(),
+      ),
     )
 
     await waitFor(() => {
@@ -1093,30 +1155,6 @@ describe('useLastDepositTime', () => {
   })
 
   it('returns undefined if account is not valid', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
-    ;(usePoolInfo as jest.Mock).mockReturnValue({
-      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      poolAbi: [],
-    })
-    ;(useContract as jest.Mock).mockReturnValue({
-      lastDepositTime: jest.fn().mockResolvedValue(BigNumber.from(100)),
-    })
-
-    const { result } = renderHook(() =>
-      useLastDepositTime(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine),
-    )
-
-    await waitFor(() => {
-      expect(result.current).toBeUndefined()
-    })
-  })
-
-  it('returns lastDepositTime', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      chainId: 1,
-    })
     ;(usePoolInfo as jest.Mock).mockReturnValue({
       pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       poolAbi: [],
@@ -1129,12 +1167,81 @@ describe('useLastDepositTime', () => {
       useLastDepositTime(
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        1,
+        undefined,
+        new JsonRpcProvider(),
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBeUndefined()
+    })
+  })
+
+  it('returns lastDepositTime', async () => {
+    ;(usePoolInfo as jest.Mock).mockReturnValue({
+      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      poolAbi: [],
+    })
+    ;(useContract as jest.Mock).mockReturnValue({
+      lastDepositTime: jest.fn().mockResolvedValue(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useLastDepositTime(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
         'account',
+        new JsonRpcProvider(),
       ),
     )
 
     await waitFor(() => {
       expect(result.current).toEqual(100)
+    })
+  })
+})
+
+describe('usePoolApr', () => {
+  it('returns undefined if contract is not valid', async () => {
+    ;(usePoolInfo as jest.Mock).mockReturnValue({
+      pool: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      poolAbi: [],
+    })
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      usePoolApr(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBeUndefined()
+    })
+  })
+
+  it('returns pool apr', async () => {
+    ;(usePoolInfo as jest.Mock).mockReturnValue({})
+    ;(useContract as jest.Mock).mockReturnValue({
+      poolAprInBps: jest.fn().mockResolvedValue(BigNumber.from(1500)),
+    })
+
+    const { result } = renderHook(() =>
+      usePoolApr(
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
+        1,
+        new JsonRpcProvider(),
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toEqual(0.15)
     })
   })
 })

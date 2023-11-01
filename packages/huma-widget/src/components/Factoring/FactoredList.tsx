@@ -39,10 +39,11 @@ export function FactoredList<T>({
 }: Props<T>): React.ReactElement {
   const theme = useTheme()
   const { isMdSize } = useMQ()
-  const { isActive } = useWeb3React()
+  const { isActive, chainId } = useWeb3React()
   const { decimals } = usePoolUnderlyingToken(
     poolInfo.poolName,
     poolInfo.poolType,
+    chainId,
   )
   const [factoredItem, setFactoredItem] = useState<Partial<T>>()
   const { creditRecord, receivableInfo } = accountStats

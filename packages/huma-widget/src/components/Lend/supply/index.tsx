@@ -52,33 +52,47 @@ export function LendSupply({
   handleSuccess,
 }: LendSupplyProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account, chainId } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const { decimals } = poolInfo?.poolUnderlyingToken || {}
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const { allowance } = usePoolAllowance(poolName, poolType, account)
+  const { allowance } = usePoolAllowance(
+    poolName,
+    poolType,
+    chainId,
+    account,
+    provider,
+  )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const [lenderApproved, refreshLenderApproved] = useLenderApproved(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
   const [, refreshLenderPosition] = useLenderPosition(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
   const withdrawlLockoutSeconds = useWithdrawlLockoutInSeconds(
     poolName,
     poolType,
+    chainId,
+    provider,
   )
   const underlyingTokenBalance = usePoolUnderlyingTokenBalance(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
   const balanceWithoutDecimals = downScale(underlyingTokenBalance, decimals)
 

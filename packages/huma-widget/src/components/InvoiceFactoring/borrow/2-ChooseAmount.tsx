@@ -2,6 +2,7 @@ import { AccountStats, PoolInfoType, useFeeManager } from '@huma-finance/shared'
 import React, { useCallback, useState } from 'react'
 import { ethers } from 'ethers'
 
+import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -19,10 +20,16 @@ export function ChooseAmount({
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { creditRecord } = accountStats
+  const { chainId, provider } = useWeb3React()
   const [chargedFees, setChargedFees] = useState(0)
   const [currentAmount, setCurrentAmount] = useState(0)
   const { approval } = useAppSelector(selectWidgetState)
-  const { getFeesCharged } = useFeeManager(poolInfo.poolName, poolInfo.poolType)
+  const { getFeesCharged } = useFeeManager(
+    poolInfo.poolName,
+    poolInfo.poolType,
+    chainId,
+    provider,
+  )
   const [remainder, setRemainder] = useState<string | number | undefined>(
     approval!.receivable?.amountFormatted,
   )

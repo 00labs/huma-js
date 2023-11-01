@@ -41,15 +41,17 @@ export function CreditLinePayment({
   handleSuccess,
 }: CreditLinePaymentProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [{ creditRecord, payoffAmount, totalDueAmount }] = useAccountStats(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
 
   useEffect(() => {

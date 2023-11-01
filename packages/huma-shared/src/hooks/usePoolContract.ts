@@ -1,8 +1,8 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber, Contract } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import BASE_FEE_MANAGER_ABI from '../abis/BaseFeeManager.json'
 import {
   BaseCreditPool,
@@ -64,74 +64,100 @@ export type AccountStats = {
 export function usePoolContract<T extends Contract>(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  return useContract<T>(poolInfo?.pool, poolInfo?.poolAbi)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  return useContract<T>(poolInfo?.pool, poolInfo?.poolAbi, provider)
 }
 
 export function useBaseConfigPoolContract<T extends Contract>(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  return useContract<T>(poolInfo?.basePoolConfig, poolInfo?.basePoolConfigAbi)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  return useContract<T>(
+    poolInfo?.basePoolConfig,
+    poolInfo?.basePoolConfigAbi,
+    provider,
+  )
 }
 
 export function usePoolFeeManagerContract(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   return useContract<BaseFeeManager>(
     poolInfo?.poolFeeManager,
     BASE_FEE_MANAGER_ABI,
+    provider,
   )
 }
 
 export function usePoolUnderlyingTokenContract(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  return useERC20Contract(poolInfo?.poolUnderlyingToken?.address)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  return useERC20Contract(poolInfo?.poolUnderlyingToken?.address, provider)
 }
 
 export function useHDTContract<T extends Contract>(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  return useContract<T>(poolInfo?.HDT?.address, poolInfo?.HDT?.abi)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  return useContract<T>(poolInfo?.HDT?.address, poolInfo?.HDT?.abi, provider)
 }
 
 export function usePoolNFTContract<T extends Contract>(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  return useContract<T>(poolInfo?.assetAddress, poolInfo?.poolAssetAbi)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  return useContract<T>(
+    poolInfo?.assetAddress,
+    poolInfo?.poolAssetAbi,
+    provider,
+  )
 }
 
 export function usePoolUnderlyingToken(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
 ): Partial<{
   address: string
   symbol: string
   decimals: number
 }> {
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   return poolInfo?.poolUnderlyingToken || {}
 }
 
 export function usePoolUnderlyingTokenBalance(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolUnderlyingTokenContract = usePoolUnderlyingTokenContract(
     poolName,
     poolType,
+    chainId,
+    provider,
   )
   const [balance, setBalance] = useState<BigNumber>(toBigNumber(0))
 
@@ -151,9 +177,10 @@ export function usePoolUnderlyingTokenBalance(
 export function usePoolTotalValue(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
-  const poolContract = usePoolContract(poolName, poolType)
-  const { chainId } = useWeb3React()
+  const poolContract = usePoolContract(poolName, poolType, chainId, provider)
   const [totalValue, setTotalValue] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
 
@@ -173,9 +200,10 @@ export function usePoolTotalValue(
 export function usePoolTotalSupply(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
-  const contract = useHDTContract<HDT>(poolName, poolType)
-  const { chainId } = useWeb3React()
+  const contract = useHDTContract<HDT>(poolName, poolType, chainId, provider)
   const [totalSupply, setTotalSupply] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
 
@@ -195,13 +223,16 @@ export function usePoolTotalSupply(
 export function usePoolBalance(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const poolUnderlyingTokenContract = usePoolUnderlyingTokenContract(
     poolName,
     poolType,
+    chainId,
+    provider,
   )
-  const poolInfo = usePoolInfo(poolName, poolType)
-  const { chainId } = useWeb3React()
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const [balance, setBalance] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
 
@@ -230,14 +261,18 @@ export function usePoolBalance(
 export function useAccountStats(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [AccountStats, () => void] {
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const poolContract = usePoolContract<ReceivableFactoringPool>(
     poolName,
     poolType,
+    chainId,
+    provider,
   )
-  const [poolBalance] = usePoolBalance(poolName, poolType)
+  const [poolBalance] = usePoolBalance(poolName, poolType, chainId, provider)
   const [accountStats, setAccountStats] = useState<AccountStats>({
     creditRecord: undefined,
     creditRecordStatic: undefined,
@@ -311,11 +346,15 @@ export function useAccountStats(
 export function useCreditRecord(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const poolContract = usePoolContract<ReceivableFactoringPool>(
     poolName,
     poolType,
+    chainId,
+    provider,
   )
 
   const checkIsApproved = useCallback(async () => {
@@ -332,9 +371,19 @@ export function useCreditRecord(
   return { checkIsApproved }
 }
 
-export function useFeeManager(poolName: POOL_NAME, poolType: POOL_TYPE) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  const feeManagerContract = usePoolFeeManagerContract(poolName, poolType)
+export function useFeeManager(
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  const feeManagerContract = usePoolFeeManagerContract(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
   const [fees, setFees] = useState<FeesType>()
 
   useEffect(() => {
@@ -377,10 +426,17 @@ export function useFeeManager(poolName: POOL_NAME, poolType: POOL_TYPE) {
 export function usePoolAllowance(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  const contract = usePoolUnderlyingTokenContract(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  const contract = usePoolUnderlyingTokenContract(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
   const [allowance, setAllowance] = useState<BigNumber>(toBigNumber(0))
   const [approved, setApproved] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
@@ -404,10 +460,12 @@ export function usePoolAllowance(
 export function useLenderPosition(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
-  const poolInfo = usePoolInfo(poolName, poolType)
-  const contract = useHDTContract<HDT>(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  const contract = useHDTContract<HDT>(poolName, poolType, chainId, provider)
   const [position, setPosition] = useState<BigNumber>()
   const [refreshCount, refresh] = useForceRefresh()
 
@@ -435,9 +493,16 @@ export function useLenderPosition(
 export function useLenderApproved(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [boolean | undefined, () => void] {
-  const contract = usePoolContract<BaseCreditPool>(poolName, poolType)
+  const contract = usePoolContract<BaseCreditPool>(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
 
@@ -457,8 +522,15 @@ export function useLenderApproved(
 export function useWithdrawlLockoutInSeconds(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const contract = useBaseConfigPoolContract<BasePoolConfig>(poolName, poolType)
+  const contract = useBaseConfigPoolContract<BasePoolConfig>(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
   const [lockoutSeconds, setLockoutSeconds] = useState<number>()
 
   useEffect(() => {
@@ -477,9 +549,16 @@ export function useWithdrawlLockoutInSeconds(
 export function useLastDepositTime(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const contract = usePoolContract<BaseCreditPool>(poolName, poolType)
+  const contract = usePoolContract<BaseCreditPool>(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
   const [lockoutSeconds, setLockoutSeconds] = useState<number>()
 
   useEffect(() => {
@@ -493,4 +572,31 @@ export function useLastDepositTime(
   }, [account, contract])
 
   return lockoutSeconds
+}
+
+export function usePoolApr(
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
+  const contract = useContract<BasePoolConfig>(
+    poolInfo?.basePoolConfig,
+    poolInfo?.basePoolConfigAbi,
+    provider,
+  )
+  const [apr, setApr] = useState<number>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract) {
+        const aprInBps = await contract.poolAprInBps()
+        setApr(aprInBps.toNumber() / 10000)
+      }
+    }
+    fetchData()
+  }, [contract])
+
+  return apr
 }

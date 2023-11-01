@@ -23,10 +23,15 @@ export function ChooseAmount({
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const { symbol, decimals } = poolInfo.poolUnderlyingToken
   const totalDue = downScale<number>(creditRecord.totalDue.toNumber(), decimals)
-  const { allowance } = useRFPoolAllowance(poolInfo.poolName, account)
+  const { allowance } = useRFPoolAllowance(
+    poolInfo.poolName,
+    chainId,
+    account,
+    provider,
+  )
   const [remainingDue, setRemainingDue] = useState(totalDue)
   const [currentAmount, setCurrentAmount] = useState(0)
 

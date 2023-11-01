@@ -3,7 +3,6 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
 
-import { useContractCrossChain } from '../../../src/hooks/useContractCrossChain'
 import {
   useContractValueV2,
   useLenderApprovedV2,
@@ -11,10 +10,11 @@ import {
   usePoolInfoV2,
   usePoolSafeTotalAssetsV2,
 } from '../../../src/v2/hooks/usePool'
+import { useContract } from '../../../src/hooks'
 
-jest.mock('../../../src/hooks/useContractCrossChain', () => ({
-  useContractCrossChain: jest.fn(),
-  useERC20ContractCrossChain: jest.fn(),
+jest.mock('../../../src/hooks/useContract', () => ({
+  useContract: jest.fn(),
+  useERC20Contract: jest.fn(),
 }))
 
 jest.mock('../../../src/v2/utils/pool', () => ({
@@ -127,7 +127,7 @@ describe('useContractValueV2', () => {
 describe('usePoolSafeTotalAssetsV2', () => {
   it('should return the total assets value and refresh function', async () => {
     const chainId = 5
-    ;(useContractCrossChain as jest.Mock).mockReturnValue({
+    ;(useContract as jest.Mock).mockReturnValue({
       totalAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
@@ -152,7 +152,7 @@ describe('useLenderApprovedV2', () => {
   it('should return the senior/junior balances value and refresh function', async () => {
     const chainId = 5
     const account = '0x123'
-    ;(useContractCrossChain as jest.Mock).mockReturnValue({
+    ;(useContract as jest.Mock).mockReturnValue({
       LENDER_ROLE: jest.fn().mockReturnValue('LENDER_ROLE'),
       hasRole: jest
         .fn()
@@ -186,7 +186,7 @@ describe('useLenderPositionV2', () => {
   it('should return the lender position value and refresh function', async () => {
     const chainId = 5
     const account = '0x123'
-    ;(useContractCrossChain as jest.Mock).mockReturnValue({
+    ;(useContract as jest.Mock).mockReturnValue({
       balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
