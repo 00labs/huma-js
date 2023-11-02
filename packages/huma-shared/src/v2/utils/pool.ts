@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import {
   ChainEnum,
   LenderApprovalProvider,
@@ -25,12 +26,14 @@ export type PoolInfoV2 = {
   poolName: POOL_NAME
   poolType: POOL_TYPE
   pool: string
-  poolAbi: unknown
   poolSafe: string
-  poolSafeAbi: unknown
   seniorTrancheVault: string
   juniorTrancheVault: string
+  poolAbi: unknown
+  poolSafeAbi: unknown
+  poolConfigAbi: unknown
   trancheVaultAbi: unknown
+  firstLossCoverAbi: unknown
   poolUnderlyingToken: {
     address: string
     symbol: string
@@ -82,4 +85,31 @@ export const getChainPoolNamesV2 = (
   }
 
   return Object.keys(CHAIN_POOLS_INFO_V2[chainId]) as POOL_NAME[]
+}
+
+export type PoolSafeStatsV2 = {
+  allowance: BigNumber
+}
+
+export type FirstLossCoverInfoV2 = {
+  totalAssets: BigNumber
+}
+
+export type TrancheVaultInfoV2 = {
+  totalAssets: BigNumber
+}
+
+export type TrancheVaultStatsV2 = {
+  lenderApproved: boolean
+  lenderPosition: BigNumber
+}
+
+export type UnderlyingTokenInfoV2 = {
+  address: string
+  symbol: string
+  decimals: number
+}
+
+export type UnderlyingTokenStatsV2 = {
+  balance: BigNumber
 }

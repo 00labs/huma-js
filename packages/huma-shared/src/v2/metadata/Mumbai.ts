@@ -2,7 +2,9 @@ import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import POOL_ABI from '../abis/Pool.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
+import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import { PoolsInfoV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsInfoV2 = {
@@ -13,12 +15,14 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     pool: '0x3E638f5A36C885c68f0F05143cbb617affA29e4e',
     poolAbi: POOL_ABI,
     poolSafeAbi: POOL_SAFE_ABI,
-    seniorTrancheVault: '0x3DC3b427b75672f6738D036F68B3146DAA1CaFc1',
-    juniorTrancheVault: '0xD76d80992B8698D6D8e3ef166c3879a1d8574a90',
+    poolConfigAbi: POOL_CONFIG_ABI,
     trancheVaultAbi: TRANCHE_VAULT_ABI,
-    poolSafe: '0xd05e4bE51758b987b959924D7E8b4Cb728c386Fd',
+    firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
+    seniorTrancheVault: '0x3DC3b427b75672f6738D036F68B3146DAA1CaFc1',
+    juniorTrancheVault: '0xD76d80992B8698D6D8e3ef166c3879a1d8574a90',
+    poolSafe: '0xd05e4bE51758b987b959924D7E8b4Cb728c386Fd',
     poolUnderlyingToken: {
       address: '0xee822415dcE6e3Ca8Ac43499FdA91744bd9Ad16A',
       symbol: 'USDC',
