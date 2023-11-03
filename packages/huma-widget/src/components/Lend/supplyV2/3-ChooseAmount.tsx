@@ -1,6 +1,7 @@
 import {
   PoolInfoV2,
   TrancheType,
+  UnderlyingTokenInfo,
   usePoolSafeAllowanceV2,
 } from '@huma-finance/shared'
 import { Box, css, Input, useTheme } from '@mui/material'
@@ -16,17 +17,18 @@ import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
   poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
 }
 
 export function ChooseAmount({
   poolInfo,
+  poolUnderlyingToken,
   selectedTranche,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const { account, chainId, provider } = useWeb3React()
-  const { poolUnderlyingToken } = poolInfo
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
   const [allowance] = usePoolSafeAllowanceV2(

@@ -10,9 +10,14 @@ import { PoolsInfoV2 } from '../utils'
 export const MUMBAI_METADATA: PoolsInfoV2 = {
   HumaCreditLineV2: {
     chainId: ChainEnum.Mumbai,
+    poolVersion: 'v2',
     poolName: POOL_NAME.HumaCreditLineV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0x3E638f5A36C885c68f0F05143cbb617affA29e4e',
+    poolConfig: '0x9dfB193bf5315cE717b5c1426619C43D4098f0A3',
+    poolSafe: '0xd05e4bE51758b987b959924D7E8b4Cb728c386Fd',
+    seniorTrancheVault: '0x3DC3b427b75672f6738D036F68B3146DAA1CaFc1',
+    juniorTrancheVault: '0xD76d80992B8698D6D8e3ef166c3879a1d8574a90',
     poolAbi: POOL_ABI,
     poolSafeAbi: POOL_SAFE_ABI,
     poolConfigAbi: POOL_CONFIG_ABI,
@@ -20,15 +25,6 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    seniorTrancheVault: '0x3DC3b427b75672f6738D036F68B3146DAA1CaFc1',
-    juniorTrancheVault: '0xD76d80992B8698D6D8e3ef166c3879a1d8574a90',
-    poolSafe: '0xd05e4bE51758b987b959924D7E8b4Cb728c386Fd',
-    poolUnderlyingToken: {
-      address: '0xee822415dcE6e3Ca8Ac43499FdA91744bd9Ad16A',
-      symbol: 'USDC',
-      decimals: 6,
-      icon: 'USDC',
-    },
     title: 'Huma Credit Line V2',
     desc: 'Earn active yield by participating in credit lines backed by on-chain income. Only available to the members of partner DAOs during beta.',
     KYC: {

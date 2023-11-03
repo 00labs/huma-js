@@ -1,10 +1,12 @@
 import { BigNumber } from 'ethers'
+
 import {
   ChainEnum,
+  isChainEnum,
   LenderApprovalProvider,
   POOL_NAME,
   POOL_TYPE,
-  isChainEnum,
+  PoolVersion,
 } from '../../utils'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
@@ -23,9 +25,11 @@ export type KYCCopy = {
 
 export type PoolInfoV2 = {
   chainId: ChainEnum
+  poolVersion: PoolVersion
   poolName: POOL_NAME
   poolType: POOL_TYPE
   pool: string
+  poolConfig: string
   poolSafe: string
   seniorTrancheVault: string
   juniorTrancheVault: string
@@ -34,12 +38,6 @@ export type PoolInfoV2 = {
   poolConfigAbi: unknown
   trancheVaultAbi: unknown
   firstLossCoverAbi: unknown
-  poolUnderlyingToken: {
-    address: string
-    symbol: string
-    decimals: number
-    icon: string
-  }
   seniorAPY: string
   juniorAPY: string
   title: string
@@ -59,6 +57,12 @@ export type PoolInfoV2 = {
     docUnderReview: KYCCopy
   }
   supplyLink?: string
+  poolUnderlyingToken?: {
+    address: string
+    symbol: string
+    decimals: number
+    icon: string
+  }
 }
 
 export type PoolsInfoV2 = {
@@ -87,6 +91,12 @@ export const getChainPoolNamesV2 = (
   return Object.keys(CHAIN_POOLS_INFO_V2[chainId]) as POOL_NAME[]
 }
 
+export type UnderlyingTokenInfo = {
+  address: string
+  symbol: string
+  decimals: number
+}
+
 export type PoolSafeStatsV2 = {
   allowance: BigNumber
 }
@@ -102,12 +112,6 @@ export type TrancheVaultInfoV2 = {
 export type TrancheVaultStatsV2 = {
   lenderApproved: boolean
   lenderPosition: BigNumber
-}
-
-export type UnderlyingTokenInfoV2 = {
-  address: string
-  symbol: string
-  decimals: number
 }
 
 export type UnderlyingTokenStatsV2 = {

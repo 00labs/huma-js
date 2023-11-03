@@ -2,6 +2,7 @@ import {
   openInNewTab,
   PoolInfoV2,
   TrancheType,
+  UnderlyingTokenInfo,
   useLenderApprovedV2,
 } from '@huma-finance/shared'
 import {
@@ -25,19 +26,21 @@ import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
   changeTranche: (tranche: TrancheType) => void
 }
 
 export function ChooseTranche({
   poolInfo,
+  poolUnderlyingToken,
   selectedTranche,
   changeTranche,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
+  const { poolName } = poolInfo
   const dispatch = useAppDispatch()
   const { account, chainId, provider } = useWeb3React()
-  const { poolUnderlyingToken, poolName } = poolInfo
   const [lenderApprovedSenior] = useLenderApprovedV2(
     poolName,
     'senior',

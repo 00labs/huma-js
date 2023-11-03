@@ -9,7 +9,7 @@ import {
   TrancheType,
   TrancheVaultInfoV2,
   TrancheVaultStatsV2,
-  UnderlyingTokenInfoV2,
+  UnderlyingTokenInfo,
   UnderlyingTokenStatsV2,
 } from '.'
 import { isChainEnum, POOL_NAME } from '../../utils'
@@ -45,7 +45,7 @@ export const getPoolContractV2 = (
   return getContract<Pool>(poolInfo.pool, poolInfo.poolAbi, provider)
 }
 
-export const getPoolConfigContractV2 = async (
+export const getPoolConfigContractV2 = (
   poolName: POOL_NAME,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
@@ -54,14 +54,11 @@ export const getPoolConfigContractV2 = async (
   if (!poolInfo) {
     return null
   }
-
-  const poolContract = getPoolContractV2(poolName, chainId, provider)
-  if (!poolContract) {
-    return null
-  }
-
-  const poolConfig = await poolContract.poolConfig()
-  return getContract<PoolConfig>(poolConfig, poolInfo.poolConfigAbi, provider)
+  return getContract<PoolConfig>(
+    poolInfo.poolConfig,
+    poolInfo.poolConfigAbi,
+    provider,
+  )
 }
 
 export const getPoolUnderlyingTokenContractV2 = async (
@@ -69,22 +66,20 @@ export const getPoolUnderlyingTokenContractV2 = async (
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) => {
-  const poolConfigContract = await getPoolConfigContractV2(
+  const poolConfigContract = getPoolConfigContractV2(
     poolName,
     chainId,
     provider,
   )
-  console.log('pool config contract loaded', new Date())
   if (!poolConfigContract) {
     return null
   }
 
   const underlyingToken = await poolConfigContract.underlyingToken()
-  console.log('underlyingToken address loaded', new Date())
   return getERC20Contract(underlyingToken, provider)
 }
 
-export const getPoolSafeContractV2 = async (
+export const getPoolSafeContractV2 = (
   poolName: POOL_NAME,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
@@ -94,16 +89,14 @@ export const getPoolSafeContractV2 = async (
     return null
   }
 
-  const poolContract = getPoolContractV2(poolName, chainId, provider)
-  if (!poolContract) {
-    return null
-  }
-
-  const poolConfig = await poolContract.poolConfig()
-  return getContract<PoolSafe>(poolConfig, poolInfo.poolSafeAbi, provider)
+  return getContract<PoolSafe>(
+    poolInfo.poolSafe,
+    poolInfo.poolSafeAbi,
+    provider,
+  )
 }
 
-export const getTrancheVaultContractV2 = async (
+export const getTrancheVaultContractV2 = (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   chainId: number | undefined,
@@ -114,18 +107,11 @@ export const getTrancheVaultContractV2 = async (
     return null
   }
 
-  const poolConfigContract = await getPoolConfigContractV2(
-    poolName,
-    chainId,
-    provider,
-  )
-  if (!poolConfigContract) {
-    return null
-  }
-
-  const trancheVault = await poolConfigContract[`${trancheType}Tranche`]()
+  const trancheVault = `${trancheType}TrancheVault` as
+    | 'seniorTrancheVault'
+    | 'juniorTrancheVault'
   return getContract<TrancheVault>(
-    trancheVault,
+    poolInfo[trancheVault],
     poolInfo.trancheVaultAbi,
     provider,
   )
@@ -141,7 +127,7 @@ export const getFirstLossCoverContractV2 = async (
   if (!poolInfo) {
     return null
   }
-  const poolConfigContract = await getPoolConfigContractV2(
+  const poolConfigContract = getPoolConfigContractV2(
     poolName,
     chainId,
     provider,
@@ -164,48 +150,20 @@ export const getPoolUnderlyingTokenInfoV2 = async (
   poolName: POOL_NAME,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<UnderlyingTokenInfoV2 | null> => {
-  const underlyingTokenContract = await getPoolUnderlyingTokenContractV2(
-    poolName,
-    chainId,
-    provider,
-  )
-  console.log('underlyingToken contract loaded', new Date())
-  if (!underlyingTokenContract) {
-    return null
-  }
-
-  const symbol = await underlyingTokenContract.symbol()
-  console.log('underlyingToken symbol loaded', new Date())
-  const decimals = await underlyingTokenContract.decimals()
-  console.log('underlyingToken decimals loaded', new Date())
-  return {
-    address: underlyingTokenContract.address,
-    symbol,
-    decimals,
-  }
-}
-
-export const getPoolUnderlyingTokeStatsV2 = async (
-  poolName: POOL_NAME,
-  chainId: number | undefined,
-  account: string | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<UnderlyingTokenInfoV2 | null> => {
-  if (!account) {
-    return null
-  }
+): Promise<UnderlyingTokenInfo | undefined> => {
   const underlyingTokenContract = await getPoolUnderlyingTokenContractV2(
     poolName,
     chainId,
     provider,
   )
   if (!underlyingTokenContract) {
-    return null
+    return undefined
   }
 
-  const symbol = await underlyingTokenContract.symbol()
-  const decimals = await underlyingTokenContract.decimals()
+  const [symbol, decimals] = await Promise.all([
+    underlyingTokenContract.symbol(),
+    underlyingTokenContract.decimals(),
+  ])
   return {
     address: underlyingTokenContract.address,
     symbol,
@@ -217,18 +175,18 @@ export const getFirstLossCoverInfoV2 = async (
   poolName: POOL_NAME,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<FirstLossCoverInfoV2 | null> => {
+): Promise<FirstLossCoverInfoV2 | undefined> => {
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
-    return null
+    return undefined
   }
-  const poolConfigContract = await getPoolConfigContractV2(
+  const poolConfigContract = getPoolConfigContractV2(
     poolName,
     chainId,
     provider,
   )
   if (!poolConfigContract) {
-    return null
+    return undefined
   }
   const firstLossCovers = await poolConfigContract.getFirstLossCovers()
   const firstLossCoverContracts = firstLossCovers
@@ -262,15 +220,15 @@ export const getTrancheVaultInfoV2 = async (
   trancheType: TrancheType,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<TrancheVaultInfoV2 | null> => {
-  const trancheVaultContract = await getTrancheVaultContractV2(
+): Promise<TrancheVaultInfoV2 | undefined> => {
+  const trancheVaultContract = getTrancheVaultContractV2(
     poolName,
     trancheType,
     chainId,
     provider,
   )
   if (!trancheVaultContract) {
-    return null
+    return undefined
   }
 
   const totalAssets = await trancheVaultContract.totalAssets()
@@ -284,18 +242,18 @@ export const getTrancheVaultStatsV2 = async (
   chainId: number | undefined,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<TrancheVaultStatsV2 | null> => {
+): Promise<TrancheVaultStatsV2 | undefined> => {
   if (!account) {
-    return null
+    return undefined
   }
-  const trancheVaultContract = await getTrancheVaultContractV2(
+  const trancheVaultContract = getTrancheVaultContractV2(
     poolName,
     trancheType,
     chainId,
     provider,
   )
   if (!trancheVaultContract) {
-    return null
+    return undefined
   }
 
   const lenderApproved = await trancheVaultContract.hasRole(
@@ -312,13 +270,13 @@ export const getPoolSafeStatsV2 = async (
   chainId: number | undefined,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<UnderlyingTokenStatsV2 | null> => {
+): Promise<UnderlyingTokenStatsV2 | undefined> => {
   if (!account) {
-    return null
+    return undefined
   }
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
-    return null
+    return undefined
   }
   const underLyingTokenContract = await getPoolUnderlyingTokenContractV2(
     poolName,
@@ -326,7 +284,7 @@ export const getPoolSafeStatsV2 = async (
     provider,
   )
   if (!underLyingTokenContract) {
-    return null
+    return undefined
   }
 
   const balance = await underLyingTokenContract.balanceOf(account)

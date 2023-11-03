@@ -72,15 +72,6 @@ function usePoolConfigContractV2(
   return useContract<PoolConfig>(poolConfig, POOL_CONFIG_V2_ABI, provider)
 }
 
-export function usePoolUnderlyingTokenContractV2(
-  poolName: POOL_NAME,
-  chainId: number | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) {
-  const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useERC20Contract(poolInfo?.poolUnderlyingToken.address, provider)
-}
-
 export function useTrancheVaultContractV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
@@ -277,6 +268,33 @@ export function useLenderPositionV2(
   )
 
   return [balance, refresh]
+}
+
+export function usePoolUnderlyingTokenContractV2(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const poolConfig = usePoolConfigContractV2(poolName, chainId, provider)
+  const [poolUnderlyingToken, setPoolUnderlyingToken] = useState<
+    string | undefined
+  >()
+
+  useEffect(() => {
+    if (poolConfig) {
+      const fetchData = async () => {
+        try {
+          setPoolUnderlyingToken(await poolConfig.underlyingToken())
+        } catch (err) {
+          setPoolUnderlyingToken(undefined)
+        }
+      }
+
+      fetchData()
+    }
+  }, [poolConfig])
+
+  return useERC20Contract(poolUnderlyingToken, provider)
 }
 
 export function usePoolSafeAllowanceV2(

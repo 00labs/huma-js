@@ -5,6 +5,7 @@ import {
   PoolInfoV2,
   sendTxAtom,
   TRANSFER_ABI,
+  UnderlyingTokenInfo,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
@@ -21,13 +22,17 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 
 type Props = {
   poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
   handleAction: () => void
 }
 
-export function Success({ poolInfo, handleAction }: Props): React.ReactElement {
+export function Success({
+  poolInfo,
+  poolUnderlyingToken,
+  handleAction,
+}: Props): React.ReactElement {
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const { poolUnderlyingToken } = poolInfo
   const [{ txReceipt }] = useAtom(sendTxAtom)
   const { symbol, decimals, address } = poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
