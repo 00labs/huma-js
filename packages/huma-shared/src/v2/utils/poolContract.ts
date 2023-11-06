@@ -4,10 +4,8 @@ import { BigNumber } from 'ethers'
 import {
   CHAIN_POOLS_INFO_V2,
   FirstLossCoverIndex,
-  FirstLossCoverInfoV2,
   PoolInfoV2,
   TrancheType,
-  TrancheVaultInfoV2,
   TrancheVaultStatsV2,
   UnderlyingTokenInfo,
   UnderlyingTokenStatsV2,
@@ -171,11 +169,11 @@ export const getPoolUnderlyingTokenInfoV2 = async (
   }
 }
 
-export const getFirstLossCoverInfoV2 = async (
+export const getFirstLossCoverAssetsV2 = async (
   poolName: POOL_NAME,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<FirstLossCoverInfoV2 | undefined> => {
+): Promise<BigNumber | undefined> => {
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return undefined
@@ -196,31 +194,24 @@ export const getFirstLossCoverInfoV2 = async (
     )
     .flatMap((item) => (item ? [item] : []))
 
-  const getFirstLossCoverInfo = async (contract: FirstLossCover) => {
-    const totalAssets = await contract.totalAssets()
-    return {
-      totalAssets,
-    }
-  }
-
-  const firstLossCoverInfo = await Promise.all(
-    firstLossCoverContracts.map((contract) => getFirstLossCoverInfo(contract)),
+  const firstLossCoverAssets = await Promise.all(
+    firstLossCoverContracts.map((contract) => contract.totalAssets()),
   )
 
   let totalAssets = BigNumber.from(0)
-  firstLossCoverInfo.forEach((item) => {
-    totalAssets = totalAssets.add(item.totalAssets)
+  firstLossCoverAssets.forEach((assets) => {
+    totalAssets = totalAssets.add(assets)
   })
 
-  return { totalAssets }
+  return totalAssets
 }
 
-export const getTrancheVaultInfoV2 = async (
+export const getTrancheVaultAssetsV2 = async (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<TrancheVaultInfoV2 | undefined> => {
+): Promise<BigNumber | undefined> => {
   const trancheVaultContract = getTrancheVaultContractV2(
     poolName,
     trancheType,
@@ -231,9 +222,7 @@ export const getTrancheVaultInfoV2 = async (
     return undefined
   }
 
-  const totalAssets = await trancheVaultContract.totalAssets()
-
-  return { totalAssets }
+  return trancheVaultContract.totalAssets()
 }
 
 export const getTrancheVaultStatsV2 = async (
