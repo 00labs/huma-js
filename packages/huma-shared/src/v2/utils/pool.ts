@@ -7,11 +7,17 @@ import {
 } from '../../utils'
 import { MUMBAI_METADATA } from '../metadata/Mumbai'
 
-export type VaultType = 'senior' | 'junior'
+export type TrancheType = 'senior' | 'junior'
 
 export enum FirstLossCoverIndex {
   borrower = 0,
   affiliate = 1,
+}
+
+export type KYCCopy = {
+  title: string
+  description: string
+  buttonText?: string
 }
 
 export type PoolInfoV2 = {
@@ -41,6 +47,15 @@ export type PoolInfoV2 = {
     | 'Remittance Financing'
     | 'Green Financing'
     | 'Invoice Factoring'
+  KYC?: {
+    provider: 'Securitize'
+    signInRequired: KYCCopy
+    verifyIdentity: KYCCopy
+    emailSignatureLink: KYCCopy
+    resendSignatureLink: KYCCopy
+    docUnderReview: KYCCopy
+  }
+  supplyLink?: string
 }
 
 export type PoolsInfoV2 = {

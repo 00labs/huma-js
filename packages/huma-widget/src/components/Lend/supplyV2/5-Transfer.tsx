@@ -1,7 +1,7 @@
 import {
   PoolInfoV2,
   useTrancheVaultContractV2,
-  VaultType,
+  TrancheType,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -15,15 +15,15 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 
 type Props = {
   poolInfo: PoolInfoV2
-  vaultType: VaultType
+  trancheType: TrancheType
 }
 
 export function Transfer({
   poolInfo,
-  vaultType,
+  trancheType,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { chainId, account } = useWeb3React()
+  const { chainId, account, provider } = useWeb3React()
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.poolUnderlyingToken
   const supplyBigNumber = ethers.utils.parseUnits(
@@ -32,9 +32,10 @@ export function Transfer({
   )
   const trancheVaultContract = useTrancheVaultContractV2(
     poolInfo.poolName,
-    vaultType,
+    trancheType,
     chainId,
-    {},
+    provider,
+    account,
   )
 
   const handleSuccess = useCallback(() => {

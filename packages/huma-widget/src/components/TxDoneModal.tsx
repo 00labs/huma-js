@@ -78,7 +78,7 @@ export function TxDoneModal({
         css={styles.doneButton}
         onClick={handleCloseModal}
       >
-        {buttonText == null ? 'DONE' : buttonText}
+        {!buttonText ? 'DONE' : buttonText}
       </Button>
     </Box>
   )

@@ -4,6 +4,7 @@ import {
   configUtil,
   DocSignatureStatus,
   IdentityService,
+  KYCCopy,
   PoolInfoV2,
   timeUtil,
   useAuthErrorHandling,
@@ -21,44 +22,6 @@ import { HumaSnackBar } from '../../HumaSnackBar'
 import { ApproveLenderImg } from '../../images'
 import { LoadingModal } from '../../LoadingModal'
 import { WrapperModal } from '../../WrapperModal'
-
-const KYCProvider = 'Securitize'
-
-type KYCCopy = {
-  title: string
-  description: string
-  buttonText?: string
-}
-
-// TODO: Add copies for the other pools. Currently only the Jia pool is using the KYC process.
-const JiaPoolCopies = {
-  signInRequired: {
-    title: 'Sign In',
-    description:
-      'Please sign in to verify that you are the owner of the wallet.',
-  },
-  verifyIdentity: {
-    title: 'Verify Identity',
-    description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYCProvider}.`,
-    buttonText: 'VERIFY MY IDENTITY',
-  },
-  emailSignatureLink: {
-    title: 'Pool Documents',
-    description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
-    buttonText: 'EMAIL DOCUSIGN LINK',
-  },
-  resendSignatureLink: {
-    title: 'Resend Documents',
-    description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
-    buttonText: 'RESEND DOCUSIGN LINK',
-  },
-  docUnderReview: {
-    title: 'Under Review',
-    description:
-      'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
-    buttonText: 'THANK YOU',
-  },
-}
 
 const LoadingCopiesByType: {
   [key: string]: {
@@ -92,7 +55,8 @@ export function Evaluation({
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()
-  const [kycCopy, setKYCCopy] = useState<KYCCopy>(JiaPoolCopies.verifyIdentity)
+  const KYCCopies = poolInfo.KYC!
+  const [kycCopy, setKYCCopy] = useState<KYCCopy>(KYCCopies.verifyIdentity)
   const [KYCVerifyStatus, setKYCVerifyStatus] =
     useState<VerificationStatusResult>()
   const [docSignatureStatus, setDocSignatureStatus] =
@@ -148,7 +112,7 @@ export function Evaluation({
     const docuSignStatus = localStorage.getItem(envelopeDocuSignStatusKey)
     setDocSignatureStatus(docuSignStatus as DocSignatureStatus['status'])
     if (docuSignStatus === 'completed') {
-      setKYCCopy(JiaPoolCopies.docUnderReview)
+      setKYCCopy(KYCCopies.docUnderReview)
       return
     }
 
@@ -167,7 +131,7 @@ export function Evaluation({
       } catch (e) {
         try {
           setAuthError(e)
-          setKYCCopy(JiaPoolCopies.signInRequired)
+          setKYCCopy(KYCCopies.signInRequired)
         } catch (e) {
           // The repeated call will throw an error of 401, so we can ignore it.
           console.log(e)
@@ -188,9 +152,9 @@ export function Evaluation({
           if (verificationStatus.isVerified) {
             const envelopeId = localStorage.getItem(envelopeKey)
             if (!envelopeId) {
-              setKYCCopy(JiaPoolCopies.emailSignatureLink)
+              setKYCCopy(KYCCopies.emailSignatureLink)
             } else if (!checkGetDocSignatureStatusIsAvailable()) {
-              setKYCCopy(JiaPoolCopies.resendSignatureLink)
+              setKYCCopy(KYCCopies.resendSignatureLink)
             } else {
               const { status } = await IdentityService.getDocSignatureStatus(
                 envelopeId,
@@ -204,14 +168,14 @@ export function Evaluation({
               localStorage.setItem(envelopeDocuSignStatusKey, status)
               setDocSignatureStatus(status)
               if (status === 'completed') {
-                setKYCCopy(JiaPoolCopies.docUnderReview)
+                setKYCCopy(KYCCopies.docUnderReview)
                 // For voided and declined status, we need to send a new link
               } else if (['voided', 'declined'].includes(status)) {
                 localStorage.removeItem(envelopeKey)
                 localStorage.removeItem(envelopeLastQueryTimeKey)
-                setKYCCopy(JiaPoolCopies.emailSignatureLink)
+                setKYCCopy(KYCCopies.emailSignatureLink)
               } else {
-                setKYCCopy(JiaPoolCopies.resendSignatureLink)
+                setKYCCopy(KYCCopies.resendSignatureLink)
               }
             }
           }
@@ -219,7 +183,7 @@ export function Evaluation({
       } catch (e: unknown) {
         try {
           setAuthError(e)
-          setKYCCopy(JiaPoolCopies.signInRequired)
+          setKYCCopy(KYCCopies.signInRequired)
         } catch (e) {
           console.error(e)
           dispatch(
@@ -234,6 +198,10 @@ export function Evaluation({
     }
     fetchData()
   }, [
+    KYCCopies.docUnderReview,
+    KYCCopies.emailSignatureLink,
+    KYCCopies.resendSignatureLink,
+    KYCCopies.signInRequired,
     account,
     chainId,
     checkGetDocSignatureStatusIsAvailable,
@@ -262,9 +230,14 @@ export function Evaluation({
       const issuerId = CHAINS[chainId!].isTestnet
         ? '53a66b32-583e-40e7-ba90-baf516d2cadd'
         : '5557baf5-d3c2-4c80-b522-c05a11c6e586'
-      const baseUrl = configUtil.getKYCProviderBaseUrl(KYCProvider, chainId!)
+      const baseUrl = configUtil.getKYCProviderBaseUrl(
+        poolInfo.KYC!.provider,
+        chainId!,
+      )
       const originUrl = window.location.href.split('?')[0]
-      const redirectUrl = `${originUrl}?poolName=${poolInfo.poolName}&kycProvider=${KYCProvider}&kycPool=${poolInfo.pool}`
+      const redirectUrl = `${originUrl}?poolName=${
+        poolInfo.poolName
+      }&kycProvider=${poolInfo.KYC!.provider}&kycPool=${poolInfo.pool}`
       const providerAuthorizeUrl = `${baseUrl}/#/authorize?issuerId=${issuerId}&scope=details&details=verification&redirectUrl=${redirectUrl}`
       window.location.href = isNotOnboarded ? providerAuthorizeUrl : baseUrl
     } else {
@@ -283,7 +256,7 @@ export function Evaluation({
             String(timeUtil.getUnixTimestamp()),
           )
           setOpenSnackBar(true)
-          setKYCCopy(JiaPoolCopies.resendSignatureLink)
+          setKYCCopy(KYCCopies.resendSignatureLink)
         } else {
           await IdentityService.resendDocSignatureLink(
             envelopeId,
@@ -305,10 +278,10 @@ export function Evaluation({
             String(timeUtil.getUnixTimestamp()),
           )
           setOpenSnackBar(true)
-          setKYCCopy(JiaPoolCopies.resendSignatureLink)
+          setKYCCopy(KYCCopies.resendSignatureLink)
         } catch (e) {
           setAuthError(e)
-          setKYCCopy(JiaPoolCopies.signInRequired)
+          setKYCCopy(KYCCopies.signInRequired)
         }
       } finally {
         setLoadingType(undefined)

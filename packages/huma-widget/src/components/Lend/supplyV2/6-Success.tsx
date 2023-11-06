@@ -8,26 +8,32 @@ import {
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
+import {
+  useDoesChainSupportNotifi,
+  useIsFirstTimeNotifiUser,
+} from '../../../hooks/useNotifi'
 import { TxDoneModal } from '../../TxDoneModal'
+import { setStep } from '../../../store/widgets.reducers'
+import { WIDGET_STEP } from '../../../store/widgets.store'
 
 type Props = {
   poolInfo: PoolInfoV2
   handleAction: () => void
-  hasNextStep: boolean
 }
 
-export function Success({
-  poolInfo,
-  handleAction,
-  hasNextStep,
-}: Props): React.ReactElement {
-  const { account } = useWeb3React()
+export function Success({ poolInfo, handleAction }: Props): React.ReactElement {
+  const dispatch = useDispatch()
+  const { account, chainId } = useWeb3React()
   const { poolUnderlyingToken } = poolInfo
   const [{ txReceipt }] = useAtom(sendTxAtom)
   const { symbol, decimals, address } = poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
+  const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const hasNextStep = isFirstTimeNotifiUser
 
   useEffect(() => {
     if (txReceipt) {
@@ -46,13 +52,21 @@ export function Success({
     }
   }, [account, address, decimals, poolInfo.poolSafe, txReceipt])
 
+  const setupNotificationsOrClose = useCallback(() => {
+    if (isFirstTimeNotifiUser && notifiChainSupported) {
+      dispatch(setStep(WIDGET_STEP.Notifications))
+    } else {
+      handleAction()
+    }
+  }, [dispatch, handleAction, isFirstTimeNotifiUser, notifiChainSupported])
+
   const content = [
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,
   ]
 
   return (
     <TxDoneModal
-      handleAction={handleAction}
+      handleAction={setupNotificationsOrClose}
       content={content}
       buttonText={hasNextStep ? "WHAT'S NEXT" : undefined}
     />

@@ -40,7 +40,7 @@ export function StreamFactoringBorrow({
 }: StreamFactoringBorrowProps): React.ReactElement | null {
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
 
   useEffect(() => {

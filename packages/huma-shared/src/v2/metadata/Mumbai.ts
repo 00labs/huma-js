@@ -27,5 +27,35 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     },
     title: 'Huma Credit Line V2',
     desc: 'Earn active yield by participating in credit lines backed by on-chain income. Only available to the members of partner DAOs during beta.',
+    KYC: {
+      provider: 'Securitize',
+      signInRequired: {
+        title: 'Sign In',
+        description:
+          'Please sign in to verify that you are the owner of the wallet.',
+      },
+      verifyIdentity: {
+        title: 'Verify Identity',
+        description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via Securitize.`,
+        buttonText: 'VERIFY MY IDENTITY',
+      },
+      emailSignatureLink: {
+        title: 'Pool Documents',
+        description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
+        buttonText: 'EMAIL DOCUSIGN LINK',
+      },
+      resendSignatureLink: {
+        title: 'Resend Documents',
+        description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
+        buttonText: 'RESEND DOCUSIGN LINK',
+      },
+      docUnderReview: {
+        title: 'Under Review',
+        description:
+          'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
+        buttonText: 'THANK YOU',
+      },
+    },
+    supplyLink: 'https://app.huma.finance',
   },
 }

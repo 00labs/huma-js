@@ -15,12 +15,14 @@ export function useFactoring<T>(
   getPaidSuccessCallback?: () => void,
 ) {
   const theme = useTheme()
-  const { account } = useWeb3React()
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const { account, chainId, provider } = useWeb3React()
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const [accountStats, refreshReceivableStats] = useAccountStats(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
   const { creditRecord, receivableInfo } = accountStats
   const accountHasActiveLoan = hasRFActiveLoan(creditRecord, receivableInfo)

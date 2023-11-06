@@ -7,6 +7,7 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useState } from 'react'
 
+import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setBorrowInfo, setStream } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -23,8 +24,14 @@ export function ChooseAmount({
   currentFlowRate,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
+  const { chainId, provider } = useWeb3React()
   const { approval } = useAppSelector(selectWidgetState)
-  const { getFeesCharged } = useFeeManager(poolInfo.poolName, poolInfo.poolType)
+  const { getFeesCharged } = useFeeManager(
+    poolInfo.poolName,
+    poolInfo.poolType,
+    chainId,
+    provider,
+  )
   const [chargedFees, setChargedFees] = useState(0)
   const [currentAmount, setCurrentAmount] = useState(0)
   const borrowPeriodInSeconds = approval!.terms.intervalInDays * 24 * 60 * 60
