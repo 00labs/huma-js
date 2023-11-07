@@ -3,22 +3,13 @@ import { BigNumber } from 'ethers'
 
 import {
   CHAIN_POOLS_INFO_V2,
-  FirstLossCoverIndex,
   PoolInfoV2,
   TrancheType,
-  TrancheVaultStatsV2,
   UnderlyingTokenInfo,
-  UnderlyingTokenStatsV2,
 } from '.'
 import { isChainEnum, POOL_NAME } from '../../utils'
 import { getContract, getERC20Contract } from '../../utils/web3'
-import {
-  FirstLossCover,
-  Pool,
-  PoolConfig,
-  PoolSafe,
-  TrancheVault,
-} from '../abis/types'
+import { FirstLossCover, PoolConfig, TrancheVault } from '../abis/types'
 
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
@@ -28,19 +19,6 @@ export const getPoolInfoV2 = (
     return CHAIN_POOLS_INFO_V2[chainId][poolName]
   }
   return null
-}
-
-export const getPoolContractV2 = (
-  poolName: POOL_NAME,
-  chainId: number | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
-  const poolInfo = getPoolInfoV2(poolName, chainId)
-  if (!poolInfo) {
-    return null
-  }
-
-  return getContract<Pool>(poolInfo.pool, poolInfo.poolAbi, provider)
 }
 
 export const getPoolConfigContractV2 = (
@@ -77,23 +55,6 @@ export const getPoolUnderlyingTokenContractV2 = async (
   return getERC20Contract(underlyingToken, provider)
 }
 
-export const getPoolSafeContractV2 = (
-  poolName: POOL_NAME,
-  chainId: number | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
-  const poolInfo = getPoolInfoV2(poolName, chainId)
-  if (!poolInfo) {
-    return null
-  }
-
-  return getContract<PoolSafe>(
-    poolInfo.poolSafe,
-    poolInfo.poolSafeAbi,
-    provider,
-  )
-}
-
 export const getTrancheVaultContractV2 = (
   poolName: POOL_NAME,
   trancheType: TrancheType,
@@ -111,35 +72,6 @@ export const getTrancheVaultContractV2 = (
   return getContract<TrancheVault>(
     poolInfo[trancheVault],
     poolInfo.trancheVaultAbi,
-    provider,
-  )
-}
-
-export const getFirstLossCoverContractV2 = async (
-  poolName: POOL_NAME,
-  firstLossCoverType: FirstLossCoverIndex,
-  chainId: number | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
-  const poolInfo = getPoolInfoV2(poolName, chainId)
-  if (!poolInfo) {
-    return null
-  }
-  const poolConfigContract = getPoolConfigContractV2(
-    poolName,
-    chainId,
-    provider,
-  )
-  if (!poolConfigContract) {
-    return null
-  }
-
-  const trancheVault = await poolConfigContract.getFirstLossCover(
-    firstLossCoverType,
-  )
-  return getContract<FirstLossCover>(
-    trancheVault,
-    poolInfo.firstLossCoverAbi,
     provider,
   )
 }
@@ -223,60 +155,4 @@ export const getTrancheVaultAssetsV2 = async (
   }
 
   return trancheVaultContract.totalAssets()
-}
-
-export const getTrancheVaultStatsV2 = async (
-  poolName: POOL_NAME,
-  trancheType: TrancheType,
-  chainId: number | undefined,
-  account: string | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<TrancheVaultStatsV2 | undefined> => {
-  if (!account) {
-    return undefined
-  }
-  const trancheVaultContract = getTrancheVaultContractV2(
-    poolName,
-    trancheType,
-    chainId,
-    provider,
-  )
-  if (!trancheVaultContract) {
-    return undefined
-  }
-
-  const lenderApproved = await trancheVaultContract.hasRole(
-    trancheVaultContract.LENDER_ROLE(),
-    account,
-  )
-  const lenderPosition = await trancheVaultContract.balanceOf(account)
-
-  return { lenderApproved, lenderPosition }
-}
-
-export const getPoolSafeStatsV2 = async (
-  poolName: POOL_NAME,
-  chainId: number | undefined,
-  account: string | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<UnderlyingTokenStatsV2 | undefined> => {
-  if (!account) {
-    return undefined
-  }
-  const poolInfo = getPoolInfoV2(poolName, chainId)
-  if (!poolInfo) {
-    return undefined
-  }
-  const underLyingTokenContract = await getPoolUnderlyingTokenContractV2(
-    poolName,
-    chainId,
-    provider,
-  )
-  if (!underLyingTokenContract) {
-    return undefined
-  }
-
-  const balance = await underLyingTokenContract.balanceOf(account)
-
-  return { balance }
 }
