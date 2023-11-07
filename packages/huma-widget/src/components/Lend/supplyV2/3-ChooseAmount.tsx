@@ -28,13 +28,12 @@ export function ChooseAmount({
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
-  const { account, chainId, provider } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
   const [allowance] = usePoolSafeAllowanceV2(
     poolInfo.poolName,
     account,
-    chainId,
     provider,
   )
   const [inputTouched, setInputTouched] = useState(false)
