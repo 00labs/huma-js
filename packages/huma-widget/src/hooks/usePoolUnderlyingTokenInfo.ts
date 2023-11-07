@@ -20,7 +20,6 @@ export const usePoolUnderlyingTokenInfo = (
       const fetchUnderlyingTokenInfo = async () => {
         const underlyingTokenInfo = await getPoolUnderlyingTokenInfoV2(
           poolName,
-          chainId,
           provider,
         )
         setPoolUnderlyingToken(underlyingTokenInfo)
