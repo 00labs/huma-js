@@ -3,7 +3,7 @@ import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
-import { isChainEnum, POOL_NAME } from '../../utils'
+import { ChainEnum, isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import {
@@ -22,7 +22,7 @@ import {
 
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,
-  chainId: number | undefined,
+  chainId: ChainEnum | undefined,
 ): PoolInfoV2 | undefined => {
   if (isChainEnum(chainId)) {
     return CHAIN_POOLS_INFO_V2[chainId]?.[poolName]
@@ -32,9 +32,9 @@ export const usePoolInfoV2 = (
 
 function usePoolSafeContractV2(
   poolName: POOL_NAME,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
+  const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   return useContract<PoolSafe>(
     poolInfo?.poolSafe,
@@ -45,10 +45,10 @@ function usePoolSafeContractV2(
 
 function usePoolConfigContractV2(
   poolName: POOL_NAME,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   const [poolConfig, setPoolConfig] = useState<string | undefined>()
+  const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const poolContract = useContract<Pool>(
     poolInfo?.pool,
@@ -71,22 +71,13 @@ function usePoolConfigContractV2(
   return useContract<PoolConfig>(poolConfig, POOL_CONFIG_V2_ABI, provider)
 }
 
-export function usePoolUnderlyingTokenContractV2(
-  poolName: POOL_NAME,
-  chainId: number | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) {
-  const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useERC20Contract(poolInfo?.poolUnderlyingToken.address, provider)
-}
-
 export function useTrancheVaultContractV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
   account?: string,
 ) {
+  const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const contractAddr = poolInfo?.[`${trancheType}TrancheVault`]
   return useContract<TrancheVault>(
@@ -100,10 +91,9 @@ export function useTrancheVaultContractV2(
 export function useFirstLossCoverContractV2(
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
-  const poolConfig = usePoolConfigContractV2(poolName, chainId, provider)
+  const poolConfig = usePoolConfigContractV2(poolName, provider)
   const [firstLossCover, setFirstLossCover] = useState<string | undefined>()
 
   useEffect(() => {
@@ -164,19 +154,16 @@ export function useContractValueV2<T = BigNumber>(
 
 export function useFirstLossCoverTotalAssetsV2(
   poolName: POOL_NAME,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const flcBorrowerContract = useFirstLossCoverContractV2(
     poolName,
     FirstLossCoverIndex.borrower,
-    chainId,
     provider,
   )
   const flcAffiliateContract = useFirstLossCoverContractV2(
     poolName,
     FirstLossCoverIndex.affiliate,
-    chainId,
     provider,
   )
   const [assets, setAssets] = useState<BigNumber>()
@@ -197,10 +184,9 @@ export function useFirstLossCoverTotalAssetsV2(
 
 export function usePoolSafeTotalAssetsV2(
   poolName: POOL_NAME,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
-  const poolSafeContract = usePoolSafeContractV2(poolName, chainId, provider)
+  const poolSafeContract = usePoolSafeContractV2(poolName, provider)
   const [value, refresh] = useContractValueV2(poolSafeContract, 'totalAssets')
   return [value, refresh]
 }
@@ -208,13 +194,11 @@ export function usePoolSafeTotalAssetsV2(
 export function useTrancheVaultAssetsV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const trancheVaultContract = useTrancheVaultContractV2(
     poolName,
     trancheType,
-    chainId,
     provider,
   )
   const [value, refresh] = useContractValueV2(
@@ -228,7 +212,6 @@ export function useLenderApprovedV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
   account: string | undefined,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [Boolean | undefined, () => void] {
   const [approved, setApproved] = useState<boolean>()
@@ -236,7 +219,6 @@ export function useLenderApprovedV2(
   const vaultContract = useTrancheVaultContractV2(
     poolName,
     trancheType,
-    chainId,
     provider,
   )
 
@@ -260,13 +242,11 @@ export function useLenderPositionV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
   account: string | undefined,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
   const vaultContract = useTrancheVaultContractV2(
     poolName,
     trancheType,
-    chainId,
     provider,
   )
   const [balance, refresh] = useContractValueV2(
@@ -278,15 +258,41 @@ export function useLenderPositionV2(
   return [balance, refresh]
 }
 
+export function usePoolUnderlyingTokenContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const poolConfig = usePoolConfigContractV2(poolName, provider)
+  const [poolUnderlyingToken, setPoolUnderlyingToken] = useState<
+    string | undefined
+  >()
+
+  useEffect(() => {
+    if (poolConfig) {
+      const fetchData = async () => {
+        try {
+          setPoolUnderlyingToken(await poolConfig.underlyingToken())
+        } catch (err) {
+          setPoolUnderlyingToken(undefined)
+        }
+      }
+
+      fetchData()
+    }
+  }, [poolConfig])
+
+  return useERC20Contract(poolUnderlyingToken, provider)
+}
+
 export function usePoolSafeAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber, () => void] {
+  const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const spender = poolInfo?.poolSafe
-  const contract = usePoolUnderlyingTokenContractV2(poolName, chainId, provider)
+  const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
   const [allowance = BigNumber.from(0), refresh] = useContractValueV2(
     contract,
     'allowance',
@@ -299,10 +305,9 @@ export function usePoolSafeAllowanceV2(
 export function usePoolUnderlyingTokenBalanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber, () => void] {
-  const contract = usePoolUnderlyingTokenContractV2(poolName, chainId, provider)
+  const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
   const [balance = BigNumber.from(0), refresh] = useContractValueV2(
     contract,
     'balanceOf',

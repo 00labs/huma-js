@@ -1,7 +1,11 @@
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
+import {
+  JsonRpcProvider,
+  JsonRpcSigner,
+  Web3Provider,
+} from '@ethersproject/providers'
 
 import ERC20_ABI from '../abis/erc20.json'
 import { Erc20 } from '../abis/types'
@@ -36,11 +40,11 @@ export function getContract<T = Contract>(
   address: string | undefined,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ABI: any,
-  provider: JsonRpcProvider,
+  provider: JsonRpcProvider | Web3Provider | undefined,
   account?: string,
-): T {
-  if (!isAddress(address) || address === AddressZero) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+): T | null {
+  if (!isAddress(address) || address === AddressZero || !ABI || !provider) {
+    return null
   }
 
   return new Contract(
@@ -53,7 +57,7 @@ export function getContract<T = Contract>(
 
 export function getERC20Contract(
   address: string | undefined,
-  provider: JsonRpcProvider,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
   return getContract<Erc20>(address, ERC20_ABI, provider)
 }

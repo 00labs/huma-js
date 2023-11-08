@@ -1,4 +1,5 @@
 import type { AddEthereumChainParameter } from '@web3-react/types'
+import { ethers } from 'ethers'
 
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Ether',
@@ -192,4 +193,22 @@ export function getExplorerUrl(
   }
 
   return `${chain.explorer}/${type}/${hash}`
+}
+
+/**
+ * Get the chain ID from a signer or provider object.
+ * @param {ethers.provider.Provider | ethers.Signer | undefined} signerOrProvider - The signer or provider object to get the chain ID from.
+ * @returns {number} - The chain ID.
+ */
+export async function getChainIdFromSignerOrProvider(
+  signerOrProvider: ethers.providers.Provider | ethers.Signer | undefined,
+): Promise<number | undefined> {
+  let network
+  if (signerOrProvider instanceof ethers.providers.Provider) {
+    network = await signerOrProvider.getNetwork()
+  } else {
+    network = await signerOrProvider?.provider?.getNetwork()
+  }
+
+  return network?.chainId
 }
