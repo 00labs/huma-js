@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
 
 import { getContract, getERC20Contract } from '../../../src/utils'
@@ -23,6 +22,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
     5: {
       HumaCreditLineV2: {
         pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
+        poolConfig: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
         seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
         juniorTrancheVault: '0x1f10865eF0181D8a7e3d31EcDECA7c615954EfEE',
         estAPY: '10-20%',
@@ -64,26 +64,22 @@ describe('getPoolInfoV2', () => {
 })
 
 describe('getPoolConfigContractV2', () => {
-  it('should return null if cannot find pool info', () => {
-    const chainId = 5
-    const result = getPoolConfigContractV2(
+  it('should return null if cannot find pool info', async () => {
+    const result = await getPoolConfigContractV2(
       'invalidPoolName' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(null)
   })
 
-  it('should return pool config contract', () => {
+  it('should return pool config contract', async () => {
     ;(getContract as jest.Mock).mockReturnValue({
       getFirstLossCover: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
-    const chainId = 5
-    const result = getPoolConfigContractV2(
+    const result = await getPoolConfigContractV2(
       'HumaCreditLineV2' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result?.getFirstLossCover).toBeDefined()
   })
@@ -91,11 +87,9 @@ describe('getPoolConfigContractV2', () => {
 
 describe('getPoolUnderlyingTokenContractV2', () => {
   it('should return null if cannot find pool info', async () => {
-    const chainId = 5
     const result = await getPoolUnderlyingTokenContractV2(
       'invalidPoolName' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(null)
   })
@@ -111,39 +105,33 @@ describe('getPoolUnderlyingTokenContractV2', () => {
       decimals: jest.fn().mockResolvedValueOnce(18),
     })
 
-    const chainId = 5
     const result = await getPoolUnderlyingTokenContractV2(
       'HumaCreditLineV2' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result?.symbol).toBeDefined()
   })
 })
 
 describe('getTrancheVaultContractV2', () => {
-  it('should return null if cannot find pool info', () => {
-    const chainId = 5
-    const result = getTrancheVaultContractV2(
+  it('should return null if cannot find pool info', async () => {
+    const result = await getTrancheVaultContractV2(
       'invalidPoolName' as any,
       'junior',
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(null)
   })
 
-  it('should return tranche vault contract', () => {
+  it('should return tranche vault contract', async () => {
     ;(getContract as jest.Mock).mockReturnValue({
       getRoleAdmin: jest.fn(),
     })
 
-    const chainId = 5
-    const result = getTrancheVaultContractV2(
+    const result = await getTrancheVaultContractV2(
       'HumaCreditLineV2' as any,
       'junior',
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result?.getRoleAdmin).toBeDefined()
   })
@@ -151,11 +139,9 @@ describe('getTrancheVaultContractV2', () => {
 
 describe('getPoolUnderlyingTokenInfoV2', () => {
   it('should return undefined if cannot find pool info', async () => {
-    const chainId = 5
     const result = await getPoolUnderlyingTokenInfoV2(
       'invalidPoolName' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(undefined)
   })
@@ -172,11 +158,9 @@ describe('getPoolUnderlyingTokenInfoV2', () => {
       decimals: jest.fn().mockResolvedValueOnce(18),
     })
 
-    const chainId = 5
     const result = await getPoolUnderlyingTokenInfoV2(
       'HumaCreditLineV2' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual({
       address: '0x6Dfb932F9fDd38E4B3D2f6AAB0581a05a267C13C',
@@ -188,11 +172,9 @@ describe('getPoolUnderlyingTokenInfoV2', () => {
 
 describe('getFirstLossCoverAssetsV2', () => {
   it('should return undefined if cannot find pool info', async () => {
-    const chainId = 5
     const result = await getFirstLossCoverAssetsV2(
       'invalidPoolName' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(undefined)
   })
@@ -200,11 +182,9 @@ describe('getFirstLossCoverAssetsV2', () => {
   it('should return undefined if cannot find pool config contract', async () => {
     ;(getContract as jest.Mock).mockReturnValueOnce(null)
 
-    const chainId = 5
     const result = await getFirstLossCoverAssetsV2(
       'HumaCreditLineV2' as any,
-      chainId,
-      new JsonRpcProvider(),
+      undefined,
     )
     expect(result).toEqual(undefined)
   })
@@ -232,11 +212,9 @@ describe('getFirstLossCoverAssetsV2', () => {
       decimals: jest.fn().mockResolvedValueOnce(18),
     })
 
-    const chainId = 5
     const result = await getFirstLossCoverAssetsV2(
       'HumaCreditLineV2' as any,
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(BigNumber.from(300))
   })
@@ -244,12 +222,10 @@ describe('getFirstLossCoverAssetsV2', () => {
 
 describe('getTrancheVaultAssetsV2', () => {
   it('should return undefined if cannot find pool info', async () => {
-    const chainId = 5
     const result = await getTrancheVaultAssetsV2(
       'invalidPoolName' as any,
       'junior',
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(undefined)
   })
@@ -259,12 +235,10 @@ describe('getTrancheVaultAssetsV2', () => {
       totalAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
-    const chainId = 5
     const result = await getTrancheVaultAssetsV2(
       'HumaCreditLineV2' as any,
       'junior',
-      chainId,
-      new JsonRpcProvider(),
+      { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(BigNumber.from(100))
   })

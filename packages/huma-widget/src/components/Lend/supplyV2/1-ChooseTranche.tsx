@@ -40,19 +40,17 @@ export function ChooseTranche({
   const theme = useTheme()
   const { poolName } = poolInfo
   const dispatch = useAppDispatch()
-  const { account, chainId, provider } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const [lenderApprovedSenior] = useLenderApprovedV2(
     poolName,
     'senior',
     account,
-    chainId,
     provider,
   )
   const [lenderApprovedJunior] = useLenderApprovedV2(
     poolName,
     'junior',
     account,
-    chainId,
     provider,
   )
   const isLoading =

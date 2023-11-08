@@ -26,7 +26,7 @@ export function Transfer({
   trancheType,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { chainId, account, provider } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolUnderlyingToken
   const supplyBigNumber = ethers.utils.parseUnits(
@@ -36,7 +36,6 @@ export function Transfer({
   const trancheVaultContract = useTrancheVaultContractV2(
     poolInfo.poolName,
     trancheType,
-    chainId,
     provider,
     account,
   )

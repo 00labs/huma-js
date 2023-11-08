@@ -5,12 +5,18 @@ import { BigNumber } from 'ethers'
 
 import {
   useContractValueV2,
+  useFirstLossCoverContractV2,
+  useFirstLossCoverTotalAssetsV2,
   useLenderApprovedV2,
   useLenderPositionV2,
   usePoolInfoV2,
+  usePoolSafeAllowanceV2,
   usePoolSafeTotalAssetsV2,
+  usePoolUnderlyingTokenBalanceV2,
+  usePoolUnderlyingTokenContractV2,
+  useTrancheVaultContractV2,
 } from '../../../src/v2/hooks/usePool'
-import { useContract } from '../../../src/hooks'
+import { useContract, useERC20Contract } from '../../../src/hooks'
 
 jest.mock('../../../src/hooks/useContract', () => ({
   useContract: jest.fn(),
@@ -18,6 +24,7 @@ jest.mock('../../../src/hooks/useContract', () => ({
 }))
 
 jest.mock('../../../src/v2/utils/pool', () => ({
+  ...jest.requireActual('../../../src/v2/utils/pool'),
   CHAIN_POOLS_INFO_V2: {
     5: {
       HumaCreditLineV2: {
@@ -56,7 +63,10 @@ describe('usePoolInfoV2', () => {
 
   it('should return undefined for an invalid chainId', () => {
     const invalidChainId = -1
-    const result = usePoolInfoV2('HumaCreditLineV2' as any, invalidChainId)
+    const result = usePoolInfoV2(
+      'HumaCreditLineV2' as any,
+      invalidChainId as any,
+    )
     expect(result).toBeUndefined()
   })
 
@@ -64,6 +74,73 @@ describe('usePoolInfoV2', () => {
     const chainId = 5
     const result = usePoolInfoV2('invalidPoolName' as any, chainId)
     expect(result).toBeUndefined()
+  })
+})
+
+describe('useTrancheVaultContractV2', () => {
+  it('returns null if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useTrancheVaultContractV2('HumaCreditLineV2' as any, 'senior', undefined),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBeNull()
+    })
+  })
+
+  it('returns tranche vault contract correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      totalAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useTrancheVaultContractV2('HumaCreditLineV2' as any, 'senior', {
+        network: { chainId: 5 },
+      } as any),
+    )
+
+    await waitFor(() => {
+      expect(result.current?.totalAssets).toBeDefined()
+    })
+  })
+})
+
+describe('useFirstLossCoverContractV2', () => {
+  it('returns null if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useFirstLossCoverContractV2('HumaCreditLineV2' as any, 0, undefined),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBeNull()
+    })
+  })
+
+  it('returns first loss cover contract correctly', async () => {
+    ;(useContract as jest.Mock)
+      .mockReturnValueOnce({
+        getFirstLossCover: jest.fn().mockResolvedValueOnce('0x123'),
+      })
+      .mockReturnValueOnce({
+        poolConfig: jest.fn().mockResolvedValue('0x123456'),
+      })
+      .mockReturnValueOnce({
+        calcLossCover: jest.fn(),
+      })
+
+    const { result } = renderHook(() =>
+      useFirstLossCoverContractV2('HumaCreditLineV2' as any, 0, {
+        network: { chainId: 5 },
+      } as any),
+    )
+
+    await waitFor(() => {
+      expect(result.current?.calcLossCover).toBeDefined()
+    })
   })
 })
 
@@ -124,9 +201,43 @@ describe('useContractValueV2', () => {
   })
 })
 
+describe('useFirstLossCoverTotalAssetsV2', () => {
+  it('returns undefined if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useFirstLossCoverTotalAssetsV2('HumaCreditLineV2' as any, undefined),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toBeUndefined()
+    })
+  })
+
+  it('returns first loss cover total assets correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      poolConfig: jest.fn().mockResolvedValue('0x123456'),
+      getFirstLossCover: jest.fn().mockResolvedValue('0x123'),
+      totalAssets: jest.fn().mockResolvedValue(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useFirstLossCoverTotalAssetsV2(
+        'HumaCreditLineV2' as any,
+        {
+          network: { chainId: 5 },
+        } as any,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(200))
+    })
+  })
+})
+
 describe('usePoolSafeTotalAssetsV2', () => {
   it('should return the total assets value and refresh function', async () => {
-    const chainId = 5
     ;(useContract as jest.Mock).mockReturnValue({
       totalAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
@@ -134,7 +245,6 @@ describe('usePoolSafeTotalAssetsV2', () => {
     const { result } = renderHook(() =>
       usePoolSafeTotalAssetsV2(
         'HumaCreditLineV2' as any,
-        chainId,
         new JsonRpcProvider(),
       ),
     )
@@ -150,7 +260,6 @@ describe('usePoolSafeTotalAssetsV2', () => {
 
 describe('useLenderApprovedV2', () => {
   it('should return the senior/junior balances value and refresh function', async () => {
-    const chainId = 5
     const account = '0x123'
     ;(useContract as jest.Mock).mockReturnValue({
       LENDER_ROLE: jest.fn().mockReturnValue('LENDER_ROLE'),
@@ -165,7 +274,6 @@ describe('useLenderApprovedV2', () => {
         'HumaCreditLineV2' as any,
         'senior',
         account,
-        chainId,
         new JsonRpcProvider(),
       ),
     )
@@ -184,7 +292,6 @@ describe('useLenderApprovedV2', () => {
 
 describe('useLenderPositionV2', () => {
   it('should return the lender position value and refresh function', async () => {
-    const chainId = 5
     const account = '0x123'
     ;(useContract as jest.Mock).mockReturnValue({
       balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
@@ -195,7 +302,6 @@ describe('useLenderPositionV2', () => {
         'HumaCreditLineV2' as any,
         'senior',
         account,
-        chainId,
         new JsonRpcProvider(),
       ),
     )
@@ -205,6 +311,122 @@ describe('useLenderPositionV2', () => {
     })
     await waitFor(() => {
       expect(typeof result.current[1]).toBe('function')
+    })
+  })
+})
+
+describe('usePoolUnderlyingTokenContractV2', () => {
+  it('returns null if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+    ;(useERC20Contract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      usePoolUnderlyingTokenContractV2('HumaCreditLineV2' as any, undefined),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBeNull()
+    })
+  })
+
+  it('returns pool underlying token contract correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      poolConfig: jest.fn().mockResolvedValue('0x123456'),
+      underlyingToken: jest.fn().mockResolvedValue('0x123'),
+    })
+    ;(useERC20Contract as jest.Mock).mockReturnValue({
+      symbol: 'USDC',
+      decimals: 18,
+    })
+
+    const { result } = renderHook(() =>
+      usePoolUnderlyingTokenContractV2(
+        'HumaCreditLineV2' as any,
+        {
+          network: { chainId: 5 },
+        } as any,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        symbol: 'USDC',
+        decimals: 18,
+      })
+    })
+  })
+})
+
+describe('usePoolSafeAllowanceV2', () => {
+  it('returns 0 if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+    ;(useERC20Contract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      usePoolSafeAllowanceV2('HumaCreditLineV2' as any, 'account', undefined),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(0))
+    })
+  })
+
+  it('returns pool safe allowance correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      poolConfig: jest.fn().mockResolvedValue('0x123456'),
+      underlyingToken: jest.fn().mockResolvedValue('0x123'),
+    })
+    ;(useERC20Contract as jest.Mock).mockReturnValue({
+      allowance: jest.fn().mockResolvedValue(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      usePoolSafeAllowanceV2('HumaCreditLineV2' as any, 'account', {
+        network: { chainId: 5 },
+      } as any),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(100))
+    })
+  })
+})
+
+describe('usePoolUnderlyingTokenBalanceV2', () => {
+  it('returns 0 if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+    ;(useERC20Contract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      usePoolUnderlyingTokenBalanceV2(
+        'HumaCreditLineV2' as any,
+        'account',
+        undefined,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(0))
+    })
+  })
+
+  it('returns underlying token balance correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      poolConfig: jest.fn().mockResolvedValue('0x123456'),
+      underlyingToken: jest.fn().mockResolvedValue('0x123'),
+    })
+    ;(useERC20Contract as jest.Mock).mockReturnValue({
+      balanceOf: jest.fn().mockResolvedValue(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      usePoolUnderlyingTokenBalanceV2('HumaCreditLineV2' as any, 'account', {
+        network: { chainId: 5 },
+      } as any),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(100))
     })
   })
 })
