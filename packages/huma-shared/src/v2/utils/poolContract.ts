@@ -7,22 +7,13 @@ import {
   TrancheType,
   UnderlyingTokenInfo,
 } from '.'
-import { isChainEnum, POOL_NAME } from '../../utils'
+import {
+  getChainIdFromSignerOrProvider,
+  isChainEnum,
+  POOL_NAME,
+} from '../../utils'
 import { getContract, getERC20Contract } from '../../utils/web3'
 import { FirstLossCover, PoolConfig, TrancheVault } from '../abis/types'
-
-const getChainId = async (
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
-  if (!provider) {
-    return undefined
-  }
-  if (provider.network?.chainId) {
-    return provider.network.chainId
-  }
-  const network = await provider.getNetwork()
-  return network.chainId
-}
 
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
@@ -38,7 +29,7 @@ export const getPoolConfigContractV2 = async (
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) => {
-  const chainId = await getChainId(provider)
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return null
@@ -67,7 +58,7 @@ export const getTrancheVaultContractV2 = async (
   trancheType: TrancheType,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) => {
-  const chainId = await getChainId(provider)
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return null
@@ -110,7 +101,7 @@ export const getFirstLossCoverAssetsV2 = async (
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<BigNumber | undefined> => {
-  const chainId = await getChainId(provider)
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return undefined
