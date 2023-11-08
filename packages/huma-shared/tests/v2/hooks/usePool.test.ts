@@ -6,12 +6,10 @@ import { BigNumber } from 'ethers'
 import {
   useContractValueV2,
   useFirstLossCoverContractV2,
-  useFirstLossCoverTotalAssetsV2,
   useLenderApprovedV2,
   useLenderPositionV2,
   usePoolInfoV2,
   usePoolSafeAllowanceV2,
-  usePoolSafeTotalAssetsV2,
   usePoolUnderlyingTokenBalanceV2,
   usePoolUnderlyingTokenContractV2,
   useTrancheVaultContractV2,
@@ -198,63 +196,6 @@ describe('useContractValueV2', () => {
       expect(result.current[0]).toEqual(BigNumber.from(100))
     })
     expect(methodCall).toBeCalledWith(params)
-  })
-})
-
-describe('useFirstLossCoverTotalAssetsV2', () => {
-  it('returns undefined if provider is undefined', async () => {
-    ;(useContract as jest.Mock).mockReturnValue(null)
-
-    const { result } = renderHook(() =>
-      useFirstLossCoverTotalAssetsV2('HumaCreditLineV2' as any, undefined),
-    )
-
-    await waitFor(() => {
-      expect(result.current[0]).toBeUndefined()
-    })
-  })
-
-  it('returns first loss cover total assets correctly', async () => {
-    ;(useContract as jest.Mock).mockReturnValue({
-      poolConfig: jest.fn().mockResolvedValue('0x123456'),
-      getFirstLossCover: jest.fn().mockResolvedValue('0x123'),
-      totalAssets: jest.fn().mockResolvedValue(BigNumber.from(100)),
-    })
-
-    const { result } = renderHook(() =>
-      useFirstLossCoverTotalAssetsV2(
-        'HumaCreditLineV2' as any,
-        {
-          network: { chainId: 5 },
-        } as any,
-      ),
-    )
-
-    await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(200))
-    })
-  })
-})
-
-describe('usePoolSafeTotalAssetsV2', () => {
-  it('should return the total assets value and refresh function', async () => {
-    ;(useContract as jest.Mock).mockReturnValue({
-      totalAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
-    })
-
-    const { result } = renderHook(() =>
-      usePoolSafeTotalAssetsV2(
-        'HumaCreditLineV2' as any,
-        new JsonRpcProvider(),
-      ),
-    )
-
-    await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(100))
-    })
-    await waitFor(() => {
-      expect(typeof result.current[1]).toBe('function')
-    })
   })
 })
 

@@ -1,12 +1,12 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import {
-  getERC20Contract,
   PoolInfoV2,
   sendTxAtom,
   txAtom,
   TxStateType,
   UnderlyingTokenInfo,
   useMount,
+  usePoolUnderlyingTokenContractV2,
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
@@ -41,11 +41,15 @@ export function ApproveAllowanceModalV2({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
-  const { provider, account } = useWeb3React()
   const reset = useResetAtom(txAtom)
+  const { provider, account } = useWeb3React()
   const [{ state, txHash }, send] = useAtom(sendTxAtom)
   const waitingForAccept = state === TxStateType.New
-  const { symbol, address } = poolUnderlyingToken
+  const { symbol } = poolUnderlyingToken
+  const underlyingTokenContract = usePoolUnderlyingTokenContractV2(
+    poolInfo.poolName,
+    provider,
+  )
 
   useEffect(() => {
     if (state === TxStateType.Success) {
@@ -76,7 +80,6 @@ export function ApproveAllowanceModalV2({
   const sendIncreaseAllowance = useCallback(async () => {
     const allowanceSpender = spender ?? poolInfo.pool
     const targetAllowanceAmount = allowanceAmount ?? MaxUint256
-    const underlyingTokenContract = await getERC20Contract(address, provider)
     const currentAllowance = await underlyingTokenContract?.allowance(
       account!,
       allowanceSpender,
@@ -92,19 +95,29 @@ export function ApproveAllowanceModalV2({
     })
   }, [
     account,
-    address,
     allowanceAmount,
     poolInfo.pool,
     provider,
     send,
     spender,
+    underlyingTokenContract,
   ])
+
+  useEffect(() => {
+    if (!showAutoPayback && underlyingTokenContract) {
+      sendIncreaseAllowance()
+    }
+  }, [sendIncreaseAllowance, showAutoPayback, underlyingTokenContract])
 
   useMount(() => {
     if (!showAutoPayback) {
       sendIncreaseAllowance()
     }
   })
+
+  if (!account || !underlyingTokenContract) {
+    return <LoadingModal title={`Approve ${symbol}`} />
+  }
 
   if (showAutoPayback && waitingForAccept) {
     return (

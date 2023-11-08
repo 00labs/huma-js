@@ -31,19 +31,6 @@ export const usePoolInfoV2 = (
   return undefined
 }
 
-function usePoolSafeContractV2(
-  poolName: POOL_NAME,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) {
-  const chainId = provider?.network?.chainId
-  const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContract<PoolSafe>(
-    poolInfo?.poolSafe,
-    poolInfo?.poolSafeAbi,
-    provider,
-  )
-}
-
 function usePoolConfigContractV2(
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
@@ -150,62 +137,6 @@ export function useContractValueV2<T = BigNumber>(
     fetchData()
   }, [contract, method, savedParams, refreshCount])
 
-  return [value, refresh]
-}
-
-export function useFirstLossCoverTotalAssetsV2(
-  poolName: POOL_NAME,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): [BigNumber | undefined, () => void] {
-  const flcBorrowerContract = useFirstLossCoverContractV2(
-    poolName,
-    FirstLossCoverIndex.borrower,
-    provider,
-  )
-  const flcAffiliateContract = useFirstLossCoverContractV2(
-    poolName,
-    FirstLossCoverIndex.affiliate,
-    provider,
-  )
-  const [assets, setAssets] = useState<BigNumber>()
-  const [refreshCount, refresh] = useForceRefresh()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const borrowerAssets = await flcBorrowerContract?.totalAssets()
-      const affiliateAssets = await flcAffiliateContract?.totalAssets()
-
-      setAssets(borrowerAssets?.add(affiliateAssets ?? 0))
-    }
-    fetchData()
-  }, [refreshCount, flcBorrowerContract, flcAffiliateContract])
-
-  return [assets, refresh]
-}
-
-export function usePoolSafeTotalAssetsV2(
-  poolName: POOL_NAME,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): [BigNumber | undefined, () => void] {
-  const poolSafeContract = usePoolSafeContractV2(poolName, provider)
-  const [value, refresh] = useContractValueV2(poolSafeContract, 'totalAssets')
-  return [value, refresh]
-}
-
-export function useTrancheVaultAssetsV2(
-  poolName: POOL_NAME,
-  trancheType: TrancheType,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): [BigNumber | undefined, () => void] {
-  const trancheVaultContract = useTrancheVaultContractV2(
-    poolName,
-    trancheType,
-    provider,
-  )
-  const [value, refresh] = useContractValueV2(
-    trancheVaultContract,
-    'totalAssets',
-  )
   return [value, refresh]
 }
 
