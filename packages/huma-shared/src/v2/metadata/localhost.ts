@@ -2,29 +2,29 @@ import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import POOL_ABI from '../abis/Pool.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
+import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import { PoolsInfoV2 } from '../utils'
 
 export const LOCALHOST_METADATA: PoolsInfoV2 = {
   HumaCreditLineV2: {
     chainId: ChainEnum.Localhost,
+    poolVersion: 'v2',
     poolName: POOL_NAME.HumaCreditLineV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE',
-    poolAbi: POOL_ABI,
-    poolSafeAbi: POOL_SAFE_ABI,
+    poolConfig: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+    poolSafe: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
     seniorTrancheVault: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c',
     juniorTrancheVault: '0xc6e7DF5E7b4f2A278906862b61205850344D4e7d',
+    poolAbi: POOL_ABI,
+    poolSafeAbi: POOL_SAFE_ABI,
+    poolConfigAbi: POOL_CONFIG_ABI,
     trancheVaultAbi: TRANCHE_VAULT_ABI,
-    poolSafe: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
+    firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    poolUnderlyingToken: {
-      address: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
-      symbol: 'USDC',
-      decimals: 6,
-      icon: 'USDC',
-    },
     title: 'Test Pool V2',
     desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     KYC: {
