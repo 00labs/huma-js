@@ -1,11 +1,12 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import {
+  getERC20Contract,
   PoolInfoV2,
   sendTxAtom,
   txAtom,
   TxStateType,
+  UnderlyingTokenInfo,
   useMount,
-  usePoolUnderlyingTokenContractV2,
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
@@ -22,6 +23,7 @@ import { WrapperModal } from './WrapperModal'
 
 type Props = {
   poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
   showAutoPayback?: boolean
   allowanceAmount?: BigNumberish
   spender?: string
@@ -31,6 +33,7 @@ type Props = {
 
 export function ApproveAllowanceModalV2({
   poolInfo,
+  poolUnderlyingToken,
   showAutoPayback = false,
   allowanceAmount,
   spender,
@@ -38,17 +41,11 @@ export function ApproveAllowanceModalV2({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
-  const { provider, account, chainId } = useWeb3React()
-  const { poolUnderlyingToken } = poolInfo
-  const { symbol } = poolUnderlyingToken
-  const poolUnderlyingTokenContract = usePoolUnderlyingTokenContractV2(
-    poolInfo.poolName,
-    chainId,
-    provider,
-  )
+  const { provider, account } = useWeb3React()
   const reset = useResetAtom(txAtom)
   const [{ state, txHash }, send] = useAtom(sendTxAtom)
   const waitingForAccept = state === TxStateType.New
+  const { symbol, address } = poolUnderlyingToken
 
   useEffect(() => {
     if (state === TxStateType.Success) {
@@ -57,7 +54,7 @@ export function ApproveAllowanceModalV2({
       }
       handleSuccess()
     }
-  }, [handleSuccess, reset, resetAfterSuccess, state, symbol])
+  }, [handleSuccess, reset, resetAfterSuccess, state])
 
   const styles = {
     iconWrapper: css`
@@ -79,7 +76,8 @@ export function ApproveAllowanceModalV2({
   const sendIncreaseAllowance = useCallback(async () => {
     const allowanceSpender = spender ?? poolInfo.pool
     const targetAllowanceAmount = allowanceAmount ?? MaxUint256
-    const currentAllowance = await poolUnderlyingTokenContract?.allowance(
+    const underlyingTokenContract = await getERC20Contract(address, provider)
+    const currentAllowance = await underlyingTokenContract?.allowance(
       account!,
       allowanceSpender,
     )
@@ -87,16 +85,16 @@ export function ApproveAllowanceModalV2({
       currentAllowance ?? 0,
     )
     send({
-      contract: poolUnderlyingTokenContract!,
+      contract: underlyingTokenContract!,
       method: 'increaseAllowance',
       params: [allowanceSpender, amountToIncrease],
       provider,
     })
   }, [
     account,
+    address,
     allowanceAmount,
     poolInfo.pool,
-    poolUnderlyingTokenContract,
     provider,
     send,
     spender,
