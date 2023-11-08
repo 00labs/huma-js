@@ -8,7 +8,8 @@ import {
   POOL_TYPE,
   PoolVersion,
 } from '../../utils'
-import { MUMBAI_METADATA } from '../metadata/Mumbai'
+import { LOCALHOST_METADATA } from '../metadata/localhost'
+import { MUMBAI_METADATA } from '../metadata/mumbai'
 
 export type TrancheType = 'senior' | 'junior'
 
@@ -75,6 +76,7 @@ export type ChainPoolsInfoV2 = {
 
 export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Mumbai]: MUMBAI_METADATA,
+  [ChainEnum.Localhost]: LOCALHOST_METADATA,
 } as ChainPoolsInfoV2
 
 export const getChainPoolNamesV2 = (

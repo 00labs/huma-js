@@ -8,6 +8,7 @@ import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import {
   FirstLossCover,
+  Pool,
   PoolConfig,
   PoolSafe,
   TrancheVault,
@@ -18,8 +19,6 @@ import {
   PoolInfoV2,
   TrancheType,
 } from '../utils/pool'
-
-export type FALLBACK_PROVIDERS = { [chainId: number]: string }
 
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,
@@ -51,9 +50,9 @@ function usePoolConfigContractV2(
   const [poolConfig, setPoolConfig] = useState<string | undefined>()
   const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const poolContract = useContract<PoolSafe>(
-    poolInfo?.poolSafe,
-    poolInfo?.poolSafeAbi,
+  const poolContract = useContract<Pool>(
+    poolInfo?.pool,
+    poolInfo?.poolAbi,
     provider,
   )
 
