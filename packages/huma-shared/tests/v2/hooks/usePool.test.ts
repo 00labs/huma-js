@@ -129,7 +129,7 @@ describe('useFirstLossCoverContractV2', () => {
         poolConfig: jest.fn().mockResolvedValue('0x123456'),
       })
       .mockReturnValueOnce({
-        calcLossCover: jest.fn(),
+        calcLossRecover: jest.fn(),
       })
 
     const { result } = renderHook(() =>
@@ -139,7 +139,7 @@ describe('useFirstLossCoverContractV2', () => {
     )
 
     await waitFor(() => {
-      expect(result.current?.calcLossCover).toBeDefined()
+      expect(result.current?.calcLossRecover).toBeDefined()
     })
   })
 })

@@ -9,6 +9,16 @@ import type { Pool, PoolInterface } from '../Pool'
 const _abi = [
   {
     inputs: [],
+    name: 'notAuthorizedCaller',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'todo',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'zeroAddressProvided',
     type: 'error',
   },
@@ -23,6 +33,80 @@ const _abi = [
       },
     ],
     name: 'Initialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'loss',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'seniorTotalAssets',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'juniorTotalAssets',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'seniorTotalLoss',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'juniorTotalLoss',
+        type: 'uint256',
+      },
+    ],
+    name: 'LossDistributed',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'lossRecovery',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'seniorTotalAssets',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'juniorTotalAssets',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'seniorTotalLoss',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'juniorTotalLoss',
+        type: 'uint256',
+      },
+    ],
+    name: 'LossRecoveryDistributed',
     type: 'event',
   },
   {
@@ -158,17 +242,29 @@ const _abi = [
     type: 'event',
   },
   {
-    inputs: [],
-    name: 'credit',
-    outputs: [
+    anonymous: false,
+    inputs: [
       {
-        internalType: 'contract IPoolCredit',
-        name: '',
-        type: 'address',
+        indexed: false,
+        internalType: 'uint256',
+        name: 'profit',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'seniorTotalAssets',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'juniorTotalAssets',
+        type: 'uint256',
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    name: 'ProfitDistributed',
+    type: 'event',
   },
   {
     inputs: [],
@@ -186,6 +282,45 @@ const _abi = [
   {
     inputs: [],
     name: 'disablePool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'loss',
+        type: 'uint256',
+      },
+    ],
+    name: 'distributeLoss',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'lossRecovery',
+        type: 'uint256',
+      },
+    ],
+    name: 'distributeLossRecovery',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'profit',
+        type: 'uint256',
+      },
+    ],
+    name: 'distributeProfit',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -339,19 +474,6 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'refreshPool',
-    outputs: [
-      {
-        internalType: 'uint96[2]',
-        name: 'assets',
-        type: 'uint96[2]',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         internalType: 'contract PoolConfig',
@@ -432,7 +554,7 @@ const _abi = [
       },
       {
         internalType: 'uint64',
-        name: 'lastUpdatedTime',
+        name: 'lastProfitDistributedTime',
         type: 'uint64',
       },
     ],

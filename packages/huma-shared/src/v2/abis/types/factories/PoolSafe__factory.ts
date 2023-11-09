@@ -9,6 +9,21 @@ import type { PoolSafe, PoolSafeInterface } from '../PoolSafe'
 const _abi = [
   {
     inputs: [],
+    name: 'notAuthorizedCaller',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'notPool',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'todo',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'zeroAddressProvided',
     type: 'error',
   },
@@ -56,6 +71,24 @@ const _abi = [
     ],
     name: 'PoolConfigChanged',
     type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'tranche',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'profit',
+        type: 'uint256',
+      },
+    ],
+    name: 'addUnprocessedProfit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
@@ -154,6 +187,13 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'resetUnprocessedProfit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'contract PoolConfig',
@@ -187,6 +227,25 @@ const _abi = [
         internalType: 'contract IERC20',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'unprocessedTrancheProfit',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',

@@ -14,11 +14,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'emptyArray',
-    type: 'error',
-  },
-  {
-    inputs: [],
     name: 'insufficientSharesForRequest',
     type: 'error',
   },
@@ -34,7 +29,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'notCurrentEpoch',
+    name: 'notAuthorizedCaller',
     type: 'error',
   },
   {
@@ -45,11 +40,6 @@ const _abi = [
   {
     inputs: [],
     name: 'poolLiquidityCapExceeded',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'withdrawnAmountHigherThanBalance',
     type: 'error',
   },
   {
@@ -91,9 +81,15 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'epochId',
+        type: 'uint256',
+      },
+      {
         indexed: false,
         internalType: 'uint256',
-        name: 'epochCount',
+        name: 'sharesRequested',
         type: 'uint256',
       },
       {
@@ -108,14 +104,8 @@ const _abi = [
         name: 'amountProcessed',
         type: 'uint256',
       },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'unprocessedIndexOfEpochIds',
-        type: 'uint256',
-      },
     ],
-    name: 'EpochsProcessed',
+    name: 'EpochProcessed',
     type: 'event',
   },
   {
@@ -268,6 +258,31 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'reinvestYield',
+        type: 'bool',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
+      },
+    ],
+    name: 'ReinvestYieldConfigSet',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: 'bytes32',
         name: 'role',
         type: 'bytes32',
@@ -364,6 +379,50 @@ const _abi = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'yield',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'shares',
+        type: 'uint256',
+      },
+    ],
+    name: 'YieldPaidout',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'yield',
+        type: 'uint256',
+      },
+    ],
+    name: 'YieldReinvested',
+    type: 'event',
+  },
+  {
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
     outputs: [
@@ -395,6 +454,11 @@ const _abi = [
         internalType: 'address',
         name: 'lender',
         type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'reinvestYield',
+        type: 'bool',
       },
     ],
     name: 'addApprovedLender',
@@ -547,6 +611,41 @@ const _abi = [
         internalType: 'uint256',
         name: 'shares',
         type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'currentEpochInfo',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint64',
+            name: 'epochId',
+            type: 'uint64',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalSharesRequested',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalSharesProcessed',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalAmountProcessed',
+            type: 'uint96',
+          },
+        ],
+        internalType: 'struct EpochInfo',
+        name: 'epochInfo',
+        type: 'tuple',
       },
     ],
     stateMutability: 'view',
@@ -717,61 +816,19 @@ const _abi = [
             type: 'uint96',
           },
         ],
-        internalType: 'struct EpochInfo[]',
-        name: 'epochsProcessed',
-        type: 'tuple[]',
-      },
-      {
-        internalType: 'uint256',
-        name: 'sharesProcessed',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amountProcessed',
-        type: 'uint256',
+        internalType: 'struct EpochInfo',
+        name: 'epochProcessed',
+        type: 'tuple',
       },
     ],
-    name: 'executeEpochs',
+    name: 'executeEpoch',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'firstUnprocessedEpochIndex',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
     name: 'getNumEpochsWithRedemption',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'getNumRedemptionRequests',
     outputs: [
       {
         internalType: 'uint256',
@@ -982,30 +1039,14 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        internalType: 'address[]',
+        name: 'lenders',
+        type: 'address[]',
       },
     ],
-    name: 'redemptionDisbursementInfoByLender',
-    outputs: [
-      {
-        internalType: 'uint64',
-        name: 'requestsIndex',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint96',
-        name: 'actualSharesProcessed',
-        type: 'uint96',
-      },
-      {
-        internalType: 'uint96',
-        name: 'actualAmountProcessed',
-        type: 'uint96',
-      },
-    ],
-    stateMutability: 'view',
+    name: 'processYieldForLenders',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -1015,22 +1056,32 @@ const _abi = [
         name: '',
         type: 'address',
       },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
     ],
-    name: 'redemptionRequestsByLender',
+    name: 'redemptionInfoByLender',
     outputs: [
       {
         internalType: 'uint64',
-        name: 'epochId',
+        name: 'lastUpdatedEpochIndex',
         type: 'uint64',
       },
       {
         internalType: 'uint96',
         name: 'numSharesRequested',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint96',
+        name: 'principalRequested',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint96',
+        name: 'totalAmountProcessed',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint96',
+        name: 'totalAmountWithdrawn',
         type: 'uint96',
       },
     ],
@@ -1095,6 +1146,24 @@ const _abi = [
       },
     ],
     name: 'setPoolConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'lender',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'reinvestYield',
+        type: 'bool',
+      },
+    ],
+    name: 'setReinvestYield',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -1257,44 +1326,33 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'unprocessedEpochInfos',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'uint64',
-            name: 'epochId',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint96',
-            name: 'totalSharesRequested',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint96',
-            name: 'totalSharesProcessed',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint96',
-            name: 'totalAmountProcessed',
-            type: 'uint96',
-          },
-        ],
-        internalType: 'struct EpochInfo[]',
-        name: 'epochInfos',
-        type: 'tuple[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
     name: 'updatePoolConfigData',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'userInfos',
+    outputs: [
+      {
+        internalType: 'uint96',
+        name: 'principal',
+        type: 'uint96',
+      },
+      {
+        internalType: 'bool',
+        name: 'reinvestYield',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {

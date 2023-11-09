@@ -28,64 +28,46 @@ import type {
 } from './common'
 
 export declare namespace FirstLossCoverStorage {
-  export type LossCoverConfigStruct = {
+  export type LossCoverProviderConfigStruct = {
     poolCapCoverageInBps: PromiseOrValue<BigNumberish>
     poolValueCoverageInBps: PromiseOrValue<BigNumberish>
   }
 
-  export type LossCoverConfigStructOutput = [number, number] & {
+  export type LossCoverProviderConfigStructOutput = [number, number] & {
     poolCapCoverageInBps: number
     poolValueCoverageInBps: number
   }
-
-  export type LossCoverPayoutConfigStruct = {
-    coverRateInBps: PromiseOrValue<BigNumberish>
-    coverCap: PromiseOrValue<BigNumberish>
-    liquidityCap: PromiseOrValue<BigNumberish>
-  }
-
-  export type LossCoverPayoutConfigStructOutput = [
-    number,
-    BigNumber,
-    BigNumber,
-  ] & { coverRateInBps: number; coverCap: BigNumber; liquidityCap: BigNumber }
 }
 
 export interface FirstLossCoverInterface extends utils.Interface {
   functions: {
-    '_calcLossRecover(uint256,uint256)': FunctionFragment
+    'addCoverAssets(uint256)': FunctionFragment
     'allowance(address,address)': FunctionFragment
     'approve(address,uint256)': FunctionFragment
-    'availableCoverCapacity()': FunctionFragment
     'balanceOf(address)': FunctionFragment
-    'calcLossCover(uint256,uint256)': FunctionFragment
     'calcLossRecover(uint256)': FunctionFragment
     'convertToAssets(uint256)': FunctionFragment
     'convertToShares(uint256)': FunctionFragment
-    'coverLoss(uint256,uint256)': FunctionFragment
+    'coverLoss(uint256)': FunctionFragment
     'coveredLoss()': FunctionFragment
     'decimals()': FunctionFragment
     'decreaseAllowance(address,uint256)': FunctionFragment
     'depositCover(uint256)': FunctionFragment
-    'depositCoverWithAffiliateFees(uint256,address)': FunctionFragment
-    'depositCoverWithTrancheVaultTokens(address,uint256)': FunctionFragment
-    'distributeProfit(uint256)': FunctionFragment
-    'getMaxCoverConfig()': FunctionFragment
-    'getOperatorConfig(address)': FunctionFragment
-    'getPayoutConfig()': FunctionFragment
+    'depositCoverFor(uint256,address)': FunctionFragment
+    'getCapacity(uint256)': FunctionFragment
+    'getCoverProviderConfig(address)': FunctionFragment
     'increaseAllowance(address,uint256)': FunctionFragment
     'initialize(string,string,address)': FunctionFragment
     'initialize(address)': FunctionFragment
     'isSufficient(address)': FunctionFragment
     'name()': FunctionFragment
+    'payoutYield(address[])': FunctionFragment
     'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolSafe()': FunctionFragment
-    'profitEscrow()': FunctionFragment
     'recoverLoss(uint256)': FunctionFragment
     'redeemCover(uint256,address)': FunctionFragment
-    'setOperator(address,(uint16,uint16))': FunctionFragment
-    'setPayoutConfig((uint16,uint96,uint96))': FunctionFragment
+    'setCoverProvider(address,(uint16,uint16))': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
     'symbol()': FunctionFragment
     'totalAssets()': FunctionFragment
@@ -98,12 +80,10 @@ export interface FirstLossCoverInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | '_calcLossRecover'
+      | 'addCoverAssets'
       | 'allowance'
       | 'approve'
-      | 'availableCoverCapacity'
       | 'balanceOf'
-      | 'calcLossCover'
       | 'calcLossRecover'
       | 'convertToAssets'
       | 'convertToShares'
@@ -112,25 +92,21 @@ export interface FirstLossCoverInterface extends utils.Interface {
       | 'decimals'
       | 'decreaseAllowance'
       | 'depositCover'
-      | 'depositCoverWithAffiliateFees'
-      | 'depositCoverWithTrancheVaultTokens'
-      | 'distributeProfit'
-      | 'getMaxCoverConfig'
-      | 'getOperatorConfig'
-      | 'getPayoutConfig'
+      | 'depositCoverFor'
+      | 'getCapacity'
+      | 'getCoverProviderConfig'
       | 'increaseAllowance'
       | 'initialize(string,string,address)'
       | 'initialize(address)'
       | 'isSufficient'
       | 'name'
+      | 'payoutYield'
       | 'pool'
       | 'poolConfig'
       | 'poolSafe'
-      | 'profitEscrow'
       | 'recoverLoss'
       | 'redeemCover'
-      | 'setOperator'
-      | 'setPayoutConfig'
+      | 'setCoverProvider'
       | 'setPoolConfig'
       | 'symbol'
       | 'totalAssets'
@@ -142,8 +118,8 @@ export interface FirstLossCoverInterface extends utils.Interface {
   ): FunctionFragment
 
   encodeFunctionData(
-    functionFragment: '_calcLossRecover',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+    functionFragment: 'addCoverAssets',
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'allowance',
@@ -154,16 +130,8 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'availableCoverCapacity',
-    values?: undefined,
-  ): string
-  encodeFunctionData(
     functionFragment: 'balanceOf',
     values: [PromiseOrValue<string>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'calcLossCover',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'calcLossRecover',
@@ -179,7 +147,7 @@ export interface FirstLossCoverInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'coverLoss',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'coveredLoss',
@@ -195,28 +163,16 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'depositCoverWithAffiliateFees',
+    functionFragment: 'depositCoverFor',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'depositCoverWithTrancheVaultTokens',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'distributeProfit',
+    functionFragment: 'getCapacity',
     values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'getMaxCoverConfig',
-    values?: undefined,
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getOperatorConfig',
+    functionFragment: 'getCoverProviderConfig',
     values: [PromiseOrValue<string>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getPayoutConfig',
-    values?: undefined,
   ): string
   encodeFunctionData(
     functionFragment: 'increaseAllowance',
@@ -239,13 +195,13 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(functionFragment: 'name', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'payoutYield',
+    values: [PromiseOrValue<string>[]],
+  ): string
   encodeFunctionData(functionFragment: 'pool', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolSafe', values?: undefined): string
-  encodeFunctionData(
-    functionFragment: 'profitEscrow',
-    values?: undefined,
-  ): string
   encodeFunctionData(
     functionFragment: 'recoverLoss',
     values: [PromiseOrValue<BigNumberish>],
@@ -255,15 +211,11 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'setOperator',
+    functionFragment: 'setCoverProvider',
     values: [
       PromiseOrValue<string>,
-      FirstLossCoverStorage.LossCoverConfigStruct,
+      FirstLossCoverStorage.LossCoverProviderConfigStruct,
     ],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setPayoutConfig',
-    values: [FirstLossCoverStorage.LossCoverPayoutConfigStruct],
   ): string
   encodeFunctionData(
     functionFragment: 'setPoolConfig',
@@ -300,20 +252,12 @@ export interface FirstLossCoverInterface extends utils.Interface {
   ): string
 
   decodeFunctionResult(
-    functionFragment: '_calcLossRecover',
+    functionFragment: 'addCoverAssets',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'availableCoverCapacity',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'calcLossCover',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(
     functionFragment: 'calcLossRecover',
     data: BytesLike,
@@ -338,27 +282,12 @@ export interface FirstLossCoverInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'depositCoverWithAffiliateFees',
+    functionFragment: 'depositCoverFor',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'getCapacity', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'depositCoverWithTrancheVaultTokens',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'distributeProfit',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getMaxCoverConfig',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getOperatorConfig',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getPayoutConfig',
+    functionFragment: 'getCoverProviderConfig',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -378,18 +307,14 @@ export interface FirstLossCoverInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'payoutYield', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'pool', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolSafe', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'profitEscrow',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'recoverLoss', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'redeemCover', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'setOperator', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'setPayoutConfig',
+    functionFragment: 'setCoverProvider',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -415,31 +340,31 @@ export interface FirstLossCoverInterface extends utils.Interface {
 
   events: {
     'Approval(address,address,uint256)': EventFragment
+    'AssetsAdded(uint256)': EventFragment
     'CoverDeposited(address,uint256,uint256)': EventFragment
+    'CoverProviderSet(address,uint256,uint256)': EventFragment
     'CoverRedeemed(address,address,uint256,uint256)': EventFragment
     'Initialized(uint8)': EventFragment
-    'LossCovered(uint256,uint256,uint256,uint256)': EventFragment
-    'LossRecovered(uint256,uint256,uint256,uint256)': EventFragment
-    'OperatorSet(address,uint256,uint256)': EventFragment
-    'PayoutConfigSet(uint256,uint256,uint256)': EventFragment
+    'LossCovered(uint256,uint256,uint256)': EventFragment
+    'LossRecovered(uint256,uint256)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
-    'ProfitDistributed(uint256,uint256)': EventFragment
     'Transfer(address,address,uint256)': EventFragment
+    'YieldPaidout(address,uint256)': EventFragment
   }
 
   getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'AssetsAdded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CoverDeposited'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CoverProviderSet'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CoverRedeemed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LossCovered'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LossRecovered'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'OperatorSet'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PayoutConfigSet'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ProfitDistributed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'YieldPaidout'): EventFragment
 }
 
 export interface ApprovalEventObject {
@@ -454,6 +379,13 @@ export type ApprovalEvent = TypedEvent<
 
 export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
 
+export interface AssetsAddedEventObject {
+  assets: BigNumber
+}
+export type AssetsAddedEvent = TypedEvent<[BigNumber], AssetsAddedEventObject>
+
+export type AssetsAddedEventFilter = TypedEventFilter<AssetsAddedEvent>
+
 export interface CoverDepositedEventObject {
   account: string
   assets: BigNumber
@@ -465,6 +397,19 @@ export type CoverDepositedEvent = TypedEvent<
 >
 
 export type CoverDepositedEventFilter = TypedEventFilter<CoverDepositedEvent>
+
+export interface CoverProviderSetEventObject {
+  account: string
+  poolCapCoverageInBps: BigNumber
+  poolValueCoverageInBps: BigNumber
+}
+export type CoverProviderSetEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  CoverProviderSetEventObject
+>
+
+export type CoverProviderSetEventFilter =
+  TypedEventFilter<CoverProviderSetEvent>
 
 export interface CoverRedeemedEventObject {
   by: string
@@ -489,11 +434,10 @@ export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 export interface LossCoveredEventObject {
   covered: BigNumber
   remaining: BigNumber
-  totalAssets: BigNumber
   coveredLoss: BigNumber
 }
 export type LossCoveredEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber, BigNumber],
+  [BigNumber, BigNumber, BigNumber],
   LossCoveredEventObject
 >
 
@@ -501,40 +445,14 @@ export type LossCoveredEventFilter = TypedEventFilter<LossCoveredEvent>
 
 export interface LossRecoveredEventObject {
   recovered: BigNumber
-  remaining: BigNumber
-  totalAssets: BigNumber
   coveredLoss: BigNumber
 }
 export type LossRecoveredEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber, BigNumber],
+  [BigNumber, BigNumber],
   LossRecoveredEventObject
 >
 
 export type LossRecoveredEventFilter = TypedEventFilter<LossRecoveredEvent>
-
-export interface OperatorSetEventObject {
-  account: string
-  poolCapCoverageInBps: BigNumber
-  poolValueCoverageInBps: BigNumber
-}
-export type OperatorSetEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  OperatorSetEventObject
->
-
-export type OperatorSetEventFilter = TypedEventFilter<OperatorSetEvent>
-
-export interface PayoutConfigSetEventObject {
-  coverRateInBps: BigNumber
-  coverCap: BigNumber
-  liquidityCap: BigNumber
-}
-export type PayoutConfigSetEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber],
-  PayoutConfigSetEventObject
->
-
-export type PayoutConfigSetEventFilter = TypedEventFilter<PayoutConfigSetEvent>
 
 export interface PoolConfigCacheUpdatedEventObject {
   poolConfig: string
@@ -559,18 +477,6 @@ export type PoolConfigChangedEvent = TypedEvent<
 export type PoolConfigChangedEventFilter =
   TypedEventFilter<PoolConfigChangedEvent>
 
-export interface ProfitDistributedEventObject {
-  profit: BigNumber
-  totalAssets: BigNumber
-}
-export type ProfitDistributedEvent = TypedEvent<
-  [BigNumber, BigNumber],
-  ProfitDistributedEventObject
->
-
-export type ProfitDistributedEventFilter =
-  TypedEventFilter<ProfitDistributedEvent>
-
 export interface TransferEventObject {
   from: string
   to: string
@@ -582,6 +488,17 @@ export type TransferEvent = TypedEvent<
 >
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>
+
+export interface YieldPaidoutEventObject {
+  account: string
+  yield: BigNumber
+}
+export type YieldPaidoutEvent = TypedEvent<
+  [string, BigNumber],
+  YieldPaidoutEventObject
+>
+
+export type YieldPaidoutEventFilter = TypedEventFilter<YieldPaidoutEvent>
 
 export interface FirstLossCover extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
@@ -610,16 +527,10 @@ export interface FirstLossCover extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
-    _calcLossRecover(
-      coveredLoss: PromiseOrValue<BigNumberish>,
-      recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        remainingRecovery: BigNumber
-        recoveredAmount: BigNumber
-      }
-    >
+    addCoverAssets(
+      assets: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -633,25 +544,20 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    availableCoverCapacity(
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { coverCapacity: BigNumber }>
-
     balanceOf(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>
 
-    calcLossCover(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      loss: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { remainingLoss: BigNumber }>
-
     calcLossRecover(
       recovery: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { remainingRecovery: BigNumber }>
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        remainingRecovery: BigNumber
+        recoveredAmount: BigNumber
+      }
+    >
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
@@ -664,7 +570,6 @@ export interface FirstLossCover extends BaseContract {
     ): Promise<[BigNumber]>
 
     coverLoss(
-      poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
@@ -684,35 +589,21 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    depositCoverWithAffiliateFees(
+    depositCoverFor(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    depositCoverWithTrancheVaultTokens(
-      trancheVaultAddress: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    distributeProfit(
-      profit: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    getMaxCoverConfig(
+    getCapacity(
+      poolAssets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<[FirstLossCoverStorage.LossCoverConfigStructOutput]>
+    ): Promise<[BigNumber]>
 
-    getOperatorConfig(
+    getCoverProviderConfig(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
-    ): Promise<[FirstLossCoverStorage.LossCoverConfigStructOutput]>
-
-    getPayoutConfig(
-      overrides?: CallOverrides,
-    ): Promise<[FirstLossCoverStorage.LossCoverPayoutConfigStructOutput]>
+    ): Promise<[FirstLossCoverStorage.LossCoverProviderConfigStructOutput]>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -739,13 +630,16 @@ export interface FirstLossCover extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>
 
+    payoutYield(
+      providers: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     pool(overrides?: CallOverrides): Promise<[string]>
 
     poolConfig(overrides?: CallOverrides): Promise<[string]>
 
     poolSafe(overrides?: CallOverrides): Promise<[string]>
-
-    profitEscrow(overrides?: CallOverrides): Promise<[string]>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
@@ -758,14 +652,9 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setOperator(
+    setCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setPayoutConfig(
-      config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
+      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -800,16 +689,10 @@ export interface FirstLossCover extends BaseContract {
     ): Promise<ContractTransaction>
   }
 
-  _calcLossRecover(
-    coveredLoss: PromiseOrValue<BigNumberish>,
-    recoveryAmount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<
-    [BigNumber, BigNumber] & {
-      remainingRecovery: BigNumber
-      recoveredAmount: BigNumber
-    }
-  >
+  addCoverAssets(
+    assets: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   allowance(
     owner: PromiseOrValue<string>,
@@ -823,23 +706,20 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>
-
   balanceOf(
     account: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>
-
-  calcLossCover(
-    poolAssets: PromiseOrValue<BigNumberish>,
-    loss: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>
 
   calcLossRecover(
     recovery: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
-  ): Promise<BigNumber>
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      remainingRecovery: BigNumber
+      recoveredAmount: BigNumber
+    }
+  >
 
   convertToAssets(
     shares: PromiseOrValue<BigNumberish>,
@@ -852,7 +732,6 @@ export interface FirstLossCover extends BaseContract {
   ): Promise<BigNumber>
 
   coverLoss(
-    poolAssets: PromiseOrValue<BigNumberish>,
     loss: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
@@ -872,35 +751,21 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  depositCoverWithAffiliateFees(
+  depositCoverFor(
     assets: PromiseOrValue<BigNumberish>,
     receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  depositCoverWithTrancheVaultTokens(
-    trancheVaultAddress: PromiseOrValue<string>,
-    tokenAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  distributeProfit(
-    profit: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  getMaxCoverConfig(
+  getCapacity(
+    poolAssets: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
-  ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
+  ): Promise<BigNumber>
 
-  getOperatorConfig(
+  getCoverProviderConfig(
     account: PromiseOrValue<string>,
     overrides?: CallOverrides,
-  ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
-
-  getPayoutConfig(
-    overrides?: CallOverrides,
-  ): Promise<FirstLossCoverStorage.LossCoverPayoutConfigStructOutput>
+  ): Promise<FirstLossCoverStorage.LossCoverProviderConfigStructOutput>
 
   increaseAllowance(
     spender: PromiseOrValue<string>,
@@ -927,13 +792,16 @@ export interface FirstLossCover extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>
 
+  payoutYield(
+    providers: PromiseOrValue<string>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   pool(overrides?: CallOverrides): Promise<string>
 
   poolConfig(overrides?: CallOverrides): Promise<string>
 
   poolSafe(overrides?: CallOverrides): Promise<string>
-
-  profitEscrow(overrides?: CallOverrides): Promise<string>
 
   recoverLoss(
     recovery: PromiseOrValue<BigNumberish>,
@@ -946,14 +814,9 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setOperator(
+  setCoverProvider(
     account: PromiseOrValue<string>,
-    config: FirstLossCoverStorage.LossCoverConfigStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setPayoutConfig(
-    config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
+    config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -988,16 +851,10 @@ export interface FirstLossCover extends BaseContract {
   ): Promise<ContractTransaction>
 
   callStatic: {
-    _calcLossRecover(
-      coveredLoss: PromiseOrValue<BigNumberish>,
-      recoveryAmount: PromiseOrValue<BigNumberish>,
+    addCoverAssets(
+      assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        remainingRecovery: BigNumber
-        recoveredAmount: BigNumber
-      }
-    >
+    ): Promise<void>
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -1011,23 +868,20 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<boolean>
 
-    availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>
-
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    calcLossCover(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      loss: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
     calcLossRecover(
       recovery: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        remainingRecovery: BigNumber
+        recoveredAmount: BigNumber
+      }
+    >
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
@@ -1040,7 +894,6 @@ export interface FirstLossCover extends BaseContract {
     ): Promise<BigNumber>
 
     coverLoss(
-      poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
@@ -1060,35 +913,21 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    depositCoverWithAffiliateFees(
+    depositCoverFor(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    depositCoverWithTrancheVaultTokens(
-      trancheVaultAddress: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
+    getCapacity(
+      poolAssets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    distributeProfit(
-      profit: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    getMaxCoverConfig(
-      overrides?: CallOverrides,
-    ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
-
-    getOperatorConfig(
+    getCoverProviderConfig(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
-    ): Promise<FirstLossCoverStorage.LossCoverConfigStructOutput>
-
-    getPayoutConfig(
-      overrides?: CallOverrides,
-    ): Promise<FirstLossCoverStorage.LossCoverPayoutConfigStructOutput>
+    ): Promise<FirstLossCoverStorage.LossCoverProviderConfigStructOutput>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1115,18 +954,21 @@ export interface FirstLossCover extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>
 
+    payoutYield(
+      providers: PromiseOrValue<string>[],
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     pool(overrides?: CallOverrides): Promise<string>
 
     poolConfig(overrides?: CallOverrides): Promise<string>
 
     poolSafe(overrides?: CallOverrides): Promise<string>
 
-    profitEscrow(overrides?: CallOverrides): Promise<string>
-
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    ): Promise<void>
 
     redeemCover(
       shares: PromiseOrValue<BigNumberish>,
@@ -1134,14 +976,9 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    setOperator(
+    setCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setPayoutConfig(
-      config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
+      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -1186,6 +1023,9 @@ export interface FirstLossCover extends BaseContract {
       value?: null,
     ): ApprovalEventFilter
 
+    'AssetsAdded(uint256)'(assets?: null): AssetsAddedEventFilter
+    AssetsAdded(assets?: null): AssetsAddedEventFilter
+
     'CoverDeposited(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
       assets?: null,
@@ -1196,6 +1036,17 @@ export interface FirstLossCover extends BaseContract {
       assets?: null,
       shares?: null,
     ): CoverDepositedEventFilter
+
+    'CoverProviderSet(address,uint256,uint256)'(
+      account?: PromiseOrValue<string> | null,
+      poolCapCoverageInBps?: null,
+      poolValueCoverageInBps?: null,
+    ): CoverProviderSetEventFilter
+    CoverProviderSet(
+      account?: PromiseOrValue<string> | null,
+      poolCapCoverageInBps?: null,
+      poolValueCoverageInBps?: null,
+    ): CoverProviderSetEventFilter
 
     'CoverRedeemed(address,address,uint256,uint256)'(
       by?: PromiseOrValue<string> | null,
@@ -1213,53 +1064,25 @@ export interface FirstLossCover extends BaseContract {
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
-    'LossCovered(uint256,uint256,uint256,uint256)'(
+    'LossCovered(uint256,uint256,uint256)'(
       covered?: null,
       remaining?: null,
-      totalAssets?: null,
       coveredLoss?: null,
     ): LossCoveredEventFilter
     LossCovered(
       covered?: null,
       remaining?: null,
-      totalAssets?: null,
       coveredLoss?: null,
     ): LossCoveredEventFilter
 
-    'LossRecovered(uint256,uint256,uint256,uint256)'(
+    'LossRecovered(uint256,uint256)'(
       recovered?: null,
-      remaining?: null,
-      totalAssets?: null,
       coveredLoss?: null,
     ): LossRecoveredEventFilter
     LossRecovered(
       recovered?: null,
-      remaining?: null,
-      totalAssets?: null,
       coveredLoss?: null,
     ): LossRecoveredEventFilter
-
-    'OperatorSet(address,uint256,uint256)'(
-      account?: PromiseOrValue<string> | null,
-      poolCapCoverageInBps?: null,
-      poolValueCoverageInBps?: null,
-    ): OperatorSetEventFilter
-    OperatorSet(
-      account?: PromiseOrValue<string> | null,
-      poolCapCoverageInBps?: null,
-      poolValueCoverageInBps?: null,
-    ): OperatorSetEventFilter
-
-    'PayoutConfigSet(uint256,uint256,uint256)'(
-      coverRateInBps?: null,
-      coverCap?: null,
-      liquidityCap?: null,
-    ): PayoutConfigSetEventFilter
-    PayoutConfigSet(
-      coverRateInBps?: null,
-      coverCap?: null,
-      liquidityCap?: null,
-    ): PayoutConfigSetEventFilter
 
     'PoolConfigCacheUpdated(address)'(
       poolConfig?: PromiseOrValue<string> | null,
@@ -1277,15 +1100,6 @@ export interface FirstLossCover extends BaseContract {
       oldPoolConfig?: PromiseOrValue<string> | null,
     ): PoolConfigChangedEventFilter
 
-    'ProfitDistributed(uint256,uint256)'(
-      profit?: null,
-      totalAssets?: null,
-    ): ProfitDistributedEventFilter
-    ProfitDistributed(
-      profit?: null,
-      totalAssets?: null,
-    ): ProfitDistributedEventFilter
-
     'Transfer(address,address,uint256)'(
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
@@ -1296,13 +1110,21 @@ export interface FirstLossCover extends BaseContract {
       to?: PromiseOrValue<string> | null,
       value?: null,
     ): TransferEventFilter
+
+    'YieldPaidout(address,uint256)'(
+      account?: PromiseOrValue<string> | null,
+      _yield?: null,
+    ): YieldPaidoutEventFilter
+    YieldPaidout(
+      account?: PromiseOrValue<string> | null,
+      _yield?: null,
+    ): YieldPaidoutEventFilter
   }
 
   estimateGas: {
-    _calcLossRecover(
-      coveredLoss: PromiseOrValue<BigNumberish>,
-      recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
+    addCoverAssets(
+      assets: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     allowance(
@@ -1317,16 +1139,8 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    availableCoverCapacity(overrides?: CallOverrides): Promise<BigNumber>
-
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    calcLossCover(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      loss: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -1346,7 +1160,6 @@ export interface FirstLossCover extends BaseContract {
     ): Promise<BigNumber>
 
     coverLoss(
-      poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
@@ -1366,31 +1179,21 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    depositCoverWithAffiliateFees(
+    depositCoverFor(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    depositCoverWithTrancheVaultTokens(
-      trancheVaultAddress: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    distributeProfit(
-      profit: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    getMaxCoverConfig(overrides?: CallOverrides): Promise<BigNumber>
-
-    getOperatorConfig(
-      account: PromiseOrValue<string>,
+    getCapacity(
+      poolAssets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    getPayoutConfig(overrides?: CallOverrides): Promise<BigNumber>
+    getCoverProviderConfig(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1417,13 +1220,16 @@ export interface FirstLossCover extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>
 
+    payoutYield(
+      providers: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     pool(overrides?: CallOverrides): Promise<BigNumber>
 
     poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     poolSafe(overrides?: CallOverrides): Promise<BigNumber>
-
-    profitEscrow(overrides?: CallOverrides): Promise<BigNumber>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
@@ -1436,14 +1242,9 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setOperator(
+    setCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setPayoutConfig(
-      config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
+      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1479,10 +1280,9 @@ export interface FirstLossCover extends BaseContract {
   }
 
   populateTransaction: {
-    _calcLossRecover(
-      coveredLoss: PromiseOrValue<BigNumberish>,
-      recoveryAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
+    addCoverAssets(
+      assets: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     allowance(
@@ -1497,18 +1297,8 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    availableCoverCapacity(
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
-    calcLossCover(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      loss: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -1528,7 +1318,6 @@ export interface FirstLossCover extends BaseContract {
     ): Promise<PopulatedTransaction>
 
     coverLoss(
-      poolAssets: PromiseOrValue<BigNumberish>,
       loss: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
@@ -1548,31 +1337,21 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    depositCoverWithAffiliateFees(
+    depositCoverFor(
       assets: PromiseOrValue<BigNumberish>,
       receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    depositCoverWithTrancheVaultTokens(
-      trancheVaultAddress: PromiseOrValue<string>,
-      tokenAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    distributeProfit(
-      profit: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    getMaxCoverConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    getOperatorConfig(
-      account: PromiseOrValue<string>,
+    getCapacity(
+      poolAssets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    getPayoutConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getCoverProviderConfig(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1599,13 +1378,16 @@ export interface FirstLossCover extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
+    payoutYield(
+      providers: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     pool(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolSafe(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    profitEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
@@ -1618,14 +1400,9 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setOperator(
+    setCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverConfigStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setPayoutConfig(
-      config: FirstLossCoverStorage.LossCoverPayoutConfigStruct,
+      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 

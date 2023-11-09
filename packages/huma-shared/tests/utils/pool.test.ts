@@ -10,34 +10,34 @@ import {
 } from '../../src/utils/pool'
 
 describe('getPoolInfo', () => {
-  it('returns null if chainId is undefined', () => {
+  it('returns undefined if chainId is undefined', () => {
     expect(
-      getPoolInfo(undefined, POOL_TYPE.Stream, POOL_NAME.Superfluid),
-    ).toBeNull()
+      getPoolInfo(undefined, POOL_NAME.Superfluid, POOL_TYPE.Stream),
+    ).toBeUndefined()
   })
 
-  it('returns null if poolType or poolName is not found', () => {
+  it('returns undefined if poolType or poolName is not found', () => {
     expect(
       getPoolInfo(
         ChainEnum.Polygon,
-        'InvalidPoolType' as any,
         POOL_NAME.Superfluid,
+        'InvalidPoolType' as any,
       ),
-    ).toBeNull()
+    ).toBeUndefined()
     expect(
       getPoolInfo(
         ChainEnum.Polygon,
-        POOL_TYPE.Stream,
         'InvalidPoolName' as any,
+        POOL_TYPE.Stream,
       ),
-    ).toBeNull()
+    ).toBeUndefined()
   })
 
   it('returns the pool info if chainId, poolType, and poolName are valid', () => {
     const poolInfo = getPoolInfo(
       ChainEnum.Goerli,
-      POOL_TYPE.CreditLine,
       POOL_NAME.HumaCreditLine,
+      POOL_TYPE.CreditLine,
     )
     expect(poolInfo?.pool).toBe('0xA22D20FB0c9980fb96A9B0B5679C061aeAf5dDE4')
   })

@@ -14,7 +14,27 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'notOperator',
+    name: 'insufficientAmountForRequest',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'insufficientSharesForRequest',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'notAllProvidersPaidOut',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'notAuthorizedCaller',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'notCoverProvider',
     type: 'error',
   },
   {
@@ -61,6 +81,19 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assets',
+        type: 'uint256',
+      },
+    ],
+    name: 'AssetsAdded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: 'address',
         name: 'account',
@@ -80,6 +113,31 @@ const _abi = [
       },
     ],
     name: 'CoverDeposited',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'poolCapCoverageInBps',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'poolValueCoverageInBps',
+        type: 'uint256',
+      },
+    ],
+    name: 'CoverProviderSet',
     type: 'event',
   },
   {
@@ -144,12 +202,6 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'totalAssets',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
         name: 'coveredLoss',
         type: 'uint256',
       },
@@ -169,73 +221,11 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'remaining',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'totalAssets',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
         name: 'coveredLoss',
         type: 'uint256',
       },
     ],
     name: 'LossRecovered',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'poolCapCoverageInBps',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'poolValueCoverageInBps',
-        type: 'uint256',
-      },
-    ],
-    name: 'OperatorSet',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'coverRateInBps',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'coverCap',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'liquidityCap',
-        type: 'uint256',
-      },
-    ],
-    name: 'PayoutConfigSet',
     type: 'event',
   },
   {
@@ -274,25 +264,6 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'profit',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'totalAssets',
-        type: 'uint256',
-      },
-    ],
-    name: 'ProfitDistributed',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: 'address',
         name: 'from',
@@ -315,32 +286,35 @@ const _abi = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'yield',
+        type: 'uint256',
+      },
+    ],
+    name: 'YieldPaidout',
+    type: 'event',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
-        name: 'coveredLoss',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'recoveryAmount',
+        name: 'assets',
         type: 'uint256',
       },
     ],
-    name: '_calcLossRecover',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'remainingRecovery',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'recoveredAmount',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'pure',
+    name: 'addCoverAssets',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -392,19 +366,6 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'availableCoverCapacity',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'coverCapacity',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         internalType: 'address',
@@ -427,30 +388,6 @@ const _abi = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'poolAssets',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'loss',
-        type: 'uint256',
-      },
-    ],
-    name: 'calcLossCover',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'remainingLoss',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
         name: 'recovery',
         type: 'uint256',
       },
@@ -460,6 +397,11 @@ const _abi = [
       {
         internalType: 'uint256',
         name: 'remainingRecovery',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'recoveredAmount',
         type: 'uint256',
       },
     ],
@@ -506,11 +448,6 @@ const _abi = [
   },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'poolAssets',
-        type: 'uint256',
-      },
       {
         internalType: 'uint256',
         name: 'loss',
@@ -610,31 +547,7 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'depositCoverWithAffiliateFees',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'shares',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'trancheVaultAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'tokenAmount',
-        type: 'uint256',
-      },
-    ],
-    name: 'depositCoverWithTrancheVaultTokens',
+    name: 'depositCoverFor',
     outputs: [
       {
         internalType: 'uint256',
@@ -649,35 +562,16 @@ const _abi = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'profit',
+        name: 'poolAssets',
         type: 'uint256',
       },
     ],
-    name: 'distributeProfit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getMaxCoverConfig',
+    name: 'getCapacity',
     outputs: [
       {
-        components: [
-          {
-            internalType: 'uint16',
-            name: 'poolCapCoverageInBps',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint16',
-            name: 'poolValueCoverageInBps',
-            type: 'uint16',
-          },
-        ],
-        internalType: 'struct FirstLossCoverStorage.LossCoverConfig',
+        internalType: 'uint256',
         name: '',
-        type: 'tuple',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -691,7 +585,7 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'getOperatorConfig',
+    name: 'getCoverProviderConfig',
     outputs: [
       {
         components: [
@@ -706,37 +600,7 @@ const _abi = [
             type: 'uint16',
           },
         ],
-        internalType: 'struct FirstLossCoverStorage.LossCoverConfig',
-        name: '',
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getPayoutConfig',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'uint16',
-            name: 'coverRateInBps',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint96',
-            name: 'coverCap',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint96',
-            name: 'liquidityCap',
-            type: 'uint96',
-          },
-        ],
-        internalType: 'struct FirstLossCoverStorage.LossCoverPayoutConfig',
+        internalType: 'struct FirstLossCoverStorage.LossCoverProviderConfig',
         name: '',
         type: 'tuple',
       },
@@ -837,6 +701,19 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: 'providers',
+        type: 'address[]',
+      },
+    ],
+    name: 'payoutYield',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'pool',
     outputs: [
@@ -876,19 +753,6 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'profitEscrow',
-    outputs: [
-      {
-        internalType: 'contract IProfitEscrow',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         internalType: 'uint256',
@@ -897,13 +761,7 @@ const _abi = [
       },
     ],
     name: 'recoverLoss',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'remainingRecovery',
-        type: 'uint256',
-      },
-    ],
+    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -951,42 +809,12 @@ const _abi = [
             type: 'uint16',
           },
         ],
-        internalType: 'struct FirstLossCoverStorage.LossCoverConfig',
+        internalType: 'struct FirstLossCoverStorage.LossCoverProviderConfig',
         name: 'config',
         type: 'tuple',
       },
     ],
-    name: 'setOperator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'uint16',
-            name: 'coverRateInBps',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint96',
-            name: 'coverCap',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint96',
-            name: 'liquidityCap',
-            type: 'uint96',
-          },
-        ],
-        internalType: 'struct FirstLossCoverStorage.LossCoverPayoutConfig',
-        name: 'config',
-        type: 'tuple',
-      },
-    ],
-    name: 'setPayoutConfig',
+    name: 'setCoverProvider',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

@@ -29,6 +29,7 @@ import type {
 
 export interface PoolSafeInterface extends utils.Interface {
   functions: {
+    'addUnprocessedProfit(address,uint256)': FunctionFragment
     'deposit(address,uint256)': FunctionFragment
     'getAvailableLiquidityForFees()': FunctionFragment
     'getPoolLiquidity()': FunctionFragment
@@ -36,15 +37,18 @@ export interface PoolSafeInterface extends utils.Interface {
     'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolFeeManager()': FunctionFragment
+    'resetUnprocessedProfit()': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
     'totalLiquidity()': FunctionFragment
     'underlyingToken()': FunctionFragment
+    'unprocessedTrancheProfit(address)': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
     'withdraw(address,uint256)': FunctionFragment
   }
 
   getFunction(
     nameOrSignatureOrTopic:
+      | 'addUnprocessedProfit'
       | 'deposit'
       | 'getAvailableLiquidityForFees'
       | 'getPoolLiquidity'
@@ -52,13 +56,19 @@ export interface PoolSafeInterface extends utils.Interface {
       | 'pool'
       | 'poolConfig'
       | 'poolFeeManager'
+      | 'resetUnprocessedProfit'
       | 'setPoolConfig'
       | 'totalLiquidity'
       | 'underlyingToken'
+      | 'unprocessedTrancheProfit'
       | 'updatePoolConfigData'
       | 'withdraw',
   ): FunctionFragment
 
+  encodeFunctionData(
+    functionFragment: 'addUnprocessedProfit',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
   encodeFunctionData(
     functionFragment: 'deposit',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
@@ -82,6 +92,10 @@ export interface PoolSafeInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
+    functionFragment: 'resetUnprocessedProfit',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
     functionFragment: 'setPoolConfig',
     values: [PromiseOrValue<string>],
   ): string
@@ -94,6 +108,10 @@ export interface PoolSafeInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
+    functionFragment: 'unprocessedTrancheProfit',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'updatePoolConfigData',
     values?: undefined,
   ): string
@@ -102,6 +120,10 @@ export interface PoolSafeInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
 
+  decodeFunctionResult(
+    functionFragment: 'addUnprocessedProfit',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'getAvailableLiquidityForFees',
@@ -119,6 +141,10 @@ export interface PoolSafeInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
+    functionFragment: 'resetUnprocessedProfit',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'setPoolConfig',
     data: BytesLike,
   ): Result
@@ -128,6 +154,10 @@ export interface PoolSafeInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'underlyingToken',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'unprocessedTrancheProfit',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -204,6 +234,12 @@ export interface PoolSafe extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
+    addUnprocessedProfit(
+      tranche: PromiseOrValue<string>,
+      profit: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -229,6 +265,10 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<[string]>
 
+    resetUnprocessedProfit(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -240,6 +280,11 @@ export interface PoolSafe extends BaseContract {
 
     underlyingToken(overrides?: CallOverrides): Promise<[string]>
 
+    unprocessedTrancheProfit(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
+
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
@@ -250,6 +295,12 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
   }
+
+  addUnprocessedProfit(
+    tranche: PromiseOrValue<string>,
+    profit: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   deposit(
     from: PromiseOrValue<string>,
@@ -272,6 +323,10 @@ export interface PoolSafe extends BaseContract {
 
   poolFeeManager(overrides?: CallOverrides): Promise<string>
 
+  resetUnprocessedProfit(
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   setPoolConfig(
     _poolConfig: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -280,6 +335,11 @@ export interface PoolSafe extends BaseContract {
   totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
   underlyingToken(overrides?: CallOverrides): Promise<string>
+
+  unprocessedTrancheProfit(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   updatePoolConfigData(
     overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -292,6 +352,12 @@ export interface PoolSafe extends BaseContract {
   ): Promise<ContractTransaction>
 
   callStatic: {
+    addUnprocessedProfit(
+      tranche: PromiseOrValue<string>,
+      profit: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -313,6 +379,8 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<string>
 
+    resetUnprocessedProfit(overrides?: CallOverrides): Promise<void>
+
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -321,6 +389,11 @@ export interface PoolSafe extends BaseContract {
     totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<string>
+
+    unprocessedTrancheProfit(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>
 
@@ -353,6 +426,12 @@ export interface PoolSafe extends BaseContract {
   }
 
   estimateGas: {
+    addUnprocessedProfit(
+      tranche: PromiseOrValue<string>,
+      profit: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -374,6 +453,10 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<BigNumber>
 
+    resetUnprocessedProfit(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -382,6 +465,11 @@ export interface PoolSafe extends BaseContract {
     totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<BigNumber>
+
+    unprocessedTrancheProfit(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -395,6 +483,12 @@ export interface PoolSafe extends BaseContract {
   }
 
   populateTransaction: {
+    addUnprocessedProfit(
+      tranche: PromiseOrValue<string>,
+      profit: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     deposit(
       from: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -418,6 +512,10 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
+    resetUnprocessedProfit(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -426,6 +524,11 @@ export interface PoolSafe extends BaseContract {
     totalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    unprocessedTrancheProfit(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
