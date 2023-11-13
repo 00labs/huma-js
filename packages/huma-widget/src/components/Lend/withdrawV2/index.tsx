@@ -96,6 +96,7 @@ export function LendWithdrawV2({
       {step === WIDGET_STEP.ChooseTranche && (
         <ChooseTranche
           poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
           changeTranche={setSelectedTranche}
         />

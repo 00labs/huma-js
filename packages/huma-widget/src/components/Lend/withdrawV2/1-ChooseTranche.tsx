@@ -1,6 +1,7 @@
 import {
   PoolInfoV2,
   TrancheType,
+  UnderlyingTokenInfo,
   useLenderApprovedV2,
 } from '@huma-finance/shared'
 import {
@@ -24,12 +25,14 @@ import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
   changeTranche: (tranche: TrancheType) => void
 }
 
 export function ChooseTranche({
   poolInfo,
+  poolUnderlyingToken,
   selectedTranche,
   changeTranche,
 }: Props): React.ReactElement | null {
@@ -37,6 +40,7 @@ export function ChooseTranche({
   const { poolName } = poolInfo
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
+  const { symbol } = poolUnderlyingToken
   const [lenderApprovedSenior] = useLenderApprovedV2(
     poolName,
     'senior',
@@ -103,11 +107,11 @@ export function ChooseTranche({
   ]
 
   if (isLoading) {
-    return <LoadingModal title='Withdraw' />
+    return <LoadingModal title={`Withdraw ${symbol}`} />
   }
 
   return (
-    <WrapperModal title='Withdraw'>
+    <WrapperModal title={`Withdraw ${symbol}`}>
       <FormControl>
         <FormLabel css={styles.subTitle}>Select Tranche Type</FormLabel>
         <RadioGroup

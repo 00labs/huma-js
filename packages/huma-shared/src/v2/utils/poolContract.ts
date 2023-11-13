@@ -147,7 +147,7 @@ export const getTrancheVaultAssetsV2 = async (
   return trancheVaultContract.totalAssets()
 }
 
-export const getTrancheToSharesV2 = async (
+export const getTrancheAssetsToSharesV2 = async (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   provider: JsonRpcProvider | Web3Provider | undefined,

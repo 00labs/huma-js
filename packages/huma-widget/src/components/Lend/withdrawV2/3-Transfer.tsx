@@ -2,7 +2,7 @@ import {
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
-  getTrancheToSharesV2,
+  getTrancheAssetsToSharesV2,
   toBigNumber,
   upScale,
   useTrancheVaultContractV2,
@@ -38,7 +38,7 @@ export function Transfer({
     account,
   )
   const withdrawBigNumber = toBigNumber(upScale(withdrawAmount!, decimals))
-  const withdrawShares = getTrancheToSharesV2(
+  const withdrawShares = getTrancheAssetsToSharesV2(
     poolInfo.poolName,
     selectedTranche!,
     provider,
