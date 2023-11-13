@@ -221,15 +221,15 @@ function getPoolStats(
   }
 
   const PoolStatsQuery = `
-  query {
-    poolStat(id:"${pool?.toLowerCase()}") {
-      id
-      amountCreditOriginated
-      amountCreditRepaid
-      amountCreditDefaulted
-    }
-  }
-`
+    query {
+        poolStat(id:"${pool?.toLowerCase()}") {
+            id
+            amountCreditOriginated
+            amountCreditRepaid
+            amountCreditDefaulted
+            }
+        }
+    `
 
   return requestPost<{
     errors?: unknown
