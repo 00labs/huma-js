@@ -64,7 +64,7 @@ export type PoolInfoType = {
   }
   extra?: {
     subgraph?: string
-    superTokens?: { id: string; symbol: string; decimals: number }[]
+    superToken?: { id: string; symbol: string; decimals: number }
     borrower?: string // For single borrower pools
     rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
     hidden?: boolean // For pools that shouldn't be displayed in the UI
@@ -314,6 +314,39 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
     },
+    [POOL_TYPE.Stream]: {
+      [POOL_NAME.Superfluid]: {
+        basePoolConfig: '0x22C024496036A8e97F93E14efa0d8379192bb22c',
+        pool: '0xF713B5203Cb6f3223830De218c2ed89Ee654b94B',
+        poolProcessor: '0x6E2f33b6d3F1E2048d078984f7FFF847C0Ed3bEd',
+        poolFeeManager: '0xd5FD3F917cf8901BeB102d81504033C748c87F19',
+        poolUnderlyingToken: {
+          address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        assetAddress: '0xa8B0362cfE0c8e4fd1D74c3512348d6f48d71080',
+        poolName: POOL_NAME.Superfluid,
+        poolType: POOL_TYPE.Stream,
+        poolAbi: STEAM_FACTORING_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        poolAssetAbi: TRADABLE_STREAM_ABI,
+        HDT: {
+          address: '0x30b1f6bca8c6c742ede0ccb4eceb22af4cba58ef',
+          abi: HDT_ABI,
+        },
+        extra: {
+          subgraph:
+            'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-matic',
+          superToken: {
+            id: '0xcaa7349cea390f89641fe306d93591f87595dc1f',
+            symbol: 'USDCx',
+            decimals: 18,
+          },
+        },
+      },
+    },
   },
   [ChainEnum.Goerli]: {
     [POOL_TYPE.CreditLine]: {
@@ -513,13 +546,11 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           subgraph:
             'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-mumbai',
-          superTokens: [
-            {
-              id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
-              symbol: 'fUSDCx',
-              decimals: 18,
-            },
-          ],
+          superToken: {
+            id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
+            symbol: 'fUSDCx',
+            decimals: 18,
+          },
         },
       },
     },
@@ -601,6 +632,8 @@ export const SupplementaryContractsMap: {
   }
 } = {
   [ChainEnum.Polygon]: {
+    [SupplementaryContracts.MultiSend]:
+      '0xDa21D2Be30353EC6Aa5AcD37999806cCefaa4C6A',
     [SupplementaryContracts.RealWorldReceivable]:
       '0xCf67CcEaC38b5E1880d62b5DB531Ab1E77614E3D',
   },
