@@ -146,3 +146,21 @@ export const getTrancheVaultAssetsV2 = async (
 
   return trancheVaultContract.totalAssets()
 }
+
+export const getTrancheAssetsToSharesV2 = async (
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  assets: BigNumber | undefined,
+): Promise<BigNumber | undefined> => {
+  const trancheVaultContract = await getTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  if (!trancheVaultContract || !assets) {
+    return undefined
+  }
+
+  return trancheVaultContract.convertToShares(assets)
+}

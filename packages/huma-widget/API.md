@@ -18,6 +18,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend supply widget V2</p></dd>
 <dt><a href="#LendWithdrawWidget">LendWithdrawWidget(props)</a> ⇒</dt>
 <dd><p>Lend withdraw widget</p></dd>
+<dt><a href="#LendWithdrawWidgetV2">LendWithdrawWidgetV2(props)</a> ⇒</dt>
+<dd><p>Lend withdraw widget V2</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
 <dd><p>Superfluid factoring widget</p></dd>
 </dl>
@@ -41,6 +43,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendWithdrawProps">LendWithdrawProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw props</p></dd>
+<dt><a href="#LendWithdrawPropsV2">LendWithdrawPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool withdraw props</p></dd>
 <dt><a href="#JsonRpcConnectionMap">JsonRpcConnectionMap</a> : <code>Object</code></dt>
 <dd><p>Mapping of your JSON-RPC connections indexed by chainId</p></dd>
 <dt><a href="#WidgetProps">WidgetProps</a> : <code>Object</code></dt>
@@ -61,6 +65,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply widget props V2</p></dd>
 <dt><a href="#LendWithdrawWidgetProps">LendWithdrawWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw widget props</p></dd>
+<dt><a href="#LendSupplyWidgetPropsV2">LendSupplyWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props V2</p></dd>
 </dl>
 
 <a name="InvoiceFactoringBorrowWidget"></a>
@@ -159,6 +165,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>LendWithdrawWidgetProps</code>](#LendWithdrawWidgetProps) | <p>The lend pool withdraw widget props</p> |
+
+<a name="LendWithdrawWidgetV2"></a>
+
+## LendWithdrawWidgetV2(props) ⇒
+<p>Lend withdraw widget V2</p>
+
+**Kind**: global function  
+**Returns**: <p>Lend pool supply widget component V2</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | <code>LendWithdrawWidgetPropsV2</code> | <p>The lend pool supply widget props V2.</p> |
 
 <a name="SuperfluidFactoringWidget"></a>
 
@@ -295,6 +313,21 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
+<a name="LendWithdrawPropsV2"></a>
+
+## LendWithdrawPropsV2 : <code>Object</code>
+<p>Lend pool withdraw props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolUnderlyingToken | <code>UnderlyingTokenInfo</code> | <p>The underlying token of the pool</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
+
 <a name="JsonRpcConnectionMap"></a>
 
 ## JsonRpcConnectionMap : <code>Object</code>
@@ -423,5 +456,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | LendWithdrawProps | [<code>LendWithdrawProps</code>](#LendWithdrawProps) | <p>Lend pool withdraw props.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="LendSupplyWidgetPropsV2"></a>
+
+## LendSupplyWidgetPropsV2 : <code>Object</code>
+<p>Lend pool supply widget props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| LendSupplyPropsV2 | [<code>LendWithdrawPropsV2</code>](#LendWithdrawPropsV2) | <p>Lend pool supply props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 

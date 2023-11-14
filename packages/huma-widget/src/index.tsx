@@ -39,6 +39,10 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  LendWithdrawPropsV2,
+  LendWithdrawV2,
+} from './components/Lend/withdrawV2'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -269,6 +273,28 @@ export function LendWithdrawWidget(props: LendWithdrawWidgetProps) {
   return (
     <Widget {...props}>
       <LendWithdraw {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Lend pool supply widget props V2
+ * @typedef {Object} LendSupplyWidgetPropsV2
+ * @property {LendWithdrawPropsV2} LendSupplyPropsV2 - Lend pool supply props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type LendWithdrawWidgetPropsV2 = LendWithdrawPropsV2 & WidgetProps
+
+/**
+ * Lend withdraw widget V2
+ *
+ * @param {LendWithdrawWidgetPropsV2} props - The lend pool supply widget props V2.
+ * @returns Lend pool supply widget component V2
+ */
+export function LendWithdrawWidgetV2(props: LendWithdrawWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <LendWithdrawV2 {...props} />
     </Widget>
   )
 }
