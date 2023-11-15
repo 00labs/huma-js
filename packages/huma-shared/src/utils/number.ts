@@ -2,15 +2,12 @@ import { BigNumber, ethers } from 'ethers'
 import { isEmpty } from './common'
 import { scientificToDecimal } from './scientificToDecimal'
 
-const moneyFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 0,
-})
-
 const numberFormatter = new Intl.NumberFormat('en-US')
 
-export const formatMoney = (num: number | string | undefined) => {
+export const formatMoney = (
+  num: number | string | undefined,
+  notation?: Intl.NumberFormatOptions['notation'],
+) => {
   if (isEmpty(num) || Number.isNaN(num)) {
     return num
   }
@@ -20,6 +17,14 @@ export const formatMoney = (num: number | string | undefined) => {
   if (numCast > 1_000) {
     numCast = Math.round(numCast)
   }
+
+  const moneyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    notation,
+  })
+
   return moneyFormatter.format(numCast)
 }
 
@@ -55,13 +60,15 @@ export const downScale = <T = string>(
 }
 
 export const upScale = <T = string>(
-  num: string | number,
+  num: string | number | BigNumber,
   decimals?: number,
 ): T => {
   if (isEmpty(num) || isEmpty(decimals)) {
     return num as T
   }
-  const result = Number(num) * 10 ** decimals!
+  const result = BigNumber.isBigNumber(num)
+    ? num.mul(10 ** decimals!)
+    : Number(num) * 10 ** decimals!
   if (typeof num === 'string') {
     return String(result) as T
   }
