@@ -218,7 +218,7 @@ describe('getPoolStats', () => {
 
   it('should return pool stats', async () => {
     const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
-    const poolStats = {
+    const poolStat = {
       id: pool,
       amountCreditOriginated: 300,
       amountCreditRepaid: 400,
@@ -226,13 +226,13 @@ describe('getPoolStats', () => {
     }
     ;(requestPost as jest.Mock).mockResolvedValue({
       data: {
-        poolStats,
+        poolStat,
       },
     })
 
     const chainId = ChainEnum.Goerli
 
     const result = await SubgraphService.getPoolStats(chainId, pool)
-    expect(result).toStrictEqual(poolStats)
+    expect(result).toStrictEqual(poolStat)
   })
 })

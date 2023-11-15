@@ -693,14 +693,13 @@ export const SupplementaryContractsMap: {
 
 export function getPoolInfo(
   chainId: number | undefined,
-  poolType: POOL_TYPE,
   poolName: POOL_NAME,
-): PoolInfoType | null {
-  if (chainId === undefined) {
-    chainId = configUtil.DEFAULT_CHAIN_ID
+  poolType: POOL_TYPE,
+): PoolInfoType | undefined {
+  if (!chainId) {
+    return undefined
   }
-
-  return PoolContractMap[chainId]?.[poolType]?.[poolName] ?? null
+  return PoolContractMap[chainId]?.[poolType]?.[poolName]
 }
 
 export function usePools(

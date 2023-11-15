@@ -14,6 +14,11 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'adminRewardRateTooHigh',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'creditLineTooHigh',
     type: 'error',
   },
@@ -29,27 +34,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'invalidCalendarUnit',
-    type: 'error',
-  },
-  {
-    inputs: [],
     name: 'lessThanRequiredCover',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notEpochManager',
-    type: 'error',
-  },
-  {
-    inputs: [],
     name: 'notPool',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'notPoolFeeManager',
     type: 'error',
   },
   {
@@ -60,31 +50,6 @@ const _abi = [
   {
     inputs: [],
     name: 'notPoolOwnerOrEA',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'notPoolOwnerTreasury',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'notPoolOwnerTreasuryOrEA',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'notTrancheVault',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'notTrancheVaultOrEpochManager',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'notTrancheVaultOrFirstLossCoverOrCreditOrPoolFeeManager',
     type: 'error',
   },
   {
@@ -214,7 +179,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'rewardsRate',
+        name: 'rewardRate',
         type: 'uint256',
       },
       {
@@ -356,9 +321,45 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'address[]',
-        name: 'firstLossCovers',
-        type: 'address[]',
+        internalType: 'uint8',
+        name: 'index',
+        type: 'uint8',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'firstLossCover',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint16',
+        name: 'coverRateInBps',
+        type: 'uint16',
+      },
+      {
+        indexed: false,
+        internalType: 'uint96',
+        name: 'coverCap',
+        type: 'uint96',
+      },
+      {
+        indexed: false,
+        internalType: 'uint96',
+        name: 'liquidityCap',
+        type: 'uint96',
+      },
+      {
+        indexed: false,
+        internalType: 'uint16',
+        name: 'maxPercentOfPoolValueInBps',
+        type: 'uint16',
+      },
+      {
+        indexed: false,
+        internalType: 'uint16',
+        name: 'riskYieldMultiplier',
+        type: 'uint16',
       },
       {
         indexed: false,
@@ -367,7 +368,7 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'FirstLossCoversChanged',
+    name: 'FirstLossCoverChanged',
     type: 'event',
   },
   {
@@ -445,7 +446,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint8',
-        name: 'withdrawalLockoutInCalendarUnit',
+        name: 'withdrawalLockoutInMonths',
         type: 'uint8',
       },
       {
@@ -538,14 +539,8 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'enum CalendarUnit',
-        name: 'unit',
-        type: 'uint8',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
-        name: 'gracePeriodInDays',
+        name: 'gracePeriodInMonths',
         type: 'uint256',
       },
       {
@@ -646,7 +641,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'rewardsRate',
+        name: 'rewardRate',
         type: 'uint256',
       },
       {
@@ -687,12 +682,6 @@ const _abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: 'enum CalendarUnit',
-        name: 'unit',
-        type: 'uint8',
-      },
       {
         indexed: false,
         internalType: 'uint256',
@@ -953,14 +942,8 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'enum CalendarUnit',
-        name: 'unit',
-        type: 'uint8',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
-        name: 'lockoutPeriodInDays',
+        name: 'lockoutPeriodInMonths',
         type: 'uint256',
       },
       {
@@ -1122,20 +1105,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'creditFeeManager',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'creditPnLManager',
+    name: 'creditDueManager',
     outputs: [
       {
         internalType: 'address',
@@ -1280,12 +1250,39 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'getFirstLossCoverProfitEscrow',
+    name: 'getFirstLossCoverConfig',
     outputs: [
       {
-        internalType: 'address',
+        components: [
+          {
+            internalType: 'uint16',
+            name: 'coverRateInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint96',
+            name: 'coverCap',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'liquidityCap',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint16',
+            name: 'maxPercentOfPoolValueInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'riskYieldMultiplier',
+            type: 'uint16',
+          },
+        ],
+        internalType: 'struct FirstLossCoverConfig',
         name: '',
-        type: 'address',
+        type: 'tuple',
       },
     ],
     stateMutability: 'view',
@@ -1340,7 +1337,7 @@ const _abi = [
           },
           {
             internalType: 'uint8',
-            name: 'withdrawalLockoutInCalendarUnit',
+            name: 'withdrawalLockoutInMonths',
             type: 'uint8',
           },
           {
@@ -1392,13 +1389,8 @@ const _abi = [
             type: 'uint96',
           },
           {
-            internalType: 'enum CalendarUnit',
-            name: 'calendarUnit',
-            type: 'uint8',
-          },
-          {
             internalType: 'uint8',
-            name: 'payPeriodInCalendarUnit',
+            name: 'payPeriodInMonths',
             type: 'uint8',
           },
           {
@@ -1413,7 +1405,7 @@ const _abi = [
           },
           {
             internalType: 'uint16',
-            name: 'defaultGracePeriodInCalendarUnit',
+            name: 'defaultGracePeriodInMonths',
             type: 'uint16',
           },
           {
@@ -1427,11 +1419,6 @@ const _abi = [
             type: 'uint16',
           },
           {
-            internalType: 'uint8',
-            name: 'flexCallWindowInEpochs',
-            type: 'uint8',
-          },
-          {
             internalType: 'bool',
             name: 'singleBorrower',
             type: 'bool',
@@ -1439,11 +1426,6 @@ const _abi = [
           {
             internalType: 'bool',
             name: 'singleCreditPerBorrower',
-            type: 'bool',
-          },
-          {
-            internalType: 'bool',
-            name: 'flexCreditEnabled',
             type: 'bool',
           },
         ],
@@ -1508,19 +1490,6 @@ const _abi = [
         internalType: 'address',
         name: 'eaNFTAddress',
         type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getRiskYieldMultipliers',
-    outputs: [
-      {
-        internalType: 'uint16[16]',
-        name: '',
-        type: 'uint16[16]',
       },
     ],
     stateMutability: 'view',
@@ -1645,11 +1614,11 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'isPoolOwnerTreasuryOrEA',
+    name: 'isFirstLossCover',
     outputs: [
       {
         internalType: 'bool',
-        name: '',
+        name: 'isCover',
         type: 'bool',
       },
     ],
@@ -1677,19 +1646,6 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'onlyEpochManager',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
     name: 'onlyOwnerOrHumaMasterAdmin',
     outputs: [],
     stateMutability: 'view',
@@ -1704,19 +1660,6 @@ const _abi = [
       },
     ],
     name: 'onlyPool',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'onlyPoolFeeManager',
     outputs: [],
     stateMutability: 'view',
     type: 'function',
@@ -1767,79 +1710,8 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'onlyPoolOwnerTreasury',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'onlyPoolOwnerTreasuryOrEA',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'onlyProtocolAndPoolOn',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'trancheVault',
-        type: 'address',
-      },
-    ],
-    name: 'onlyTrancheVault',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'onlyTrancheVaultOrEpochManager',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'onlyTrancheVaultOrFirstLossCoverOrCreditOrPoolFeeManager',
     outputs: [],
     stateMutability: 'view',
     type: 'function',
@@ -2027,7 +1899,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'rewardsRate',
+        name: 'rewardRate',
         type: 'uint256',
       },
       {
@@ -2125,14 +1997,36 @@ const _abi = [
         type: 'address',
       },
       {
-        internalType: 'uint16',
-        name: 'riskYieldMultiplier',
-        type: 'uint16',
-      },
-      {
-        internalType: 'address',
-        name: 'profitEscrow',
-        type: 'address',
+        components: [
+          {
+            internalType: 'uint16',
+            name: 'coverRateInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint96',
+            name: 'coverCap',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'liquidityCap',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint16',
+            name: 'maxPercentOfPoolValueInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'riskYieldMultiplier',
+            type: 'uint16',
+          },
+        ],
+        internalType: 'struct FirstLossCoverConfig',
+        name: 'config',
+        type: 'tuple',
       },
     ],
     name: 'setFirstLossCover',
@@ -2194,7 +2088,7 @@ const _abi = [
           },
           {
             internalType: 'uint8',
-            name: 'withdrawalLockoutInCalendarUnit',
+            name: 'withdrawalLockoutInMonths',
             type: 'uint8',
           },
           {
@@ -2265,11 +2159,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'enum CalendarUnit',
-        name: 'unit',
-        type: 'uint8',
-      },
-      {
         internalType: 'uint256',
         name: 'gracePeriod',
         type: 'uint256',
@@ -2289,24 +2178,6 @@ const _abi = [
       },
     ],
     name: 'setPoolFeeManager',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bool',
-        name: 'enabled',
-        type: 'bool',
-      },
-      {
-        internalType: 'uint256',
-        name: 'windowInEpoch',
-        type: 'uint256',
-      },
-    ],
-    name: 'setPoolFlexCall',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -2341,7 +2212,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'rewardsRate',
+        name: 'rewardRate',
         type: 'uint256',
       },
       {
@@ -2370,11 +2241,6 @@ const _abi = [
   },
   {
     inputs: [
-      {
-        internalType: 'enum CalendarUnit',
-        name: 'unit',
-        type: 'uint8',
-      },
       {
         internalType: 'uint256',
         name: 'number',
@@ -2471,11 +2337,6 @@ const _abi = [
   },
   {
     inputs: [
-      {
-        internalType: 'enum CalendarUnit',
-        name: 'unit',
-        type: 'uint8',
-      },
       {
         internalType: 'uint256',
         name: 'lockoutPeriod',
