@@ -198,6 +198,7 @@ function getRWReceivableInfo(
 
 type PoolStats = {
   id: string
+  totalPoolAssets: number
   amountCreditOriginated: number
   amountCreditRepaid: number
   amountCreditDefaulted: number
@@ -222,14 +223,14 @@ function getPoolStats(
 
   const PoolStatsQuery = `
     query {
-        poolStat(id:"${pool?.toLowerCase()}") {
-            id
-            amountCreditOriginated
-            amountCreditRepaid
-            amountCreditDefaulted
-            }
-        }
-    `
+      poolStat(id:"${pool?.toLowerCase()}") {
+        id
+        amountCreditOriginated
+        amountCreditRepaid
+        amountCreditDefaulted
+        totalPoolAssets
+      }
+    }`
 
   return requestPost<{
     errors?: unknown
