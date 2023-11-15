@@ -39,7 +39,7 @@ export function StreamFactoringBorrow({
   handleSuccess,
 }: StreamFactoringBorrowProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account, chainId } = useWeb3React()
+  const { account } = useWeb3React()
   const poolInfo = usePoolInfo(poolName, poolType)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
 
@@ -71,11 +71,10 @@ export function StreamFactoringBorrow({
       {step === WIDGET_STEP.ApproveAllowance && (
         <ApproveAllowance poolInfo={poolInfo} />
       )}
-      {step === WIDGET_STEP.Permit && account && chainId && (
+      {step === WIDGET_STEP.Permit && account && (
         <Permit
           poolInfo={poolInfo}
           payerAddress={payerAddress}
-          chainId={chainId}
           borrower={account}
           superToken={superToken}
         />
