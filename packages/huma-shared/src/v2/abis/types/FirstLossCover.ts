@@ -71,6 +71,7 @@ export interface FirstLossCoverInterface extends utils.Interface {
     'setPoolConfig(address)': FunctionFragment
     'symbol()': FunctionFragment
     'totalAssets()': FunctionFragment
+    'totalAssetsOf(address)': FunctionFragment
     'totalSupply()': FunctionFragment
     'transfer(address,uint256)': FunctionFragment
     'transferFrom(address,address,uint256)': FunctionFragment
@@ -110,6 +111,7 @@ export interface FirstLossCoverInterface extends utils.Interface {
       | 'setPoolConfig'
       | 'symbol'
       | 'totalAssets'
+      | 'totalAssetsOf'
       | 'totalSupply'
       | 'transfer'
       | 'transferFrom'
@@ -227,6 +229,10 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
+    functionFragment: 'totalAssetsOf',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'totalSupply',
     values?: undefined,
   ): string
@@ -323,6 +329,10 @@ export interface FirstLossCoverInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'totalAssets', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'totalAssetsOf',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result
   decodeFunctionResult(
@@ -491,7 +501,7 @@ export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
 export interface YieldPaidoutEventObject {
   account: string
-  yield: BigNumber
+  yields: BigNumber
 }
 export type YieldPaidoutEvent = TypedEvent<
   [string, BigNumber],
@@ -667,6 +677,11 @@ export interface FirstLossCover extends BaseContract {
 
     totalAssets(overrides?: CallOverrides): Promise<[BigNumber]>
 
+    totalAssetsOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { assets: BigNumber }>
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
 
     transfer(
@@ -828,6 +843,11 @@ export interface FirstLossCover extends BaseContract {
   symbol(overrides?: CallOverrides): Promise<string>
 
   totalAssets(overrides?: CallOverrides): Promise<BigNumber>
+
+  totalAssetsOf(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -991,6 +1011,11 @@ export interface FirstLossCover extends BaseContract {
 
     totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
+    totalAssetsOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     transfer(
@@ -1113,11 +1138,11 @@ export interface FirstLossCover extends BaseContract {
 
     'YieldPaidout(address,uint256)'(
       account?: PromiseOrValue<string> | null,
-      _yield?: null,
+      yields?: null,
     ): YieldPaidoutEventFilter
     YieldPaidout(
       account?: PromiseOrValue<string> | null,
-      _yield?: null,
+      yields?: null,
     ): YieldPaidoutEventFilter
   }
 
@@ -1256,6 +1281,11 @@ export interface FirstLossCover extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<BigNumber>
 
     totalAssets(overrides?: CallOverrides): Promise<BigNumber>
+
+    totalAssetsOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -1414,6 +1444,11 @@ export interface FirstLossCover extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    totalAssetsOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
 

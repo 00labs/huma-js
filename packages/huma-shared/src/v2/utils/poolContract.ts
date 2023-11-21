@@ -17,7 +17,13 @@ import {
 } from '../../utils'
 import CREDIT_ABI from '../abis/Credit.json'
 import { getContract, getERC20Contract } from '../../utils/web3'
-import { Credit, FirstLossCover, PoolConfig, TrancheVault } from '../abis/types'
+import {
+  Credit,
+  EpochManager,
+  FirstLossCover,
+  PoolConfig,
+  TrancheVault,
+} from '../abis/types'
 
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
@@ -101,6 +107,22 @@ export const getTrancheVaultContractV2 = async (
   return getContract<TrancheVault>(
     poolInfo[trancheVault],
     poolInfo.trancheVaultAbi,
+    provider,
+  )
+}
+
+export const getEpochManagerContractV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return null
+  }
+  return getContract<EpochManager>(
+    poolInfo.epochManager,
+    poolInfo.epochManagerAbi,
     provider,
   )
 }
@@ -290,4 +312,19 @@ export const getCreditConfig = async (
   }
 
   return creditContract.getCreditConfig(creditHash)
+}
+
+export const getCurrentEpochInfoV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<EpochManager.CurrentEpochStructOutput | undefined> => {
+  const epochManagerContract = await getEpochManagerContractV2(
+    poolName,
+    provider,
+  )
+  if (!epochManagerContract) {
+    return undefined
+  }
+
+  return epochManagerContract.currentEpoch()
 }

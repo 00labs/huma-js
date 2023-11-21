@@ -570,6 +570,7 @@ export const PoolContractMap: PoolContractMapType = {
               decimals: 18,
             },
           ],
+          hidden: true,
         },
       },
     },

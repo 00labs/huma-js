@@ -15,6 +15,7 @@ import {
   usePoolUnderlyingTokenBalanceV2,
   usePoolUnderlyingTokenContractV2,
   useTrancheVaultContractV2,
+  useWithdrawableAssetsV2,
 } from '../../../src/v2/hooks/usePool'
 import { useContract, useERC20Contract } from '../../../src/hooks'
 
@@ -421,6 +422,41 @@ describe('usePoolUnderlyingTokenBalanceV2', () => {
 
     const { result } = renderHook(() =>
       usePoolUnderlyingTokenBalanceV2('HumaCreditLineV2' as any, 'account', {
+        network: { chainId: 5 },
+      } as any),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(100))
+    })
+  })
+})
+
+describe('useWithdrawableAssetsV2', () => {
+  it('returns 0 if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useWithdrawableAssetsV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        'account',
+        undefined,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(BigNumber.from(0))
+    })
+  })
+
+  it('returns underlying token balance correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      withdrawableAssets: jest.fn().mockResolvedValue(BigNumber.from(100)),
+    })
+
+    const { result } = renderHook(() =>
+      useWithdrawableAssetsV2('HumaCreditLineV2' as any, 'senior', 'account', {
         network: { chainId: 5 },
       } as any),
     )
