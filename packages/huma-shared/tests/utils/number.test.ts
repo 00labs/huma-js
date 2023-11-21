@@ -63,6 +63,14 @@ describe('upScale', () => {
     expect(upScale('123.45', 2)).toBe('12345')
     expect(upScale(123.45, 2)).toBe(12345)
   })
+
+  it('returns the upscaled number if the input is a valid number and decimals would cause overflow', () => {
+    expect(
+      upScale<BigNumber>(BigNumber.from(10), 18).eq(
+        BigNumber.from('10000000000000000000'),
+      ),
+    ).toBe(true)
+  })
 })
 
 describe('toBigNumber', () => {
