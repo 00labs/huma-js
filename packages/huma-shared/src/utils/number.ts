@@ -67,7 +67,7 @@ export const upScale = <T = string>(
     return num as T
   }
   const result = BigNumber.isBigNumber(num)
-    ? num.mul(10 ** decimals!)
+    ? num.mul(BigNumber.from(10).pow(decimals!))
     : Number(num) * 10 ** decimals!
   if (typeof num === 'string') {
     return String(result) as T

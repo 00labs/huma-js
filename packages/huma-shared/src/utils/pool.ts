@@ -514,6 +514,8 @@ export const PoolContractMap: PoolContractMapType = {
           abi: HDT_ABI,
         },
         extra: {
+          borrower: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
+          rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           disableBorrow: true,
           detailsPage: true,
         },
