@@ -31,6 +31,7 @@ export type PoolInfoV2 = {
   poolType: POOL_TYPE
   pool: string
   poolConfig: string
+  poolCredit: string
   poolSafe: string
   seniorTrancheVault: string
   juniorTrancheVault: string
