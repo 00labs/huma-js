@@ -297,7 +297,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'yield',
+        name: 'yields',
         type: 'uint256',
       },
     ],
@@ -852,6 +852,25 @@ const _abi = [
       {
         internalType: 'uint256',
         name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'totalAssetsOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'assets',
         type: 'uint256',
       },
     ],

@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Credit__factory } from './Credit__factory'
+export { EpochManager__factory } from './EpochManager__factory'
 export { FirstLossCover__factory } from './FirstLossCover__factory'
 export { Pool__factory } from './Pool__factory'
 export { PoolConfig__factory } from './PoolConfig__factory'

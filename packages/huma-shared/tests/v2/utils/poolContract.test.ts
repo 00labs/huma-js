@@ -7,6 +7,8 @@ import {
   getERC20Contract,
 } from '../../../src/utils'
 import {
+  getCurrentEpochInfoV2,
+  getEpochManagerContractV2,
   getFirstLossCoverAssetsV2,
   getLenderPositionV2,
   getPoolConfigContractV2,
@@ -148,6 +150,29 @@ describe('getTrancheVaultContractV2', () => {
       { network: { chainId: 5 } } as any,
     )
     expect(result?.getRoleAdmin).toBeDefined()
+  })
+})
+
+describe('getEpochManagerContractV2', () => {
+  it('should return null if cannot find pool info', async () => {
+    const result = await getEpochManagerContractV2(
+      'invalidPoolName' as any,
+      { network: { chainId: 5 } } as any,
+    )
+    expect(result).toEqual(null)
+  })
+
+  it('should return pool underlying token contract', async () => {
+    ;(getContract as jest.Mock).mockReturnValueOnce({
+      currentEpoch: jest.fn().mockResolvedValueOnce({}),
+    })
+    ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
+
+    const result = await getEpochManagerContractV2(
+      'HumaCreditLineV2' as any,
+      { network: { chainId: 5 } } as any,
+    )
+    expect(result?.currentEpoch).toBeDefined()
   })
 })
 
@@ -352,5 +377,32 @@ describe('getTrancheAssetsToSharesV2', () => {
       BigNumber.from(1),
     )
     expect(result).toEqual(BigNumber.from(100))
+  })
+})
+
+describe('getCurrentEpochInfoV2', () => {
+  it('should return undefined if cannot find epochManagerContract', async () => {
+    const result = await getCurrentEpochInfoV2(
+      'invalidPoolName' as any,
+      { network: { chainId: 5 } } as any,
+    )
+    expect(result).toEqual(undefined)
+  })
+
+  it('should return current epoch info', async () => {
+    const mockCurrentEpochInfo = {
+      id: BigNumber.from(1),
+      endTime: BigNumber.from(32452345),
+    }
+    ;(getContract as jest.Mock).mockReturnValueOnce({
+      currentEpoch: jest.fn().mockResolvedValueOnce(mockCurrentEpochInfo),
+    })
+    ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
+
+    const result = await getCurrentEpochInfoV2(
+      'HumaCreditLineV2' as any,
+      { network: { chainId: 5 } } as any,
+    )
+    expect(result).toEqual(mockCurrentEpochInfo)
   })
 })

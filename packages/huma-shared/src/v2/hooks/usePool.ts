@@ -3,7 +3,7 @@ import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
-import { ChainEnum, isChainEnum, POOL_NAME } from '../../utils'
+import { ChainEnum, getContract, isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import {
@@ -251,7 +251,7 @@ export function useLenderPositionV2(
   )
   const [balance, refresh] = useContractValueV2(
     vaultContract,
-    'balanceOf',
+    'totalAssetsOf',
     account,
   )
 
@@ -315,4 +315,69 @@ export function usePoolUnderlyingTokenBalanceV2(
   )
 
   return [balance, refresh]
+}
+
+export const useFirstLossCoverAssetsV2 = (
+  poolName: POOL_NAME,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [BigNumber | undefined, () => void] => {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const [totalAssets, setTotalAssets] = useState<BigNumber | undefined>()
+  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    if (account && poolInfo && poolConfigContract) {
+      const fetchData = async () => {
+        const firstLossCovers = await poolConfigContract.getFirstLossCovers()
+        const firstLossCoverContracts = firstLossCovers
+          .filter((item) => !!item)
+          .map((item) =>
+            getContract<FirstLossCover>(
+              item,
+              poolInfo.firstLossCoverAbi,
+              provider,
+            ),
+          )
+          .flatMap((item) => (item ? [item] : []))
+
+        const firstLossCoverAssets = await Promise.all(
+          firstLossCoverContracts.map((contract) =>
+            contract.totalAssetsOf(account),
+          ),
+        )
+
+        let totalAssets = BigNumber.from(0)
+        firstLossCoverAssets.forEach((assets) => {
+          totalAssets = totalAssets.add(assets)
+        })
+        setTotalAssets(totalAssets)
+      }
+      fetchData()
+    }
+  }, [account, poolConfigContract, poolInfo, provider, refreshCount])
+
+  return [totalAssets, refresh]
+}
+
+export function useWithdrawableAssetsV2(
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [BigNumber, () => void] {
+  const vaultContract = useTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  const [withdrawableAssets = BigNumber.from(0), refresh] = useContractValueV2(
+    vaultContract,
+    'withdrawableAssets',
+    account,
+  )
+
+  return [withdrawableAssets, refresh]
 }

@@ -35,11 +35,13 @@ export type PoolInfoV2 = {
   poolSafe: string
   seniorTrancheVault: string
   juniorTrancheVault: string
+  epochManager: string
   poolAbi: unknown
   poolSafeAbi: unknown
   poolConfigAbi: unknown
   trancheVaultAbi: unknown
   firstLossCoverAbi: unknown
+  epochManagerAbi: unknown
   seniorAPY: string
   juniorAPY: string
   title: string
