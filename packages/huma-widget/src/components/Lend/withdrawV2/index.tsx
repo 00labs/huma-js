@@ -47,10 +47,18 @@ export function LendWithdrawV2({
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [lenderPositionSenior, refreshLenderPositionSenior] =
-    useLenderPositionV2(poolName, 'junior', account, provider)
-  const [lenderPositionJunior, refreshLenderPositionJunior] =
-    useLenderPositionV2(poolName, 'junior', account, provider)
+  const [seniorPosition, refreshSeniorPosition] = useLenderPositionV2(
+    poolName,
+    'senior',
+    account,
+    provider,
+  )
+  const [juniorPosition, refreshJuniorPosition] = useLenderPositionV2(
+    poolName,
+    'junior',
+    account,
+    provider,
+  )
   const poolUnderlyingToken = usePoolUnderlyingTokenInfo(
     poolName,
     defaultPoolUnderlyingToken,
@@ -59,27 +67,27 @@ export function LendWithdrawV2({
 
   useEffect(() => {
     if (!step) {
-      if (lenderPositionSenior && !lenderPositionJunior) {
+      if (seniorPosition && !juniorPosition) {
         setSelectedTranche('senior')
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
-      } else if (lenderPositionJunior && !lenderPositionSenior) {
+      } else if (juniorPosition && !seniorPosition) {
         setSelectedTranche('junior')
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
       } else {
         dispatch(setStep(WIDGET_STEP.ChooseTranche))
       }
     }
-  }, [dispatch, lenderPositionSenior, lenderPositionJunior, step])
+  }, [dispatch, seniorPosition, juniorPosition, step])
 
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
-      refreshLenderPositionSenior()
-      refreshLenderPositionJunior()
+      refreshSeniorPosition()
+      refreshJuniorPosition()
       if (handleSuccess) {
         handleSuccess(blockNumber)
       }
     },
-    [handleSuccess, refreshLenderPositionJunior, refreshLenderPositionSenior],
+    [handleSuccess, refreshJuniorPosition, refreshSeniorPosition],
   )
 
   if (!poolInfo || !poolUnderlyingToken) {

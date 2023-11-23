@@ -8,9 +8,9 @@ import {
 import { ThemeProvider } from '@mui/material'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { Provider as AtomProvider } from 'jotai'
+import { useEffect, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { useEffect, useState } from 'react'
 import { ChainSupportProvider } from './components/ChainSupportProvider'
 import {
   CreditLineApprove,
@@ -32,17 +32,18 @@ import {
   InvoiceFactoringPayment,
   InvoiceFactoringPaymentProps,
 } from './components/InvoiceFactoring/payment'
+import { LendRedeemPropsV2, LendRedeemV2 } from './components/Lend/RedeemV2'
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
 import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
-import { SuperfluidFactoring } from './components/SuperfluidFactoring'
-import { store } from './store'
-import { themeHuma } from './theme'
-import { WCProps } from './utilTypes'
 import {
   LendWithdrawPropsV2,
   LendWithdrawV2,
 } from './components/Lend/withdrawV2'
+import { SuperfluidFactoring } from './components/SuperfluidFactoring'
+import { store } from './store'
+import { themeHuma } from './theme'
+import { WCProps } from './utilTypes'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -295,6 +296,28 @@ export function LendWithdrawWidgetV2(props: LendWithdrawWidgetPropsV2) {
   return (
     <Widget {...props}>
       <LendWithdrawV2 {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Lend pool redeem widget props V2
+ * @typedef {Object} LendRedeemWidgetPropsV2
+ * @property {LendRedeemPropsV2} LendRedeemPropsV2 - Lend pool redeem props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type LendRedeemWidgetPropsV2 = LendRedeemPropsV2 & WidgetProps
+
+/**
+ * Lend redeem widget V2
+ *
+ * @param {LendRedeemWidgetPropsV2} props - The lend pool redeem widget props V2.
+ * @returns Lend pool redeem widget component V2
+ */
+export function LendRedeemWidgetV2(props: LendRedeemWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <LendRedeemV2 {...props} />
     </Widget>
   )
 }

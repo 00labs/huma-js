@@ -381,3 +381,36 @@ export function useWithdrawableAssetsV2(
 
   return [withdrawableAssets, refresh]
 }
+
+type RedemptionInfo = {
+  shares: BigNumber
+  amount: BigNumber
+}
+
+export function useCancellableRedemptionInfoV2(
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [RedemptionInfo | undefined, () => void] {
+  const [redemptionInfo, setRedemptionInfo] = useState<RedemptionInfo>()
+  const vaultContract = useTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    if (account && vaultContract) {
+      const fetchData = async () => {
+        const shares = await vaultContract.cancellableRedemptionShares(account)
+        const amount = await vaultContract.convertToAssets(shares)
+        setRedemptionInfo({ shares, amount })
+      }
+      fetchData()
+    }
+  }, [account, vaultContract, refreshCount])
+
+  return [redemptionInfo, refresh]
+}
