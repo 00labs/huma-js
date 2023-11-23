@@ -15,6 +15,7 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     poolType: POOL_TYPE.CreditLine,
     pool: '0x3Eb397BaBdd57E3a37a9fce7aADa11Bbc85a8429',
     poolConfig: '0xC662f70b755Fd4E027367793A2Fe8385EDa85785',
+    poolCredit: '',
     poolSafe: '0xca5bFcC7ec24f2222853176a0caDe98db4606D05',
     seniorTrancheVault: '0xed674Dc30ED04b8FB2a97a23AF0EBA8c076d5ca0',
     juniorTrancheVault: '0x3234Cf74Aef57CC2A69f47d693e38D5272C41Ec5',

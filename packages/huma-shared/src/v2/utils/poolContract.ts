@@ -1,6 +1,9 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { BigNumber } from 'ethers'
-
+import { BigNumber, ethers } from 'ethers'
+import {
+  CreditConfigStructOutput,
+  CreditRecordStructOutput,
+} from '../abis/types/Credit'
 import {
   CHAIN_POOLS_INFO_V2,
   PoolInfoV2,
@@ -12,8 +15,9 @@ import {
   isChainEnum,
   POOL_NAME,
 } from '../../utils'
+import CREDIT_ABI from '../abis/Credit.json'
 import { getContract, getERC20Contract } from '../../utils/web3'
-import { FirstLossCover, PoolConfig, TrancheVault } from '../abis/types'
+import { Credit, FirstLossCover, PoolConfig, TrancheVault } from '../abis/types'
 
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
@@ -28,7 +32,7 @@ export const getPoolInfoV2 = (
 export const getPoolConfigContractV2 = async (
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
+): Promise<PoolConfig | null> => {
   const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
@@ -44,7 +48,7 @@ export const getPoolConfigContractV2 = async (
 export const getPoolUnderlyingTokenContractV2 = async (
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
+): Promise<ethers.Contract | null> => {
   const poolConfigContract = await getPoolConfigContractV2(poolName, provider)
   if (!poolConfigContract) {
     return null
@@ -53,11 +57,38 @@ export const getPoolUnderlyingTokenContractV2 = async (
   return getERC20Contract(underlyingToken, provider)
 }
 
+export const getPoolUnderlyingTokenBalanceV2 = async (
+  poolName: POOL_NAME,
+  address: string,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<BigNumber | null> => {
+  const poolUnderlyingTokenContract = await getPoolUnderlyingTokenContractV2(
+    poolName,
+    provider,
+  )
+  if (!poolUnderlyingTokenContract) {
+    return null
+  }
+  return poolUnderlyingTokenContract.balanceOf(address)
+}
+
+export const getPoolCreditContractV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<Credit | null> => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return null
+  }
+  return getContract<Credit>(poolInfo.poolCredit, CREDIT_ABI, provider)
+}
+
 export const getTrancheVaultContractV2 = async (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
+): Promise<TrancheVault | null> => {
   const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
@@ -183,4 +214,80 @@ export const getTrancheAssetsToSharesV2 = async (
   }
 
   return trancheVaultContract.convertToShares(assets)
+}
+
+export const getCreditHash = (
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  account: string | undefined,
+): string | undefined => {
+  if (!account) {
+    return undefined
+  }
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return undefined
+  }
+
+  // Get keccak256 hash of the credit contract and account
+  return ethers.utils.keccak256(
+    ethers.utils.defaultAbiCoder.encode(
+      ['address', 'address'],
+      [poolInfo.poolCredit, account],
+    ),
+  )
+}
+
+export const getCreditRecord = async (
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<CreditRecordStructOutput | undefined> => {
+  if (!account) {
+    return undefined
+  }
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return undefined
+  }
+
+  const creditContract = await getPoolCreditContractV2(poolName, provider)
+  if (!creditContract) {
+    return undefined
+  }
+
+  const creditHash = getCreditHash(poolName, chainId, account)
+  if (!creditHash) {
+    return undefined
+  }
+
+  return creditContract.getCreditRecord(creditHash)
+}
+
+export const getCreditConfig = async (
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<CreditConfigStructOutput | undefined> => {
+  if (!account) {
+    return undefined
+  }
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return undefined
+  }
+
+  const creditContract = await getPoolCreditContractV2(poolName, provider)
+  if (!creditContract) {
+    return undefined
+  }
+
+  const creditHash = getCreditHash(poolName, chainId, account)
+  if (!creditHash) {
+    return undefined
+  }
+
+  return creditContract.getCreditConfig(creditHash)
 }
