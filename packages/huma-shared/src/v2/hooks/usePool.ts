@@ -367,13 +367,13 @@ export function useWithdrawableAssetsV2(
   trancheType: TrancheType,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [BigNumber, () => void] {
+): [BigNumber | undefined, () => void] {
   const vaultContract = useTrancheVaultContractV2(
     poolName,
     trancheType,
     provider,
   )
-  const [withdrawableAssets = BigNumber.from(0), refresh] = useContractValueV2(
+  const [withdrawableAssets, refresh] = useContractValueV2(
     vaultContract,
     'withdrawableAssets',
     account,

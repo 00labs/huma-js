@@ -1,48 +1,32 @@
 import {
   PoolInfoV2,
   TrancheType,
-  UnderlyingTokenInfo,
-  getTrancheAssetsToSharesV2,
-  toBigNumber,
-  upScale,
   useTrancheVaultContractV2,
 } from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 
-import { useWeb3React } from '@web3-react/core'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
-import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { TxSendModalV2 } from '../../TxSendModalV2'
 
 type Props = {
   poolInfo: PoolInfoV2
-  poolUnderlyingToken: UnderlyingTokenInfo
-  selectedTranche: TrancheType | undefined
+  selectedTranche: TrancheType
 }
 
 export function Transfer({
   poolInfo,
-  poolUnderlyingToken,
   selectedTranche,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { decimals } = poolUnderlyingToken
   const { account, provider } = useWeb3React()
-  const { withdrawAmount } = useAppSelector(selectWidgetState)
   const trancheVaultContract = useTrancheVaultContractV2(
     poolInfo.poolName,
-    selectedTranche!,
+    selectedTranche,
     provider,
     account,
-  )
-  const withdrawBigNumber = toBigNumber(upScale(withdrawAmount!, decimals))
-  const withdrawShares = getTrancheAssetsToSharesV2(
-    poolInfo.poolName,
-    selectedTranche!,
-    provider,
-    withdrawBigNumber,
   )
 
   const handleSuccess = useCallback(() => {
@@ -56,8 +40,8 @@ export function Transfer({
   return (
     <TxSendModalV2
       contract={trancheVaultContract}
-      method='addRedemptionRequest'
-      params={[withdrawShares]}
+      method='disburse'
+      params={[account]}
       handleSuccess={handleSuccess}
     />
   )

@@ -11,7 +11,11 @@ import React, { useEffect, useState } from 'react'
 
 import { REDEMPTION_TYPE, RedemptionActionInfo } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
-import { setRedeemAmount, setStep } from '../../../store/widgets.reducers'
+import {
+  setRedeemAmount,
+  setRedeemShares,
+  setStep,
+} from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { LoadingModal } from '../../LoadingModal'
@@ -107,7 +111,8 @@ export function ChooseAmount({
     const shares = Number(newAmount) / sharePrice
     setCurrentShares(shares)
     setCurrentAmount(Number(newAmount))
-    dispatch(setRedeemAmount({ amount: Number(newAmount), shares }))
+    dispatch(setRedeemAmount(Number(newAmount)))
+    dispatch(setRedeemShares(shares))
   }
 
   const handleAction = () => {

@@ -47,8 +47,9 @@ export type WidgetState = {
   remainDueAmount?: number
   supplyAmount?: number
   withdrawAmount?: number
-  redeemShares?: number
+  withdrawShares?: number
   redeemAmount?: number
+  redeemShares?: number
   errorMessage?: string
   errorReason?: string
   tokenId?: string

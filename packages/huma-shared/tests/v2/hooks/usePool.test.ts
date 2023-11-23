@@ -434,7 +434,7 @@ describe('usePoolUnderlyingTokenBalanceV2', () => {
 })
 
 describe('useWithdrawableAssetsV2', () => {
-  it('returns 0 if provider is undefined', async () => {
+  it('returns undefined if provider is undefined', async () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
@@ -447,11 +447,11 @@ describe('useWithdrawableAssetsV2', () => {
     )
 
     await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(0))
+      expect(result.current[0]).toEqual(undefined)
     })
   })
 
-  it('returns underlying token balance correctly', async () => {
+  it('returns withdrawable assets correctly', async () => {
     ;(useContract as jest.Mock).mockReturnValue({
       withdrawableAssets: jest.fn().mockResolvedValue(BigNumber.from(100)),
     })

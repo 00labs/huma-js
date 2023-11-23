@@ -1,14 +1,15 @@
-import { useWeb3React } from '@web3-react/core'
 import {
   POOL_NAME,
   TrancheType,
   UnderlyingTokenInfo,
-  useLenderPositionV2,
   usePoolInfoV2,
+  useWithdrawableAssetsV2,
 } from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { usePoolUnderlyingTokenInfo } from '../../../hooks/usePoolUnderlyingTokenInfo'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -16,10 +17,8 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseTranche } from './1-ChooseTranche'
-import { ChooseAmount } from './2-ChooseAmount'
-import { usePoolUnderlyingTokenInfo } from '../../../hooks/usePoolUnderlyingTokenInfo'
-import { Done } from './4-Done'
-import { Transfer } from './3-Transfer'
+import { Transfer } from './2-Transfer'
+import { Done } from './3-Done'
 
 /**
  * Lend pool withdraw props
@@ -47,18 +46,10 @@ export function LendWithdrawV2({
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [seniorPosition, refreshSeniorPosition] = useLenderPositionV2(
-    poolName,
-    'senior',
-    account,
-    provider,
-  )
-  const [juniorPosition, refreshJuniorPosition] = useLenderPositionV2(
-    poolName,
-    'junior',
-    account,
-    provider,
-  )
+  const [seniorWithdrawableAmount, refreshSeniorWithdrawableAmount] =
+    useWithdrawableAssetsV2(poolName, 'senior', account, provider)
+  const [juniorWithdrawableAmount, refreshJuniorWithdrawableAmount] =
+    useWithdrawableAssetsV2(poolName, 'junior', account, provider)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfo(
     poolName,
     defaultPoolUnderlyingToken,
@@ -67,27 +58,23 @@ export function LendWithdrawV2({
 
   useEffect(() => {
     if (!step) {
-      if (seniorPosition && !juniorPosition) {
-        setSelectedTranche('senior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
-      } else if (juniorPosition && !seniorPosition) {
-        setSelectedTranche('junior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
-      } else {
-        dispatch(setStep(WIDGET_STEP.ChooseTranche))
-      }
+      dispatch(setStep(WIDGET_STEP.ChooseTranche))
     }
-  }, [dispatch, seniorPosition, juniorPosition, step])
+  }, [dispatch, step])
 
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
-      refreshSeniorPosition()
-      refreshJuniorPosition()
+      refreshSeniorWithdrawableAmount()
+      refreshJuniorWithdrawableAmount()
       if (handleSuccess) {
         handleSuccess(blockNumber)
       }
     },
-    [handleSuccess, refreshJuniorPosition, refreshSeniorPosition],
+    [
+      handleSuccess,
+      refreshJuniorWithdrawableAmount,
+      refreshSeniorWithdrawableAmount,
+    ],
   )
 
   if (!poolInfo || !poolUnderlyingToken) {
@@ -107,17 +94,12 @@ export function LendWithdrawV2({
           poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
           changeTranche={setSelectedTranche}
+          seniorWithdrawableAmount={seniorWithdrawableAmount}
+          juniorWithdrawableAmount={juniorWithdrawableAmount}
         />
       )}
-      {step === WIDGET_STEP.ChooseAmount && (
-        <ChooseAmount poolUnderlyingToken={poolUnderlyingToken} />
-      )}
-      {step === WIDGET_STEP.Transfer && (
-        <Transfer
-          poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
-          selectedTranche={selectedTranche}
-        />
+      {step === WIDGET_STEP.Transfer && selectedTranche && (
+        <Transfer poolInfo={poolInfo} selectedTranche={selectedTranche} />
       )}
       {step === WIDGET_STEP.Done && (
         <Done
