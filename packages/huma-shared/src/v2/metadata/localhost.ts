@@ -1,11 +1,13 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
-import POOL_ABI from '../abis/Pool.json'
-import POOL_SAFE_ABI from '../abis/PoolSafe.json'
-import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
-import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
-import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
+import POOL_CREDIT_ABI from '../abis/Credit.json'
 import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
+import POOL_ABI from '../abis/Pool.json'
+import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
+import POOL_SAFE_ABI from '../abis/PoolSafe.json'
+import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
+import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
 export const LOCALHOST_METADATA: PoolsInfoV2 = {
@@ -21,7 +23,12 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x68B1D87F95878fE05B998F19b66F4baba5De1aed',
     juniorTrancheVault: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c',
     epochManager: '',
+    firstLossCovers: {
+      [FirstLossCoverIndex.borrower]: '',
+      [FirstLossCoverIndex.affiliate]: '',
+    },
     poolAbi: POOL_ABI,
+    poolCreditAbi: POOL_CREDIT_ABI,
     poolSafeAbi: POOL_SAFE_ABI,
     poolConfigAbi: POOL_CONFIG_ABI,
     trancheVaultAbi: TRANCHE_VAULT_ABI,

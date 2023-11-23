@@ -10,13 +10,9 @@ import {
 } from '../../utils'
 import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
+import { FirstLossCoverIndex } from '../types'
 
 export type TrancheType = 'senior' | 'junior'
-
-export enum FirstLossCoverIndex {
-  borrower = 0,
-  affiliate = 1,
-}
 
 export type KYCCopy = {
   title: string
@@ -36,7 +32,12 @@ export type PoolInfoV2 = {
   seniorTrancheVault: string
   juniorTrancheVault: string
   epochManager: string
+  firstLossCovers: {
+    [FirstLossCoverIndex.borrower]: string
+    [FirstLossCoverIndex.affiliate]: string
+  }
   poolAbi: unknown
+  poolCreditAbi: unknown
   poolSafeAbi: unknown
   poolConfigAbi: unknown
   trancheVaultAbi: unknown

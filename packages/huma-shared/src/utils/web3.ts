@@ -58,6 +58,7 @@ export function getContract<T = Contract>(
 export function getERC20Contract(
   address: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
 ) {
-  return getContract<Erc20>(address, ERC20_ABI, provider)
+  return getContract<Erc20>(address, ERC20_ABI, provider, account)
 }

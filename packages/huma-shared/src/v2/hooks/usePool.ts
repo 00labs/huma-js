@@ -1,3 +1,4 @@
+import { MaxUint256 } from '@ethersproject/constants'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
@@ -7,6 +8,7 @@ import { ChainEnum, getContract, isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import {
+  Credit,
   FirstLossCover,
   Pool,
   PoolConfig,
@@ -14,11 +16,30 @@ import {
   TrancheVault,
 } from '../abis/types'
 import {
+  CreditConfigStructOutput,
+  CreditRecordStructOutput,
+} from '../abis/types/Credit'
+import { FirstLossCoverIndex } from '../types'
+import {
   CHAIN_POOLS_INFO_V2,
-  FirstLossCoverIndex,
   PoolInfoV2,
   TrancheType,
+  UnderlyingTokenInfo,
 } from '../utils/pool'
+import {
+  getCreditConfig,
+  getCreditHash,
+  getCreditRecord,
+  getPoolUnderlyingTokenBalanceV2,
+  getPoolUnderlyingTokenInfoV2,
+} from '../utils/poolContract'
+
+export type AccountStatsV2 = {
+  creditRecord?: CreditRecordStructOutput
+  creditConfig?: CreditConfigStructOutput
+  creditAvailable?: BigNumber
+  payoffAmount?: BigNumber
+}
 
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,
@@ -28,6 +49,15 @@ export const usePoolInfoV2 = (
     return CHAIN_POOLS_INFO_V2[chainId]?.[poolName]
   }
   return undefined
+}
+
+function usePoolContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  return useContract<Pool>(poolInfo?.pool, poolInfo?.poolAbi, provider)
 }
 
 function usePoolSafeContractV2(
@@ -92,28 +122,32 @@ export function useFirstLossCoverContractV2(
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
   provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
 ) {
-  const poolConfig = usePoolConfigContractV2(poolName, provider)
-  const [firstLossCover, setFirstLossCover] = useState<string | undefined>()
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setFirstLossCover(
-          await poolConfig?.getFirstLossCover(firstLossCoverType),
-        )
-      } catch (err) {
-        setFirstLossCover(undefined)
-      }
-    }
-
-    fetchData()
-  }, [firstLossCoverType, poolConfig])
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const firstLossCover = poolInfo?.firstLossCovers?.[firstLossCoverType]
 
   return useContract<FirstLossCover>(
     firstLossCover,
     FIRST_LOSS_COVER_ABI,
     provider,
+    account,
+  )
+}
+
+export function useCreditContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  return useContract<Credit>(
+    poolInfo?.poolCredit,
+    poolInfo?.poolCreditAbi,
+    provider,
+    account,
   )
 }
 
@@ -288,18 +322,49 @@ export function usePoolSafeAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [BigNumber, () => void] {
+) {
   const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const spender = poolInfo?.poolSafe
   const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
-  const [allowance = BigNumber.from(0), refresh] = useContractValueV2(
-    contract,
-    'allowance',
-    [account, spender],
-  )
+  const [allowance, setAllowance] = useState<BigNumber>()
+  const [autopayEnabled, setAutopayEnabled] = useState<boolean>()
+  const [refreshCount, refresh] = useForceRefresh()
 
-  return [allowance, refresh]
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && account && spender) {
+        const allowance = await contract.allowance(account, spender)
+        setAllowance(allowance)
+        setAutopayEnabled(allowance.gt(MaxUint256.div(2)))
+      }
+    }
+    fetchData()
+  }, [account, contract, spender, refreshCount])
+
+  return { autopayEnabled, allowance, refresh }
+}
+
+export function usePoolUnderlyingTokenInfoV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): UnderlyingTokenInfo | undefined {
+  const [poolUnderlyingTokenInfo, setPoolUnderlyingTokenInfo] =
+    useState<UnderlyingTokenInfo>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const poolUnderlyingTokenInfo = await getPoolUnderlyingTokenInfoV2(
+        poolName,
+        provider,
+      )
+      setPoolUnderlyingTokenInfo(poolUnderlyingTokenInfo)
+    }
+
+    fetchData()
+  }, [poolName, provider])
+
+  return poolUnderlyingTokenInfo
 }
 
 export function usePoolUnderlyingTokenBalanceV2(
@@ -413,4 +478,214 @@ export function useCancellableRedemptionInfoV2(
   }, [account, vaultContract, refreshCount])
 
   return [redemptionInfo, refresh]
+}
+
+export function useAccountStatsV2(
+  poolName: POOL_NAME,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [AccountStatsV2, () => void] {
+  const chainId = provider?.network?.chainId
+  const [accountStats, setAccountStats] = useState<AccountStatsV2>({})
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (account) {
+        const creditHash = getCreditHash(poolName, chainId, account)
+        if (creditHash) {
+          const [creditRecord, creditConfig, poolTokenBalance] =
+            await Promise.all([
+              getCreditRecord(poolName, chainId, account, provider),
+              getCreditConfig(poolName, chainId, account, provider),
+              getPoolUnderlyingTokenBalanceV2(poolName, account, provider),
+            ])
+          if (creditRecord && creditConfig && poolTokenBalance) {
+            const principal = creditRecord.unbilledPrincipal
+              .add(creditRecord.nextDue)
+              .add(creditRecord.totalPastDue)
+            const unusedCredit = creditConfig.creditLimit.sub(principal)
+            // Set available credit to the minimum of the pool balance or the credit available amount,
+            // since both are upper bounds on the amount of credit that can be borrowed.
+            // If either is negative, cap the available credit to 0.
+            let creditAvailable = unusedCredit.lt(poolTokenBalance)
+              ? unusedCredit
+              : poolTokenBalance
+            creditAvailable = creditAvailable.lt(0)
+              ? BigNumber.from(0)
+              : creditAvailable
+
+            setAccountStats({
+              creditRecord,
+              creditConfig,
+              creditAvailable,
+              payoffAmount: creditRecord.unbilledPrincipal
+                .add(creditRecord.nextDue)
+                .add(creditRecord.totalPastDue),
+            })
+          }
+        }
+      }
+    }
+    fetchData()
+  }, [account, chainId, poolName, provider, refreshCount])
+
+  return [accountStats, refresh]
+}
+
+export function useFirstLossCoverSufficientV2(
+  poolName: POOL_NAME,
+  firstLossCoverIndex: FirstLossCoverIndex,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [boolean | undefined, () => void] {
+  const contract = useFirstLossCoverContractV2(
+    poolName,
+    firstLossCoverIndex,
+    provider,
+  )
+  const [isSufficient, setIsSufficient] = useState<boolean>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && account) {
+        const isSufficient = await contract.isSufficient(account)
+        setIsSufficient(isSufficient)
+      }
+    }
+    fetchData()
+  }, [account, contract, refreshCount])
+
+  return [isSufficient, refresh]
+}
+
+export function useFirstLossCoverAllowanceV2(
+  poolName: POOL_NAME,
+  firstLossCoverType: FirstLossCoverIndex,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [BigNumber | undefined, () => void] {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const spender = poolInfo?.firstLossCovers?.[firstLossCoverType]
+  const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
+  const [allowance, refresh] = useContractValueV2(contract, 'allowance', [
+    account,
+    spender,
+  ])
+
+  return [allowance, refresh]
+}
+
+export function useFirstLossCoverInvestV2(
+  poolName: POOL_NAME,
+  firstLossCoverIndex: FirstLossCoverIndex,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [{ balance: BigNumber; assets: BigNumber } | undefined, () => void] {
+  const contract = useFirstLossCoverContractV2(
+    poolName,
+    firstLossCoverIndex,
+    provider,
+  )
+  const [invest, setInvest] = useState<{
+    balance: BigNumber
+    assets: BigNumber
+  }>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && account) {
+        const balance = await contract.balanceOf(account)
+        const assets = await contract.convertToAssets(balance)
+        setInvest({
+          balance,
+          assets,
+        })
+      }
+    }
+    fetchData()
+  }, [account, contract, refreshCount])
+
+  return [invest, refresh]
+}
+
+export const useFirstLossCoverRequirement = (
+  poolName: POOL_NAME,
+  firstLossCoverType: FirstLossCoverIndex,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [
+  { minRequirement: BigNumber; minAmountToDeposit: BigNumber } | undefined,
+  () => void,
+] => {
+  const [requirement, setRequirement] = useState<{
+    minRequirement: BigNumber
+    minAmountToDeposit: BigNumber
+  }>()
+  const BP_FACTOR = BigNumber.from(10000)
+  const poolContract = usePoolContractV2(poolName, provider)
+  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
+  const firstLossCoverContract = useFirstLossCoverContractV2(
+    poolName,
+    firstLossCoverType,
+    provider,
+  )
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (
+        account &&
+        poolContract &&
+        poolConfigContract &&
+        firstLossCoverContract
+      ) {
+        const [
+          lossCoverProviderConfig,
+          firstLossCoverBalance,
+          lpConfig,
+          poolValue,
+        ] = await Promise.all([
+          firstLossCoverContract.getCoverProviderConfig(account),
+          firstLossCoverContract.balanceOf(account),
+          poolConfigContract.getLPConfig(),
+          poolContract.totalAssets(),
+        ])
+
+        const poolCap = lpConfig.liquidityCap
+        const minFromPoolCap = poolCap
+          .mul(lossCoverProviderConfig.poolCapCoverageInBps)
+          .div(BP_FACTOR)
+        const minFromPoolValue = poolValue
+          .mul(lossCoverProviderConfig.poolValueCoverageInBps)
+          .div(BP_FACTOR)
+        const minRequirement = minFromPoolCap.gt(minFromPoolValue)
+          ? minFromPoolCap
+          : minFromPoolValue
+
+        const firstLossCoverAssets =
+          await firstLossCoverContract.convertToAssets(firstLossCoverBalance)
+
+        setRequirement({
+          minRequirement,
+          minAmountToDeposit: minRequirement.gt(firstLossCoverAssets)
+            ? minRequirement.sub(firstLossCoverAssets)
+            : BigNumber.from(0),
+        })
+      }
+    }
+    fetchData()
+  }, [
+    BP_FACTOR,
+    account,
+    firstLossCoverContract,
+    poolConfigContract,
+    poolContract,
+    refreshCount,
+  ])
+
+  return [requirement, refresh]
 }
