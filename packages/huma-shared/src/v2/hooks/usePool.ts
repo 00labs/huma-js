@@ -2,11 +2,13 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
+import { MaxUint256 } from '@ethersproject/constants'
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import { ChainEnum, getContract, isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import {
+  Credit,
   FirstLossCover,
   Pool,
   PoolConfig,
@@ -14,11 +16,29 @@ import {
   TrancheVault,
 } from '../abis/types'
 import {
+  CreditConfigStructOutput,
+  CreditRecordStructOutput,
+} from '../abis/types/Credit'
+import {
   CHAIN_POOLS_INFO_V2,
   FirstLossCoverIndex,
   PoolInfoV2,
   TrancheType,
+  UnderlyingTokenInfo,
 } from '../utils/pool'
+import {
+  getCreditConfig,
+  getCreditHash,
+  getCreditRecord,
+  getPoolUnderlyingTokenBalanceV2,
+  getPoolUnderlyingTokenInfoV2,
+} from '../utils/poolContract'
+
+export type AccountStatsV2 = {
+  creditRecord?: CreditRecordStructOutput
+  creditConfig?: CreditConfigStructOutput
+  creditAvailable?: BigNumber
+}
 
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,
@@ -114,6 +134,21 @@ export function useFirstLossCoverContractV2(
     firstLossCover,
     FIRST_LOSS_COVER_ABI,
     provider,
+  )
+}
+
+export function useCreditContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  return useContract<Credit>(
+    poolInfo?.poolCredit,
+    poolInfo?.poolCreditAbi,
+    provider,
+    account,
   )
 }
 
@@ -302,6 +337,28 @@ export function usePoolSafeAllowanceV2(
   return [allowance, refresh]
 }
 
+export function usePoolUnderlyingTokenInfoV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): UnderlyingTokenInfo | undefined {
+  const [poolUnderlyingTokenInfo, setPoolUnderlyingTokenInfo] =
+    useState<UnderlyingTokenInfo>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const poolUnderlyingTokenInfo = await getPoolUnderlyingTokenInfoV2(
+        poolName,
+        provider,
+      )
+      setPoolUnderlyingTokenInfo(poolUnderlyingTokenInfo)
+    }
+
+    fetchData()
+  }, [poolName, provider])
+
+  return poolUnderlyingTokenInfo
+}
+
 export function usePoolUnderlyingTokenBalanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
@@ -413,4 +470,82 @@ export function useCancellableRedemptionInfoV2(
   }, [account, vaultContract, refreshCount])
 
   return [redemptionInfo, refresh]
+}
+
+export function useAccountStatsV2(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [AccountStatsV2, () => void] {
+  const [accountStats, setAccountStats] = useState<AccountStatsV2>({})
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (account) {
+        const creditHash = getCreditHash(poolName, chainId, account)
+        if (creditHash) {
+          const [creditRecord, creditConfig, poolTokenBalance] =
+            await Promise.all([
+              getCreditRecord(poolName, chainId, account, provider),
+              getCreditConfig(poolName, chainId, account, provider),
+              getPoolUnderlyingTokenBalanceV2(poolName, account, provider),
+            ])
+          if (creditRecord && creditConfig && poolTokenBalance) {
+            const principal = creditRecord.unbilledPrincipal
+              .add(creditRecord.nextDue)
+              .add(creditRecord.totalPastDue)
+            const unusedCredit = creditConfig.creditLimit.sub(principal)
+            // Set available credit to the minimum of the pool balance or the credit available amount,
+            // since both are upper bounds on the amount of credit that can be borrowed.
+            // If either is negative, cap the available credit to 0.
+            let creditAvailable = unusedCredit.lt(poolTokenBalance)
+              ? unusedCredit
+              : poolTokenBalance
+            creditAvailable = creditAvailable.lt(0)
+              ? BigNumber.from(0)
+              : creditAvailable
+
+            setAccountStats({
+              creditRecord,
+              creditConfig,
+              creditAvailable,
+            })
+          }
+        }
+      }
+    }
+    fetchData()
+  }, [account, chainId, poolName, provider, refreshCount])
+
+  return [accountStats, refresh]
+}
+
+export function useCreditAllowanceV2(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
+  const [allowance, setAllowance] = useState<BigNumber>(BigNumber.from(0))
+  const [autopayEnabled, setAutopayEnabled] = useState<boolean>(false)
+  const [loaded, setLoaded] = useState<boolean>(false)
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && poolInfo && account) {
+        const allowance = await contract.allowance(account, poolInfo.poolCredit)
+        setAllowance(allowance)
+        setAutopayEnabled(allowance.gt(MaxUint256.div(2)))
+        setLoaded(true)
+      }
+    }
+    fetchData()
+  }, [account, contract, poolInfo, refreshCount])
+
+  return { autopayEnabled, allowance, loaded, refresh }
 }

@@ -6,6 +6,7 @@ import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
+import POOL_CREDIT_ABI from '../abis/Credit.json'
 import { PoolsInfoV2 } from '../utils'
 
 export const LOCALHOST_METADATA: PoolsInfoV2 = {
@@ -22,6 +23,7 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     juniorTrancheVault: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c',
     epochManager: '',
     poolAbi: POOL_ABI,
+    poolCreditAbi: POOL_CREDIT_ABI,
     poolSafeAbi: POOL_SAFE_ABI,
     poolConfigAbi: POOL_CONFIG_ABI,
     trancheVaultAbi: TRANCHE_VAULT_ABI,

@@ -21,6 +21,10 @@ import {
   CreditLineBorrowProps,
 } from './components/CreditLine/borrow'
 import {
+  CreditLineBorrowPropsV2,
+  CreditLineBorrowV2,
+} from './components/CreditLine/borrowV2'
+import {
   CreditLinePayment,
   CreditLinePaymentProps,
 } from './components/CreditLine/payment'
@@ -163,6 +167,28 @@ export function CreditLineBorrowWidget(props: CreditLineBorrowWidgetProps) {
   return (
     <Widget {...props}>
       <CreditLineBorrow {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Credit line pool borrow widget props V2
+ * @typedef {Object} CreditLineBorrowWidgetPropsV2
+ * @property {CreditLineBorrowPropsV2} CreditLineBorrowPropsV2 - Credit line pool borrow props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type CreditLineBorrowWidgetPropsV2 = CreditLineBorrowPropsV2 & WidgetProps
+
+/**
+ * Credit line borrow widget V2
+ *
+ * @param {CreditLineBorrowWidgetPropsV2} props - The credit line pool borrow widget props V2.
+ * @returns Credit line pool borrow widget component V2
+ */
+export function CreditLineBorrowWidgetV2(props: CreditLineBorrowWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <CreditLineBorrowV2 {...props} />
     </Widget>
   )
 }

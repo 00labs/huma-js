@@ -6,6 +6,7 @@ import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
+import POOL_CREDIT_ABI from '../abis/Credit.json'
 import { PoolsInfoV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsInfoV2 = {
@@ -14,14 +15,15 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     poolVersion: 'v2',
     poolName: POOL_NAME.HumaCreditLineV2,
     poolType: POOL_TYPE.CreditLine,
-    pool: '0xF265Ae2a0614648eEf254f2a4E446DC9c8cFC6F7',
-    poolCredit: '',
-    poolConfig: '0x89BC611A2770c28e67332e8f7A37c0c546e380B7',
-    poolSafe: '0x50cF6e722aaD352453E519f0F9565634C2b48e2b',
-    seniorTrancheVault: '0x44eb8b1ff0192aa1951B08F15964Ae62615BFaab',
-    juniorTrancheVault: '0x449Edd4d106B8d36C662df74E30913352B7C8E3E',
-    epochManager: '0xbc5d17AfF4F5c5B1815E3f8ECD47794CA7db98c4',
+    pool: '0x65e42480c03d0757ed4819C722DD5B26EF8eB88B',
+    poolCredit: '0x0652dE7EEC37354c78B2F115ceB4b57BD745D00D',
+    poolConfig: '0xd329f594067C78C747d3A22565d93498DD455B08',
+    poolSafe: '0x836BD38c0628C5760905feD05bB54c12D5f4D37A',
+    seniorTrancheVault: '0x799d542684508730e00A9186d4a2756d2b386459',
+    juniorTrancheVault: '0x1d0797B67834b1bB127B10933c40751B9046979c',
+    epochManager: '0x4f71aC8D39ceB7EAFb8001574343646C3A12C831',
     poolAbi: POOL_ABI,
+    poolCreditAbi: POOL_CREDIT_ABI,
     poolSafeAbi: POOL_SAFE_ABI,
     poolConfigAbi: POOL_CONFIG_ABI,
     trancheVaultAbi: TRANCHE_VAULT_ABI,

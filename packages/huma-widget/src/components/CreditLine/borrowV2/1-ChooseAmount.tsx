@@ -1,0 +1,75 @@
+import {
+  AccountStatsV2,
+  PoolInfoV2,
+  UnderlyingTokenInfo,
+  useCreditAllowanceV2,
+} from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
+import React, { useCallback, useState } from 'react'
+
+import { useAppDispatch } from '../../../hooks/useRedux'
+import { setBorrowInfo } from '../../../store/widgets.reducers'
+import { WIDGET_STEP } from '../../../store/widgets.store'
+import { ChooseAmountModal } from '../../ChooseAmountModal'
+
+type Props = {
+  poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
+  accountStats: AccountStatsV2
+}
+
+export function ChooseAmount({
+  poolInfo,
+  poolUnderlyingToken,
+  accountStats,
+}: Props): React.ReactElement | null {
+  const dispatch = useAppDispatch()
+  const { account, chainId, provider } = useWeb3React()
+  const { symbol, decimals } = poolUnderlyingToken!
+  const [currentAmount, setCurrentAmount] = useState(0)
+  const { creditAvailable } = accountStats
+  const creditAvailableFormatted = creditAvailable
+    ? Number(ethers.utils.formatUnits(creditAvailable, decimals))
+    : 0
+
+  const { autopayEnabled } = useCreditAllowanceV2(
+    poolInfo.poolName,
+    chainId,
+    account,
+    provider,
+  )
+  const handleChangeAmount = useCallback((newAmount: number) => {
+    setCurrentAmount(newAmount)
+  }, [])
+
+  const handleAction = useCallback(() => {
+    const nextStep = autopayEnabled
+      ? WIDGET_STEP.Transfer
+      : WIDGET_STEP.ApproveAllowance
+
+    dispatch(
+      setBorrowInfo({
+        borrowAmount: currentAmount,
+        borrowAmountBN: ethers.utils
+          .parseUnits(currentAmount.toString(), decimals)
+          .toJSON(),
+        chargedFees: 0,
+        nextStep,
+      }),
+    )
+  }, [autopayEnabled, currentAmount, decimals, dispatch])
+
+  return (
+    <ChooseAmountModal
+      title='Borrow'
+      description1='Choose Amount'
+      sliderMax={creditAvailableFormatted}
+      currentAmount={currentAmount}
+      tokenSymbol={symbol}
+      handleChangeAmount={handleChangeAmount}
+      handleAction={handleAction}
+      actionText='borrow'
+    />
+  )
+}
