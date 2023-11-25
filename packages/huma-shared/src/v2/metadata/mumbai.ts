@@ -1,12 +1,13 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
-import POOL_ABI from '../abis/Pool.json'
-import POOL_SAFE_ABI from '../abis/PoolSafe.json'
-import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
-import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
-import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
-import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
+import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
+import POOL_ABI from '../abis/Pool.json'
+import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
+import POOL_SAFE_ABI from '../abis/PoolSafe.json'
+import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
+import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsInfoV2 = {
@@ -22,6 +23,12 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x799d542684508730e00A9186d4a2756d2b386459',
     juniorTrancheVault: '0x1d0797B67834b1bB127B10933c40751B9046979c',
     epochManager: '0x4f71aC8D39ceB7EAFb8001574343646C3A12C831',
+    firstLossCovers: {
+      [FirstLossCoverIndex.borrower]:
+        '0x36F56698BCc4374d82a8765A1CAfbcd65820B04a',
+      [FirstLossCoverIndex.affiliate]:
+        '0x1888b552DC5fC2d8B432C0f6cB54844Ec9f8a759',
+    },
     poolAbi: POOL_ABI,
     poolCreditAbi: POOL_CREDIT_ABI,
     poolSafeAbi: POOL_SAFE_ABI,

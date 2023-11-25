@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ChooseAmountModal } from '../../ChooseAmountModal'
+import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   poolInfo: PoolInfoV2
@@ -25,7 +26,7 @@ export function ChooseAmount({
   accountStats,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { account, chainId, provider } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken!
   const [currentAmount, setCurrentAmount] = useState(0)
   const { creditAvailable } = accountStats
@@ -35,7 +36,6 @@ export function ChooseAmount({
 
   const { autopayEnabled } = useCreditAllowanceV2(
     poolInfo.poolName,
-    chainId,
     account,
     provider,
   )
@@ -44,6 +44,8 @@ export function ChooseAmount({
   }, [])
 
   const handleAction = useCallback(() => {
+    console.log('autopayEnabled', autopayEnabled)
+
     const nextStep = autopayEnabled
       ? WIDGET_STEP.Transfer
       : WIDGET_STEP.ApproveAllowance
@@ -59,6 +61,10 @@ export function ChooseAmount({
       }),
     )
   }, [autopayEnabled, currentAmount, decimals, dispatch])
+
+  if (autopayEnabled === undefined) {
+    return <LoadingModal title='Borrow' />
+  }
 
   return (
     <ChooseAmountModal

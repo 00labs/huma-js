@@ -21,11 +21,12 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { LoadingModal } from '../../LoadingModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { ChooseAmount } from './1-ChooseAmount'
-import { ApproveAllowance } from './2-ApproveAllowance'
-import { Transfer } from './3-Transfer'
-import { Success } from './4-Success'
-import { Notifications } from './5-Notifications'
+import { DepositCover } from './1-DepositCover'
+import { ChooseAmount } from './2-ChooseAmount'
+import { ApproveAllowance } from './3-ApproveAllowance'
+import { Transfer } from './4-Transfer'
+import { Success } from './5-Success'
+import { Notifications } from './6-Notifications'
 
 /**
  * Credit line pool borrow props V2
@@ -57,7 +58,7 @@ export function CreditLineBorrowV2({
     defaultPoolUnderlyingToken,
   )
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [accountStats] = useAccountStatsV2(poolName, chainId, account, provider)
+  const [accountStats] = useAccountStatsV2(poolName, account, provider)
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const { creditRecord } = accountStats
@@ -66,7 +67,7 @@ export function CreditLineBorrowV2({
   useEffect(() => {
     if (!step && accountState !== undefined) {
       if (accountState >= CreditState.Approved) {
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+        dispatch(setStep(WIDGET_STEP.FirstLossCover))
       }
     }
   }, [accountState, dispatch, step])
@@ -99,6 +100,12 @@ export function CreditLineBorrowV2({
       handleSuccess={handleSuccess}
     >
       {!step && <LoadingModal title='Borrow' />}
+      {step === WIDGET_STEP.FirstLossCover && (
+        <DepositCover
+          poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
+        />
+      )}
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
           poolInfo={poolInfo}
