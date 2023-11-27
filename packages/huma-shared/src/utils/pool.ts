@@ -17,6 +17,7 @@ export enum POOL_NAME {
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
   Symplifi = 'Symplifi',
+  Raincards = 'Raincards',
 }
 
 export enum POOL_TYPE {
@@ -133,6 +134,14 @@ export const PoolMap: PoolMapType = {
     },
     [POOL_NAME.Symplifi]: {
       name: 'Symplifi Pool',
+      borrowDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      lendDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      estAPY: '20%',
+    },
+    [POOL_NAME.Raincards]: {
+      name: 'Raincards Pool',
       borrowDesc:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       lendDesc:
@@ -557,22 +566,22 @@ export const PoolContractMap: PoolContractMapType = {
       },
     },
     [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.ArfUSDCMigrationTest]: {
-        basePoolConfig: '0xe8338a5e3e58b425249f82594c82b42c2df4c5e9',
-        pool: '0xbb1b50e1ec5835b3c58944e820e7a5e136141ddc',
-        poolFeeManager: '0x9f667f613C16542aC8b1e502F4D796774F623D86',
+      [POOL_NAME.Raincards]: {
+        basePoolConfig: '0x10b7CBe54178eB6C81b2D84Ac073747BcA744F6C',
+        pool: '0xf8065dA82cC990325059c436939c6a90C322E9Dd',
+        poolFeeManager: '0x87534B96FD15EbD6Aa0456F45045B541e5E8889a',
         poolUnderlyingToken: {
-          address: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+          address: '0xb961c37ABDDA55929327fa9d20eBDE6BB8B1348E',
           symbol: 'USDC',
           decimals: 6,
           icon: 'USDC',
         },
-        poolName: POOL_NAME.ArfUSDCMigrationTest,
+        poolName: POOL_NAME.Raincards,
         poolType: POOL_TYPE.CreditLine,
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
-          address: '0x8bce02521622222Ee13D1Ce2c5E4CCab52ce24Bb',
+          address: '0x8Ec8f8AFE179032e2929C49eF4f8Ea2d18245B9a',
           abi: HDT_ABI,
         },
       },
