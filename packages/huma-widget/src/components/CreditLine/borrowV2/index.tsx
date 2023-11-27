@@ -1,9 +1,9 @@
 import {
   CreditState,
   POOL_NAME,
-  UnderlyingTokenInfo,
   useAccountStatsV2,
   usePoolInfoV2,
+  usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect } from 'react'
@@ -13,7 +13,6 @@ import {
   useDoesChainSupportNotifi,
   useIsFirstTimeNotifiUser,
 } from '../../../hooks/useNotifi'
-import { usePoolUnderlyingTokenInfo } from '../../../hooks/usePoolUnderlyingTokenInfo'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -32,20 +31,17 @@ import { Notifications } from './6-Notifications'
  * Credit line pool borrow props V2
  * @typedef {Object} CreditLineBorrowPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {poolUnderlyingToken|undefined} poolUnderlyingToken The pool's underlying token info.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the credit line pool borrow action is successful.
  */
 export interface CreditLineBorrowPropsV2 {
   poolName: keyof typeof POOL_NAME
-  poolUnderlyingToken?: UnderlyingTokenInfo
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function CreditLineBorrowV2({
   poolName: poolNameStr,
-  poolUnderlyingToken: defaultPoolUnderlyingToken,
   handleClose,
   handleSuccess,
 }: CreditLineBorrowPropsV2): React.ReactElement | null {
@@ -53,10 +49,7 @@ export function CreditLineBorrowV2({
   const poolName = POOL_NAME[poolNameStr]
   const { account, chainId, provider } = useWeb3React()
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const poolUnderlyingToken = usePoolUnderlyingTokenInfo(
-    poolName,
-    defaultPoolUnderlyingToken,
-  )
+  const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [accountStats] = useAccountStatsV2(poolName, account, provider)
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)

@@ -33,7 +33,7 @@ export const getPoolInfoV2 = (
   chainId: number | undefined,
 ): PoolInfoV2 | null => {
   if (isChainEnum(chainId)) {
-    return CHAIN_POOLS_INFO_V2[chainId][poolName]
+    return CHAIN_POOLS_INFO_V2[chainId]?.[poolName]
   }
   return null
 }

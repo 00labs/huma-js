@@ -1,16 +1,15 @@
 import {
   POOL_NAME,
-  UnderlyingTokenInfo,
   useCancellableRedemptionInfoV2,
   useLenderPositionV2,
   usePoolInfoV2,
+  usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { usePoolUnderlyingTokenInfo } from '../../../hooks/usePoolUnderlyingTokenInfo'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -26,13 +25,11 @@ import { Done } from './4-Done'
  * Lend pool withdraw props
  * @typedef {Object} LendRedeemPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {UnderlyingTokenInfo} poolUnderlyingToken The underlying token of the pool
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool withdraw action is successful.
  */
 export type LendRedeemPropsV2 = {
   poolName: keyof typeof POOL_NAME
-  poolUnderlyingToken?: UnderlyingTokenInfo
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
@@ -75,7 +72,6 @@ export type RedemptionInfo = {
 
 export function LendRedeemV2({
   poolName: poolNameStr,
-  poolUnderlyingToken: defaultPoolUnderlyingToken,
   handleClose,
   handleSuccess,
 }: LendRedeemPropsV2): React.ReactElement | null {
@@ -88,10 +84,7 @@ export function LendRedeemV2({
     useCancellableRedemptionInfoV2(poolName, 'senior', account, provider)
   const [juniorRedemptionInfo, refreshJuniorRedemptionInfo] =
     useCancellableRedemptionInfoV2(poolName, 'junior', account, provider)
-  const poolUnderlyingToken = usePoolUnderlyingTokenInfo(
-    poolName,
-    defaultPoolUnderlyingToken,
-  )
+  const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const [seniorPosition, refreshSeniorPosition] = useLenderPositionV2(
     poolName,
     'senior',
@@ -149,7 +142,15 @@ export function LendRedeemV2({
   }
 
   if (!poolInfo || !poolUnderlyingToken) {
-    return null
+    return (
+      <WidgetWrapper
+        isOpen
+        isLoading
+        loadingTitle='Redeem'
+        handleClose={handleClose}
+        handleSuccess={handleSuccess}
+      />
+    )
   }
 
   return (

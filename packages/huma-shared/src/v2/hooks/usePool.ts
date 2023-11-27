@@ -38,6 +38,7 @@ export type AccountStatsV2 = {
   creditRecord?: CreditRecordStructOutput
   creditConfig?: CreditConfigStructOutput
   creditAvailable?: BigNumber
+  payoffAmount?: BigNumber
 }
 
 export const usePoolInfoV2 = (
@@ -321,18 +322,27 @@ export function usePoolSafeAllowanceV2(
   poolName: POOL_NAME,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [BigNumber, () => void] {
+) {
   const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const spender = poolInfo?.poolSafe
   const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
-  const [allowance = BigNumber.from(0), refresh] = useContractValueV2(
-    contract,
-    'allowance',
-    [account, spender],
-  )
+  const [allowance, setAllowance] = useState<BigNumber>()
+  const [autopayEnabled, setAutopayEnabled] = useState<boolean>()
+  const [refreshCount, refresh] = useForceRefresh()
 
-  return [allowance, refresh]
+  useEffect(() => {
+    const fetchData = async () => {
+      if (contract && account && spender) {
+        const allowance = await contract.allowance(account, spender)
+        setAllowance(allowance)
+        setAutopayEnabled(allowance.gt(MaxUint256.div(2)))
+      }
+    }
+    fetchData()
+  }, [account, contract, spender, refreshCount])
+
+  return { autopayEnabled, allowance, refresh }
 }
 
 export function usePoolUnderlyingTokenInfoV2(
@@ -509,6 +519,9 @@ export function useAccountStatsV2(
               creditRecord,
               creditConfig,
               creditAvailable,
+              payoffAmount: creditRecord.unbilledPrincipal
+                .add(creditRecord.nextDue)
+                .add(creditRecord.totalPastDue),
             })
           }
         }
@@ -518,32 +531,6 @@ export function useAccountStatsV2(
   }, [account, chainId, poolName, provider, refreshCount])
 
   return [accountStats, refresh]
-}
-
-export function useCreditAllowanceV2(
-  poolName: POOL_NAME,
-  account: string | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-) {
-  const chainId = provider?.network?.chainId
-  const poolInfo = usePoolInfoV2(poolName, chainId)
-  const contract = usePoolUnderlyingTokenContractV2(poolName, provider)
-  const [allowance, setAllowance] = useState<BigNumber>(BigNumber.from(0))
-  const [autopayEnabled, setAutopayEnabled] = useState<boolean>()
-  const [refreshCount, refresh] = useForceRefresh()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (contract && poolInfo && account) {
-        const allowance = await contract.allowance(account, poolInfo.poolCredit)
-        setAllowance(allowance)
-        setAutopayEnabled(allowance.gt(MaxUint256.div(2)))
-      }
-    }
-    fetchData()
-  }, [account, contract, poolInfo, refreshCount])
-
-  return { autopayEnabled, allowance, refresh }
 }
 
 export function useFirstLossCoverSufficientV2(

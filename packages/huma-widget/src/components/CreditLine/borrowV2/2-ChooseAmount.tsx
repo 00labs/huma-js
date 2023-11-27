@@ -2,7 +2,7 @@ import {
   AccountStatsV2,
   PoolInfoV2,
   UnderlyingTokenInfo,
-  useCreditAllowanceV2,
+  usePoolSafeAllowanceV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -34,7 +34,7 @@ export function ChooseAmount({
     ? Number(ethers.utils.formatUnits(creditAvailable, decimals))
     : 0
 
-  const { autopayEnabled } = useCreditAllowanceV2(
+  const { autopayEnabled } = usePoolSafeAllowanceV2(
     poolInfo.poolName,
     account,
     provider,
@@ -44,8 +44,6 @@ export function ChooseAmount({
   }, [])
 
   const handleAction = useCallback(() => {
-    console.log('autopayEnabled', autopayEnabled)
-
     const nextStep = autopayEnabled
       ? WIDGET_STEP.Transfer
       : WIDGET_STEP.ApproveAllowance
