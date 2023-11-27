@@ -26,8 +26,12 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend withdraw widget V2</p></dd>
 <dt><a href="#LendRedeemWidgetV2">LendRedeemWidgetV2(props)</a> ⇒</dt>
 <dd><p>Lend redeem widget V2</p></dd>
+<dt><a href="#SupplyFirstLossCoverWidget">SupplyFirstLossCoverWidget(props)</a> ⇒</dt>
+<dd><p>Supply first loss cover widget</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
 <dd><p>Superfluid factoring widget</p></dd>
+<dt><a href="#AutoPaybackWidgetV2">AutoPaybackWidgetV2(props)</a> ⇒</dt>
+<dd><p>Supply first loss cover widget</p></dd>
 </dl>
 
 ## Typedefs
@@ -35,6 +39,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dl>
 <dt><a href="#CreditLineApproveProps">CreditLineApproveProps</a> : <code>Object</code></dt>
 <dd><p>Credit line pool approve allowance props</p></dd>
+<dt><a href="#AutoPaybackPropsV2">AutoPaybackPropsV2</a> : <code>Object</code></dt>
+<dd><p>Auto payback props V2</p></dd>
 <dt><a href="#CreditLineBorrowProps">CreditLineBorrowProps</a> : <code>Object</code></dt>
 <dd><p>Credit line pool borrow props</p></dd>
 <dt><a href="#CreditLineBorrowPropsV2">CreditLineBorrowPropsV2</a> : <code>Object</code></dt>
@@ -43,6 +49,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Credit line pool payment props</p></dd>
 <dt><a href="#CreditLinePaymentPropsV2">CreditLinePaymentPropsV2</a> : <code>Object</code></dt>
 <dd><p>Credit line pool payment props V2</p></dd>
+<dt><a href="#SupplyFirstLossCoverProps">SupplyFirstLossCoverProps</a> : <code>Object</code></dt>
+<dd><p>Supply first loss cover props</p></dd>
 <dt><a href="#InvoiceFactoringBorrowProps">InvoiceFactoringBorrowProps</a> : <code>Object</code></dt>
 <dd><p>Invoice factoring pool borrow props</p></dd>
 <dt><a href="#InvoiceFactoringPaymentProps">InvoiceFactoringPaymentProps</a> : <code>Object</code></dt>
@@ -85,6 +93,10 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply widget props V2</p></dd>
 <dt><a href="#LendRedeemWidgetPropsV2">LendRedeemWidgetPropsV2</a> : <code>Object</code></dt>
 <dd><p>Lend pool redeem widget props V2</p></dd>
+<dt><a href="#SupplyFirstLossCoverWidgetProps">SupplyFirstLossCoverWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Supply first loss cover widget props</p></dd>
+<dt><a href="#AutoPaybackWidgetPropsV2">AutoPaybackWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Auto payback widget props V2</p></dd>
 </dl>
 
 <a name="InvoiceFactoringBorrowWidget"></a>
@@ -232,6 +244,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | props | [<code>LendRedeemWidgetPropsV2</code>](#LendRedeemWidgetPropsV2) | <p>The lend pool redeem widget props V2.</p> |
 
+<a name="SupplyFirstLossCoverWidget"></a>
+
+## SupplyFirstLossCoverWidget(props) ⇒
+<p>Supply first loss cover widget</p>
+
+**Kind**: global function  
+**Returns**: <p>Supply first loss cover widget component</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SupplyFirstLossCoverWidgetProps</code>](#SupplyFirstLossCoverWidgetProps) | <p>The supply first loss cover widget props.</p> |
+
 <a name="SuperfluidFactoringWidget"></a>
 
 ## SuperfluidFactoringWidget(props) ⇒
@@ -243,6 +267,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>WidgetProps</code>](#WidgetProps) | <p>The superfluid factoring widget props.</p> |
+
+<a name="AutoPaybackWidgetV2"></a>
+
+## AutoPaybackWidgetV2(props) ⇒
+<p>Supply first loss cover widget</p>
+
+**Kind**: global function  
+**Returns**: <p>Supply first loss cover widget component</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SupplyFirstLossCoverWidgetProps</code>](#SupplyFirstLossCoverWidgetProps) | <p>The supply first loss cover widget props.</p> |
 
 <a name="CreditLineApproveProps"></a>
 
@@ -259,6 +295,20 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | amount | <code>BigNumberish</code> \| <code>undefined</code> | <p>The amount to approve.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool approve allowance action is successful.</p> |
+
+<a name="AutoPaybackPropsV2"></a>
+
+## AutoPaybackPropsV2 : <code>Object</code>
+<p>Auto payback props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
 <a name="CreditLineBorrowProps"></a>
 
@@ -318,6 +368,20 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
+
+<a name="SupplyFirstLossCoverProps"></a>
+
+## SupplyFirstLossCoverProps : <code>Object</code>
+<p>Supply first loss cover props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
 <a name="InvoiceFactoringBorrowProps"></a>
 
@@ -602,5 +666,31 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | LendRedeemPropsV2 | [<code>LendRedeemPropsV2</code>](#LendRedeemPropsV2) | <p>Lend pool redeem props V2.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="SupplyFirstLossCoverWidgetProps"></a>
+
+## SupplyFirstLossCoverWidgetProps : <code>Object</code>
+<p>Supply first loss cover widget props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| SupplyFirstLossCover | <code>SupplyFirstLossCover</code> | <p>Supply first loss cover props.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="AutoPaybackWidgetPropsV2"></a>
+
+## AutoPaybackWidgetPropsV2 : <code>Object</code>
+<p>Auto payback widget props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| AutoPayback | <code>AutoPayback</code> | <p>Auto payback props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 

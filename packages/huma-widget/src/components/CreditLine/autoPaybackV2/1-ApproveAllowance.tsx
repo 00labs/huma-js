@@ -1,5 +1,5 @@
 import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-finance/shared'
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
@@ -14,17 +14,17 @@ type Props = {
 export function ApproveAllowance({
   poolInfo,
   poolUnderlyingToken,
-}: Props): React.ReactElement | null {
+}: Props): React.ReactElement {
   const dispatch = useAppDispatch()
 
-  const handleSuccess = useCallback(() => {
-    dispatch(setStep(WIDGET_STEP.Transfer))
-  }, [dispatch])
+  const handleSuccess = () => {
+    dispatch(setStep(WIDGET_STEP.Done))
+  }
 
   return (
     <ApproveAllowanceModalV2
       poolInfo={poolInfo}
-      spender={poolInfo.poolCredit}
+      spender={poolInfo.poolSafe}
       poolUnderlyingToken={poolUnderlyingToken}
       handleSuccess={handleSuccess}
       showAutoPayback

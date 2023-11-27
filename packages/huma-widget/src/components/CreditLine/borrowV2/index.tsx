@@ -20,12 +20,11 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { LoadingModal } from '../../LoadingModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { DepositCover } from './1-DepositCover'
-import { ChooseAmount } from './2-ChooseAmount'
-import { ApproveAllowance } from './3-ApproveAllowance'
-import { Transfer } from './4-Transfer'
-import { Success } from './5-Success'
-import { Notifications } from './6-Notifications'
+import { ChooseAmount } from './1-ChooseAmount'
+import { ApproveAllowance } from './2-ApproveAllowance'
+import { Transfer } from './3-Transfer'
+import { Success } from './4-Success'
+import { Notifications } from './5-Notifications'
 
 /**
  * Credit line pool borrow props V2
@@ -60,7 +59,7 @@ export function CreditLineBorrowV2({
   useEffect(() => {
     if (!step && accountState !== undefined) {
       if (accountState >= CreditState.Approved) {
-        dispatch(setStep(WIDGET_STEP.FirstLossCover))
+        dispatch(setStep(WIDGET_STEP.ChooseAmount))
       }
     }
   }, [accountState, dispatch, step])
@@ -93,12 +92,6 @@ export function CreditLineBorrowV2({
       handleSuccess={handleSuccess}
     >
       {!step && <LoadingModal title='Borrow' />}
-      {step === WIDGET_STEP.FirstLossCover && (
-        <DepositCover
-          poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
-        />
-      )}
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
           poolInfo={poolInfo}

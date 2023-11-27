@@ -17,6 +17,10 @@ import {
   CreditLineApproveProps,
 } from './components/CreditLine/approve'
 import {
+  AutoPaybackPropsV2,
+  AutoPaybackV2,
+} from './components/CreditLine/autoPaybackV2'
+import {
   CreditLineBorrow,
   CreditLineBorrowProps,
 } from './components/CreditLine/borrow'
@@ -32,6 +36,10 @@ import {
   CreditLinePaymentPropsV2,
   CreditLinePaymentV2,
 } from './components/CreditLine/paymentV2'
+import {
+  SupplyFirstLossCover,
+  SupplyFirstLossCoverProps,
+} from './components/CreditLine/supplyFLC'
 import {
   InvoiceFactoringBorrow,
   InvoiceFactoringBorrowProps,
@@ -377,6 +385,30 @@ export function LendRedeemWidgetV2(props: LendRedeemWidgetPropsV2) {
 }
 
 /**
+ * Supply first loss cover widget props
+ * @typedef {Object} SupplyFirstLossCoverWidgetProps
+ * @property {SupplyFirstLossCover} SupplyFirstLossCover - Supply first loss cover props.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type SupplyFirstLossCoverWidgetProps = SupplyFirstLossCoverProps & WidgetProps
+
+/**
+ * Supply first loss cover widget
+ *
+ * @param {SupplyFirstLossCoverWidgetProps} props - The supply first loss cover widget props.
+ * @returns Supply first loss cover widget component
+ */
+export function SupplyFirstLossCoverWidget(
+  props: SupplyFirstLossCoverWidgetProps,
+) {
+  return (
+    <Widget {...props}>
+      <SupplyFirstLossCover {...props} />
+    </Widget>
+  )
+}
+
+/**
  * Superfluid factoring widget
  *
  * @param {WidgetProps} props - The superfluid factoring widget props.
@@ -386,6 +418,28 @@ export function SuperfluidFactoringWidget(props: WidgetProps) {
   return (
     <Widget {...props}>
       <SuperfluidFactoring />
+    </Widget>
+  )
+}
+
+/**
+ * Auto payback widget props V2
+ * @typedef {Object} AutoPaybackWidgetPropsV2
+ * @property {AutoPayback} AutoPayback - Auto payback props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type AutoPaybackWidgetPropsV2 = AutoPaybackPropsV2 & WidgetProps
+
+/**
+ * Supply first loss cover widget
+ *
+ * @param {SupplyFirstLossCoverWidgetProps} props - The supply first loss cover widget props.
+ * @returns Supply first loss cover widget component
+ */
+export function AutoPaybackWidgetV2(props: AutoPaybackWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <AutoPaybackV2 {...props} />
     </Widget>
   )
 }
