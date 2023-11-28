@@ -200,12 +200,17 @@ export const getTrancheVaultAssetsV2 = async (
   return trancheVaultContract.totalAssets()
 }
 
+type LenderPosition = {
+  shares: BigNumber
+  assets: BigNumber
+}
+
 export const getLenderPositionV2 = async (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<BigNumber | undefined> => {
+): Promise<LenderPosition | undefined> => {
   if (!account) {
     return undefined
   }
@@ -217,7 +222,15 @@ export const getLenderPositionV2 = async (
   if (!vaultContract) {
     return undefined
   }
-  return vaultContract.balanceOf(account)
+  const [shares, assets] = await Promise.all([
+    vaultContract.balanceOf(account),
+    vaultContract.totalAssetsOf(account),
+  ])
+
+  return {
+    shares,
+    assets,
+  }
 }
 
 export const getTrancheAssetsToSharesV2 = async (
@@ -236,6 +249,24 @@ export const getTrancheAssetsToSharesV2 = async (
   }
 
   return trancheVaultContract.convertToShares(assets)
+}
+
+export const getTrancheSharesToAssetsV2 = async (
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  shares: BigNumber | undefined,
+): Promise<BigNumber | undefined> => {
+  const trancheVaultContract = await getTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  if (!trancheVaultContract || !shares) {
+    return undefined
+  }
+
+  return trancheVaultContract.convertToAssets(shares)
 }
 
 export const getCreditHash = (

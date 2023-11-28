@@ -1,15 +1,13 @@
 import {
   PoolInfoV2,
-  TrancheType,
   UnderlyingTokenInfo,
-  getTrancheAssetsToSharesV2,
-  toBigNumber,
-  upScale,
   useTrancheVaultContractV2,
 } from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 
-import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
+import { REDEMPTION_TYPE, RedemptionActionInfo } from '.'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -19,31 +17,26 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  selectedTranche: TrancheType | undefined
+  redemptionType: REDEMPTION_TYPE
 }
 
 export function Transfer({
   poolInfo,
   poolUnderlyingToken,
-  selectedTranche,
+  redemptionType,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { decimals } = poolUnderlyingToken
   const { account, provider } = useWeb3React()
-  const { withdrawAmount } = useAppSelector(selectWidgetState)
+  const { redeemShares } = useAppSelector(selectWidgetState)
+  const redemptionActionInfo = RedemptionActionInfo[redemptionType]
   const trancheVaultContract = useTrancheVaultContractV2(
     poolInfo.poolName,
-    selectedTranche!,
+    redemptionActionInfo.tranche,
     provider,
     account,
   )
-  const withdrawBigNumber = toBigNumber(upScale(withdrawAmount!, decimals))
-  const withdrawShares = getTrancheAssetsToSharesV2(
-    poolInfo.poolName,
-    selectedTranche!,
-    provider,
-    withdrawBigNumber,
-  )
+  const redeemSharesBN = ethers.utils.parseUnits(String(redeemShares), decimals)
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))
@@ -56,8 +49,8 @@ export function Transfer({
   return (
     <TxSendModalV2
       contract={trancheVaultContract}
-      method='addRedemptionRequest'
-      params={[withdrawShares]}
+      method={`${redemptionActionInfo.action.toLowerCase()}RedemptionRequest`}
+      params={[redeemSharesBN]}
       handleSuccess={handleSuccess}
     />
   )

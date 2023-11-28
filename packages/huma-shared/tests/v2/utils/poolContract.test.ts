@@ -16,6 +16,7 @@ import {
   getPoolUnderlyingTokenContractV2,
   getPoolUnderlyingTokenInfoV2,
   getTrancheAssetsToSharesV2,
+  getTrancheSharesToAssetsV2,
   getTrancheVaultAssetsV2,
   getTrancheVaultContractV2,
 } from '../../../src/v2/utils'
@@ -314,6 +315,7 @@ describe('getLenderPositionV2', () => {
   it('should return the lender position', async () => {
     ;(getContract as jest.Mock).mockReturnValueOnce({
       balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
+      totalAssetsOf: jest.fn().mockResolvedValueOnce(BigNumber.from(200)),
     })
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
@@ -323,7 +325,10 @@ describe('getLenderPositionV2', () => {
       'account',
       { network: { chainId: 5 } } as any,
     )
-    expect(result).toEqual(BigNumber.from(100))
+    expect(result).toEqual({
+      shares: BigNumber.from(100),
+      assets: BigNumber.from(200),
+    })
   })
 })
 
@@ -371,6 +376,59 @@ describe('getTrancheAssetsToSharesV2', () => {
     }
 
     const result = await getTrancheAssetsToSharesV2(
+      'HumaCreditLineV2' as any,
+      'junior',
+      mockProvider as any,
+      BigNumber.from(1),
+    )
+    expect(result).toEqual(BigNumber.from(100))
+  })
+})
+
+describe('getTrancheSharesToAssetsV2', () => {
+  it('should return undefined if cannot find pool info', async () => {
+    const mockProvider = {
+      provider: {
+        getNetwork: jest.fn().mockResolvedValue({ chainId: 5 }),
+      },
+    }
+
+    const result = await getTrancheSharesToAssetsV2(
+      'invalidPoolName' as any,
+      'junior',
+      mockProvider as any,
+      BigNumber.from(1),
+    )
+    expect(result).toEqual(undefined)
+  })
+
+  it('should return undefined if no shares are given', async () => {
+    const mockProvider = {
+      provider: {
+        getNetwork: jest.fn().mockResolvedValue({ chainId: 5 }),
+      },
+    }
+
+    const result = await getTrancheSharesToAssetsV2(
+      'invalidPoolName' as any,
+      'junior',
+      mockProvider as any,
+      undefined,
+    )
+    expect(result).toEqual(undefined)
+  })
+
+  it('should return tranche vault shares converted to assets', async () => {
+    ;(getContract as jest.Mock).mockReturnValueOnce({
+      convertToAssets: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
+    })
+    const mockProvider = {
+      provider: {
+        getNetwork: jest.fn().mockResolvedValue({ chainId: 5 }),
+      },
+    }
+
+    const result = await getTrancheSharesToAssetsV2(
       'HumaCreditLineV2' as any,
       'junior',
       mockProvider as any,

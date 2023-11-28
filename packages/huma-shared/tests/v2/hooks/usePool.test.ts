@@ -4,6 +4,7 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
 
 import {
+  useCancellableRedemptionInfoV2,
   useContractValueV2,
   useFirstLossCoverContractV2,
   useFirstLossCoverTotalAssetsV2,
@@ -433,7 +434,7 @@ describe('usePoolUnderlyingTokenBalanceV2', () => {
 })
 
 describe('useWithdrawableAssetsV2', () => {
-  it('returns 0 if provider is undefined', async () => {
+  it('returns undefined if provider is undefined', async () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
@@ -446,11 +447,11 @@ describe('useWithdrawableAssetsV2', () => {
     )
 
     await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(0))
+      expect(result.current[0]).toEqual(undefined)
     })
   })
 
-  it('returns underlying token balance correctly', async () => {
+  it('returns withdrawable assets correctly', async () => {
     ;(useContract as jest.Mock).mockReturnValue({
       withdrawableAssets: jest.fn().mockResolvedValue(BigNumber.from(100)),
     })
@@ -463,6 +464,71 @@ describe('useWithdrawableAssetsV2', () => {
 
     await waitFor(() => {
       expect(result.current[0]).toEqual(BigNumber.from(100))
+    })
+  })
+})
+
+describe('useCancellableRedemptionInfoV2', () => {
+  it('returns undefined if account is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useCancellableRedemptionInfoV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        undefined,
+        {
+          network: { chainId: 5 },
+        } as any,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(undefined)
+    })
+  })
+
+  it('returns undefined if provider is undefined', async () => {
+    ;(useContract as jest.Mock).mockReturnValue(null)
+
+    const { result } = renderHook(() =>
+      useCancellableRedemptionInfoV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        'account',
+        undefined,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual(undefined)
+    })
+  })
+
+  it('returns RedemptionInfo correctly', async () => {
+    ;(useContract as jest.Mock).mockReturnValue({
+      cancellableRedemptionShares: jest
+        .fn()
+        .mockResolvedValue(BigNumber.from(100)),
+      convertToAssets: jest.fn().mockResolvedValue(BigNumber.from(50)),
+    })
+
+    const { result } = renderHook(() =>
+      useCancellableRedemptionInfoV2(
+        'HumaCreditLineV2' as any,
+        'senior',
+        'account',
+        {
+          network: { chainId: 5 },
+        } as any,
+      ),
+    )
+
+    await waitFor(() => {
+      expect(result.current[0]).toEqual({
+        shares: BigNumber.from(100),
+        amount: BigNumber.from(50),
+      })
     })
   })
 })

@@ -29,6 +29,9 @@ export const widgetSlice = createSlice({
       state.multisend = undefined
       state.supplyAmount = undefined
       state.withdrawAmount = undefined
+      state.withdrawShares = undefined
+      state.redeemAmount = undefined
+      state.redeemShares = undefined
     },
     setStep: (state, { payload }: PayloadAction<WIDGET_STEP>) => {
       state.step = payload
@@ -83,6 +86,15 @@ export const widgetSlice = createSlice({
     setWithdrawAmount: (state, { payload }: PayloadAction<number>) => {
       state.withdrawAmount = payload
     },
+    setWithdrawShares: (state, { payload }: PayloadAction<number>) => {
+      state.withdrawShares = payload
+    },
+    setRedeemAmount: (state, { payload }: PayloadAction<number>) => {
+      state.redeemAmount = payload
+    },
+    setRedeemShares: (state, { payload }: PayloadAction<number>) => {
+      state.redeemShares = payload
+    },
     setStream: (state, { payload }: PayloadAction<WidgetStream>) => {
       const stream = state.stream ?? {}
       state.stream = { ...stream, ...payload }
@@ -116,6 +128,9 @@ export const {
   setMultisend,
   setSupplyAmount,
   setWithdrawAmount,
+  setWithdrawShares,
+  setRedeemAmount,
+  setRedeemShares,
 } = widgetSlice.actions
 
 export default widgetSlice.reducer

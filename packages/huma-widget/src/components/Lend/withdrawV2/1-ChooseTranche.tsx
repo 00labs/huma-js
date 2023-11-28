@@ -1,8 +1,8 @@
 import {
+  getTrancheVaultContractV2,
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
-  useLenderApprovedV2,
 } from '@huma-finance/shared'
 import {
   css,
@@ -14,19 +14,22 @@ import {
   useTheme,
 } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import React from 'react'
+import { BigNumber, ethers } from 'ethers'
+import React, { useEffect, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
-import { WrapperModal } from '../../WrapperModal'
 import { LoadingModal } from '../../LoadingModal'
+import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
+  seniorWithdrawableAmount: BigNumber | undefined
+  juniorWithdrawableAmount: BigNumber | undefined
   changeTranche: (tranche: TrancheType) => void
 }
 
@@ -34,27 +37,62 @@ export function ChooseTranche({
   poolInfo,
   poolUnderlyingToken,
   selectedTranche,
+  seniorWithdrawableAmount,
+  juniorWithdrawableAmount,
   changeTranche,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
-  const { poolName } = poolInfo
   const dispatch = useAppDispatch()
-  const { account, provider } = useWeb3React()
+  const { provider } = useWeb3React()
   const { symbol } = poolUnderlyingToken
-  const [lenderApprovedSenior] = useLenderApprovedV2(
-    poolName,
-    'senior',
-    account,
-    provider,
+  const [seniorWithdrawableShares, setSeniorWithdrawableShares] = useState(
+    BigNumber.from(0),
   )
-  const [lenderApprovedJunior] = useLenderApprovedV2(
-    poolName,
-    'junior',
-    account,
-    provider,
+  const [juniorWithdrawableShares, setJuniorWithdrawableShares] = useState(
+    BigNumber.from(0),
   )
+
   const isLoading =
-    lenderApprovedSenior === undefined || lenderApprovedJunior === undefined
+    seniorWithdrawableAmount === undefined ||
+    juniorWithdrawableAmount === undefined
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (seniorWithdrawableAmount?.gt(0)) {
+        const seniorVaultContract = await getTrancheVaultContractV2(
+          poolInfo.poolName,
+          'senior',
+          provider,
+        )
+        if (seniorVaultContract) {
+          const shares = await seniorVaultContract.convertToShares(
+            seniorWithdrawableAmount,
+          )
+          setSeniorWithdrawableShares(shares)
+        }
+      }
+    }
+    fetchData()
+  }, [poolInfo.poolName, provider, seniorWithdrawableAmount])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (juniorWithdrawableAmount?.gt(0)) {
+        const juniorVaultContract = await getTrancheVaultContractV2(
+          poolInfo.poolName,
+          'senior',
+          provider,
+        )
+        if (juniorVaultContract) {
+          const shares = await juniorVaultContract.convertToShares(
+            juniorWithdrawableAmount,
+          )
+          setJuniorWithdrawableShares(shares)
+        }
+      }
+    }
+    fetchData()
+  }, [poolInfo.poolName, provider, juniorWithdrawableAmount])
 
   const styles = {
     subTitle: css`
@@ -83,26 +121,39 @@ export function ChooseTranche({
     `,
   }
 
-  const handleNext = () => {
-    if (
-      (selectedTranche === 'senior' && lenderApprovedSenior) ||
-      (selectedTranche === 'junior' && lenderApprovedJunior)
-    ) {
-      dispatch(setStep(WIDGET_STEP.ChooseAmount))
+  const formatBN = (amountBN?: BigNumber) => {
+    if (!amountBN) {
+      return '--'
     }
+    const amount = ethers.utils.formatUnits(
+      amountBN,
+      poolUnderlyingToken.decimals,
+    )
+    return Number(amount).toFixed(0)
+  }
+
+  const handleNext = () => {
+    dispatch(setStep(WIDGET_STEP.Transfer))
   }
 
   const items: {
     label: string
     value: TrancheType
+    disabled: boolean | undefined
   }[] = [
     {
-      label: 'Senior',
+      label: `Withdraw ${formatBN(seniorWithdrawableAmount)} ${
+        poolUnderlyingToken.symbol
+      } from Senior vault (${formatBN(seniorWithdrawableShares)} shares)`,
       value: 'senior',
+      disabled: seniorWithdrawableAmount?.lte(0) ?? true,
     },
     {
-      label: 'Junior',
+      label: `Withdraw ${formatBN(juniorWithdrawableAmount)} ${
+        poolUnderlyingToken.symbol
+      } from Junior vault (${formatBN(juniorWithdrawableShares)} shares)`,
       value: 'junior',
+      disabled: juniorWithdrawableAmount?.lte(0) ?? true,
     },
   ]
 
@@ -124,6 +175,7 @@ export function ChooseTranche({
             <FormControlLabel
               key={item.label}
               value={item.value}
+              disabled={item.disabled}
               control={
                 <Radio
                   sx={{
