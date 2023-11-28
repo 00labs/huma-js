@@ -48,7 +48,7 @@ import {
   InvoiceFactoringPayment,
   InvoiceFactoringPaymentProps,
 } from './components/InvoiceFactoring/payment'
-import { LendRedeemPropsV2, LendRedeemV2 } from './components/Lend/redemptionV2'
+import { LendRedeemPropsV2, LendRedeemV2 } from './components/Lend/redeemV2'
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
 import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
