@@ -19,9 +19,7 @@ export function Success({
   const amountFormatted = ethers.utils.formatUnits(amountToDeposit, decimals)
 
   const content = [
-    `You have supplied ${formatMoney(
-      amountFormatted,
-    )} ${symbol}, you can borrow now.`,
+    `You have supplied ${formatMoney(amountFormatted)} ${symbol}.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

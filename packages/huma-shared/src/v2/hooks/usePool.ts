@@ -20,6 +20,7 @@ import {
   CreditRecordStructOutput,
 } from '../abis/types/Credit'
 import { FirstLossCoverIndex } from '../types'
+import { BP_FACTOR } from '../utils/const'
 import {
   CHAIN_POOLS_INFO_V2,
   PoolInfoV2,
@@ -34,7 +35,7 @@ import {
   getPoolUnderlyingTokenInfoV2,
 } from '../utils/poolContract'
 
-export type AccountStatsV2 = {
+export type CreditStatsV2 = {
   creditRecord?: CreditRecordStructOutput
   creditConfig?: CreditConfigStructOutput
   creditAvailable?: BigNumber
@@ -480,13 +481,13 @@ export function useCancellableRedemptionInfoV2(
   return [redemptionInfo, refresh]
 }
 
-export function useAccountStatsV2(
+export function useCreditStatsV2(
   poolName: POOL_NAME,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [AccountStatsV2, () => void] {
+): [CreditStatsV2, () => void] {
   const chainId = provider?.network?.chainId
-  const [accountStats, setAccountStats] = useState<AccountStatsV2>({})
+  const [accountStats, setAccountStats] = useState<CreditStatsV2>({})
   const [refreshCount, refresh] = useForceRefresh()
 
   useEffect(() => {
@@ -578,7 +579,7 @@ export function useFirstLossCoverAllowanceV2(
   return [allowance, refresh]
 }
 
-export function useFirstLossCoverInvestV2(
+export function useFirstLossCoverPositionV2(
   poolName: POOL_NAME,
   firstLossCoverIndex: FirstLossCoverIndex,
   account: string | undefined,
@@ -625,7 +626,6 @@ export const useFirstLossCoverRequirement = (
     minRequirement: BigNumber
     minAmountToDeposit: BigNumber
   }>()
-  const BP_FACTOR = BigNumber.from(10000)
   const poolContract = usePoolContractV2(poolName, provider)
   const poolConfigContract = usePoolConfigContractV2(poolName, provider)
   const firstLossCoverContract = useFirstLossCoverContractV2(
@@ -679,7 +679,6 @@ export const useFirstLossCoverRequirement = (
     }
     fetchData()
   }, [
-    BP_FACTOR,
     account,
     firstLossCoverContract,
     poolConfigContract,

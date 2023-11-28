@@ -1,12 +1,5 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
-import POOL_CREDIT_ABI from '../abis/Credit.json'
-import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
-import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
-import POOL_ABI from '../abis/Pool.json'
-import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
-import POOL_SAFE_ABI from '../abis/PoolSafe.json'
-import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
@@ -29,13 +22,6 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
       [FirstLossCoverIndex.affiliate]:
         '0x1888b552DC5fC2d8B432C0f6cB54844Ec9f8a759',
     },
-    poolAbi: POOL_ABI,
-    poolCreditAbi: POOL_CREDIT_ABI,
-    poolSafeAbi: POOL_SAFE_ABI,
-    poolConfigAbi: POOL_CONFIG_ABI,
-    trancheVaultAbi: TRANCHE_VAULT_ABI,
-    firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
-    epochManagerAbi: EPOCH_MANAGER_ABI,
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
     title: 'Huma Credit Line V2',

@@ -11,6 +11,13 @@ import {
 import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
 import { FirstLossCoverIndex } from '../types'
+import POOL_CREDIT_ABI from '../abis/Credit.json'
+import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
+import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
+import POOL_ABI from '../abis/Pool.json'
+import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
+import POOL_SAFE_ABI from '../abis/PoolSafe.json'
+import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 
 export type TrancheType = 'senior' | 'junior'
 
@@ -36,13 +43,13 @@ export type PoolInfoV2 = {
     [FirstLossCoverIndex.borrower]: string
     [FirstLossCoverIndex.affiliate]: string
   }
-  poolAbi: unknown
-  poolCreditAbi: unknown
-  poolSafeAbi: unknown
-  poolConfigAbi: unknown
-  trancheVaultAbi: unknown
-  firstLossCoverAbi: unknown
-  epochManagerAbi: unknown
+  poolAbi?: unknown
+  poolCreditAbi?: unknown
+  poolSafeAbi?: unknown
+  poolConfigAbi?: unknown
+  trancheVaultAbi?: unknown
+  firstLossCoverAbi?: unknown
+  epochManagerAbi?: unknown
   seniorAPY: string
   juniorAPY: string
   title: string
@@ -78,9 +85,25 @@ export type ChainPoolsInfoV2 = {
   [chainId in ChainEnum]: PoolsInfoV2
 }
 
+const getMetadataWithAbis = (metadata: PoolsInfoV2) => {
+  Object.keys(metadata).forEach((poolName) => {
+    const pool = metadata[poolName as POOL_NAME]
+    if (pool) {
+      pool.poolAbi = POOL_ABI
+      pool.poolCreditAbi = POOL_CREDIT_ABI
+      pool.poolSafeAbi = POOL_SAFE_ABI
+      pool.poolConfigAbi = POOL_CONFIG_ABI
+      pool.trancheVaultAbi = TRANCHE_VAULT_ABI
+      pool.firstLossCoverAbi = FIRST_LOSS_COVER_ABI
+      pool.epochManagerAbi = EPOCH_MANAGER_ABI
+    }
+  })
+  return metadata
+}
+
 export const CHAIN_POOLS_INFO_V2 = {
-  [ChainEnum.Mumbai]: MUMBAI_METADATA,
-  [ChainEnum.Localhost]: LOCALHOST_METADATA,
+  [ChainEnum.Mumbai]: getMetadataWithAbis(MUMBAI_METADATA),
+  [ChainEnum.Localhost]: getMetadataWithAbis(LOCALHOST_METADATA),
 } as ChainPoolsInfoV2
 
 export const getChainPoolNamesV2 = (

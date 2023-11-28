@@ -22,20 +22,20 @@ export function Success({
 }: Props): React.ReactElement {
   const { symbol, decimals } = poolUnderlyingToken
   const [{ txReceipt }] = useAtom(sendTxAtom)
-  const [payedAmount, setPayedAmount] = useState<string | undefined>()
+  const [paidAmount, setPaidAmount] = useState<string | undefined>()
 
   useEffect(() => {
     if (txReceipt) {
       const [event] = decodeLogs(txReceipt.logs, TRANSFER_ABI)
       if (event) {
-        const payedAmount = downScale(event.args.value.toString(), decimals)
-        setPayedAmount(payedAmount)
+        const paidAmount = downScale(event.args.value.toString(), decimals)
+        setPaidAmount(paidAmount)
       }
     }
   }, [decimals, txReceipt])
 
   const content = [
-    `You successfully paid ${formatMoney(payedAmount)} ${symbol}.`,
+    `You successfully paid ${formatMoney(paidAmount)} ${symbol}.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

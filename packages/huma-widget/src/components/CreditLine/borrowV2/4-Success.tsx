@@ -1,5 +1,5 @@
 import {
-  AccountStatsV2,
+  CreditStatsV2,
   timeUtil,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
@@ -11,7 +11,7 @@ import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
-  creditRecord: AccountStatsV2['creditRecord']
+  creditRecord: CreditStatsV2['creditRecord']
   handleAction: () => void
   hasNextStep: boolean
 }

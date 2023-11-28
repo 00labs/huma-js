@@ -1,6 +1,6 @@
 import {
   POOL_NAME,
-  useAccountStatsV2,
+  useCreditStatsV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
@@ -42,7 +42,7 @@ export function CreditLinePaymentV2({
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [{ creditRecord, payoffAmount }] = useAccountStatsV2(
+  const [{ creditRecord, payoffAmount }] = useCreditStatsV2(
     poolName,
     account,
     provider,

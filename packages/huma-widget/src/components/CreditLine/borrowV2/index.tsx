@@ -1,7 +1,7 @@
 import {
   CreditState,
   POOL_NAME,
-  useAccountStatsV2,
+  useCreditStatsV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
@@ -50,7 +50,7 @@ export function CreditLineBorrowV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [accountStats] = useAccountStatsV2(poolName, account, provider)
+  const [accountStats] = useCreditStatsV2(poolName, account, provider)
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const { creditRecord } = accountStats

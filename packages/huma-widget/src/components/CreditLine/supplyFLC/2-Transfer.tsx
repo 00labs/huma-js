@@ -16,11 +16,13 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 type Props = {
   poolInfo: PoolInfoV2
   amountToDeposit: BigNumber
+  title: string
 }
 
 export function Transfer({
   poolInfo,
   amountToDeposit,
+  title,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { provider, account } = useWeb3React()
@@ -36,12 +38,12 @@ export function Transfer({
   }, [dispatch])
 
   if (!firstLossCoverContract) {
-    return <LoadingModal title='Enable Pool' />
+    return <LoadingModal title={title} />
   }
 
   return (
     <TxSendModalV2
-      title='Enable Pool'
+      title={title}
       contract={firstLossCoverContract}
       method='depositCover'
       params={[amountToDeposit]}

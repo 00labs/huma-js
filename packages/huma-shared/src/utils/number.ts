@@ -83,3 +83,15 @@ export const toBigNumber = (num: string | number) => {
     return BigNumber.from(Number(numStr).toFixed(0))
   }
 }
+
+export const formatBNFixed = (
+  amountBN: BigNumber | undefined,
+  decimals: number,
+  toFixed: number = 0,
+) => {
+  if (!amountBN) {
+    return '--'
+  }
+  const amount = ethers.utils.formatUnits(amountBN, decimals)
+  return Number(amount).toFixed(toFixed)
+}

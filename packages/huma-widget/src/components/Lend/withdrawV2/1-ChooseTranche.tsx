@@ -1,4 +1,5 @@
 import {
+  formatBNFixed,
   getTrancheVaultContractV2,
   PoolInfoV2,
   TrancheType,
@@ -14,7 +15,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -44,7 +45,7 @@ export function ChooseTranche({
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const { provider } = useWeb3React()
-  const { symbol } = poolUnderlyingToken
+  const { symbol, decimals } = poolUnderlyingToken
   const [seniorWithdrawableShares, setSeniorWithdrawableShares] = useState(
     BigNumber.from(0),
   )
@@ -121,17 +122,6 @@ export function ChooseTranche({
     `,
   }
 
-  const formatBN = (amountBN?: BigNumber) => {
-    if (!amountBN) {
-      return '--'
-    }
-    const amount = ethers.utils.formatUnits(
-      amountBN,
-      poolUnderlyingToken.decimals,
-    )
-    return Number(amount).toFixed(0)
-  }
-
   const handleNext = () => {
     dispatch(setStep(WIDGET_STEP.Transfer))
   }
@@ -142,16 +132,24 @@ export function ChooseTranche({
     disabled: boolean | undefined
   }[] = [
     {
-      label: `Withdraw ${formatBN(seniorWithdrawableAmount)} ${
-        poolUnderlyingToken.symbol
-      } from Senior vault (${formatBN(seniorWithdrawableShares)} shares)`,
+      label: `Withdraw ${formatBNFixed(
+        seniorWithdrawableAmount,
+        decimals,
+      )} ${symbol} from Senior vault (${formatBNFixed(
+        seniorWithdrawableShares,
+        decimals,
+      )} shares)`,
       value: 'senior',
       disabled: seniorWithdrawableAmount?.lte(0) ?? true,
     },
     {
-      label: `Withdraw ${formatBN(juniorWithdrawableAmount)} ${
-        poolUnderlyingToken.symbol
-      } from Junior vault (${formatBN(juniorWithdrawableShares)} shares)`,
+      label: `Withdraw ${formatBNFixed(
+        juniorWithdrawableAmount,
+        decimals,
+      )} ${symbol} from Junior vault (${formatBNFixed(
+        juniorWithdrawableShares,
+        decimals,
+      )} shares)`,
       value: 'junior',
       disabled: juniorWithdrawableAmount?.lte(0) ?? true,
     },

@@ -25,7 +25,7 @@ export function Done({
     `You successfully ${redemptionActionInfo.action.toLowerCase()}ed ${formatMoney(
       redeemAmount,
     )} ${symbol} (${redeemShares} shares) redemption request.`,
-    `The final amount might be different.`,
+    `Note: Exact redemption amounts may vary once processed.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

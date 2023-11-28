@@ -1,5 +1,5 @@
 import {
-  AccountStatsV2,
+  CreditStatsV2,
   PoolInfoV2,
   UnderlyingTokenInfo,
   usePoolSafeAllowanceV2,
@@ -17,7 +17,7 @@ import { LoadingModal } from '../../LoadingModal'
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  accountStats: AccountStatsV2
+  accountStats: CreditStatsV2
 }
 
 export function ChooseAmount({

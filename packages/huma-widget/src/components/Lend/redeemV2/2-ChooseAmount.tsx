@@ -129,8 +129,12 @@ export function ChooseAmount({
 
   return (
     <WrapperModal
-      title={`${redemptionActionInfo.action} Redemption Request`}
-      subTitle={`Select ${symbol} amount with ${redemptionActionInfo.tranche}`}
+      title={redemptionActionInfo.action}
+      subTitle={
+        redemptionActionInfo.action === 'Create'
+          ? `Select ${symbol} amount to redeem from ${redemptionActionInfo.tranche} tranche}`
+          : `Cancel ${symbol} amount from ${redemptionActionInfo.tranche} tranche redemption request`
+      }
     >
       <Box css={styles.sliderWrapper}>
         <Box css={styles.currentAmount}>
@@ -151,7 +155,7 @@ export function ChooseAmount({
         onClick={handleAction}
         disabled={Number(currentAmount) <= 0}
       >
-        {redemptionActionInfo.action.toUpperCase()}
+        SUBMIT
       </BottomButton>
     </WrapperModal>
   )

@@ -43,12 +43,12 @@ export enum REDEMPTION_TYPE {
 
 export const RedemptionActionInfo: {
   [key in REDEMPTION_TYPE]: {
-    action: 'Add' | 'Cancel'
+    action: 'Create' | 'Cancel'
     tranche: 'senior' | 'junior'
   }
 } = {
   [REDEMPTION_TYPE.AddSeniorRedemption]: {
-    action: 'Add',
+    action: 'Create',
     tranche: 'senior',
   },
   [REDEMPTION_TYPE.CancelSeniorRedemption]: {
@@ -56,7 +56,7 @@ export const RedemptionActionInfo: {
     tranche: 'senior',
   },
   [REDEMPTION_TYPE.AddJuniorRedemption]: {
-    action: 'Add',
+    action: 'Create',
     tranche: 'junior',
   },
   [REDEMPTION_TYPE.CancelJuniorRedemption]: {
@@ -129,12 +129,12 @@ export function LendRedeemV2({
 
   const getMaxAmount = () => {
     if (redemptionActionInfo?.tranche === 'senior') {
-      return redemptionActionInfo?.action === 'Add'
+      return redemptionActionInfo?.action === 'Create'
         ? seniorPosition
         : seniorRedemptionInfo?.amount
     }
     if (redemptionActionInfo?.tranche === 'junior') {
-      return redemptionActionInfo?.action === 'Add'
+      return redemptionActionInfo?.action === 'Create'
         ? juniorPosition
         : juniorRedemptionInfo?.amount
     }
