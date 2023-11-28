@@ -14,15 +14,18 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { LoadingModal } from '../../LoadingModal'
 import { TxSendModalV2 } from '../../TxSendModalV2'
+import { PaymentType } from '.'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
+  paymentType: PaymentType
 }
 
 export function Transfer({
   poolInfo,
   poolUnderlyingToken,
+  paymentType,
 }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
@@ -34,6 +37,8 @@ export function Transfer({
     provider,
     account,
   )
+  const method =
+    paymentType === PaymentType.Payment ? 'makePayment' : 'makePrincipalPayment'
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))
@@ -47,7 +52,7 @@ export function Transfer({
     <TxSendModalV2
       title='Pay'
       contract={creditContract}
-      method='makePayment'
+      method={method}
       params={[account, paymentBigNumber]}
       handleSuccess={handleSuccess}
     />

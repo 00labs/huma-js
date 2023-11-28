@@ -186,7 +186,8 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
       'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-goerli',
   },
   [ChainEnum.Mumbai]: {
-    subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
+    subgraph:
+      'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-mumbai-test',
     receivablesSubgraph:
       'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-mumbai',
   },
