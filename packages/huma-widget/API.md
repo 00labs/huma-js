@@ -26,6 +26,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend withdraw widget V2</p></dd>
 <dt><a href="#LendRedeemWidgetV2">LendRedeemWidgetV2(props)</a> ⇒</dt>
 <dd><p>Lend redeem widget V2</p></dd>
+<dt><a href="#SupplyFirstLossCoverWidget">SupplyFirstLossCoverWidget(props)</a> ⇒</dt>
+<dd><p>Supply first loss cover widget</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
 <dd><p>Superfluid factoring widget</p></dd>
 <dt><a href="#AutoPaybackWidgetV2">AutoPaybackWidgetV2(props)</a> ⇒</dt>
@@ -100,639 +102,595 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <a name="InvoiceFactoringBorrowWidget"></a>
 
 ## InvoiceFactoringBorrowWidget(props) ⇒
-
 <p>Invoice factoring borrow widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Invoice factoring pool borrow widget component</p>
+**Returns**: <p>Invoice factoring pool borrow widget component</p>  
 
-| Param | Type                                                                                 | Description                                            |
-| ----- | ------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>InvoiceFactoringBorrowWidgetProps</code>](#InvoiceFactoringBorrowWidgetProps) | <p>The invoice factoring pool borrow widget props.</p> |
 
 <a name="InvoiceFactoringPaymentWidget"></a>
 
 ## InvoiceFactoringPaymentWidget(props) ⇒
-
 <p>Invoice factoring payment widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Invoice factoring pool payment widget component</p>
+**Returns**: <p>Invoice factoring pool payment widget component</p>  
 
-| Param | Type                                                                                   | Description                                             |
-| ----- | -------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>InvoiceFactoringPaymentWidgetProps</code>](#InvoiceFactoringPaymentWidgetProps) | <p>The invoice factoring pool payment widget props.</p> |
 
 <a name="CreditLineBorrowWidget"></a>
 
 ## CreditLineBorrowWidget(props) ⇒
-
 <p>Credit line borrow widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Credit line pool borrow widget component</p>
+**Returns**: <p>Credit line pool borrow widget component</p>  
 
-| Param | Type                                                                     | Description                                      |
-| ----- | ------------------------------------------------------------------------ | ------------------------------------------------ |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>CreditLineBorrowWidgetProps</code>](#CreditLineBorrowWidgetProps) | <p>The credit line pool borrow widget props.</p> |
 
 <a name="CreditLineBorrowWidgetV2"></a>
 
 ## CreditLineBorrowWidgetV2(props) ⇒
-
 <p>Credit line borrow widget V2</p>
 
 **Kind**: global function  
-**Returns**: <p>Credit line pool borrow widget component V2</p>
+**Returns**: <p>Credit line pool borrow widget component V2</p>  
 
-| Param | Type                                                                         | Description                                         |
-| ----- | ---------------------------------------------------------------------------- | --------------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>CreditLineBorrowWidgetPropsV2</code>](#CreditLineBorrowWidgetPropsV2) | <p>The credit line pool borrow widget props V2.</p> |
 
 <a name="CreditLinePaymentWidget"></a>
 
 ## CreditLinePaymentWidget(props) ⇒
-
 <p>Credit line payment widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Credit line pool payment widget component</p>
+**Returns**: <p>Credit line pool payment widget component</p>  
 
-| Param | Type                                                                       | Description                                       |
-| ----- | -------------------------------------------------------------------------- | ------------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>CreditLinePaymentWidgetProps</code>](#CreditLinePaymentWidgetProps) | <p>The credit line pool payment widget props.</p> |
 
 <a name="CreditLinePaymentWidgetV2"></a>
 
 ## CreditLinePaymentWidgetV2(props) ⇒
-
 <p>Credit line payment widget V2</p>
 
 **Kind**: global function  
-**Returns**: <p>Credit line pool payment widget component V2</p>
+**Returns**: <p>Credit line pool payment widget component V2</p>  
 
-| Param | Type                                                                           | Description                                          |
-| ----- | ------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>CreditLinePaymentWidgetPropsV2</code>](#CreditLinePaymentWidgetPropsV2) | <p>The credit line pool payment widget props V2.</p> |
 
 <a name="CreditLineApproveWidget"></a>
 
 ## CreditLineApproveWidget(props) ⇒
-
 <p>Credit line allowance approve widget to top up a pool's ERC20 token allowance.
 To be used when re-enabling autopay and other pool actions that require allowance.</p>
 
 **Kind**: global function  
-**Returns**: <p>Credit line pool approve widget component</p>
+**Returns**: <p>Credit line pool approve widget component</p>  
 
-| Param | Type                                      | Description                                       |
-| ----- | ----------------------------------------- | ------------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | <code>CreditLineApproveWidgetProps</code> | <p>The credit line pool approve widget props.</p> |
 
 <a name="LendSupplyWidget"></a>
 
 ## LendSupplyWidget(props) ⇒
-
 <p>Lend supply widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Lend pool supply widget component</p>
+**Returns**: <p>Lend pool supply widget component</p>  
 
-| Param | Type                                                         | Description                               |
-| ----- | ------------------------------------------------------------ | ----------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>LendSupplyWidgetProps</code>](#LendSupplyWidgetProps) | <p>The lend pool supply widget props.</p> |
 
 <a name="LendSupplyWidgetV2"></a>
 
 ## LendSupplyWidgetV2(props) ⇒
-
 <p>Lend supply widget V2</p>
 
 **Kind**: global function  
-**Returns**: <p>Lend pool supply widget component V2</p>
+**Returns**: <p>Lend pool supply widget component V2</p>  
 
-| Param | Type                                                             | Description                                  |
-| ----- | ---------------------------------------------------------------- | -------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>LendSupplyWidgetPropsV2</code>](#LendSupplyWidgetPropsV2) | <p>The lend pool supply widget props V2.</p> |
 
 <a name="LendWithdrawWidget"></a>
 
 ## LendWithdrawWidget(props) ⇒
-
 <p>Lend withdraw widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Lend pool withdraw widget component</p>
+**Returns**: <p>Lend pool withdraw widget component</p>  
 
-| Param | Type                                                             | Description                                |
-| ----- | ---------------------------------------------------------------- | ------------------------------------------ |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>LendWithdrawWidgetProps</code>](#LendWithdrawWidgetProps) | <p>The lend pool withdraw widget props</p> |
 
 <a name="LendWithdrawWidgetV2"></a>
 
 ## LendWithdrawWidgetV2(props) ⇒
-
 <p>Lend withdraw widget V2</p>
 
 **Kind**: global function  
-**Returns**: <p>Lend pool supply widget component V2</p>
+**Returns**: <p>Lend pool supply widget component V2</p>  
 
-| Param | Type                                   | Description                                  |
-| ----- | -------------------------------------- | -------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | <code>LendWithdrawWidgetPropsV2</code> | <p>The lend pool supply widget props V2.</p> |
 
 <a name="LendRedeemWidgetV2"></a>
 
 ## LendRedeemWidgetV2(props) ⇒
-
 <p>Lend redeem widget V2</p>
 
 **Kind**: global function  
-**Returns**: <p>Lend pool redeem widget component V2</p>
+**Returns**: <p>Lend pool redeem widget component V2</p>  
 
-| Param | Type                                                             | Description                                  |
-| ----- | ---------------------------------------------------------------- | -------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>LendRedeemWidgetPropsV2</code>](#LendRedeemWidgetPropsV2) | <p>The lend pool redeem widget props V2.</p> |
 
 <a name="SupplyFirstLossCoverWidget"></a>
 
 ## SupplyFirstLossCoverWidget(props) ⇒
-
 <p>Supply first loss cover widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Supply first loss cover widget component</p>
+**Returns**: <p>Supply first loss cover widget component</p>  
 
-| Param | Type                                                                             | Description                                      |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>SupplyFirstLossCoverWidgetProps</code>](#SupplyFirstLossCoverWidgetProps) | <p>The supply first loss cover widget props.</p> |
 
 <a name="SuperfluidFactoringWidget"></a>
 
 ## SuperfluidFactoringWidget(props) ⇒
-
 <p>Superfluid factoring widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Superfluid factoring widget component</p>
+**Returns**: <p>Superfluid factoring widget component</p>  
 
-| Param | Type                                     | Description                                   |
-| ----- | ---------------------------------------- | --------------------------------------------- |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>WidgetProps</code>](#WidgetProps) | <p>The superfluid factoring widget props.</p> |
 
 <a name="AutoPaybackWidgetV2"></a>
 
 ## AutoPaybackWidgetV2(props) ⇒
-
 <p>Supply first loss cover widget</p>
 
 **Kind**: global function  
-**Returns**: <p>Supply first loss cover widget component</p>
+**Returns**: <p>Supply first loss cover widget component</p>  
 
-| Param | Type                                                                             | Description                                      |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Param | Type | Description |
+| --- | --- | --- |
 | props | [<code>SupplyFirstLossCoverWidgetProps</code>](#SupplyFirstLossCoverWidgetProps) | <p>The supply first loss cover widget props.</p> |
 
 <a name="CreditLineApproveProps"></a>
 
 ## CreditLineApproveProps : <code>Object</code>
-
 <p>Credit line pool approve allowance props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                                                | Description                                                                                          |
-| ------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| poolName      | <code>POOL_NAME</code>                              | <p>The name of the pool.</p>                                                                         |
-| poolType      | <code>POOL_TYPE</code>                              | <p>The type of the pool.</p>                                                                         |
-| amount        | <code>BigNumberish</code> \| <code>undefined</code> | <p>The amount to approve.</p>                                                                        |
-| handleClose   | <code>function</code>                               | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p>           |
-| handleSuccess | <code>function</code>                               | <p>Optional function to notify that the credit line pool approve allowance action is successful.</p> |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| amount | <code>BigNumberish</code> \| <code>undefined</code> | <p>The amount to approve.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool approve allowance action is successful.</p> |
 
 <a name="AutoPaybackPropsV2"></a>
 
 ## AutoPaybackPropsV2 : <code>Object</code>
-
 <p>Auto payback props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the credit line pool borrow action is successful.</p>  |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
 <a name="CreditLineBorrowProps"></a>
 
 ## CreditLineBorrowProps : <code>Object</code>
-
 <p>Credit line pool borrow props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                 |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------- |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                                |
-| poolType      | <code>POOL_TYPE</code> | <p>The type of the pool.</p>                                                                |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p>  |
-| handleApprove | <code>function</code>  | <p>Optional function to notify when user is approved successfully to borrow again pool.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the credit line pool borrow action is successful.</p>   |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleApprove | <code>function</code> | <p>Optional function to notify when user is approved successfully to borrow again pool.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
 <a name="CreditLineBorrowPropsV2"></a>
 
 ## CreditLineBorrowPropsV2 : <code>Object</code>
-
 <p>Credit line pool borrow props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the credit line pool borrow action is successful.</p>  |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
 <a name="CreditLinePaymentProps"></a>
 
 ## CreditLinePaymentProps : <code>Object</code>
-
 <p>Credit line pool payment props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| poolType      | <code>POOL_TYPE</code> | <p>The type of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
 
 <a name="CreditLinePaymentPropsV2"></a>
 
 ## CreditLinePaymentPropsV2 : <code>Object</code>
-
 <p>Credit line pool payment props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
 
 <a name="SupplyFirstLossCoverProps"></a>
 
 ## SupplyFirstLossCoverProps : <code>Object</code>
-
 <p>Supply first loss cover props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the credit line pool borrow action is successful.</p>  |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
 <a name="InvoiceFactoringBorrowProps"></a>
 
 ## InvoiceFactoringBorrowProps : <code>Object</code>
-
 <p>Invoice factoring pool borrow props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                                          | Description                                                                                |
-| ------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code>                        | <p>The name of the pool.</p>                                                               |
-| poolType      | <code>POOL_TYPE</code>                        | <p>The type of the pool.</p>                                                               |
-| tokenId       | <code>string</code> \| <code>BigNumber</code> | <p>The NFT token id representing invoice.</p>                                              |
-| handleClose   | <code>function</code>                         | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>                         | <p>Optional function to notify that the invoice pool borrow action is successful.</p>      |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| tokenId | <code>string</code> \| <code>BigNumber</code> | <p>The NFT token id representing invoice.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the invoice pool borrow action is successful.</p> |
 
 <a name="InvoiceFactoringPaymentProps"></a>
 
 ## InvoiceFactoringPaymentProps : <code>Object</code>
-
 <p>Invoice factoring pool payment props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| poolType      | <code>POOL_TYPE</code> | <p>The type of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the invoice pool payment action is successful.</p>     |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the invoice pool payment action is successful.</p> |
 
 <a name="LendRedeemPropsV2"></a>
 
 ## LendRedeemPropsV2 : <code>Object</code>
-
 <p>Lend pool withdraw props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the lending pool withdraw action is successful.</p>    |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
 <a name="LendSupplyProps"></a>
 
 ## LendSupplyProps : <code>Object</code>
-
 <p>Lend pool supply props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| poolType      | <code>POOL_TYPE</code> | <p>The type of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the lending pool supply action is successful.</p>      |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
 <a name="LendSupplyPropsV2"></a>
 
 ## LendSupplyPropsV2 : <code>Object</code>
-
 <p>Lend pool supply props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the lending pool supply action is successful.</p>      |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
 <a name="LendWithdrawProps"></a>
 
 ## LendWithdrawProps : <code>Object</code>
-
 <p>Lend pool withdraw props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| poolType      | <code>POOL_TYPE</code> | <p>The type of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the lending pool withdraw action is successful.</p>    |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
 <a name="LendWithdrawPropsV2"></a>
 
 ## LendWithdrawPropsV2 : <code>Object</code>
-
 <p>Lend pool withdraw props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name          | Type                   | Description                                                                                |
-| ------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| poolName      | <code>POOL_NAME</code> | <p>The name of the pool.</p>                                                               |
-| handleClose   | <code>function</code>  | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
-| handleSuccess | <code>function</code>  | <p>Optional function to notify that the lending pool withdraw action is successful.</p>    |
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
 <a name="JsonRpcConnectionMap"></a>
 
 ## JsonRpcConnectionMap : <code>Object</code>
-
 <p>Mapping of your JSON-RPC connections indexed by chainId</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name    | Type                                                                                                               | Description                                                                      |
-| ------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | chainId | <code>Object.&lt;number, (string\|Array.&lt;string&gt;\|JsonRpcProvider\|Array.&lt;JsonRpcProvider&gt;)&gt;</code> | <p>Chain id to map the JSON-RPC URL/URLs or JsonRpcProvider/JsonRpcProviders</p> |
 
 <a name="WidgetProps"></a>
 
 ## WidgetProps : <code>Object</code>
-
 <p>Object representing the props passed to web3 provider</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name           | Type                                                                                 | Description                                                                                                     |
-| -------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| desiredChainId | <code>desiredChainId</code> \| <code>undefined</code>                                | <p>Optional desired chain id, will trigger the switch network action if different from the current chain id</p> |
-| jsonRpcUrlMap  | [<code>JsonRpcConnectionMap</code>](#JsonRpcConnectionMap) \| <code>undefined</code> | <p>Optional mapping of your JSON-RPC connections indexed by chainId</p>                                         |
-| provider       | <code>Eip1193Provider</code> \| <code>JsonRpcProvider</code>                         | <p>EIP-1193 provider or JsonRpc Provider</p>                                                                    |
+| Name | Type | Description |
+| --- | --- | --- |
+| desiredChainId | <code>desiredChainId</code> \| <code>undefined</code> | <p>Optional desired chain id, will trigger the switch network action if different from the current chain id</p> |
+| jsonRpcUrlMap | [<code>JsonRpcConnectionMap</code>](#JsonRpcConnectionMap) \| <code>undefined</code> | <p>Optional mapping of your JSON-RPC connections indexed by chainId</p> |
+| provider | <code>Eip1193Provider</code> \| <code>JsonRpcProvider</code> | <p>EIP-1193 provider or JsonRpc Provider</p> |
 
 <a name="InvoiceFactoringBorrowWidgetProps"></a>
 
 ## InvoiceFactoringBorrowWidgetProps : <code>Object</code>
-
 <p>Invoice factoring pool borrow widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                        | Type                                                                     | Description                                 |
-| --------------------------- | ------------------------------------------------------------------------ | ------------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | InvoiceFactoringBorrowProps | [<code>InvoiceFactoringBorrowProps</code>](#InvoiceFactoringBorrowProps) | <p>Invoice factoring pool borrow props.</p> |
-| WidgetProps                 | [<code>WidgetProps</code>](#WidgetProps)                                 | <p>Widget general props.</p>                |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="InvoiceFactoringPaymentWidgetProps"></a>
 
 ## InvoiceFactoringPaymentWidgetProps : <code>Object</code>
-
 <p>Invoice factoring pool payment widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                         | Type                                                                       | Description                                  |
-| ---------------------------- | -------------------------------------------------------------------------- | -------------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | InvoiceFactoringPaymentProps | [<code>InvoiceFactoringPaymentProps</code>](#InvoiceFactoringPaymentProps) | <p>Invoice factoring pool payment props.</p> |
-| WidgetProps                  | [<code>WidgetProps</code>](#WidgetProps)                                   | <p>Widget general props.</p>                 |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="CreditLineBorrowWidgetProps"></a>
 
 ## CreditLineBorrowWidgetProps : <code>Object</code>
-
 <p>Credit line pool borrow widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                  | Type                                                         | Description                           |
-| --------------------- | ------------------------------------------------------------ | ------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | CreditLineBorrowProps | [<code>CreditLineBorrowProps</code>](#CreditLineBorrowProps) | <p>Credit line pool borrow props.</p> |
-| WidgetProps           | [<code>WidgetProps</code>](#WidgetProps)                     | <p>Widget general props.</p>          |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="CreditLineBorrowWidgetPropsV2"></a>
 
 ## CreditLineBorrowWidgetPropsV2 : <code>Object</code>
-
 <p>Credit line pool borrow widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                    | Type                                                             | Description                              |
-| ----------------------- | ---------------------------------------------------------------- | ---------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | CreditLineBorrowPropsV2 | [<code>CreditLineBorrowPropsV2</code>](#CreditLineBorrowPropsV2) | <p>Credit line pool borrow props V2.</p> |
-| WidgetProps             | [<code>WidgetProps</code>](#WidgetProps)                         | <p>Widget general props.</p>             |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="CreditLinePaymentWidgetProps"></a>
 
 ## CreditLinePaymentWidgetProps : <code>Object</code>
-
 <p>Credit line pool payment widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                   | Type                                                           | Description                            |
-| ---------------------- | -------------------------------------------------------------- | -------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | CreditLinePaymentProps | [<code>CreditLinePaymentProps</code>](#CreditLinePaymentProps) | <p>Credit line pool payment props.</p> |
-| WidgetProps            | [<code>WidgetProps</code>](#WidgetProps)                       | <p>Widget general props.</p>           |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="CreditLinePaymentWidgetPropsV2"></a>
 
 ## CreditLinePaymentWidgetPropsV2 : <code>Object</code>
-
 <p>Credit line pool payment widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                     | Type                                                               | Description                               |
-| ------------------------ | ------------------------------------------------------------------ | ----------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | CreditLinePaymentPropsV2 | [<code>CreditLinePaymentPropsV2</code>](#CreditLinePaymentPropsV2) | <p>Credit line pool payment props V2.</p> |
-| WidgetProps              | [<code>WidgetProps</code>](#WidgetProps)                           | <p>Widget general props.</p>              |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="CreditLinePaymentWidgetProps"></a>
 
 ## CreditLinePaymentWidgetProps : <code>Object</code>
-
 <p>Credit line allowance approval widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                   | Type                                                           | Description                                 |
-| ---------------------- | -------------------------------------------------------------- | ------------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | CreditLineApproveProps | [<code>CreditLineApproveProps</code>](#CreditLineApproveProps) | <p>Credit line allowance approve props.</p> |
-| WidgetProps            | [<code>WidgetProps</code>](#WidgetProps)                       | <p>Widget general props.</p>                |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendSupplyWidgetProps"></a>
 
 ## LendSupplyWidgetProps : <code>Object</code>
-
 <p>Lend pool supply widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name            | Type                                             | Description                    |
-| --------------- | ------------------------------------------------ | ------------------------------ |
+| Name | Type | Description |
+| --- | --- | --- |
 | LendSupplyProps | [<code>LendSupplyProps</code>](#LendSupplyProps) | <p>Lend pool supply props.</p> |
-| WidgetProps     | [<code>WidgetProps</code>](#WidgetProps)         | <p>Widget general props.</p>   |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendSupplyWidgetPropsV2"></a>
 
 ## LendSupplyWidgetPropsV2 : <code>Object</code>
-
 <p>Lend pool supply widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name              | Type                                                 | Description                       |
-| ----------------- | ---------------------------------------------------- | --------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | LendSupplyPropsV2 | [<code>LendSupplyPropsV2</code>](#LendSupplyPropsV2) | <p>Lend pool supply props V2.</p> |
-| WidgetProps       | [<code>WidgetProps</code>](#WidgetProps)             | <p>Widget general props.</p>      |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendWithdrawWidgetProps"></a>
 
 ## LendWithdrawWidgetProps : <code>Object</code>
-
 <p>Lend pool withdraw widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name              | Type                                                 | Description                      |
-| ----------------- | ---------------------------------------------------- | -------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | LendWithdrawProps | [<code>LendWithdrawProps</code>](#LendWithdrawProps) | <p>Lend pool withdraw props.</p> |
-| WidgetProps       | [<code>WidgetProps</code>](#WidgetProps)             | <p>Widget general props.</p>     |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendSupplyWidgetPropsV2"></a>
 
 ## LendSupplyWidgetPropsV2 : <code>Object</code>
-
 <p>Lend pool supply widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name              | Type                                                     | Description                       |
-| ----------------- | -------------------------------------------------------- | --------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | LendSupplyPropsV2 | [<code>LendWithdrawPropsV2</code>](#LendWithdrawPropsV2) | <p>Lend pool supply props V2.</p> |
-| WidgetProps       | [<code>WidgetProps</code>](#WidgetProps)                 | <p>Widget general props.</p>      |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="LendRedeemWidgetPropsV2"></a>
 
 ## LendRedeemWidgetPropsV2 : <code>Object</code>
-
 <p>Lend pool redeem widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name              | Type                                                 | Description                       |
-| ----------------- | ---------------------------------------------------- | --------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | LendRedeemPropsV2 | [<code>LendRedeemPropsV2</code>](#LendRedeemPropsV2) | <p>Lend pool redeem props V2.</p> |
-| WidgetProps       | [<code>WidgetProps</code>](#WidgetProps)             | <p>Widget general props.</p>      |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="SupplyFirstLossCoverWidgetProps"></a>
 
 ## SupplyFirstLossCoverWidgetProps : <code>Object</code>
-
 <p>Supply first loss cover widget props</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name                 | Type                                     | Description                           |
-| -------------------- | ---------------------------------------- | ------------------------------------- |
-| SupplyFirstLossCover | <code>SupplyFirstLossCover</code>        | <p>Supply first loss cover props.</p> |
-| WidgetProps          | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p>          |
+| Name | Type | Description |
+| --- | --- | --- |
+| SupplyFirstLossCover | <code>SupplyFirstLossCover</code> | <p>Supply first loss cover props.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="AutoPaybackWidgetPropsV2"></a>
 
 ## AutoPaybackWidgetPropsV2 : <code>Object</code>
-
 <p>Auto payback widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
-| Name        | Type                                     | Description                   |
-| ----------- | ---------------------------------------- | ----------------------------- |
-| AutoPayback | <code>AutoPayback</code>                 | <p>Auto payback props V2.</p> |
-| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p>  |
+| Name | Type | Description |
+| --- | --- | --- |
+| AutoPayback | <code>AutoPayback</code> | <p>Auto payback props V2.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
