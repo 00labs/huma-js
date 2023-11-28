@@ -76,7 +76,11 @@ export function ApproveAllowanceModalV2({
   const sendIncreaseAllowance = useCallback(async () => {
     const allowanceSpender = spender ?? poolInfo.pool
     const targetAllowanceAmount = allowanceAmount ?? MaxUint256
-    const underlyingTokenContract = await getERC20Contract(address, provider)
+    const underlyingTokenContract = await getERC20Contract(
+      address,
+      provider,
+      account,
+    )
     const currentAllowance = await underlyingTokenContract?.allowance(
       account!,
       allowanceSpender,

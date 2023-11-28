@@ -9,6 +9,71 @@ import type { Credit, CreditInterface } from '../Credit'
 const _abi = [
   {
     inputs: [],
+    name: 'attemptedDrawdownForNonrevolvingLine',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'committedAmountGreaterThanCreditLimit',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditExpiredDueToFirstDrawdownTooLate',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineExceeded',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineHasOutstandingBalance',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineHasUnfulfilledCommitment',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineNotInGoodStandingState',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineNotInStateForMakingPayment',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineNotInStateForMakingPrincipalPayment',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditLineNotInStateForUpdate',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'creditNotInStateForDrawdown',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'defaultHasAlreadyBeenTriggered',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'defaultTriggeredTooEarly',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'evaluationAgentServiceAccountRequired',
     type: 'error',
   },
@@ -19,7 +84,37 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'insufficientBorrowerFirstLossCover',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'notBorrower',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'notBorrowerOrEA',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'paymentDetectionServiceAccountRequired',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'zeroAddressProvided',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'zeroAmountProvided',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'zeroPayPeriods',
     type: 'error',
   },
   {
@@ -222,6 +317,61 @@ const _abi = [
         type: 'address',
       },
       {
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'creditHash',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'creditLimit',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'enum PayPeriodDuration',
+        name: 'periodDuration',
+        type: 'uint8',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'remainingPeriods',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'yieldInBps',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'committedAmount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'revolving',
+        type: 'bool',
+      },
+    ],
+    name: 'CreditLineApproved',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
         indexed: false,
         internalType: 'uint256',
         name: 'oldCreditLimit',
@@ -348,6 +498,25 @@ const _abi = [
       },
     ],
     name: 'Initialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amountWaived',
+        type: 'uint256',
+      },
+    ],
+    name: 'LateFeeWaived',
     type: 'event',
   },
   {
@@ -491,7 +660,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'nextDue',
+        name: 'principalDue',
         type: 'uint256',
       },
       {
@@ -503,7 +672,13 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'principalPaid',
+        name: 'principalDuePaid',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'unbilledPrincipalPaid',
         type: 'uint256',
       },
       {
@@ -560,6 +735,44 @@ const _abi = [
     type: 'event',
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint96',
+        name: 'creditLimit',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint16',
+        name: 'remainingPeriods',
+        type: 'uint16',
+      },
+      {
+        internalType: 'uint16',
+        name: 'yieldInBps',
+        type: 'uint16',
+      },
+      {
+        internalType: 'uint96',
+        name: 'committedAmount',
+        type: 'uint96',
+      },
+      {
+        internalType: 'bool',
+        name: 'revolving',
+        type: 'bool',
+      },
+    ],
+    name: 'approveBorrower',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'calendar',
     outputs: [
@@ -570,6 +783,19 @@ const _abi = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'closeCredit',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -589,6 +815,42 @@ const _abi = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'borrowAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'drawdown',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'numOfPeriods',
+        type: 'uint256',
+      },
+    ],
+    name: 'extendRemainingPeriod',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -901,6 +1163,64 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'makePayment',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'paidoff',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'makePrincipalPayment',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'paidoff',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'bytes32',
         name: '',
         type: 'bytes32',
@@ -915,6 +1235,19 @@ const _abi = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'pauseCredit',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -946,12 +1279,67 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'refreshCredit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'contract PoolConfig',
         name: '_poolConfig',
         type: 'address',
       },
     ],
     name: 'setPoolConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'triggerDefault',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'principalLoss',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'yieldLoss',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'feesLoss',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'unpauseCredit',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -975,8 +1363,67 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'creditLimit',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'committedAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'updateLimitAndCommitment',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'updatePoolConfigData',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'yieldInBps',
+        type: 'uint256',
+      },
+    ],
+    name: 'updateYield',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'waiveLateFee',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

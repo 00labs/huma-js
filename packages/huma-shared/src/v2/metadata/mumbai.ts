@@ -1,11 +1,6 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
-import POOL_ABI from '../abis/Pool.json'
-import POOL_SAFE_ABI from '../abis/PoolSafe.json'
-import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
-import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
-import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
-import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
+import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsInfoV2 = {
@@ -14,19 +9,19 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     poolVersion: 'v2',
     poolName: POOL_NAME.HumaCreditLineV2,
     poolType: POOL_TYPE.CreditLine,
-    pool: '0xF265Ae2a0614648eEf254f2a4E446DC9c8cFC6F7',
-    poolCredit: '',
-    poolConfig: '0x89BC611A2770c28e67332e8f7A37c0c546e380B7',
-    poolSafe: '0x50cF6e722aaD352453E519f0F9565634C2b48e2b',
-    seniorTrancheVault: '0x44eb8b1ff0192aa1951B08F15964Ae62615BFaab',
-    juniorTrancheVault: '0x449Edd4d106B8d36C662df74E30913352B7C8E3E',
-    epochManager: '0xbc5d17AfF4F5c5B1815E3f8ECD47794CA7db98c4',
-    poolAbi: POOL_ABI,
-    poolSafeAbi: POOL_SAFE_ABI,
-    poolConfigAbi: POOL_CONFIG_ABI,
-    trancheVaultAbi: TRANCHE_VAULT_ABI,
-    firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
-    epochManagerAbi: EPOCH_MANAGER_ABI,
+    pool: '0x65e42480c03d0757ed4819C722DD5B26EF8eB88B',
+    poolCredit: '0x0652dE7EEC37354c78B2F115ceB4b57BD745D00D',
+    poolConfig: '0xd329f594067C78C747d3A22565d93498DD455B08',
+    poolSafe: '0x836BD38c0628C5760905feD05bB54c12D5f4D37A',
+    seniorTrancheVault: '0x799d542684508730e00A9186d4a2756d2b386459',
+    juniorTrancheVault: '0x1d0797B67834b1bB127B10933c40751B9046979c',
+    epochManager: '0x4f71aC8D39ceB7EAFb8001574343646C3A12C831',
+    firstLossCovers: {
+      [FirstLossCoverIndex.borrower]:
+        '0x36F56698BCc4374d82a8765A1CAfbcd65820B04a',
+      [FirstLossCoverIndex.affiliate]:
+        '0x1888b552DC5fC2d8B432C0f6cB54844Ec9f8a759',
+    },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
     title: 'Huma Credit Line V2',

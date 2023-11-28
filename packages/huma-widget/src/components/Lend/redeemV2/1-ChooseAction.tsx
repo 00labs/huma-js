@@ -85,21 +85,21 @@ export function ChooseAction({
     disabled?: boolean
   }[] = [
     {
-      label: 'Add Senior Redemption',
+      label: 'Request Senior Tranche Redemption',
       value: REDEMPTION_TYPE.AddSeniorRedemption,
     },
     {
-      label: 'Cancel Senior Redemption',
+      label: 'Cancel Senior Tranche Redemption',
       value: REDEMPTION_TYPE.CancelSeniorRedemption,
       amount: formatAmount(seniorRedemptionInfo?.amount),
       disabled: seniorRedemptionInfo?.amount.lte(0) ?? true,
     },
     {
-      label: 'Add Junior Redemption',
+      label: 'Request Junior Tranche Redemption',
       value: REDEMPTION_TYPE.AddJuniorRedemption,
     },
     {
-      label: 'Cancel Junior Redemption',
+      label: 'Cancel Junior Tranche Redemption',
       value: REDEMPTION_TYPE.CancelJuniorRedemption,
       amount: formatAmount(juniorRedemptionInfo?.amount),
       disabled: juniorRedemptionInfo?.amount.lte(0) ?? true,

@@ -1,9 +1,6 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, ethers } from 'ethers'
-import {
-  CreditConfigStructOutput,
-  CreditRecordStructOutput,
-} from '../abis/types/Credit'
+
 import {
   CHAIN_POOLS_INFO_V2,
   PoolInfoV2,
@@ -15,24 +12,42 @@ import {
   isChainEnum,
   POOL_NAME,
 } from '../../utils'
-import CREDIT_ABI from '../abis/Credit.json'
 import { getContract, getERC20Contract } from '../../utils/web3'
+import CREDIT_ABI from '../abis/Credit.json'
 import {
   Credit,
   EpochManager,
   FirstLossCover,
+  Pool,
   PoolConfig,
   TrancheVault,
 } from '../abis/types'
+import {
+  CreditConfigStructOutput,
+  CreditRecordStructOutput,
+} from '../abis/types/Credit'
+import { FirstLossCoverIndex } from '../types'
 
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
   chainId: number | undefined,
 ): PoolInfoV2 | null => {
   if (isChainEnum(chainId)) {
-    return CHAIN_POOLS_INFO_V2[chainId][poolName]
+    return CHAIN_POOLS_INFO_V2[chainId]?.[poolName]
   }
   return null
+}
+
+export const getPoolContractV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<Pool | null> => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return null
+  }
+  return getContract<Pool>(poolInfo.pool, poolInfo.poolAbi, provider)
 }
 
 export const getPoolConfigContractV2 = async (
@@ -123,6 +138,23 @@ export const getEpochManagerContractV2 = async (
   return getContract<EpochManager>(
     poolInfo.epochManager,
     poolInfo.epochManagerAbi,
+    provider,
+  )
+}
+
+export const getFirstLossCoverContractV2 = async (
+  poolName: POOL_NAME,
+  firstLossCoverType: FirstLossCoverIndex,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return null
+  }
+  return getContract<FirstLossCover>(
+    poolInfo.firstLossCovers[firstLossCoverType],
+    poolInfo.firstLossCoverAbi,
     provider,
   )
 }

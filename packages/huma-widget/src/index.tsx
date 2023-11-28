@@ -17,13 +17,29 @@ import {
   CreditLineApproveProps,
 } from './components/CreditLine/approve'
 import {
+  AutoPaybackPropsV2,
+  AutoPaybackV2,
+} from './components/CreditLine/autoPaybackV2'
+import {
   CreditLineBorrow,
   CreditLineBorrowProps,
 } from './components/CreditLine/borrow'
 import {
+  CreditLineBorrowPropsV2,
+  CreditLineBorrowV2,
+} from './components/CreditLine/borrowV2'
+import {
   CreditLinePayment,
   CreditLinePaymentProps,
 } from './components/CreditLine/payment'
+import {
+  CreditLinePaymentPropsV2,
+  CreditLinePaymentV2,
+} from './components/CreditLine/paymentV2'
+import {
+  SupplyFirstLossCover,
+  SupplyFirstLossCoverProps,
+} from './components/CreditLine/supplyFLC'
 import {
   InvoiceFactoringBorrow,
   InvoiceFactoringBorrowProps,
@@ -32,7 +48,7 @@ import {
   InvoiceFactoringPayment,
   InvoiceFactoringPaymentProps,
 } from './components/InvoiceFactoring/payment'
-import { LendRedeemPropsV2, LendRedeemV2 } from './components/Lend/RedeemV2'
+import { LendRedeemPropsV2, LendRedeemV2 } from './components/Lend/redeemV2'
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
 import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
@@ -168,6 +184,28 @@ export function CreditLineBorrowWidget(props: CreditLineBorrowWidgetProps) {
 }
 
 /**
+ * Credit line pool borrow widget props V2
+ * @typedef {Object} CreditLineBorrowWidgetPropsV2
+ * @property {CreditLineBorrowPropsV2} CreditLineBorrowPropsV2 - Credit line pool borrow props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type CreditLineBorrowWidgetPropsV2 = CreditLineBorrowPropsV2 & WidgetProps
+
+/**
+ * Credit line borrow widget V2
+ *
+ * @param {CreditLineBorrowWidgetPropsV2} props - The credit line pool borrow widget props V2.
+ * @returns Credit line pool borrow widget component V2
+ */
+export function CreditLineBorrowWidgetV2(props: CreditLineBorrowWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <CreditLineBorrowV2 {...props} />
+    </Widget>
+  )
+}
+
+/**
  * Credit line pool payment widget props
  * @typedef {Object} CreditLinePaymentWidgetProps
  * @property {CreditLinePaymentProps} CreditLinePaymentProps - Credit line pool payment props.
@@ -185,6 +223,30 @@ export function CreditLinePaymentWidget(props: CreditLinePaymentWidgetProps) {
   return (
     <Widget {...props}>
       <CreditLinePayment {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Credit line pool payment widget props V2
+ * @typedef {Object} CreditLinePaymentWidgetPropsV2
+ * @property {CreditLinePaymentPropsV2} CreditLinePaymentPropsV2 - Credit line pool payment props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type CreditLinePaymentWidgetPropsV2 = CreditLinePaymentPropsV2 & WidgetProps
+
+/**
+ * Credit line payment widget V2
+ *
+ * @param {CreditLinePaymentWidgetPropsV2} props - The credit line pool payment widget props V2.
+ * @returns Credit line pool payment widget component V2
+ */
+export function CreditLinePaymentWidgetV2(
+  props: CreditLinePaymentWidgetPropsV2,
+) {
+  return (
+    <Widget {...props}>
+      <CreditLinePaymentV2 {...props} />
     </Widget>
   )
 }
@@ -323,6 +385,30 @@ export function LendRedeemWidgetV2(props: LendRedeemWidgetPropsV2) {
 }
 
 /**
+ * Supply first loss cover widget props
+ * @typedef {Object} SupplyFirstLossCoverWidgetProps
+ * @property {SupplyFirstLossCover} SupplyFirstLossCover - Supply first loss cover props.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type SupplyFirstLossCoverWidgetProps = SupplyFirstLossCoverProps & WidgetProps
+
+/**
+ * Supply first loss cover widget
+ *
+ * @param {SupplyFirstLossCoverWidgetProps} props - The supply first loss cover widget props.
+ * @returns Supply first loss cover widget component
+ */
+export function SupplyFirstLossCoverWidget(
+  props: SupplyFirstLossCoverWidgetProps,
+) {
+  return (
+    <Widget {...props}>
+      <SupplyFirstLossCover {...props} />
+    </Widget>
+  )
+}
+
+/**
  * Superfluid factoring widget
  *
  * @param {WidgetProps} props - The superfluid factoring widget props.
@@ -332,6 +418,28 @@ export function SuperfluidFactoringWidget(props: WidgetProps) {
   return (
     <Widget {...props}>
       <SuperfluidFactoring />
+    </Widget>
+  )
+}
+
+/**
+ * Auto payback widget props V2
+ * @typedef {Object} AutoPaybackWidgetPropsV2
+ * @property {AutoPayback} AutoPayback - Auto payback props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type AutoPaybackWidgetPropsV2 = AutoPaybackPropsV2 & WidgetProps
+
+/**
+ * Supply first loss cover widget
+ *
+ * @param {SupplyFirstLossCoverWidgetProps} props - The supply first loss cover widget props.
+ * @returns Supply first loss cover widget component
+ */
+export function AutoPaybackWidgetV2(props: AutoPaybackWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <AutoPaybackV2 {...props} />
     </Widget>
   )
 }

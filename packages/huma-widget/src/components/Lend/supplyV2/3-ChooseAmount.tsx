@@ -6,7 +6,7 @@ import {
 } from '@huma-finance/shared'
 import { Box, css, Input, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import React, { useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -31,7 +31,7 @@ export function ChooseAmount({
   const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
-  const [allowance] = usePoolSafeAllowanceV2(
+  const { allowance = BigNumber.from(0) } = usePoolSafeAllowanceV2(
     poolInfo.poolName,
     account,
     provider,
