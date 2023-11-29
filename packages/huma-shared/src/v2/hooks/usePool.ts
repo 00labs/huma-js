@@ -279,18 +279,25 @@ export function useLenderPositionV2(
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber | undefined, () => void] {
+  const [position, setPosition] = useState<BigNumber>()
   const vaultContract = useTrancheVaultContractV2(
     poolName,
     trancheType,
     provider,
   )
-  const [balance, refresh] = useContractValueV2(
-    vaultContract,
-    'totalAssetsOf',
-    account,
-  )
+  const [refreshCount, refresh] = useForceRefresh()
 
-  return [balance, refresh]
+  useEffect(() => {
+    const fetchData = async () => {
+      if (vaultContract && account) {
+        const position = await vaultContract.totalAssetsOf(account)
+        setPosition(position)
+      }
+    }
+    fetchData()
+  }, [account, vaultContract, refreshCount])
+
+  return [position, refresh]
 }
 
 export function usePoolUnderlyingTokenContractV2(

@@ -37,6 +37,10 @@ export function Transfer({
     account,
   )
   const redeemSharesBN = ethers.utils.parseUnits(String(redeemShares), decimals)
+  const method =
+    redemptionActionInfo.action === 'Create'
+      ? 'addRedemptionRequest'
+      : 'cancelRedemptionRequest'
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))
@@ -49,7 +53,7 @@ export function Transfer({
   return (
     <TxSendModalV2
       contract={trancheVaultContract}
-      method={`${redemptionActionInfo.action.toLowerCase()}RedemptionRequest`}
+      method={method}
       params={[redeemSharesBN]}
       handleSuccess={handleSuccess}
     />

@@ -20,12 +20,13 @@ export function Done({
   const { symbol } = poolUnderlyingToken
   const { redeemAmount, redeemShares } = useAppSelector(selectWidgetState)
   const redemptionActionInfo = RedemptionActionInfo[redemptionType]
+  const isCreate = redemptionActionInfo.action === 'Create'
 
   const content = [
-    `You successfully ${redemptionActionInfo.action.toLowerCase()}ed ${formatMoney(
+    `You successfully ${isCreate ? 'created' : 'canceled'} ${formatMoney(
       redeemAmount,
     )} ${symbol} (${redeemShares} shares) redemption request.`,
-    `Note: Exact redemption amounts may vary once processed.`,
+    isCreate ? `Note: Exact redemption amounts may vary once processed.` : '',
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

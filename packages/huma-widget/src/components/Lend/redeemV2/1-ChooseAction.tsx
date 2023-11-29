@@ -24,6 +24,8 @@ type Props = {
   seniorRedemptionInfo: RedemptionInfo | undefined
   juniorRedemptionInfo: RedemptionInfo | undefined
   redemptionType: REDEMPTION_TYPE | undefined
+  seniorPosition: BigNumber | undefined
+  juniorPosition: BigNumber | undefined
   changeRedemptionType: (tranche: REDEMPTION_TYPE) => void
 }
 
@@ -32,6 +34,8 @@ export function ChooseAction({
   seniorRedemptionInfo,
   juniorRedemptionInfo,
   redemptionType,
+  seniorPosition,
+  juniorPosition,
   changeRedemptionType,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
@@ -82,27 +86,29 @@ export function ChooseAction({
     label: string
     value: REDEMPTION_TYPE
     amount?: string
-    disabled?: boolean
+    show: boolean
   }[] = [
     {
       label: 'Request Senior Tranche Redemption',
       value: REDEMPTION_TYPE.AddSeniorRedemption,
+      show: seniorPosition?.gt(0) ?? false,
     },
     {
       label: 'Cancel Senior Tranche Redemption',
       value: REDEMPTION_TYPE.CancelSeniorRedemption,
       amount: formatAmount(seniorRedemptionInfo?.amount),
-      disabled: seniorRedemptionInfo?.amount.lte(0) ?? true,
+      show: seniorRedemptionInfo?.amount.gt(0) ?? false,
     },
     {
       label: 'Request Junior Tranche Redemption',
       value: REDEMPTION_TYPE.AddJuniorRedemption,
+      show: juniorPosition?.gt(0) ?? false,
     },
     {
       label: 'Cancel Junior Tranche Redemption',
       value: REDEMPTION_TYPE.CancelJuniorRedemption,
       amount: formatAmount(juniorRedemptionInfo?.amount),
-      disabled: juniorRedemptionInfo?.amount.lte(0) ?? true,
+      show: juniorRedemptionInfo?.amount.gt(0) ?? false,
     },
   ]
 
@@ -120,30 +126,31 @@ export function ChooseAction({
           css={styles.radioGroup}
           onChange={(e) => changeRedemptionType(Number(e.target.value))}
         >
-          {items.map((item) => {
-            let { label } = item
-            if (item.amount) {
-              label = `${item.label} (${item.amount} available)`
-            }
-            return (
-              <FormControlLabel
-                disabled={item.disabled}
-                key={item.label}
-                value={item.value}
-                control={
-                  <Radio
-                    sx={{
-                      '& .MuiSvgIcon-root': {
-                        fontSize: 24,
-                      },
-                    }}
-                  />
-                }
-                label={label}
-                css={styles.formControl}
-              />
-            )
-          })}
+          {items
+            .filter((item) => item.show)
+            .map((item) => {
+              let { label } = item
+              if (item.amount) {
+                label = `${item.label} (${item.amount} available)`
+              }
+              return (
+                <FormControlLabel
+                  key={item.label}
+                  value={item.value}
+                  control={
+                    <Radio
+                      sx={{
+                        '& .MuiSvgIcon-root': {
+                          fontSize: 24,
+                        },
+                      }}
+                    />
+                  }
+                  label={label}
+                  css={styles.formControl}
+                />
+              )
+            })}
         </RadioGroup>
       </FormControl>
       <BottomButton
