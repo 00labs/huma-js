@@ -32,12 +32,13 @@ export function TxSendModal({
   handleSuccess,
 }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
-  const { provider, chainId } = useWeb3React()
+  const { provider, chainId, account } = useWeb3React()
   const poolContract = usePoolContract(
     poolInfo.poolName,
     poolInfo.poolType,
     chainId,
     provider,
+    account,
   )
   const [{ state, txHash }, send] = useAtom(sendTxAtom)
 
