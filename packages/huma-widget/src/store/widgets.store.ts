@@ -8,6 +8,7 @@ export enum WIDGET_TYPE {
 export enum WIDGET_STEP {
   SignIn = 'SignIn',
   ChooseTranche = 'ChooseTranche',
+  ChoosePaymentType = 'ChoosePaymentType',
   Evaluation = 'Evaluation',
   FirstLossCover = 'FirstLossCover',
   ChooseAmount = 'ChooseAmount',

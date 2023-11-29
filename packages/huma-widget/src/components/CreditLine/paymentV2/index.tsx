@@ -5,7 +5,7 @@ import {
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useAppSelector } from '../../../hooks/useRedux'
@@ -14,10 +14,16 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { ChooseAmount } from './1-ChooseAmount'
-import { ApproveAllowance } from './2-ApproveAllowance'
-import { Transfer } from './3-Transfer'
-import { Success } from './4-Success'
+import { ChoosePaymentType } from './1-ChoosePaymentType'
+import { ChooseAmount } from './2-ChooseAmount'
+import { ApproveAllowance } from './3-ApproveAllowance'
+import { Transfer } from './4-Transfer'
+import { Success } from './5-Success'
+
+export enum PaymentType {
+  Payment,
+  PrincipalPayment,
+}
 
 /**
  * Credit line pool payment props V2
@@ -48,9 +54,10 @@ export function CreditLinePaymentV2({
     provider,
   )
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
+  const [paymentType, setPaymentType] = useState<PaymentType>()
 
   useEffect(() => {
-    dispatch(setStep(WIDGET_STEP.ChooseAmount))
+    dispatch(setStep(WIDGET_STEP.ChoosePaymentType))
   }, [dispatch])
 
   if (!poolInfo || !creditRecord || !poolUnderlyingToken) {
@@ -73,6 +80,12 @@ export function CreditLinePaymentV2({
       handleClose={handleClose}
       handleSuccess={handleSuccess}
     >
+      {step === WIDGET_STEP.ChoosePaymentType && (
+        <ChoosePaymentType
+          paymentType={paymentType}
+          changePaymentType={setPaymentType}
+        />
+      )}
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
           poolInfo={poolInfo}
@@ -87,10 +100,11 @@ export function CreditLinePaymentV2({
           poolUnderlyingToken={poolUnderlyingToken}
         />
       )}
-      {step === WIDGET_STEP.Transfer && (
+      {step === WIDGET_STEP.Transfer && paymentType !== undefined && (
         <Transfer
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
+          paymentType={paymentType}
         />
       )}
       {step === WIDGET_STEP.Done && (
