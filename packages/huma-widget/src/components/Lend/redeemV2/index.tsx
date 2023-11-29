@@ -167,6 +167,8 @@ export function LendRedeemV2({
           juniorRedemptionInfo={juniorRedemptionInfo}
           redemptionType={redemptionType}
           changeRedemptionType={setRedemptionType}
+          seniorPosition={seniorPosition}
+          juniorPosition={juniorPosition}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && redemptionType && (
@@ -193,7 +195,7 @@ export function LendRedeemV2({
       )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
-          title='Withdraw'
+          title='Redeem'
           errorReason='Sorry there was an error'
           errorMessage={errorMessage}
           handleOk={handleClose}
