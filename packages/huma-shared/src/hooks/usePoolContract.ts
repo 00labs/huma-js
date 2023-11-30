@@ -66,9 +66,10 @@ export function usePoolContract<T extends Contract>(
   poolType: POOL_TYPE,
   chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
 ) {
   const poolInfo = usePoolInfo(poolName, poolType, chainId)
-  return useContract<T>(poolInfo?.pool, poolInfo?.poolAbi, provider)
+  return useContract<T>(poolInfo?.pool, poolInfo?.poolAbi, provider, account)
 }
 
 export function useBaseConfigPoolContract<T extends Contract>(
