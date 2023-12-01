@@ -1,10 +1,11 @@
-import { useWeb3React } from '@web3-react/core'
+import { getAddress } from '@ethersproject/address'
 import { PoolInfoType } from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect } from 'react'
 
 import useEA from '../../../hooks/useEA'
-import { LoadingModal } from '../../LoadingModal'
 import { WIDGET_STEP } from '../../../store/widgets.store'
+import { LoadingModal } from '../../LoadingModal'
 import { SignIn } from '../../SignIn'
 
 type Props = {
@@ -35,7 +36,7 @@ export function Evaluation({
             receivable: {
               address: poolInfo.assetAddress!,
             },
-            payerWalletAddress: payerAddress,
+            payerWalletAddress: getAddress(payerAddress),
             superToken,
           },
         },

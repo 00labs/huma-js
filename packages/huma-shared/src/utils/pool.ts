@@ -17,6 +17,7 @@ export enum POOL_NAME {
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
   Symplifi = 'Symplifi',
+  Raincards = 'Raincards',
 }
 
 export enum POOL_TYPE {
@@ -64,8 +65,9 @@ export type PoolInfoType = {
   }
   extra?: {
     subgraph?: string
-    superTokens?: { id: string; symbol: string; decimals: number }[]
+    superToken?: { id: string; symbol: string; decimals: number }
     borrower?: string // For single borrower pools
+    rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
     hidden?: boolean // For pools that shouldn't be displayed in the UI
     order?: number // Ordering in the pool list. Null values are sorted last.
     disableBorrow?: boolean
@@ -132,6 +134,14 @@ export const PoolMap: PoolMapType = {
     },
     [POOL_NAME.Symplifi]: {
       name: 'Symplifi Pool',
+      borrowDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      lendDesc:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      estAPY: '20%',
+    },
+    [POOL_NAME.Raincards]: {
+      name: 'Raincards Pool',
       borrowDesc:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       lendDesc:
@@ -313,6 +323,39 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
     },
+    [POOL_TYPE.Stream]: {
+      [POOL_NAME.Superfluid]: {
+        basePoolConfig: '0x22C024496036A8e97F93E14efa0d8379192bb22c',
+        pool: '0xF713B5203Cb6f3223830De218c2ed89Ee654b94B',
+        poolProcessor: '0x6E2f33b6d3F1E2048d078984f7FFF847C0Ed3bEd',
+        poolFeeManager: '0xd5FD3F917cf8901BeB102d81504033C748c87F19',
+        poolUnderlyingToken: {
+          address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        assetAddress: '0xa8B0362cfE0c8e4fd1D74c3512348d6f48d71080',
+        poolName: POOL_NAME.Superfluid,
+        poolType: POOL_TYPE.Stream,
+        poolAbi: STEAM_FACTORING_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        poolAssetAbi: TRADABLE_STREAM_ABI,
+        HDT: {
+          address: '0x30b1f6bca8c6c742ede0ccb4eceb22af4cba58ef',
+          abi: HDT_ABI,
+        },
+        extra: {
+          subgraph:
+            'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-matic',
+          superToken: {
+            id: '0xcaa7349cea390f89641fe306d93591f87595dc1f',
+            symbol: 'USDCx',
+            decimals: 18,
+          },
+        },
+      },
+    },
   },
   [ChainEnum.Goerli]: {
     [POOL_TYPE.CreditLine]: {
@@ -458,6 +501,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
           borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
+          rwrUploader: '0x4c6388346f2a3af2d64461339a5cdd3a3d63ccf5',
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
@@ -479,6 +523,8 @@ export const PoolContractMap: PoolContractMapType = {
           abi: HDT_ABI,
         },
         extra: {
+          borrower: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
+          rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           disableBorrow: true,
           detailsPage: true,
         },
@@ -511,33 +557,31 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           subgraph:
             'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-mumbai',
-          superTokens: [
-            {
-              id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
-              symbol: 'fUSDCx',
-              decimals: 18,
-            },
-          ],
+          superToken: {
+            id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
+            symbol: 'fUSDCx',
+            decimals: 18,
+          },
         },
       },
     },
     [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.ArfUSDCMigrationTest]: {
-        basePoolConfig: '0xe8338a5e3e58b425249f82594c82b42c2df4c5e9',
-        pool: '0xbb1b50e1ec5835b3c58944e820e7a5e136141ddc',
-        poolFeeManager: '0x9f667f613C16542aC8b1e502F4D796774F623D86',
+      [POOL_NAME.Raincards]: {
+        basePoolConfig: '0x10b7CBe54178eB6C81b2D84Ac073747BcA744F6C',
+        pool: '0xf8065dA82cC990325059c436939c6a90C322E9Dd',
+        poolFeeManager: '0x87534B96FD15EbD6Aa0456F45045B541e5E8889a',
         poolUnderlyingToken: {
-          address: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+          address: '0xb961c37ABDDA55929327fa9d20eBDE6BB8B1348E',
           symbol: 'USDC',
           decimals: 6,
           icon: 'USDC',
         },
-        poolName: POOL_NAME.ArfUSDCMigrationTest,
+        poolName: POOL_NAME.Raincards,
         poolType: POOL_TYPE.CreditLine,
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
-          address: '0x8bce02521622222Ee13D1Ce2c5E4CCab52ce24Bb',
+          address: '0x8Ec8f8AFE179032e2929C49eF4f8Ea2d18245B9a',
           abi: HDT_ABI,
         },
       },
@@ -599,6 +643,8 @@ export const SupplementaryContractsMap: {
   }
 } = {
   [ChainEnum.Polygon]: {
+    [SupplementaryContracts.MultiSend]:
+      '0xDa21D2Be30353EC6Aa5AcD37999806cCefaa4C6A',
     [SupplementaryContracts.RealWorldReceivable]:
       '0xCf67CcEaC38b5E1880d62b5DB531Ab1E77614E3D',
   },

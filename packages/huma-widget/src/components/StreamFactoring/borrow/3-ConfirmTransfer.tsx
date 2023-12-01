@@ -1,5 +1,4 @@
-import { CHAINS, isEmpty } from '@huma-finance/shared'
-import { useWeb3React } from '@web3-react/core'
+import { isEmpty } from '@huma-finance/shared'
 import React, { useCallback } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -10,15 +9,11 @@ import { ConfirmTransferModal } from '../../ConfirmTransferModal'
 
 export function ConfirmTransfer(): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { chainId } = useWeb3React()
   const { borrowAmount, approval } = useAppSelector(selectWidgetState)
 
   const handleAction = useCallback(() => {
-    const step = CHAINS[chainId!].isTestnet
-      ? WIDGET_STEP.ApproveAllowance
-      : WIDGET_STEP.Permit
-    dispatch(setStep(step))
-  }, [chainId, dispatch])
+    dispatch(setStep(WIDGET_STEP.ApproveAllowance))
+  }, [dispatch])
 
   if (isEmpty(borrowAmount) || isEmpty(approval)) {
     return null
