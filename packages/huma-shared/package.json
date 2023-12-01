@@ -38,7 +38,7 @@
     "@mui/system": "^5.0.6",
     "@mui/x-date-pickers": "^5.0.7",
     "@reduxjs/toolkit": "^1.8.6",
-    "@requestnetwork/multi-format": "^0.15.10",
+    "@requestnetwork/multi-format": "0.15.10",
     "@types/utf8": "^3.0.1",
     "@walletconnect/ethereum-provider": "1.8.0",
     "@walletconnect/jsonrpc-http-connection": "^1.0.3",
