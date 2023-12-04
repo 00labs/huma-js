@@ -101,7 +101,7 @@ export type LPConfigStructOutput = [
 
 export type PoolSettingsStruct = {
   maxCreditLine: PromiseOrValue<BigNumberish>
-  payPeriodInMonths: PromiseOrValue<BigNumberish>
+  payPeriodDuration: PromiseOrValue<BigNumberish>
   creditApprovalExpirationInDays: PromiseOrValue<BigNumberish>
   latePaymentGracePeriodInDays: PromiseOrValue<BigNumberish>
   defaultGracePeriodInMonths: PromiseOrValue<BigNumberish>
@@ -109,6 +109,7 @@ export type PoolSettingsStruct = {
   advanceRateInBps: PromiseOrValue<BigNumberish>
   singleBorrower: PromiseOrValue<boolean>
   singleCreditPerBorrower: PromiseOrValue<boolean>
+  receivableAutoApproval: PromiseOrValue<boolean>
 }
 
 export type PoolSettingsStructOutput = [
@@ -121,9 +122,10 @@ export type PoolSettingsStructOutput = [
   number,
   boolean,
   boolean,
+  boolean,
 ] & {
   maxCreditLine: BigNumber
-  payPeriodInMonths: number
+  payPeriodDuration: number
   creditApprovalExpirationInDays: number
   latePaymentGracePeriodInDays: number
   defaultGracePeriodInMonths: number
@@ -131,6 +133,7 @@ export type PoolSettingsStructOutput = [
   advanceRateInBps: number
   singleBorrower: boolean
   singleCreditPerBorrower: boolean
+  receivableAutoApproval: boolean
 }
 
 export type FeeStructureStruct = {
@@ -178,6 +181,7 @@ export interface PoolConfigInterface extends utils.Interface {
     'checkLiquidityRequirements()': FunctionFragment
     'credit()': FunctionFragment
     'creditDueManager()': FunctionFragment
+    'creditManager()': FunctionFragment
     'epochManager()': FunctionFragment
     'evaluationAgent()': FunctionFragment
     'evaluationAgentId()': FunctionFragment
@@ -235,10 +239,11 @@ export interface PoolConfigInterface extends utils.Interface {
     'setPoolName(string)': FunctionFragment
     'setPoolOwnerRewardsAndLiquidity(uint256,uint256)': FunctionFragment
     'setPoolOwnerTreasury(address)': FunctionFragment
-    'setPoolPayPeriod(uint256)': FunctionFragment
+    'setPoolPayPeriod(uint8)': FunctionFragment
     'setPoolSafe(address)': FunctionFragment
     'setPoolUnderlyingToken(address)': FunctionFragment
     'setReceivableAsset(address)': FunctionFragment
+    'setReceivableAutoApproval(bool)': FunctionFragment
     'setReceivableRequiredInBps(uint256)': FunctionFragment
     'setTranches(address,address)': FunctionFragment
     'setTranchesPolicy(address)': FunctionFragment
@@ -262,6 +267,7 @@ export interface PoolConfigInterface extends utils.Interface {
       | 'checkLiquidityRequirements'
       | 'credit'
       | 'creditDueManager'
+      | 'creditManager'
       | 'epochManager'
       | 'evaluationAgent'
       | 'evaluationAgentId'
@@ -323,6 +329,7 @@ export interface PoolConfigInterface extends utils.Interface {
       | 'setPoolSafe'
       | 'setPoolUnderlyingToken'
       | 'setReceivableAsset'
+      | 'setReceivableAutoApproval'
       | 'setReceivableRequiredInBps'
       | 'setTranches'
       | 'setTranchesPolicy'
@@ -373,6 +380,10 @@ export interface PoolConfigInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'credit', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'creditDueManager',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
+    functionFragment: 'creditManager',
     values?: undefined,
   ): string
   encodeFunctionData(
@@ -609,6 +620,10 @@ export interface PoolConfigInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
+    functionFragment: 'setReceivableAutoApproval',
+    values: [PromiseOrValue<boolean>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'setReceivableRequiredInBps',
     values: [PromiseOrValue<BigNumberish>],
   ): string
@@ -677,6 +692,10 @@ export interface PoolConfigInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'credit', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'creditDueManager',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'creditManager',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -870,6 +889,10 @@ export interface PoolConfigInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
+    functionFragment: 'setReceivableAutoApproval',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'setReceivableRequiredInBps',
     data: BytesLike,
   ): Result
@@ -921,12 +944,13 @@ export interface PoolConfigInterface extends utils.Interface {
     'PoolNameChanged(string,address)': EventFragment
     'PoolOwnerRewardsAndLiquidityChanged(uint256,uint256,address)': EventFragment
     'PoolOwnerTreasuryChanged(address,address)': EventFragment
-    'PoolPayPeriodChanged(uint256,address)': EventFragment
+    'PoolPayPeriodChanged(uint8,address)': EventFragment
     'PoolRewardsWithdrawn(address,uint256)': EventFragment
     'PoolSafeChanged(address,address)': EventFragment
     'PoolUnderlyingTokenChanged(address,address)': EventFragment
     'ProtocolRewardsWithdrawn(address,uint256,address)': EventFragment
     'ReceivableAssetChanged(address,address)': EventFragment
+    'ReceivableAutoApproval(bool,address)': EventFragment
     'ReceivableRequiredInBpsChanged(uint256,address)': EventFragment
     'RoleAdminChanged(bytes32,bytes32,bytes32)': EventFragment
     'RoleGranted(bytes32,address,address)': EventFragment
@@ -979,6 +1003,7 @@ export interface PoolConfigInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'PoolUnderlyingTokenChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'ProtocolRewardsWithdrawn'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'ReceivableAssetChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'ReceivableAutoApproval'): EventFragment
   getEvent(
     nameOrSignatureOrTopic: 'ReceivableRequiredInBpsChanged',
   ): EventFragment
@@ -1294,11 +1319,11 @@ export type PoolOwnerTreasuryChangedEventFilter =
   TypedEventFilter<PoolOwnerTreasuryChangedEvent>
 
 export interface PoolPayPeriodChangedEventObject {
-  number: BigNumber
+  payPeriodDuration: number
   by: string
 }
 export type PoolPayPeriodChangedEvent = TypedEvent<
-  [BigNumber, string],
+  [number, string],
   PoolPayPeriodChangedEventObject
 >
 
@@ -1364,6 +1389,18 @@ export type ReceivableAssetChangedEvent = TypedEvent<
 
 export type ReceivableAssetChangedEventFilter =
   TypedEventFilter<ReceivableAssetChangedEvent>
+
+export interface ReceivableAutoApprovalEventObject {
+  receivableAutoApproval: boolean
+  by: string
+}
+export type ReceivableAutoApprovalEvent = TypedEvent<
+  [boolean, string],
+  ReceivableAutoApprovalEventObject
+>
+
+export type ReceivableAutoApprovalEventFilter =
+  TypedEventFilter<ReceivableAutoApprovalEvent>
 
 export interface ReceivableRequiredInBpsChangedEventObject {
   receivableRequiredInBps: BigNumber
@@ -1526,6 +1563,8 @@ export interface PoolConfig extends BaseContract {
 
     creditDueManager(overrides?: CallOverrides): Promise<[string]>
 
+    creditManager(overrides?: CallOverrides): Promise<[string]>
+
     epochManager(overrides?: CallOverrides): Promise<[string]>
 
     evaluationAgent(overrides?: CallOverrides): Promise<[string]>
@@ -1572,7 +1611,7 @@ export interface PoolConfig extends BaseContract {
       [
         string,
         BigNumber,
-        BigNumber,
+        number,
         BigNumber,
         BigNumber,
         string,
@@ -1583,7 +1622,7 @@ export interface PoolConfig extends BaseContract {
       ] & {
         token: string
         yieldInBps: BigNumber
-        payPeriod: BigNumber
+        payPeriodDuration: number
         maxCreditAmount: BigNumber
         liquidityCap: BigNumber
         name: string
@@ -1795,7 +1834,7 @@ export interface PoolConfig extends BaseContract {
     ): Promise<ContractTransaction>
 
     setPoolPayPeriod(
-      number: PromiseOrValue<BigNumberish>,
+      duration: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1811,6 +1850,11 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    setReceivableAutoApproval(
+      autoApproval: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1888,6 +1932,8 @@ export interface PoolConfig extends BaseContract {
 
   creditDueManager(overrides?: CallOverrides): Promise<string>
 
+  creditManager(overrides?: CallOverrides): Promise<string>
+
   epochManager(overrides?: CallOverrides): Promise<string>
 
   evaluationAgent(overrides?: CallOverrides): Promise<string>
@@ -1930,7 +1976,7 @@ export interface PoolConfig extends BaseContract {
     [
       string,
       BigNumber,
-      BigNumber,
+      number,
       BigNumber,
       BigNumber,
       string,
@@ -1941,7 +1987,7 @@ export interface PoolConfig extends BaseContract {
     ] & {
       token: string
       yieldInBps: BigNumber
-      payPeriod: BigNumber
+      payPeriodDuration: number
       maxCreditAmount: BigNumber
       liquidityCap: BigNumber
       name: string
@@ -2153,7 +2199,7 @@ export interface PoolConfig extends BaseContract {
   ): Promise<ContractTransaction>
 
   setPoolPayPeriod(
-    number: PromiseOrValue<BigNumberish>,
+    duration: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -2169,6 +2215,11 @@ export interface PoolConfig extends BaseContract {
 
   setReceivableAsset(
     _receivableAsset: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  setReceivableAutoApproval(
+    autoApproval: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -2246,6 +2297,8 @@ export interface PoolConfig extends BaseContract {
 
     creditDueManager(overrides?: CallOverrides): Promise<string>
 
+    creditManager(overrides?: CallOverrides): Promise<string>
+
     epochManager(overrides?: CallOverrides): Promise<string>
 
     evaluationAgent(overrides?: CallOverrides): Promise<string>
@@ -2290,7 +2343,7 @@ export interface PoolConfig extends BaseContract {
       [
         string,
         BigNumber,
-        BigNumber,
+        number,
         BigNumber,
         BigNumber,
         string,
@@ -2301,7 +2354,7 @@ export interface PoolConfig extends BaseContract {
       ] & {
         token: string
         yieldInBps: BigNumber
-        payPeriod: BigNumber
+        payPeriodDuration: number
         maxCreditAmount: BigNumber
         liquidityCap: BigNumber
         name: string
@@ -2513,7 +2566,7 @@ export interface PoolConfig extends BaseContract {
     ): Promise<void>
 
     setPoolPayPeriod(
-      number: PromiseOrValue<BigNumberish>,
+      duration: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2529,6 +2582,11 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    setReceivableAutoApproval(
+      autoApproval: PromiseOrValue<boolean>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2811,12 +2869,12 @@ export interface PoolConfig extends BaseContract {
       by?: PromiseOrValue<string> | null,
     ): PoolOwnerTreasuryChangedEventFilter
 
-    'PoolPayPeriodChanged(uint256,address)'(
-      number?: null,
+    'PoolPayPeriodChanged(uint8,address)'(
+      payPeriodDuration?: null,
       by?: null,
     ): PoolPayPeriodChangedEventFilter
     PoolPayPeriodChanged(
-      number?: null,
+      payPeriodDuration?: null,
       by?: null,
     ): PoolPayPeriodChangedEventFilter
 
@@ -2863,6 +2921,15 @@ export interface PoolConfig extends BaseContract {
       receivableAsset?: null,
       by?: null,
     ): ReceivableAssetChangedEventFilter
+
+    'ReceivableAutoApproval(bool,address)'(
+      receivableAutoApproval?: null,
+      by?: null,
+    ): ReceivableAutoApprovalEventFilter
+    ReceivableAutoApproval(
+      receivableAutoApproval?: null,
+      by?: null,
+    ): ReceivableAutoApprovalEventFilter
 
     'ReceivableRequiredInBpsChanged(uint256,address)'(
       receivableRequiredInBps?: null,
@@ -2980,6 +3047,8 @@ export interface PoolConfig extends BaseContract {
     credit(overrides?: CallOverrides): Promise<BigNumber>
 
     creditDueManager(overrides?: CallOverrides): Promise<BigNumber>
+
+    creditManager(overrides?: CallOverrides): Promise<BigNumber>
 
     epochManager(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -3214,7 +3283,7 @@ export interface PoolConfig extends BaseContract {
     ): Promise<BigNumber>
 
     setPoolPayPeriod(
-      number: PromiseOrValue<BigNumberish>,
+      duration: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -3230,6 +3299,11 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    setReceivableAutoApproval(
+      autoApproval: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -3309,6 +3383,8 @@ export interface PoolConfig extends BaseContract {
     credit(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     creditDueManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     epochManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
@@ -3549,7 +3625,7 @@ export interface PoolConfig extends BaseContract {
     ): Promise<PopulatedTransaction>
 
     setPoolPayPeriod(
-      number: PromiseOrValue<BigNumberish>,
+      duration: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -3565,6 +3641,11 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    setReceivableAutoApproval(
+      autoApproval: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 

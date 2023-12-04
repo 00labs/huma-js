@@ -684,9 +684,9 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
+        internalType: 'enum PayPeriodDuration',
+        name: 'payPeriodDuration',
+        type: 'uint8',
       },
       {
         indexed: false,
@@ -797,6 +797,25 @@ const _abi = [
       },
     ],
     name: 'ReceivableAssetChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'receivableAutoApproval',
+        type: 'bool',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
+      },
+    ],
+    name: 'ReceivableAutoApproval',
     type: 'event',
   },
   {
@@ -1118,6 +1137,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'creditManager',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'epochManager',
     outputs: [
       {
@@ -1389,8 +1421,8 @@ const _abi = [
             type: 'uint96',
           },
           {
-            internalType: 'uint8',
-            name: 'payPeriodInMonths',
+            internalType: 'enum PayPeriodDuration',
+            name: 'payPeriodDuration',
             type: 'uint8',
           },
           {
@@ -1428,6 +1460,11 @@ const _abi = [
             name: 'singleCreditPerBorrower',
             type: 'bool',
           },
+          {
+            internalType: 'bool',
+            name: 'receivableAutoApproval',
+            type: 'bool',
+          },
         ],
         internalType: 'struct PoolSettings',
         name: '',
@@ -1452,9 +1489,9 @@ const _abi = [
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'payPeriod',
-        type: 'uint256',
+        internalType: 'enum PayPeriodDuration',
+        name: 'payPeriodDuration',
+        type: 'uint8',
       },
       {
         internalType: 'uint256',
@@ -2242,9 +2279,9 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'number',
-        type: 'uint256',
+        internalType: 'enum PayPeriodDuration',
+        name: 'duration',
+        type: 'uint8',
       },
     ],
     name: 'setPoolPayPeriod',
@@ -2287,6 +2324,19 @@ const _abi = [
       },
     ],
     name: 'setReceivableAsset',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: 'autoApproval',
+        type: 'bool',
+      },
+    ],
+    name: 'setReceivableAutoApproval',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

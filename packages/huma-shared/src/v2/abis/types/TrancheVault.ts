@@ -705,7 +705,7 @@ export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
 export interface YieldPaidoutEventObject {
   account: string
-  yield: BigNumber
+  yields: BigNumber
   shares: BigNumber
 }
 export type YieldPaidoutEvent = TypedEvent<
@@ -717,7 +717,7 @@ export type YieldPaidoutEventFilter = TypedEventFilter<YieldPaidoutEvent>
 
 export interface YieldReinvestedEventObject {
   account: string
-  yield: BigNumber
+  yields: BigNumber
 }
 export type YieldReinvestedEvent = TypedEvent<
   [string, BigNumber],
@@ -1630,22 +1630,22 @@ export interface TrancheVault extends BaseContract {
 
     'YieldPaidout(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
-      _yield?: null,
+      yields?: null,
       shares?: null,
     ): YieldPaidoutEventFilter
     YieldPaidout(
       account?: PromiseOrValue<string> | null,
-      _yield?: null,
+      yields?: null,
       shares?: null,
     ): YieldPaidoutEventFilter
 
     'YieldReinvested(address,uint256)'(
       account?: PromiseOrValue<string> | null,
-      _yield?: null,
+      yields?: null,
     ): YieldReinvestedEventFilter
     YieldReinvested(
       account?: PromiseOrValue<string> | null,
-      _yield?: null,
+      yields?: null,
     ): YieldReinvestedEventFilter
   }
 
