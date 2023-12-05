@@ -9,11 +9,13 @@ import {
 } from '.'
 import {
   getChainIdFromSignerOrProvider,
+  getContract,
+  getERC20Contract,
   isChainEnum,
   POOL_NAME,
 } from '../../utils'
-import { getContract, getERC20Contract } from '../../utils/web3'
 import CREDIT_ABI from '../abis/Credit.json'
+import CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
 import {
   Credit,
   EpochManager,
@@ -22,10 +24,11 @@ import {
   PoolConfig,
   TrancheVault,
 } from '../abis/types'
+import { CreditRecordStructOutput } from '../abis/types/Credit'
 import {
   CreditConfigStructOutput,
-  CreditRecordStructOutput,
-} from '../abis/types/Credit'
+  CreditManager,
+} from '../abis/types/CreditManager'
 import { FirstLossCoverIndex } from '../types'
 
 export const getPoolInfoV2 = (
@@ -103,6 +106,22 @@ export const getPoolCreditContractV2 = async (
     return null
   }
   return getContract<Credit>(poolInfo.poolCredit, CREDIT_ABI, provider)
+}
+
+export const getPoolCreditManagerContractV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<CreditManager | null> => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return null
+  }
+  return getContract<CreditManager>(
+    poolInfo.poolCreditManager,
+    CREDIT_MANAGER_ABI,
+    provider,
+  )
 }
 
 export const getTrancheVaultContractV2 = async (
@@ -364,8 +383,11 @@ export const getCreditConfig = async (
     return undefined
   }
 
-  const creditContract = await getPoolCreditContractV2(poolName, provider)
-  if (!creditContract) {
+  const creditManagerContract = await getPoolCreditManagerContractV2(
+    poolName,
+    provider,
+  )
+  if (!creditManagerContract) {
     return undefined
   }
 
@@ -374,7 +396,7 @@ export const getCreditConfig = async (
     return undefined
   }
 
-  return creditContract.getCreditConfig(creditHash)
+  return creditManagerContract.getCreditConfig(creditHash)
 }
 
 export const getCurrentEpochInfoV2 = async (

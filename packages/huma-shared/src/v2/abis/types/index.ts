@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Credit } from './Credit'
+export type { CreditManager } from './CreditManager'
 export type { EpochManager } from './EpochManager'
 export type { FirstLossCover } from './FirstLossCover'
 export type { Pool } from './Pool'
@@ -10,6 +11,7 @@ export type { PoolSafe } from './PoolSafe'
 export type { TrancheVault } from './TrancheVault'
 export * as factories from './factories'
 export { Credit__factory } from './factories/Credit__factory'
+export { CreditManager__factory } from './factories/CreditManager__factory'
 export { EpochManager__factory } from './factories/EpochManager__factory'
 export { FirstLossCover__factory } from './factories/FirstLossCover__factory'
 export { Pool__factory } from './factories/Pool__factory'

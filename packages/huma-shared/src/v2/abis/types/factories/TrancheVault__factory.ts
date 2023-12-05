@@ -390,7 +390,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'yield',
+        name: 'yields',
         type: 'uint256',
       },
       {
@@ -415,7 +415,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'yield',
+        name: 'yields',
         type: 'uint256',
       },
     ],

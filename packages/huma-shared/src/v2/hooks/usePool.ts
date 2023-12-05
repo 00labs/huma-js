@@ -15,10 +15,8 @@ import {
   PoolSafe,
   TrancheVault,
 } from '../abis/types'
-import {
-  CreditConfigStructOutput,
-  CreditRecordStructOutput,
-} from '../abis/types/Credit'
+import { CreditRecordStructOutput } from '../abis/types/Credit'
+import { CreditConfigStructOutput } from '../abis/types/CreditManager'
 import { FirstLossCoverIndex } from '../types'
 import { BP_FACTOR } from '../utils/const'
 import {
@@ -494,7 +492,7 @@ export function useCreditStatsV2(
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [CreditStatsV2, () => void] {
   const chainId = provider?.network?.chainId
-  const [accountStats, setAccountStats] = useState<CreditStatsV2>({})
+  const [creditStats, setCreditStats] = useState<CreditStatsV2>({})
   const [refreshCount, refresh] = useForceRefresh()
 
   useEffect(() => {
@@ -523,7 +521,7 @@ export function useCreditStatsV2(
               ? BigNumber.from(0)
               : creditAvailable
 
-            setAccountStats({
+            setCreditStats({
               creditRecord,
               creditConfig,
               creditAvailable,
@@ -538,7 +536,7 @@ export function useCreditStatsV2(
     fetchData()
   }, [account, chainId, poolName, provider, refreshCount])
 
-  return [accountStats, refresh]
+  return [creditStats, refresh]
 }
 
 export function useFirstLossCoverSufficientV2(
