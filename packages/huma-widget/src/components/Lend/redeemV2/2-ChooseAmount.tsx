@@ -132,7 +132,7 @@ export function ChooseAmount({
       title={redemptionActionInfo.action}
       subTitle={
         redemptionActionInfo.action === 'Create'
-          ? `Select ${symbol} amount to redeem from ${redemptionActionInfo.tranche} tranche}`
+          ? `Select ${symbol} amount to redeem from ${redemptionActionInfo.tranche} tranche`
           : `Cancel ${symbol} amount from ${redemptionActionInfo.tranche} tranche redemption request`
       }
     >
