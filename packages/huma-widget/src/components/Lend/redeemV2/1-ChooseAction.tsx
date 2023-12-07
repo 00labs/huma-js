@@ -1,5 +1,6 @@
 import { UnderlyingTokenInfo } from '@huma-finance/shared'
 import {
+  Box,
   css,
   FormControl,
   FormControlLabel,
@@ -129,9 +130,17 @@ export function ChooseAction({
           {items
             .filter((item) => item.show)
             .map((item) => {
-              let { label } = item
+              const { label } = item
+              let labelNode = <Box>{label}</Box>
               if (item.amount) {
-                label = `${item.label} (${item.amount} available)`
+                labelNode = (
+                  <>
+                    <Box>{label}</Box>
+                    <Box>
+                      ({item.amount} {symbol} available)
+                    </Box>
+                  </>
+                )
               }
               return (
                 <FormControlLabel
@@ -146,7 +155,7 @@ export function ChooseAction({
                       }}
                     />
                   }
-                  label={label}
+                  label={labelNode}
                   css={styles.formControl}
                 />
               )
