@@ -141,12 +141,12 @@ export const PoolMap: PoolMapType = {
       estAPY: '20%',
     },
     [POOL_NAME.Raincards]: {
-      name: 'Raincards Pool',
+      name: 'Rain Receivables Pool',
       borrowDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'The Rain Receivables Pool is reshaping spend management for Web3 teams, enabling Web3 entities like DAOs and protocols to effortlessly manage fiat expenses through corporate cards.',
       lendDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      estAPY: '20%',
+        'The Rain Receivables Pool is reshaping spend management for Web3 teams, enabling Web3 entities like DAOs and protocols to effortlessly manage fiat expenses through corporate cards.',
+      estAPY: '15%',
     },
   },
   [POOL_TYPE.Invoice]: {
@@ -293,6 +293,30 @@ export const PoolContractMap: PoolContractMapType = {
         },
         extra: {
           borrower: '0xd581AEDAB50a0431D52829F03d42d0C61bc36119',
+          disableBorrow: true,
+          detailsPage: true,
+        },
+      },
+      [POOL_NAME.Raincards]: {
+        basePoolConfig: '0xBD239B764731b15664F62c32b7E0a6cd78a4E34B',
+        pool: '0x82a76045dc4543fa4776df1bcad11f2aa6ea51d2',
+        poolFeeManager: '0x4384560Eb9d4108fcb90981e7a0f03C21bf782d8',
+        poolUnderlyingToken: {
+          address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.Raincards,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x238F9076D0136dE0FaAe79450Ad73250A6bcD90e',
+          abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0xdbE3976d8Bac43410f421cA69aae0eC54D8155C2',
           disableBorrow: true,
           detailsPage: true,
         },
