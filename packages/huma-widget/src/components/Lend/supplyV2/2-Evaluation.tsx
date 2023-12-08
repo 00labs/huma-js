@@ -50,8 +50,11 @@ export function Evaluation({
   const isDev = checkIsDev()
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
-  const { isWalletOwnershipVerified, setError: setAuthError } =
-    useAuthErrorHandling(isDev)
+  const {
+    isWalletOwnershipVerified,
+    setError: setAuthError,
+    error: authError,
+  } = useAuthErrorHandling(isDev)
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()
@@ -178,6 +181,8 @@ export function Evaluation({
                 setKYCCopy(KYCCopies.resendSignatureLink)
               }
             }
+          } else {
+            setKYCCopy(KYCCopies.verifyIdentity)
           }
         }
       } catch (e: unknown) {
@@ -202,6 +207,7 @@ export function Evaluation({
     KYCCopies.emailSignatureLink,
     KYCCopies.resendSignatureLink,
     KYCCopies.signInRequired,
+    KYCCopies.verifyIdentity,
     account,
     chainId,
     checkGetDocSignatureStatusIsAvailable,
@@ -217,6 +223,20 @@ export function Evaluation({
     setAuthError,
     isWalletOwnershipVerified,
   ])
+
+  useEffect(() => {
+    if (
+      authError &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [4001, 'ACTION_REJECTED'].includes((authError as any).code)
+    ) {
+      dispatch(
+        setError({
+          errorMessage: 'User has rejected the transaction.',
+        }),
+      )
+    }
+  }, [authError, dispatch])
 
   const approveLender = async () => {
     if (docSignatureCompleted) {
