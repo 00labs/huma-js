@@ -1,5 +1,5 @@
 import {
-  CreditState,
+  CreditStateV2,
   POOL_NAME,
   useCreditStatsV2,
   usePoolInfoV2,
@@ -58,7 +58,7 @@ export function CreditLineBorrowV2({
 
   useEffect(() => {
     if (!step && accountState !== undefined) {
-      if (accountState >= CreditState.Approved) {
+      if (accountState >= CreditStateV2.Approved) {
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
       }
     }
