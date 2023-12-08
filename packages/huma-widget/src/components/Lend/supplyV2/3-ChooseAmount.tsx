@@ -4,7 +4,7 @@ import {
   UnderlyingTokenInfo,
   usePoolSafeAllowanceV2,
 } from '@huma-finance/shared'
-import { Box, css, Input, useTheme } from '@mui/material'
+import { Box, css, TextField, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import React, { useState } from 'react'
@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
+import { NumericFormatCustom } from '../../NumericFormatCustom'
 import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
@@ -47,7 +48,15 @@ export function ChooseAmount({
       ${theme.cssMixins.rowSpaceBetweened};
     `,
     inputField: css`
-      width: 100%;
+      input {
+        width: 100%;
+        color: ${theme.palette.text.primary};
+        font-family: 'Uni-Neue-Black';
+        font-size: 40px;
+        line-height: 133.4%;
+      }
+    `,
+    inputFieldSymbol: css`
       color: ${theme.palette.text.primary};
       font-family: 'Uni-Neue-Black';
       font-size: 40px;
@@ -82,13 +91,21 @@ export function ChooseAmount({
     >
       <Box css={styles.inputAmountWrapper}>
         <Box css={styles.inputAmount}>
-          <Input
+          <TextField
             css={styles.inputField}
-            type='number'
             value={!inputTouched && currentAmount === 0 ? '' : currentAmount}
             onChange={handleChangeAmount}
+            InputProps={{
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              inputComponent: NumericFormatCustom as any,
+              endAdornment: (
+                <Box component='span' css={styles.inputFieldSymbol}>
+                  {symbol}
+                </Box>
+              ),
+            }}
             placeholder='0'
-            endAdornment={symbol}
+            variant='standard'
           />
         </Box>
       </Box>
