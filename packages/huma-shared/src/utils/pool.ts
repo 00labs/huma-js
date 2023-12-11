@@ -553,6 +553,30 @@ export const PoolContractMap: PoolContractMapType = {
           detailsPage: true,
         },
       },
+      [POOL_NAME.Jia]: {
+        basePoolConfig: '0x75be4c971c730e197cae5e643e0f05ce7b4a58fe',
+        pool: '0xa190A0ab76F58b491Cc36205B268e8cF5650c576',
+        poolFeeManager: '0x0c092Bb9d5bc8DEA9d98FFda84E943816AD6E710',
+        poolUnderlyingToken: {
+          address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          symbol: 'cUSD',
+          decimals: 18,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.Jia,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x3Ce8221DBd48122de424e49F649D7A57EF722439',
+          abi: HDT_ABI,
+        },
+        extra: {
+          disableBorrow: true,
+          detailsPage: true,
+          borrower: '0xD3CCe1eC5a3981B27bD998f33A7eafdD27Ad2dF4',
+        },
+      },
     },
   },
   [ChainEnum.Mumbai]: {
