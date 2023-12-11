@@ -37,9 +37,9 @@ import {
   UnderlyingTokenInfo,
 } from '../utils/pool'
 import {
-  getCreditConfig,
-  getCreditHash,
-  getCreditRecord,
+  getCreditConfigV2,
+  getCreditHashV2,
+  getCreditRecordV2,
   getPoolUnderlyingTokenBalanceV2,
   getPoolUnderlyingTokenInfoV2,
 } from '../utils/poolContract'
@@ -553,12 +553,12 @@ export function useCreditStatsV2(
   useEffect(() => {
     const fetchData = async () => {
       if (account) {
-        const creditHash = getCreditHash(poolName, chainId, account)
+        const creditHash = getCreditHashV2(poolName, chainId, account)
         if (creditHash) {
           const [creditRecord, creditConfig, poolTokenBalance] =
             await Promise.all([
-              getCreditRecord(poolName, chainId, account, provider),
-              getCreditConfig(poolName, chainId, account, provider),
+              getCreditRecordV2(poolName, chainId, account, provider),
+              getCreditConfigV2(poolName, chainId, account, provider),
               getPoolUnderlyingTokenBalanceV2(poolName, account, provider),
             ])
           if (creditRecord && creditConfig && poolTokenBalance) {
