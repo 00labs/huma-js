@@ -236,3 +236,52 @@ describe('getPoolStats', () => {
     expect(result).toStrictEqual(poolStat)
   })
 })
+
+describe('checkBorrowAndLendHistory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
+  it('should return undefined if no subgraph url is found', async () => {
+    const chainId = 12 // ChainId without receivables Subgraph url
+    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
+    const userAddress = '0x123'
+
+    const result = await SubgraphService.checkBorrowAndLendHistory(
+      chainId,
+      pool,
+      userAddress,
+    )
+    expect(result).toStrictEqual(undefined)
+  })
+
+  it('should return undefined if requestPost returns error', async () => {
+    ;(requestPost as jest.Mock).mockResolvedValue({ errors: 'errors' })
+
+    const chainId = ChainEnum.Goerli
+    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
+
+    const result = await SubgraphService.getPoolStats(chainId, pool)
+    expect(result).toStrictEqual(undefined)
+  })
+
+  it('should return pool stats', async () => {
+    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
+    const poolStat = {
+      id: pool,
+      amountCreditOriginated: 300,
+      amountCreditRepaid: 400,
+      amountCreditDefaulted: 500,
+    }
+    ;(requestPost as jest.Mock).mockResolvedValue({
+      data: {
+        poolStat,
+      },
+    })
+
+    const chainId = ChainEnum.Goerli
+
+    const result = await SubgraphService.getPoolStats(chainId, pool)
+    expect(result).toStrictEqual(poolStat)
+  })
+})
