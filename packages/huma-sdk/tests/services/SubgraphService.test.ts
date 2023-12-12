@@ -1,8 +1,10 @@
 import {
   ChainEnum,
+  CreditEvent,
   POOL_NAME,
   POOL_TYPE,
   requestPost,
+  isV2Pool,
 } from '@huma-finance/shared'
 
 import { SubgraphService } from '../../src/services/SubgraphService'
@@ -10,6 +12,7 @@ import { SubgraphService } from '../../src/services/SubgraphService'
 jest.mock('@huma-finance/shared', () => ({
   ...jest.requireActual('@huma-finance/shared'),
   requestPost: jest.fn(),
+  isV2Pool: jest.fn(),
 }))
 
 describe('getSubgraphUrlForChainId', () => {
@@ -255,33 +258,102 @@ describe('checkBorrowAndLendHistory', () => {
     expect(result).toStrictEqual(undefined)
   })
 
+  it('should return undefined if pool is not valid address', async () => {
+    const chainId = ChainEnum.Goerli
+    const poolNotValid = ''
+    const userAddress = '0x0548b2924412Cd85EB91D29772a9b8A9868F6A39'
+
+    const result = await SubgraphService.checkBorrowAndLendHistory(
+      chainId,
+      poolNotValid,
+      userAddress,
+    )
+    expect(result).toStrictEqual(undefined)
+  })
+
+  it('should return undefined if user address is not valid address', async () => {
+    const chainId = ChainEnum.Goerli
+    const pool = '0x0548b2924412Cd85EB91D29772a9b8A9868F6A39'
+    const userAddressNotValid = ''
+
+    const result = await SubgraphService.checkBorrowAndLendHistory(
+      chainId,
+      pool,
+      userAddressNotValid,
+    )
+    expect(result).toStrictEqual(undefined)
+  })
+
   it('should return undefined if requestPost returns error', async () => {
     ;(requestPost as jest.Mock).mockResolvedValue({ errors: 'errors' })
 
     const chainId = ChainEnum.Goerli
     const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
+    const userAddress = '0x0548b2924412Cd85EB91D29772a9b8A9868F6A39'
 
-    const result = await SubgraphService.getPoolStats(chainId, pool)
+    const result = await SubgraphService.checkBorrowAndLendHistory(
+      chainId,
+      pool,
+      userAddress,
+    )
     expect(result).toStrictEqual(undefined)
   })
 
-  it('should return pool stats', async () => {
+  it('should return if user has borrow history', async () => {
     const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
-    const poolStat = {
-      id: pool,
-      amountCreditOriginated: 300,
-      amountCreditRepaid: 400,
-      amountCreditDefaulted: 500,
-    }
+    const userAddress = '0x0548b2924412Cd85EB91D29772a9b8A9868F6A39'
     ;(requestPost as jest.Mock).mockResolvedValue({
       data: {
-        poolStat,
+        creditEvents: [
+          {
+            pool,
+            event: CreditEvent.DrawdownMade,
+          },
+        ],
       },
     })
+    ;(isV2Pool as jest.Mock).mockResolvedValue(false)
 
     const chainId = ChainEnum.Goerli
 
-    const result = await SubgraphService.getPoolStats(chainId, pool)
-    expect(result).toStrictEqual(poolStat)
+    const result = await SubgraphService.checkBorrowAndLendHistory(
+      chainId,
+      pool,
+      userAddress,
+    )
+    expect(result).toStrictEqual({
+      hasBorrowHistory: true,
+      hasLendHistory: false,
+    })
+  })
+
+  it('should return if user has lend history', async () => {
+    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
+    const userAddress = '0x0548b2924412Cd85EB91D29772a9b8A9868F6A39'
+    ;(requestPost as jest.Mock).mockResolvedValue({
+      data: {
+        lenders: [
+          {
+            id: '0x0548b2924412Cd85EB91D29772a9b8A9868F6A39',
+            tranche: {
+              type: 0,
+            },
+          },
+        ],
+      },
+    })
+    ;(isV2Pool as jest.Mock).mockResolvedValue(true)
+
+    const chainId = ChainEnum.Goerli
+
+    const result = await SubgraphService.checkBorrowAndLendHistory(
+      chainId,
+      pool,
+      userAddress,
+    )
+    expect(result).toStrictEqual({
+      hasBorrowHistory: false,
+      hasLendHistory: true,
+    })
   })
 })
