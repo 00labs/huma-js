@@ -245,6 +245,55 @@ function getPoolStats(
   })
 }
 
+type OngoingCredits = { unbilledPrincipal: number; totalDue: number }[]
+
+/**
+ * Get ongoing credits for a pool.
+ *
+ * @memberof SubgraphService
+ * @param {number} chainId - The ID of the chain.
+ * @param {string} pool - The address of the pool.
+ * @returns {Promise<OngoingCredits|undefined>} The pool's ongoing credits.
+ */
+function getOngoingCredits(
+  chainId: number,
+  pool: string,
+): Promise<OngoingCredits | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  const ongoingCreditsQuery = `
+  query {
+    creditLines(
+      where: {
+        or: [
+          { pool: "${pool}", unbilledPrincipal_gt: 0 }
+          { pool: "${pool}", totalDue_gt: 0 }
+        ]
+      }
+    ) {
+      unbilledPrincipal
+      totalDue
+    }
+  }
+`
+
+  return requestPost<{
+    errors?: unknown
+    data: { creditLines: OngoingCredits }
+  }>(url, JSON.stringify({ query: ongoingCreditsQuery }), {
+    withCredentials: false,
+  }).then((res) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return undefined
+    }
+    return res.data.creditLines
+  })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -255,4 +304,5 @@ export const SubgraphService = {
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
   getPoolStats,
+  getOngoingCredits,
 }

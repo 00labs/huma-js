@@ -475,6 +475,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.getLastFactorizedAmountFromPool(userAddress, chainId, poolName, poolType)](#SubgraphService.getLastFactorizedAmountFromPool) ⇒ <code>Promise.&lt;number&gt;</code>
     * [.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getRWReceivableInfo) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
     * [.getPoolStats(chainId, pool)](#SubgraphService.getPoolStats) ⇒ <code>Promise.&lt;{PoolStats}&gt;</code>
+    * [.getOngoingCredits(chainId, pool)](#SubgraphService.getOngoingCredits) ⇒ <code>Promise.&lt;(OngoingCredits\|undefined)&gt;</code>
 
 <a name="SubgraphService.getSubgraphUrlForChainId"></a>
 
@@ -542,6 +543,19 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 **Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
 **Returns**: <code>Promise.&lt;{PoolStats}&gt;</code> - <p>The pool's stats info.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chainId | <code>number</code> | <p>The ID of the chain.</p> |
+| pool | <code>string</code> | <p>The address of the pool.</p> |
+
+<a name="SubgraphService.getOngoingCredits"></a>
+
+### SubgraphService.getOngoingCredits(chainId, pool) ⇒ <code>Promise.&lt;(OngoingCredits\|undefined)&gt;</code>
+<p>Get ongoing credits for a pool.</p>
+
+**Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
+**Returns**: <code>Promise.&lt;(OngoingCredits\|undefined)&gt;</code> - <p>The pool's ongoing credits.</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |
