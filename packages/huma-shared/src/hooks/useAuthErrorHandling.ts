@@ -44,6 +44,7 @@ const verifyOwnership = async (
 export type AuthState = {
   isWalletOwnershipVerificationRequired: boolean
   isWalletOwnershipVerified: boolean
+  error: unknown
   setError: React.Dispatch<React.SetStateAction<unknown>>
 }
 
@@ -78,15 +79,14 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         isDev,
         provider,
         handleVerificationCompletion,
-      ).catch((e) => throwError(e))
-    } else {
-      throwError(error)
+      ).catch((e) => setError(e))
     }
   }, [chainId, isDev, error, throwError, account, provider])
 
   return {
     isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
+    error,
     setError,
   }
 }
