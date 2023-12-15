@@ -75,7 +75,7 @@ function usePoolSafeContractV2(
   )
 }
 
-function usePoolConfigContractV2(
+export function usePoolConfigContractV2(
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
