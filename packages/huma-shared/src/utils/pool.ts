@@ -200,6 +200,10 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     receivablesSubgraph:
       'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-alfajores',
   },
+  [ChainEnum.Localhost]: {
+    subgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
+    receivablesSubgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
+  },
 }
 
 export const PoolContractMap: PoolContractMapType = {
