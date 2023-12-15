@@ -16,7 +16,10 @@ import {
   TrancheVault,
 } from '../abis/types'
 import { CreditRecordStructOutput } from '../abis/types/Credit'
-import { CreditConfigStructOutput } from '../abis/types/CreditManager'
+import {
+  CreditConfigStructOutput,
+  CreditManager,
+} from '../abis/types/CreditManager'
 import { FirstLossCoverIndex } from '../types'
 import { BP_FACTOR } from '../utils/const'
 import {
@@ -72,7 +75,7 @@ function usePoolSafeContractV2(
   )
 }
 
-function usePoolConfigContractV2(
+export function usePoolConfigContractV2(
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
@@ -145,6 +148,21 @@ export function useCreditContractV2(
   return useContract<Credit>(
     poolInfo?.poolCredit,
     poolInfo?.poolCreditAbi,
+    provider,
+    account,
+  )
+}
+
+export function useCreditManagerContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  return useContract<CreditManager>(
+    poolInfo?.poolCreditManager,
+    poolInfo?.poolCreditManagerAbi,
     provider,
     account,
   )

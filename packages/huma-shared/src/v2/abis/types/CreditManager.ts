@@ -60,38 +60,80 @@ export type CreditConfigStructOutput = [
 
 export interface CreditManagerInterface extends utils.Interface {
   functions: {
+    'approveBorrower(address,uint96,uint16,uint16,uint96,uint64,bool)': FunctionFragment
     'calendar()': FunctionFragment
+    'closeCredit(address)': FunctionFragment
     'credit()': FunctionFragment
-    'creditBorrowerMap(bytes32)': FunctionFragment
+    'extendRemainingPeriod(address,uint256)': FunctionFragment
+    'getCreditBorrower(bytes32)': FunctionFragment
     'getCreditConfig(bytes32)': FunctionFragment
     'humaConfig()': FunctionFragment
     'initialize(address)': FunctionFragment
     'isDefaultReady(bytes32)': FunctionFragment
     'onlyCreditBorrower(bytes32,address)': FunctionFragment
+    'pauseCredit(address)': FunctionFragment
     'poolConfig()': FunctionFragment
+    'refreshCredit(address)': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
+    'startCommittedCredit(address)': FunctionFragment
+    'triggerDefault(address)': FunctionFragment
+    'unpauseCredit(address)': FunctionFragment
+    'updateLimitAndCommitment(address,uint256,uint256)': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
+    'updateYield(address,uint256)': FunctionFragment
+    'waiveLateFee(address,uint256)': FunctionFragment
   }
 
   getFunction(
     nameOrSignatureOrTopic:
+      | 'approveBorrower'
       | 'calendar'
+      | 'closeCredit'
       | 'credit'
-      | 'creditBorrowerMap'
+      | 'extendRemainingPeriod'
+      | 'getCreditBorrower'
       | 'getCreditConfig'
       | 'humaConfig'
       | 'initialize'
       | 'isDefaultReady'
       | 'onlyCreditBorrower'
+      | 'pauseCredit'
       | 'poolConfig'
+      | 'refreshCredit'
       | 'setPoolConfig'
-      | 'updatePoolConfigData',
+      | 'startCommittedCredit'
+      | 'triggerDefault'
+      | 'unpauseCredit'
+      | 'updateLimitAndCommitment'
+      | 'updatePoolConfigData'
+      | 'updateYield'
+      | 'waiveLateFee',
   ): FunctionFragment
 
+  encodeFunctionData(
+    functionFragment: 'approveBorrower',
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>,
+    ],
+  ): string
   encodeFunctionData(functionFragment: 'calendar', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'closeCredit',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(functionFragment: 'credit', values?: undefined): string
   encodeFunctionData(
-    functionFragment: 'creditBorrowerMap',
+    functionFragment: 'extendRemainingPeriod',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'getCreditBorrower',
     values: [PromiseOrValue<BytesLike>],
   ): string
   encodeFunctionData(
@@ -111,20 +153,65 @@ export interface CreditManagerInterface extends utils.Interface {
     functionFragment: 'onlyCreditBorrower',
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
   ): string
+  encodeFunctionData(
+    functionFragment: 'pauseCredit',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'refreshCredit',
+    values: [PromiseOrValue<string>],
+  ): string
   encodeFunctionData(
     functionFragment: 'setPoolConfig',
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
+    functionFragment: 'startCommittedCredit',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'triggerDefault',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'unpauseCredit',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'updateLimitAndCommitment',
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+    ],
+  ): string
+  encodeFunctionData(
     functionFragment: 'updatePoolConfigData',
     values?: undefined,
   ): string
+  encodeFunctionData(
+    functionFragment: 'updateYield',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'waiveLateFee',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+  ): string
 
+  decodeFunctionResult(
+    functionFragment: 'approveBorrower',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'calendar', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'closeCredit', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'credit', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'creditBorrowerMap',
+    functionFragment: 'extendRemainingPeriod',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'getCreditBorrower',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -141,32 +228,64 @@ export interface CreditManagerInterface extends utils.Interface {
     functionFragment: 'onlyCreditBorrower',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'pauseCredit', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
   decodeFunctionResult(
+    functionFragment: 'refreshCredit',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'setPoolConfig',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'startCommittedCredit',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'triggerDefault',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'unpauseCredit',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'updateLimitAndCommitment',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
     functionFragment: 'updatePoolConfigData',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'updateYield', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'waiveLateFee',
+    data: BytesLike,
+  ): Result
 
   events: {
     'CommittedCreditStarted(bytes32)': EventFragment
     'CreditConfigChanged(bytes32,uint256,uint256,uint8,uint256,uint256,bool,uint256,bool)': EventFragment
+    'CreditLineApproved(address,bytes32,uint256,uint8,uint256,uint256,uint256,bool)': EventFragment
+    'CreditLineClosed(address,address,uint8)': EventFragment
     'CreditPaused(bytes32)': EventFragment
     'DefaultTriggered(bytes32,uint256,uint256,uint256,address)': EventFragment
     'Initialized(uint8)': EventFragment
+    'LateFeeWaived(address,uint256)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
-    'RemainingPeriodsExtended(bytes32,uint256,uint256,uint256,uint256,address)': EventFragment
+    'RemainingPeriodsExtended(bytes32,uint256,uint256,address)': EventFragment
   }
 
   getEvent(nameOrSignatureOrTopic: 'CommittedCreditStarted'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CreditConfigChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CreditLineApproved'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CreditLineClosed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CreditPaused'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'DefaultTriggered'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'LateFeeWaived'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RemainingPeriodsExtended'): EventFragment
@@ -212,6 +331,37 @@ export type CreditConfigChangedEvent = TypedEvent<
 export type CreditConfigChangedEventFilter =
   TypedEventFilter<CreditConfigChangedEvent>
 
+export interface CreditLineApprovedEventObject {
+  borrower: string
+  creditHash: string
+  creditLimit: BigNumber
+  periodDuration: number
+  remainingPeriods: BigNumber
+  yieldInBps: BigNumber
+  committedAmount: BigNumber
+  revolving: boolean
+}
+export type CreditLineApprovedEvent = TypedEvent<
+  [string, string, BigNumber, number, BigNumber, BigNumber, BigNumber, boolean],
+  CreditLineApprovedEventObject
+>
+
+export type CreditLineApprovedEventFilter =
+  TypedEventFilter<CreditLineApprovedEvent>
+
+export interface CreditLineClosedEventObject {
+  borrower: string
+  by: string
+  reasonCode: number
+}
+export type CreditLineClosedEvent = TypedEvent<
+  [string, string, number],
+  CreditLineClosedEventObject
+>
+
+export type CreditLineClosedEventFilter =
+  TypedEventFilter<CreditLineClosedEvent>
+
 export interface CreditPausedEventObject {
   creditHash: string
 }
@@ -241,6 +391,17 @@ export type InitializedEvent = TypedEvent<[number], InitializedEventObject>
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
+export interface LateFeeWaivedEventObject {
+  borrower: string
+  amountWaived: BigNumber
+}
+export type LateFeeWaivedEvent = TypedEvent<
+  [string, BigNumber],
+  LateFeeWaivedEventObject
+>
+
+export type LateFeeWaivedEventFilter = TypedEventFilter<LateFeeWaivedEvent>
+
 export interface PoolConfigCacheUpdatedEventObject {
   poolConfig: string
 }
@@ -268,12 +429,10 @@ export interface RemainingPeriodsExtendedEventObject {
   creditHash: string
   oldRemainingPeriods: BigNumber
   newRemainingPeriods: BigNumber
-  oldMaturityDate: BigNumber
-  newMaturityDate: BigNumber
   by: string
 }
 export type RemainingPeriodsExtendedEvent = TypedEvent<
-  [string, BigNumber, BigNumber, BigNumber, BigNumber, string],
+  [string, BigNumber, BigNumber, string],
   RemainingPeriodsExtendedEventObject
 >
 
@@ -307,12 +466,34 @@ export interface CreditManager extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
+    approveBorrower(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      remainingPeriods: PromiseOrValue<BigNumberish>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      designatedStartDate: PromiseOrValue<BigNumberish>,
+      revolving: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     calendar(overrides?: CallOverrides): Promise<[string]>
+
+    closeCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     credit(overrides?: CallOverrides): Promise<[string]>
 
-    creditBorrowerMap(
-      arg0: PromiseOrValue<BytesLike>,
+    extendRemainingPeriod(
+      borrower: PromiseOrValue<string>,
+      numOfPeriods: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    getCreditBorrower(
+      creditHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<[string]>
 
@@ -339,24 +520,90 @@ export interface CreditManager extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[void]>
 
+    pauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     poolConfig(overrides?: CallOverrides): Promise<[string]>
+
+    refreshCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
+    startCommittedCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    triggerDefault(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    unpauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    updateLimitAndCommitment(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     updatePoolConfigData(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    updateYield(
+      borrower: PromiseOrValue<string>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    waiveLateFee(
+      borrower: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
   }
 
+  approveBorrower(
+    borrower: PromiseOrValue<string>,
+    creditLimit: PromiseOrValue<BigNumberish>,
+    remainingPeriods: PromiseOrValue<BigNumberish>,
+    yieldInBps: PromiseOrValue<BigNumberish>,
+    committedAmount: PromiseOrValue<BigNumberish>,
+    designatedStartDate: PromiseOrValue<BigNumberish>,
+    revolving: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   calendar(overrides?: CallOverrides): Promise<string>
+
+  closeCredit(
+    borrower: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   credit(overrides?: CallOverrides): Promise<string>
 
-  creditBorrowerMap(
-    arg0: PromiseOrValue<BytesLike>,
+  extendRemainingPeriod(
+    borrower: PromiseOrValue<string>,
+    numOfPeriods: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  getCreditBorrower(
+    creditHash: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides,
   ): Promise<string>
 
@@ -383,10 +630,42 @@ export interface CreditManager extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<void>
 
+  pauseCredit(
+    borrower: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   poolConfig(overrides?: CallOverrides): Promise<string>
+
+  refreshCredit(
+    borrower: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
 
   setPoolConfig(
     _poolConfig: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  startCommittedCredit(
+    borrower: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  triggerDefault(
+    borrower: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  unpauseCredit(
+    borrower: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  updateLimitAndCommitment(
+    borrower: PromiseOrValue<string>,
+    creditLimit: PromiseOrValue<BigNumberish>,
+    committedAmount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -394,13 +673,47 @@ export interface CreditManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
+  updateYield(
+    borrower: PromiseOrValue<string>,
+    yieldInBps: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  waiveLateFee(
+    borrower: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   callStatic: {
+    approveBorrower(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      remainingPeriods: PromiseOrValue<BigNumberish>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      designatedStartDate: PromiseOrValue<BigNumberish>,
+      revolving: PromiseOrValue<boolean>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     calendar(overrides?: CallOverrides): Promise<string>
+
+    closeCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     credit(overrides?: CallOverrides): Promise<string>
 
-    creditBorrowerMap(
-      arg0: PromiseOrValue<BytesLike>,
+    extendRemainingPeriod(
+      borrower: PromiseOrValue<string>,
+      numOfPeriods: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    getCreditBorrower(
+      creditHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<string>
 
@@ -427,14 +740,64 @@ export interface CreditManager extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
+    pauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     poolConfig(overrides?: CallOverrides): Promise<string>
+
+    refreshCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
+    startCommittedCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    triggerDefault(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        principalLoss: BigNumber
+        yieldLoss: BigNumber
+        feesLoss: BigNumber
+      }
+    >
+
+    unpauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    updateLimitAndCommitment(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>
+
+    updateYield(
+      borrower: PromiseOrValue<string>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    waiveLateFee(
+      borrower: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>
   }
 
   filters: {
@@ -468,6 +831,38 @@ export interface CreditManager extends BaseContract {
       autoApproval?: null,
     ): CreditConfigChangedEventFilter
 
+    'CreditLineApproved(address,bytes32,uint256,uint8,uint256,uint256,uint256,bool)'(
+      borrower?: PromiseOrValue<string> | null,
+      creditHash?: PromiseOrValue<BytesLike> | null,
+      creditLimit?: null,
+      periodDuration?: null,
+      remainingPeriods?: null,
+      yieldInBps?: null,
+      committedAmount?: null,
+      revolving?: null,
+    ): CreditLineApprovedEventFilter
+    CreditLineApproved(
+      borrower?: PromiseOrValue<string> | null,
+      creditHash?: PromiseOrValue<BytesLike> | null,
+      creditLimit?: null,
+      periodDuration?: null,
+      remainingPeriods?: null,
+      yieldInBps?: null,
+      committedAmount?: null,
+      revolving?: null,
+    ): CreditLineApprovedEventFilter
+
+    'CreditLineClosed(address,address,uint8)'(
+      borrower?: PromiseOrValue<string> | null,
+      by?: null,
+      reasonCode?: null,
+    ): CreditLineClosedEventFilter
+    CreditLineClosed(
+      borrower?: PromiseOrValue<string> | null,
+      by?: null,
+      reasonCode?: null,
+    ): CreditLineClosedEventFilter
+
     'CreditPaused(bytes32)'(
       creditHash?: PromiseOrValue<BytesLike> | null,
     ): CreditPausedEventFilter
@@ -493,6 +888,15 @@ export interface CreditManager extends BaseContract {
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
+    'LateFeeWaived(address,uint256)'(
+      borrower?: null,
+      amountWaived?: null,
+    ): LateFeeWaivedEventFilter
+    LateFeeWaived(
+      borrower?: null,
+      amountWaived?: null,
+    ): LateFeeWaivedEventFilter
+
     'PoolConfigCacheUpdated(address)'(
       poolConfig?: PromiseOrValue<string> | null,
     ): PoolConfigCacheUpdatedEventFilter
@@ -509,31 +913,49 @@ export interface CreditManager extends BaseContract {
       oldPoolConfig?: PromiseOrValue<string> | null,
     ): PoolConfigChangedEventFilter
 
-    'RemainingPeriodsExtended(bytes32,uint256,uint256,uint256,uint256,address)'(
+    'RemainingPeriodsExtended(bytes32,uint256,uint256,address)'(
       creditHash?: PromiseOrValue<BytesLike> | null,
       oldRemainingPeriods?: null,
       newRemainingPeriods?: null,
-      oldMaturityDate?: null,
-      newMaturityDate?: null,
       by?: null,
     ): RemainingPeriodsExtendedEventFilter
     RemainingPeriodsExtended(
       creditHash?: PromiseOrValue<BytesLike> | null,
       oldRemainingPeriods?: null,
       newRemainingPeriods?: null,
-      oldMaturityDate?: null,
-      newMaturityDate?: null,
       by?: null,
     ): RemainingPeriodsExtendedEventFilter
   }
 
   estimateGas: {
+    approveBorrower(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      remainingPeriods: PromiseOrValue<BigNumberish>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      designatedStartDate: PromiseOrValue<BigNumberish>,
+      revolving: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     calendar(overrides?: CallOverrides): Promise<BigNumber>
+
+    closeCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     credit(overrides?: CallOverrides): Promise<BigNumber>
 
-    creditBorrowerMap(
-      arg0: PromiseOrValue<BytesLike>,
+    extendRemainingPeriod(
+      borrower: PromiseOrValue<string>,
+      numOfPeriods: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    getCreditBorrower(
+      creditHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -560,25 +982,91 @@ export interface CreditManager extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
+    pauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     poolConfig(overrides?: CallOverrides): Promise<BigNumber>
+
+    refreshCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
+    startCommittedCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    triggerDefault(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    unpauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    updateLimitAndCommitment(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     updatePoolConfigData(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    updateYield(
+      borrower: PromiseOrValue<string>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    waiveLateFee(
+      borrower: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
   }
 
   populateTransaction: {
+    approveBorrower(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      remainingPeriods: PromiseOrValue<BigNumberish>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      designatedStartDate: PromiseOrValue<BigNumberish>,
+      revolving: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     calendar(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    closeCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     credit(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    creditBorrowerMap(
-      arg0: PromiseOrValue<BytesLike>,
+    extendRemainingPeriod(
+      borrower: PromiseOrValue<string>,
+      numOfPeriods: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    getCreditBorrower(
+      creditHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -605,14 +1093,58 @@ export interface CreditManager extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
+    pauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    refreshCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
 
     setPoolConfig(
       _poolConfig: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
+    startCommittedCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    triggerDefault(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    unpauseCredit(
+      borrower: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    updateLimitAndCommitment(
+      borrower: PromiseOrValue<string>,
+      creditLimit: PromiseOrValue<BigNumberish>,
+      committedAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     updatePoolConfigData(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    updateYield(
+      borrower: PromiseOrValue<string>,
+      yieldInBps: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    waiveLateFee(
+      borrower: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
   }

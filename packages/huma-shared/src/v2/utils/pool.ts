@@ -12,6 +12,7 @@ import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
 import { FirstLossCoverIndex } from '../types'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
+import POOL_CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
 import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_ABI from '../abis/Pool.json'
@@ -46,6 +47,7 @@ export type PoolInfoV2 = {
   }
   poolAbi?: unknown
   poolCreditAbi?: unknown
+  poolCreditManagerAbi?: unknown
   poolSafeAbi?: unknown
   poolConfigAbi?: unknown
   trancheVaultAbi?: unknown
@@ -92,6 +94,7 @@ const getMetadataWithAbis = (metadata: PoolsInfoV2) => {
     if (pool) {
       pool.poolAbi = POOL_ABI
       pool.poolCreditAbi = POOL_CREDIT_ABI
+      pool.poolCreditManagerAbi = POOL_CREDIT_MANAGER_ABI
       pool.poolSafeAbi = POOL_SAFE_ABI
       pool.poolConfigAbi = POOL_CONFIG_ABI
       pool.trancheVaultAbi = TRANCHE_VAULT_ABI

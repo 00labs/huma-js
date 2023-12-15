@@ -5,7 +5,8 @@ import { useMemo } from 'react'
 
 import ERC20_ABI from '../abis/erc20.json'
 import MULTISEND_ABI from '../abis/Multisend.json'
-import { Erc20, Multisend } from '../abis/types'
+import TEST_ERC20_ABI from '../abis/TestERC20.json'
+import { Erc20, Multisend, TestERC20 } from '../abis/types'
 import {
   SupplementaryContracts,
   SupplementaryContractsMap,
@@ -50,4 +51,12 @@ export function useMultiSendContract(
     MULTISEND_ABI,
     provider,
   )
+}
+
+export function useTestERC20Contract(
+  tokenAddress: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  return useContract<TestERC20>(tokenAddress, TEST_ERC20_ABI, provider, account)
 }
