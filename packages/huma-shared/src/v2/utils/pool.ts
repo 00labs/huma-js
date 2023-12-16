@@ -8,6 +8,7 @@ import {
   POOL_TYPE,
   PoolVersion,
 } from '../../utils'
+import { HUMA_METADATA } from '../metadata/huma'
 import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
 import { FirstLossCoverIndex } from '../types'
@@ -107,6 +108,7 @@ const getMetadataWithAbis = (metadata: PoolsInfoV2) => {
 
 export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Mumbai]: getMetadataWithAbis(MUMBAI_METADATA),
+  [ChainEnum.Huma]: getMetadataWithAbis(HUMA_METADATA),
   [ChainEnum.Localhost]: getMetadataWithAbis(LOCALHOST_METADATA),
 } as ChainPoolsInfoV2
 

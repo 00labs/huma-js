@@ -41,7 +41,8 @@ export enum ChainEnum {
   Mumbai = 80001,
   Celo = 42220,
   Alfajores = 44787,
-  Localhost = 31337,
+  Localhost = 31338,
+  Huma = 31337,
 }
 
 export const CHAINS: {
@@ -70,8 +71,18 @@ export const CHAINS: {
   },
   [ChainEnum.Localhost]: {
     id: ChainEnum.Localhost,
-    urls: ['http://ec2-3-101-149-232.us-west-1.compute.amazonaws.com:8545'],
+    urls: ['http://localhost:8545'],
     name: 'Localhost',
+    nativeCurrency: ETH,
+    explorer: '',
+    wait: 1,
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+  [ChainEnum.Huma]: {
+    id: ChainEnum.Huma,
+    urls: ['http://ec2-3-101-149-232.us-west-1.compute.amazonaws.com:8545'],
+    name: 'Huma',
     nativeCurrency: ETH,
     explorer: '',
     wait: 1,

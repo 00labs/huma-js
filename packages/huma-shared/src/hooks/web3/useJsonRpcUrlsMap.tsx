@@ -41,6 +41,7 @@ function toJsonRpcMap<T>(
 ): Record<ChainEnum, T> {
   return {
     [ChainEnum.Localhost]: getChainConnections(ChainEnum.Localhost),
+    [ChainEnum.Huma]: getChainConnections(ChainEnum.Huma),
     [ChainEnum.Goerli]: getChainConnections(ChainEnum.Goerli),
     [ChainEnum.Polygon]: getChainConnections(ChainEnum.Polygon),
     [ChainEnum.Mumbai]: getChainConnections(ChainEnum.Mumbai),
