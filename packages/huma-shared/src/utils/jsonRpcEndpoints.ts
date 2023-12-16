@@ -12,6 +12,9 @@ import { ChainEnum } from './chain'
  */
 export const JSON_RPC_FALLBACK_ENDPOINTS: Record<ChainEnum, string[]> = {
   [ChainEnum.Localhost]: ['http://localhost:8545'],
+  [ChainEnum.Huma]: [
+    'http://ec2-3-101-149-232.us-west-1.compute.amazonaws.com:8545',
+  ],
   [ChainEnum.Goerli]: ['https://rpc.ankr.com/eth_goerli'],
   [ChainEnum.Mumbai]: ['https://rpc.ankr.com/polygon_mumbai'],
   [ChainEnum.Polygon]: ['https://polygon-rpc.com/'],
