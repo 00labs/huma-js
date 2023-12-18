@@ -206,9 +206,9 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   },
   [ChainEnum.Huma]: {
     subgraph:
-      'http://ec2-3-101-149-232.us-west-1.compute.amazonaws.com:8000/subgraphs/name/huma-localhost',
+      'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
     receivablesSubgraph:
-      'http://ec2-3-101-149-232.us-west-1.compute.amazonaws.com:8000/subgraphs/name/huma-localhost',
+      'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
   },
 }
 
