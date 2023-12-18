@@ -81,7 +81,7 @@ export const CHAINS: {
   },
   [ChainEnum.Huma]: {
     id: ChainEnum.Huma,
-    urls: ['http://ec2-3-101-149-232.us-west-1.compute.amazonaws.com:8545'],
+    urls: ['https://integration.v2.huma.finance'],
     name: 'Huma',
     nativeCurrency: ETH,
     explorer: '',
