@@ -9,6 +9,7 @@ import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { BigNumber } from 'ethers'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -48,6 +49,7 @@ export function LendWithdrawV2({
     useWithdrawableAssetsV2(poolName, 'junior', account, provider)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [withdrawAmount, setWithdrawAmount] = useState<BigNumber>()
 
   useEffect(() => {
     if (!step) {
@@ -70,6 +72,19 @@ export function LendWithdrawV2({
     ],
   )
 
+  const handleChangeTranche = useCallback(
+    (tranche: TrancheType) => {
+      setSelectedTranche(tranche)
+      if (tranche === 'senior') {
+        setWithdrawAmount(seniorWithdrawableAmount)
+      }
+      if (tranche === 'junior') {
+        setWithdrawAmount(juniorWithdrawableAmount)
+      }
+    },
+    [juniorWithdrawableAmount, seniorWithdrawableAmount],
+  )
+
   if (!poolInfo || !poolUnderlyingToken) {
     return null
   }
@@ -86,7 +101,7 @@ export function LendWithdrawV2({
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
-          changeTranche={setSelectedTranche}
+          changeTranche={handleChangeTranche}
           seniorWithdrawableAmount={seniorWithdrawableAmount}
           juniorWithdrawableAmount={juniorWithdrawableAmount}
         />
@@ -94,9 +109,10 @@ export function LendWithdrawV2({
       {step === WIDGET_STEP.Transfer && selectedTranche && (
         <Transfer poolInfo={poolInfo} selectedTranche={selectedTranche} />
       )}
-      {step === WIDGET_STEP.Done && (
+      {step === WIDGET_STEP.Done && withdrawAmount && (
         <Done
           poolUnderlyingToken={poolUnderlyingToken}
+          withdrawAmount={withdrawAmount}
           handleAction={handleClose}
         />
       )}
