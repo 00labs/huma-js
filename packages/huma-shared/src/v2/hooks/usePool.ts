@@ -668,14 +668,14 @@ export const useFirstLossCoverRequirement = (
       ) {
         const [
           lossCoverProviderConfig,
-          firstLossCoverBalance,
           lpConfig,
           poolValue,
+          firstLossCoverAssets,
         ] = await Promise.all([
           firstLossCoverContract.getCoverProviderConfig(account),
-          firstLossCoverContract.balanceOf(account),
           poolConfigContract.getLPConfig(),
           poolContract.totalAssets(),
+          firstLossCoverContract.totalAssetsOf(account),
         ])
 
         const poolCap = lpConfig.liquidityCap
@@ -689,13 +689,10 @@ export const useFirstLossCoverRequirement = (
           ? minFromPoolCap
           : minFromPoolValue
 
-        const firstLossCoverAssets =
-          await firstLossCoverContract.convertToAssets(firstLossCoverBalance)
-
         setRequirement({
           minRequirement,
           minAmountToDeposit: minRequirement.gt(firstLossCoverAssets)
-            ? minRequirement.sub(firstLossCoverAssets)
+            ? minRequirement.sub(firstLossCoverAssets).add(1) // add 1 to round up
             : BigNumber.from(0),
         })
       }
