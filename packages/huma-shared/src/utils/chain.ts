@@ -42,7 +42,7 @@ export enum ChainEnum {
   Celo = 42220,
   Alfajores = 44787,
   Localhost = 31338,
-  Huma = 31337,
+  HumaTestnet = 31337,
 }
 
 export const CHAINS: {
@@ -79,10 +79,10 @@ export const CHAINS: {
     isTestnet: true,
     icon: 'Ethereum',
   },
-  [ChainEnum.Huma]: {
-    id: ChainEnum.Huma,
+  [ChainEnum.HumaTestnet]: {
+    id: ChainEnum.HumaTestnet,
     urls: ['https://integration.v2.huma.finance'],
-    name: 'Huma',
+    name: 'HumaTestnet',
     nativeCurrency: ETH,
     explorer: '',
     wait: 1,

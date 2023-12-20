@@ -10,9 +10,9 @@ import { configUtil } from './config'
 export enum POOL_NAME {
   RequestNetwork = 'RequestNetwork',
   HumaCreditLine = 'HumaCreditLine',
-  HumaCreditLineV2 = 'HumaCreditLineV2',
   Superfluid = 'Superfluid',
   Jia = 'Jia',
+  JiaV2 = 'JiaV2',
   ArfCreditPool1 = 'ArfCreditPool1',
   ArfUSDCMigrationTest = 'ArfUSDCMigrationTest',
   BSOS = 'BSOS',
@@ -204,7 +204,7 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
     receivablesSubgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
   },
-  [ChainEnum.Huma]: {
+  [ChainEnum.HumaTestnet]: {
     subgraph:
       'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
     receivablesSubgraph:
