@@ -29,7 +29,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
   ...jest.requireActual('../../../src/v2/utils/pool'),
   CHAIN_POOLS_INFO_V2: {
     5: {
-      HumaCreditLineV2: {
+      JiaV2: {
         pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
         seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
         juniorTrancheVault: '0x1f10865eF0181D8a7e3d31EcDECA7c615954EfEE',
@@ -48,7 +48,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
 describe('usePoolInfoV2', () => {
   it('should return the poolInfo for a valid poolName and chainId', () => {
     const chainId = 5
-    const result = usePoolInfoV2('HumaCreditLineV2' as any, chainId)
+    const result = usePoolInfoV2('JiaV2' as any, chainId)
     expect(result).toEqual({
       pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
       seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
@@ -65,10 +65,7 @@ describe('usePoolInfoV2', () => {
 
   it('should return undefined for an invalid chainId', () => {
     const invalidChainId = -1
-    const result = usePoolInfoV2(
-      'HumaCreditLineV2' as any,
-      invalidChainId as any,
-    )
+    const result = usePoolInfoV2('JiaV2' as any, invalidChainId as any)
     expect(result).toBeUndefined()
   })
 
@@ -84,7 +81,7 @@ describe('useTrancheVaultContractV2', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useTrancheVaultContractV2('HumaCreditLineV2' as any, 'senior', undefined),
+      useTrancheVaultContractV2('JiaV2' as any, 'senior', undefined),
     )
 
     await waitFor(() => {
@@ -98,7 +95,7 @@ describe('useTrancheVaultContractV2', () => {
     })
 
     const { result } = renderHook(() =>
-      useTrancheVaultContractV2('HumaCreditLineV2' as any, 'senior', {
+      useTrancheVaultContractV2('JiaV2' as any, 'senior', {
         network: { chainId: 5 },
       } as any),
     )
@@ -114,7 +111,7 @@ describe('useFirstLossCoverContractV2', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useFirstLossCoverContractV2('HumaCreditLineV2' as any, 0, undefined),
+      useFirstLossCoverContractV2('JiaV2' as any, 0, undefined),
     )
 
     await waitFor(() => {
@@ -135,7 +132,7 @@ describe('useFirstLossCoverContractV2', () => {
       })
 
     const { result } = renderHook(() =>
-      useFirstLossCoverContractV2('HumaCreditLineV2' as any, 0, {
+      useFirstLossCoverContractV2('JiaV2' as any, 0, {
         network: { chainId: 5 },
       } as any),
     )
@@ -208,7 +205,7 @@ describe('useFirstLossCoverTotalAssetsV2', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useFirstLossCoverTotalAssetsV2('HumaCreditLineV2' as any, undefined),
+      useFirstLossCoverTotalAssetsV2('JiaV2' as any, undefined),
     )
 
     await waitFor(() => {
@@ -225,7 +222,7 @@ describe('useFirstLossCoverTotalAssetsV2', () => {
 
     const { result } = renderHook(() =>
       useFirstLossCoverTotalAssetsV2(
-        'HumaCreditLineV2' as any,
+        'JiaV2' as any,
         {
           network: { chainId: 5 },
         } as any,
@@ -245,10 +242,7 @@ describe('usePoolSafeTotalAssetsV2', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolSafeTotalAssetsV2(
-        'HumaCreditLineV2' as any,
-        new JsonRpcProvider(),
-      ),
+      usePoolSafeTotalAssetsV2('JiaV2' as any, new JsonRpcProvider()),
     )
 
     await waitFor(() => {
@@ -273,7 +267,7 @@ describe('useLenderApprovedV2', () => {
 
     const { result } = renderHook(() =>
       useLenderApprovedV2(
-        'HumaCreditLineV2' as any,
+        'JiaV2' as any,
         'senior',
         account,
         new JsonRpcProvider(),
@@ -301,7 +295,7 @@ describe('useLenderPositionV2', () => {
 
     const { result } = renderHook(() =>
       useLenderPositionV2(
-        'HumaCreditLineV2' as any,
+        'JiaV2' as any,
         'senior',
         account,
         new JsonRpcProvider(),
@@ -323,7 +317,7 @@ describe('usePoolUnderlyingTokenContractV2', () => {
     ;(useERC20Contract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolUnderlyingTokenContractV2('HumaCreditLineV2' as any, undefined),
+      usePoolUnderlyingTokenContractV2('JiaV2' as any, undefined),
     )
 
     await waitFor(() => {
@@ -343,7 +337,7 @@ describe('usePoolUnderlyingTokenContractV2', () => {
 
     const { result } = renderHook(() =>
       usePoolUnderlyingTokenContractV2(
-        'HumaCreditLineV2' as any,
+        'JiaV2' as any,
         {
           network: { chainId: 5 },
         } as any,
@@ -365,7 +359,7 @@ describe('usePoolSafeAllowanceV2', () => {
     ;(useERC20Contract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolSafeAllowanceV2('HumaCreditLineV2' as any, 'account', undefined),
+      usePoolSafeAllowanceV2('JiaV2' as any, 'account', undefined),
     )
 
     await waitFor(() => {
@@ -383,7 +377,7 @@ describe('usePoolSafeAllowanceV2', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolSafeAllowanceV2('HumaCreditLineV2' as any, 'account', {
+      usePoolSafeAllowanceV2('JiaV2' as any, 'account', {
         network: { chainId: 5 },
       } as any),
     )
@@ -400,11 +394,7 @@ describe('usePoolUnderlyingTokenBalanceV2', () => {
     ;(useERC20Contract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      usePoolUnderlyingTokenBalanceV2(
-        'HumaCreditLineV2' as any,
-        'account',
-        undefined,
-      ),
+      usePoolUnderlyingTokenBalanceV2('JiaV2' as any, 'account', undefined),
     )
 
     await waitFor(() => {
@@ -422,7 +412,7 @@ describe('usePoolUnderlyingTokenBalanceV2', () => {
     })
 
     const { result } = renderHook(() =>
-      usePoolUnderlyingTokenBalanceV2('HumaCreditLineV2' as any, 'account', {
+      usePoolUnderlyingTokenBalanceV2('JiaV2' as any, 'account', {
         network: { chainId: 5 },
       } as any),
     )
@@ -438,12 +428,7 @@ describe('useWithdrawableAssetsV2', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useWithdrawableAssetsV2(
-        'HumaCreditLineV2' as any,
-        'senior',
-        'account',
-        undefined,
-      ),
+      useWithdrawableAssetsV2('JiaV2' as any, 'senior', 'account', undefined),
     )
 
     await waitFor(() => {
@@ -457,7 +442,7 @@ describe('useWithdrawableAssetsV2', () => {
     })
 
     const { result } = renderHook(() =>
-      useWithdrawableAssetsV2('HumaCreditLineV2' as any, 'senior', 'account', {
+      useWithdrawableAssetsV2('JiaV2' as any, 'senior', 'account', {
         network: { chainId: 5 },
       } as any),
     )
@@ -473,14 +458,9 @@ describe('useCancellableRedemptionInfoV2', () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
 
     const { result } = renderHook(() =>
-      useCancellableRedemptionInfoV2(
-        'HumaCreditLineV2' as any,
-        'senior',
-        undefined,
-        {
-          network: { chainId: 5 },
-        } as any,
-      ),
+      useCancellableRedemptionInfoV2('JiaV2' as any, 'senior', undefined, {
+        network: { chainId: 5 },
+      } as any),
     )
 
     await waitFor(() => {
@@ -493,7 +473,7 @@ describe('useCancellableRedemptionInfoV2', () => {
 
     const { result } = renderHook(() =>
       useCancellableRedemptionInfoV2(
-        'HumaCreditLineV2' as any,
+        'JiaV2' as any,
         'senior',
         'account',
         undefined,
@@ -514,14 +494,9 @@ describe('useCancellableRedemptionInfoV2', () => {
     })
 
     const { result } = renderHook(() =>
-      useCancellableRedemptionInfoV2(
-        'HumaCreditLineV2' as any,
-        'senior',
-        'account',
-        {
-          network: { chainId: 5 },
-        } as any,
-      ),
+      useCancellableRedemptionInfoV2('JiaV2' as any, 'senior', 'account', {
+        network: { chainId: 5 },
+      } as any),
     )
 
     await waitFor(() => {

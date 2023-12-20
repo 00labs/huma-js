@@ -636,19 +636,19 @@ export function useFirstLossCoverPositionV2(
   return [invest, refresh]
 }
 
+type FirstLossCoverRequirement = {
+  minRequirement: BigNumber
+  minAmountToDeposit: BigNumber
+  amountToDeposit: BigNumber
+}
+
 export const useFirstLossCoverRequirement = (
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [
-  { minRequirement: BigNumber; minAmountToDeposit: BigNumber } | undefined,
-  () => void,
-] => {
-  const [requirement, setRequirement] = useState<{
-    minRequirement: BigNumber
-    minAmountToDeposit: BigNumber
-  }>()
+): [FirstLossCoverRequirement | undefined, () => void] => {
+  const [requirement, setRequirement] = useState<FirstLossCoverRequirement>()
   const poolContract = usePoolContractV2(poolName, provider)
   const poolConfigContract = usePoolConfigContractV2(poolName, provider)
   const firstLossCoverContract = useFirstLossCoverContractV2(
@@ -689,11 +689,13 @@ export const useFirstLossCoverRequirement = (
           ? minFromPoolCap
           : minFromPoolValue
 
+        const minAmountToDeposit = minRequirement.gt(firstLossCoverAssets)
+          ? minRequirement.sub(firstLossCoverAssets).add(1) // add 1 to round up
+          : BigNumber.from(0)
         setRequirement({
           minRequirement,
-          minAmountToDeposit: minRequirement.gt(firstLossCoverAssets)
-            ? minRequirement.sub(firstLossCoverAssets).add(1) // add 1 to round up
-            : BigNumber.from(0),
+          minAmountToDeposit,
+          amountToDeposit: minAmountToDeposit.mul(2),
         })
       }
     }

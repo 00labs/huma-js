@@ -4,10 +4,10 @@ import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
 export const MUMBAI_METADATA: PoolsInfoV2 = {
-  HumaCreditLineV2: {
+  JiaV2: {
     chainId: ChainEnum.Mumbai,
     poolVersion: 'v2',
-    poolName: POOL_NAME.HumaCreditLineV2,
+    poolName: POOL_NAME.JiaV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0x9aAA78aA565fE3c7665c35eBa1405c7288FE87fD',
     poolCredit: '0x67C8589e7cdff6F95C3189cdf084d0827A31c2b3',

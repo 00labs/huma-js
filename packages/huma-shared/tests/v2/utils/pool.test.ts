@@ -3,8 +3,8 @@ import { getChainPoolNamesV2, CHAIN_POOLS_INFO_V2 } from '../../../src/v2/utils'
 
 jest.mock('../../../src/v2/metadata/Localhost', () => ({
   LOCALHOST_METADATA: {
-    HumaCreditLineV2: {
-      poolName: 'HumaCreditLineV2',
+    JiaV2: {
+      poolName: 'JiaV2',
       pool: '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
       estAPY: '10-20%',
       underlyingToken: {
@@ -19,8 +19,8 @@ jest.mock('../../../src/v2/metadata/Localhost', () => ({
 
 jest.mock('../../../src/v2/metadata/Mumbai', () => ({
   MUMBAI_METADATA: {
-    HumaCreditLineV2: {
-      poolName: 'HumaCreditLineV2',
+    JiaV2: {
+      poolName: 'JiaV2',
       pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
       estAPY: '10-20%',
       underlyingToken: {
@@ -37,8 +37,8 @@ describe('getPoolsInfoV2', () => {
   it('should return the poolsInfoV2 object', () => {
     const result = CHAIN_POOLS_INFO_V2
 
-    expect(result[ChainEnum.Localhost].HumaCreditLineV2).toEqual({
-      poolName: 'HumaCreditLineV2',
+    expect(result[ChainEnum.Localhost].JiaV2).toEqual({
+      poolName: 'JiaV2',
       pool: '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
       estAPY: '10-20%',
       underlyingToken: {
@@ -48,8 +48,8 @@ describe('getPoolsInfoV2', () => {
         icon: 'USDC',
       },
     })
-    expect(result[ChainEnum.Mumbai].HumaCreditLineV2).toEqual({
-      poolName: 'HumaCreditLineV2',
+    expect(result[ChainEnum.Mumbai].JiaV2).toEqual({
+      poolName: 'JiaV2',
       pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
       estAPY: '10-20%',
       underlyingToken: {
@@ -78,6 +78,6 @@ describe('getChainPoolNamesV2', () => {
   it('should return an array of pool names for valid chainId', () => {
     const result = getChainPoolNamesV2(ChainEnum.Mumbai)
 
-    expect(result).toEqual(['HumaCreditLineV2'])
+    expect(result).toEqual(['JiaV2'])
   })
 })

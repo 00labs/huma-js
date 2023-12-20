@@ -34,7 +34,7 @@ jest.mock('../../../src/utils/chain', () => ({
 jest.mock('../../../src/v2/utils/pool', () => ({
   CHAIN_POOLS_INFO_V2: {
     5: {
-      HumaCreditLineV2: {
+      JiaV2: {
         pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
         poolConfig: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
         seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
@@ -54,7 +54,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
 describe('getPoolInfoV2', () => {
   it('should return the poolInfo for a valid poolName and chainId', () => {
     const chainId = 5
-    const result = getPoolInfoV2('HumaCreditLineV2' as any, chainId)
+    const result = getPoolInfoV2('JiaV2' as any, chainId)
     expect(result).toEqual({
       pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
       poolConfig: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
@@ -72,7 +72,7 @@ describe('getPoolInfoV2', () => {
 
   it('should return null for an invalid chainId', () => {
     const invalidChainId = -1
-    const result = getPoolInfoV2('HumaCreditLineV2' as any, invalidChainId)
+    const result = getPoolInfoV2('JiaV2' as any, invalidChainId)
     expect(result).toBeNull()
   })
 })
@@ -93,7 +93,7 @@ describe('getPoolConfigContractV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getPoolConfigContractV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       { network: { chainId: 5 } } as any,
     )
     expect(result?.getFirstLossCover).toBeDefined()
@@ -122,7 +122,7 @@ describe('getPoolUnderlyingTokenContractV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getPoolUnderlyingTokenContractV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       { network: { chainId: 5 } } as any,
     )
     expect(result?.symbol).toBeDefined()
@@ -145,11 +145,9 @@ describe('getTrancheVaultContractV2', () => {
     })
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
-    const result = await getTrancheVaultContractV2(
-      'HumaCreditLineV2' as any,
-      'junior',
-      { network: { chainId: 5 } } as any,
-    )
+    const result = await getTrancheVaultContractV2('JiaV2' as any, 'junior', {
+      network: { chainId: 5 },
+    } as any)
     expect(result?.getRoleAdmin).toBeDefined()
   })
 })
@@ -170,7 +168,7 @@ describe('getEpochManagerContractV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getEpochManagerContractV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       { network: { chainId: 5 } } as any,
     )
     expect(result?.currentEpoch).toBeDefined()
@@ -200,7 +198,7 @@ describe('getPoolUnderlyingTokenInfoV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getPoolUnderlyingTokenInfoV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual({
@@ -226,10 +224,7 @@ describe('getFirstLossCoverAssetsV2', () => {
   it('should return undefined if cannot find pool config contract', async () => {
     ;(getContract as jest.Mock).mockReturnValueOnce(null)
 
-    const result = await getFirstLossCoverAssetsV2(
-      'HumaCreditLineV2' as any,
-      undefined,
-    )
+    const result = await getFirstLossCoverAssetsV2('JiaV2' as any, undefined)
     expect(result).toEqual(undefined)
   })
 
@@ -258,7 +253,7 @@ describe('getFirstLossCoverAssetsV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getFirstLossCoverAssetsV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(BigNumber.from(300))
@@ -281,30 +276,25 @@ describe('getTrancheVaultAssetsV2', () => {
     })
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
-    const result = await getTrancheVaultAssetsV2(
-      'HumaCreditLineV2' as any,
-      'junior',
-      { network: { chainId: 5 } } as any,
-    )
+    const result = await getTrancheVaultAssetsV2('JiaV2' as any, 'junior', {
+      network: { chainId: 5 },
+    } as any)
     expect(result).toEqual(BigNumber.from(100))
   })
 })
 
 describe('getLenderPositionV2', () => {
   it('should return undefined if account is invalid', async () => {
-    const result = await getLenderPositionV2(
-      'HumaCreditLineV2' as any,
-      'senior',
-      '',
-      { network: { chainId: 5 } } as any,
-    )
+    const result = await getLenderPositionV2('JiaV2' as any, 'senior', '', {
+      network: { chainId: 5 },
+    } as any)
     expect(result).toEqual(undefined)
   })
 
   it('should return undefined if contract is invalid', async () => {
     const invalidChainId = -1
     const result = await getLenderPositionV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       'senior',
       'account',
       { network: { chainId: invalidChainId } } as any,
@@ -320,7 +310,7 @@ describe('getLenderPositionV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getLenderPositionV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       'senior',
       'account',
       { network: { chainId: 5 } } as any,
@@ -376,7 +366,7 @@ describe('getTrancheAssetsToSharesV2', () => {
     }
 
     const result = await getTrancheAssetsToSharesV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       'junior',
       mockProvider as any,
       BigNumber.from(1),
@@ -429,7 +419,7 @@ describe('getTrancheSharesToAssetsV2', () => {
     }
 
     const result = await getTrancheSharesToAssetsV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       'junior',
       mockProvider as any,
       BigNumber.from(1),
@@ -458,7 +448,7 @@ describe('getCurrentEpochInfoV2', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(5)
 
     const result = await getCurrentEpochInfoV2(
-      'HumaCreditLineV2' as any,
+      'JiaV2' as any,
       { network: { chainId: 5 } } as any,
     )
     expect(result).toEqual(mockCurrentEpochInfo)
