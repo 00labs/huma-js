@@ -1,0 +1,140 @@
+import {
+  CreditStateV2,
+  POOL_NAME,
+  useCreditStatsV2,
+  usePoolInfoV2,
+  usePoolUnderlyingTokenInfoV2,
+} from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+import {
+  useDoesChainSupportNotifi,
+  useIsFirstTimeNotifiUser,
+} from '../../../hooks/useNotifi'
+import { useAppSelector } from '../../../hooks/useRedux'
+import { setStep } from '../../../store/widgets.reducers'
+import { selectWidgetState } from '../../../store/widgets.selectors'
+import { WIDGET_STEP } from '../../../store/widgets.store'
+import { ErrorModal } from '../../ErrorModal'
+import { LoadingModal } from '../../LoadingModal'
+import { WidgetWrapper } from '../../WidgetWrapper'
+import { ChooseAmount } from './1-ChooseAmount'
+import { ApproveAllowance } from './2-ApproveAllowance'
+import { Transfer } from './5-Transfer'
+import { Success } from './6-Success'
+import { Notifications } from './7-Notifications'
+import { CreateReceivable } from './3-CreateReceivable'
+import { ApproveReceivable } from './4-ApproveReceivable'
+
+/**
+ * Receivable backed credit line pool borrow props V2
+ * @typedef {Object} ReceivableBackedCreditLineBorrowPropsV2
+ * @property {POOL_NAME} poolName The name of the pool.
+ * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the credit line pool borrow action is successful.
+ */
+export interface ReceivableBackedCreditLineBorrowPropsV2 {
+  poolName: keyof typeof POOL_NAME
+  handleClose: () => void
+  handleSuccess?: (blockNumber?: number) => void
+}
+
+export function ReceivableBackedCreditLineBorrowV2({
+  poolName: poolNameStr,
+  handleClose,
+  handleSuccess,
+}: ReceivableBackedCreditLineBorrowPropsV2): React.ReactElement | null {
+  const dispatch = useDispatch()
+  const poolName = POOL_NAME[poolNameStr]
+  const { account, chainId, provider } = useWeb3React()
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
+  const { step, errorMessage } = useAppSelector(selectWidgetState)
+  const [accountStats] = useCreditStatsV2(poolName, account, provider)
+  const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { creditRecord } = accountStats
+  const accountState = creditRecord?.state
+  const [tokenId, setTokenId] = useState<string>()
+
+  useEffect(() => {
+    if (!step && accountState !== undefined) {
+      if (accountState >= CreditStateV2.Approved) {
+        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+      }
+    }
+  }, [accountState, dispatch, step])
+
+  const setupNotificationsOrClose = useCallback(() => {
+    if (isFirstTimeNotifiUser && notifiChainSupported) {
+      dispatch(setStep(WIDGET_STEP.Notifications))
+    } else {
+      handleClose()
+    }
+  }, [dispatch, handleClose, isFirstTimeNotifiUser, notifiChainSupported])
+
+  if (!poolInfo || !poolUnderlyingToken || !creditRecord) {
+    return (
+      <WidgetWrapper
+        isOpen
+        isLoading
+        loadingTitle='Borrow'
+        handleClose={handleClose}
+        handleSuccess={handleSuccess}
+      />
+    )
+  }
+
+  return (
+    <WidgetWrapper
+      isOpen
+      loadingTitle='Borrow'
+      handleClose={handleClose}
+      handleSuccess={handleSuccess}
+    >
+      {!step && <LoadingModal title='Borrow' />}
+      {step === WIDGET_STEP.ChooseAmount && (
+        <ChooseAmount
+          poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
+          accountStats={accountStats}
+        />
+      )}
+      {step === WIDGET_STEP.ApproveAllowance && (
+        <ApproveAllowance
+          poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
+        />
+      )}
+      {step === WIDGET_STEP.MintNFT && (
+        <CreateReceivable poolInfo={poolInfo} setTokenId={setTokenId} />
+      )}
+      {step === WIDGET_STEP.ApproveNFT && tokenId && (
+        <ApproveReceivable poolInfo={poolInfo} tokenId={tokenId} />
+      )}
+      {step === WIDGET_STEP.Transfer && tokenId && (
+        <Transfer poolInfo={poolInfo} tokenId={tokenId} />
+      )}
+      {step === WIDGET_STEP.Done && (
+        <Success
+          poolUnderlyingToken={poolUnderlyingToken}
+          handleAction={setupNotificationsOrClose}
+          creditRecord={accountStats.creditRecord!}
+          hasNextStep={isFirstTimeNotifiUser}
+        />
+      )}
+      {step === WIDGET_STEP.Notifications && (
+        <Notifications handleAction={handleClose} />
+      )}
+      {step === WIDGET_STEP.Error && (
+        <ErrorModal
+          title='Borrow'
+          errorMessage={errorMessage}
+          handleOk={handleClose}
+        />
+      )}
+    </WidgetWrapper>
+  )
+}

@@ -33,7 +33,7 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     chainId: ChainEnum.Localhost,
     poolVersion: 'v2',
     poolName: POOL_NAME.ArfCreditPoolV2,
-    poolType: POOL_TYPE.ReceivableBacked,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x4C4a2f8c81640e47606d3fd77B353E87Ba015584',
     poolConfig: '0x162A433068F51e18b7d13932F27e66a3f99E6890',
     poolCredit: '0x51A1ceB83B83F1985a81C295d1fF28Afef186E02',

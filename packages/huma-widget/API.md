@@ -32,6 +32,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Superfluid factoring widget</p></dd>
 <dt><a href="#AutoPaybackWidgetV2">AutoPaybackWidgetV2(props)</a> ⇒</dt>
 <dd><p>Supply first loss cover widget</p></dd>
+<dt><a href="#ReceivableBackedCreditLineBorrowWidgetV2">ReceivableBackedCreditLineBorrowWidgetV2(props)</a> ⇒</dt>
+<dd><p>Receivable backed credit line borrow widget V2</p></dd>
 </dl>
 
 ## Typedefs
@@ -65,6 +67,10 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool withdraw props</p></dd>
 <dt><a href="#LendWithdrawPropsV2">LendWithdrawPropsV2</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw props</p></dd>
+<dt><a href="#ReceivableBackedCreditLineBorrowPropsV2">ReceivableBackedCreditLineBorrowPropsV2</a> : <code>Object</code></dt>
+<dd><p>Receivable backed credit line pool borrow props V2</p></dd>
+<dt><a href="#CreditLinePaymentPropsV2">CreditLinePaymentPropsV2</a> : <code>Object</code></dt>
+<dd><p>Credit line pool payment props V2</p></dd>
 <dt><a href="#JsonRpcConnectionMap">JsonRpcConnectionMap</a> : <code>Object</code></dt>
 <dd><p>Mapping of your JSON-RPC connections indexed by chainId</p></dd>
 <dt><a href="#WidgetProps">WidgetProps</a> : <code>Object</code></dt>
@@ -97,6 +103,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Supply first loss cover widget props</p></dd>
 <dt><a href="#AutoPaybackWidgetPropsV2">AutoPaybackWidgetPropsV2</a> : <code>Object</code></dt>
 <dd><p>Auto payback widget props V2</p></dd>
+<dt><a href="#ReceivableBackedCreditLineBorrowWidgetPropsV2">ReceivableBackedCreditLineBorrowWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Receivable backed credit line pool borrow widget props V2</p></dd>
 </dl>
 
 <a name="InvoiceFactoringBorrowWidget"></a>
@@ -279,6 +287,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>SupplyFirstLossCoverWidgetProps</code>](#SupplyFirstLossCoverWidgetProps) | <p>The supply first loss cover widget props.</p> |
+
+<a name="ReceivableBackedCreditLineBorrowWidgetV2"></a>
+
+## ReceivableBackedCreditLineBorrowWidgetV2(props) ⇒
+<p>Receivable backed credit line borrow widget V2</p>
+
+**Kind**: global function  
+**Returns**: <p>Receivable backed credit line pool borrow widget component V2</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>ReceivableBackedCreditLineBorrowWidgetPropsV2</code>](#ReceivableBackedCreditLineBorrowWidgetPropsV2) | <p>The receivable backed credit line pool borrow widget props V2.</p> |
 
 <a name="CreditLineApproveProps"></a>
 
@@ -486,6 +506,34 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
+<a name="ReceivableBackedCreditLineBorrowPropsV2"></a>
+
+## ReceivableBackedCreditLineBorrowPropsV2 : <code>Object</code>
+<p>Receivable backed credit line pool borrow props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
+
+<a name="CreditLinePaymentPropsV2"></a>
+
+## CreditLinePaymentPropsV2 : <code>Object</code>
+<p>Credit line pool payment props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
+
 <a name="JsonRpcConnectionMap"></a>
 
 ## JsonRpcConnectionMap : <code>Object</code>
@@ -692,5 +740,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | AutoPayback | <code>AutoPayback</code> | <p>Auto payback props V2.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="ReceivableBackedCreditLineBorrowWidgetPropsV2"></a>
+
+## ReceivableBackedCreditLineBorrowWidgetPropsV2 : <code>Object</code>
+<p>Receivable backed credit line pool borrow widget props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| ReceivableBackedCreditLineBorrowPropsV2 | [<code>ReceivableBackedCreditLineBorrowPropsV2</code>](#ReceivableBackedCreditLineBorrowPropsV2) | <p>Receivable backed credit line pool borrow props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 

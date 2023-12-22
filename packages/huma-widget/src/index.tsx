@@ -56,6 +56,10 @@ import {
   LendWithdrawPropsV2,
   LendWithdrawV2,
 } from './components/Lend/withdrawV2'
+import {
+  ReceivableBackedCreditLineBorrowPropsV2,
+  ReceivableBackedCreditLineBorrowV2,
+} from './components/ReceivableBackedCreditLine/borrow'
 import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
@@ -440,6 +444,31 @@ export function AutoPaybackWidgetV2(props: AutoPaybackWidgetPropsV2) {
   return (
     <Widget {...props}>
       <AutoPaybackV2 {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Receivable backed credit line pool borrow widget props V2
+ * @typedef {Object} ReceivableBackedCreditLineBorrowWidgetPropsV2
+ * @property {ReceivableBackedCreditLineBorrowPropsV2} ReceivableBackedCreditLineBorrowPropsV2 - Receivable backed credit line pool borrow props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type ReceivableBackedCreditLineBorrowWidgetPropsV2 =
+  ReceivableBackedCreditLineBorrowPropsV2 & WidgetProps
+
+/**
+ * Receivable backed credit line borrow widget V2
+ *
+ * @param {ReceivableBackedCreditLineBorrowWidgetPropsV2} props - The receivable backed credit line pool borrow widget props V2.
+ * @returns Receivable backed credit line pool borrow widget component V2
+ */
+export function ReceivableBackedCreditLineBorrowWidgetV2(
+  props: ReceivableBackedCreditLineBorrowWidgetPropsV2,
+) {
+  return (
+    <Widget {...props}>
+      <ReceivableBackedCreditLineBorrowV2 {...props} />
     </Widget>
   )
 }

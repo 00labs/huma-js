@@ -7,12 +7,14 @@ import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import { ChainEnum, getContract, isChainEnum, POOL_NAME } from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
+import RECEIVABLE_V2_ABI from '../abis/Receivable.json'
 import {
   Credit,
   FirstLossCover,
   Pool,
   PoolConfig,
   PoolSafe,
+  Receivable,
   TrancheVault,
 } from '../abis/types'
 import { CreditRecordStructOutput } from '../abis/types/Credit'
@@ -166,6 +168,35 @@ export function useCreditManagerContractV2(
     provider,
     account,
   )
+}
+
+export function useReceivableContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
+  const [receivableContract, setReceivableContract] = useState<Receivable>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolConfigContract) {
+        const receivableAsset = await poolConfigContract.receivableAsset()
+        const receivableAssetContract = getContract<Receivable>(
+          receivableAsset,
+          RECEIVABLE_V2_ABI,
+          provider,
+          account,
+        )
+        if (receivableAssetContract) {
+          setReceivableContract(receivableAssetContract)
+        }
+      }
+    }
+    fetchData()
+  }, [account, poolConfigContract, provider])
+
+  return receivableContract
 }
 
 export function useContractValueV2<T = BigNumber>(
