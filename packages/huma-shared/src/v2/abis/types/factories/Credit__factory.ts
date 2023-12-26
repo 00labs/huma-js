@@ -1073,6 +1073,41 @@ const _abi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint96',
+            name: 'receivableAmount',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint64',
+            name: 'receivableId',
+            type: 'uint64',
+          },
+        ],
+        internalType: 'struct ReceivableInput',
+        name: 'receivableInput',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'drawdownWithReceivable',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const
 
 export class Credit__factory {
