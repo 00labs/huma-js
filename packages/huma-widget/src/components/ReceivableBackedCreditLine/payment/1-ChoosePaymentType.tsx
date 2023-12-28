@@ -63,12 +63,12 @@ export function ChoosePaymentType({
     value: PaymentType
   }[] = [
     {
-      label: 'Payment',
-      value: PaymentType.Payment,
+      label: 'Payment with Receivable',
+      value: PaymentType.PaymentWithReceivable,
     },
     {
-      label: 'Principal Payment',
-      value: PaymentType.PrincipalPayment,
+      label: 'Payment with Receivable and Drawdown',
+      value: PaymentType.PaymentWithReceivableAndDrawdown,
     },
   ]
 

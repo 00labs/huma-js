@@ -38,7 +38,9 @@ export function Transfer({
     account,
   )
   const method =
-    paymentType === PaymentType.Payment ? 'makePayment' : 'makePrincipalPayment'
+    paymentType === PaymentType.PaymentWithReceivable
+      ? 'makePaymentWithReceivable'
+      : 'makePrincipalPaymentAndDrawdownWithReceivable'
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))

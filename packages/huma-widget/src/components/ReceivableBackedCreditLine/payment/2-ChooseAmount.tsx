@@ -7,8 +7,9 @@ import {
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
+import { PaymentType } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setPaymentAmount, setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -17,16 +18,16 @@ import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   payoffAmount: BigNumber
-  totalDueAmount: BigNumber
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
+  paymentType: PaymentType
 }
 
 export function ChooseAmount({
   payoffAmount: payoffAmountBN,
-  totalDueAmount: totalDueAmountBN,
   poolInfo,
   poolUnderlyingToken,
+  paymentType,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
@@ -37,17 +38,9 @@ export function ChooseAmount({
     account,
     provider,
   )
-  const totalDueAmount = Number(
-    ethers.utils.formatUnits(totalDueAmountBN, decimals),
-  )
   const payoffAmount = Number(
     ethers.utils.formatUnits(payoffAmountBN, decimals),
   )
-
-  useEffect(() => {
-    setCurrentAmount(totalDueAmount)
-    dispatch(setPaymentAmount({ paymentAmount: totalDueAmount }))
-  }, [dispatch, totalDueAmount])
 
   const handleChangeAmount = useCallback(
     (newAmount: number) => {
@@ -59,11 +52,17 @@ export function ChooseAmount({
 
   const handleAction = useCallback(() => {
     const payAmount = upScale(currentAmount, decimals)
-    const step = toBigNumber(payAmount).gt(allowance!)
-      ? WIDGET_STEP.ApproveAllowance
-      : WIDGET_STEP.Transfer
+    if (toBigNumber(payAmount).gt(allowance!)) {
+      dispatch(setStep(WIDGET_STEP.ApproveAllowance))
+      return
+    }
+
+    const step =
+      paymentType === PaymentType.PaymentWithReceivable
+        ? WIDGET_STEP.Transfer
+        : WIDGET_STEP.MintNFT
     dispatch(setStep(step))
-  }, [allowance, currentAmount, decimals, dispatch])
+  }, [allowance, currentAmount, decimals, dispatch, paymentType])
 
   if (!allowance) {
     return <LoadingModal title='Pay' />
@@ -79,7 +78,6 @@ export function ChooseAmount({
       handleChangeAmount={handleChangeAmount}
       handleAction={handleAction}
       actionText='pay'
-      payoffAmount={payoffAmount}
       hideTerms
     />
   )
