@@ -18,12 +18,14 @@ type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
   accountStats: CreditStatsV2
+  needCreateReceivable: boolean
 }
 
 export function ChooseAmount({
   poolInfo,
   poolUnderlyingToken,
   accountStats,
+  needCreateReceivable,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
@@ -44,9 +46,14 @@ export function ChooseAmount({
   }, [])
 
   const handleAction = useCallback(() => {
-    const nextStep = autopayEnabled
-      ? WIDGET_STEP.MintNFT
-      : WIDGET_STEP.ApproveAllowance
+    let nextStep: WIDGET_STEP
+    if (!autopayEnabled) {
+      nextStep = WIDGET_STEP.ApproveAllowance
+    } else {
+      nextStep = needCreateReceivable
+        ? WIDGET_STEP.MintNFT
+        : WIDGET_STEP.Transfer
+    }
 
     dispatch(
       setBorrowInfo({
@@ -58,7 +65,7 @@ export function ChooseAmount({
         nextStep,
       }),
     )
-  }, [autopayEnabled, currentAmount, decimals, dispatch])
+  }, [autopayEnabled, currentAmount, decimals, dispatch, needCreateReceivable])
 
   if (autopayEnabled === undefined) {
     return <LoadingModal title='Borrow' />
