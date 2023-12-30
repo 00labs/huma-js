@@ -22,7 +22,7 @@ export function ApproveAllowance({
   const handleSuccess = useCallback(() => {
     dispatch(
       setStep(
-        needCreateReceivable ? WIDGET_STEP.MintNFT : WIDGET_STEP.Transfer,
+        needCreateReceivable ? WIDGET_STEP.MintNFT : WIDGET_STEP.ApproveNFT,
       ),
     )
   }, [dispatch, needCreateReceivable])

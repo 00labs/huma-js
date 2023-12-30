@@ -52,7 +52,7 @@ export function ChooseAmount({
     } else {
       nextStep = needCreateReceivable
         ? WIDGET_STEP.MintNFT
-        : WIDGET_STEP.Transfer
+        : WIDGET_STEP.ApproveNFT
     }
 
     dispatch(

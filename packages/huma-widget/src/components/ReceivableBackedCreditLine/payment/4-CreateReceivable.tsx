@@ -4,10 +4,11 @@ import {
   sendTxAtom,
   txAtom,
   TxStateType,
+  UnderlyingTokenInfo,
   useReceivableContractV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber, ContractReceipt } from 'ethers'
+import { ContractReceipt, ethers } from 'ethers'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import moment from 'moment'
@@ -22,11 +23,13 @@ import { ViewOnExplorer } from '../../ViewOnExplorer'
 
 type Props = {
   poolInfo: PoolInfoV2
+  poolUnderlyingToken: UnderlyingTokenInfo
   setTokenId: (tokenId: string) => void
 }
 
 export function CreateReceivable({
   poolInfo,
+  poolUnderlyingToken,
   setTokenId,
 }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
@@ -66,7 +69,10 @@ export function CreateReceivable({
 
   useEffect(() => {
     if (receivableContract) {
-      const paymentAmountBN = BigNumber.from(paymentAmount)
+      const paymentAmountBN = ethers.utils.parseUnits(
+        String(paymentAmount),
+        poolUnderlyingToken.decimals,
+      )
       const maturityDate = moment().add(1, 'months').unix()
       send({
         contract: receivableContract,
@@ -75,7 +81,13 @@ export function CreateReceivable({
         provider,
       })
     }
-  }, [paymentAmount, provider, receivableContract, send])
+  }, [
+    paymentAmount,
+    poolUnderlyingToken.decimals,
+    provider,
+    receivableContract,
+    send,
+  ])
 
   return (
     <LoadingModal

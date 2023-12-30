@@ -118,7 +118,11 @@ export function ReceivableBackedCreditLinePaymentV2({
         />
       )}
       {step === WIDGET_STEP.MintNFT && (
-        <CreateReceivable poolInfo={poolInfo} setTokenId={setBorrowTokenId} />
+        <CreateReceivable
+          poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
+          setTokenId={setBorrowTokenId}
+        />
       )}
       {step === WIDGET_STEP.ApproveNFT && borrowTokenId && (
         <ApproveReceivable poolInfo={poolInfo} tokenId={borrowTokenId} />
