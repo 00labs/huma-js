@@ -10,14 +10,17 @@ import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 
 import { TxDoneModal } from '../../TxDoneModal'
+import { PaymentType } from '.'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
+  paymentType: PaymentType
   handleAction: () => void
 }
 
 export function Success({
   poolUnderlyingToken,
+  paymentType,
   handleAction,
 }: Props): React.ReactElement {
   const { symbol, decimals } = poolUnderlyingToken
@@ -34,9 +37,13 @@ export function Success({
     }
   }, [decimals, txReceipt])
 
-  const content = [
-    `You successfully paid ${formatMoney(paidAmount)} ${symbol}.`,
-  ]
+  const amoutFormatted = formatMoney(paidAmount)
+  const content =
+    paymentType === PaymentType.PaymentWithReceivable
+      ? [`You successfully paid ${amoutFormatted} ${symbol}.`]
+      : [
+          `You successfully paid ${amoutFormatted} ${symbol} and borrowed ${amoutFormatted} ${symbol}.`,
+        ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />
 }

@@ -31,8 +31,7 @@ export function CreateReceivable({
 }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
   const { provider, account } = useWeb3React()
-  const { borrowAmountBN: borrowAmountBNJson } =
-    useAppSelector(selectWidgetState)
+  const { paymentAmount } = useAppSelector(selectWidgetState)
   const [{ state, txHash, txReceipt }, send] = useAtom(sendTxAtom)
   const reset = useResetAtom(txAtom)
   const receivableContract = useReceivableContractV2(
@@ -67,16 +66,16 @@ export function CreateReceivable({
 
   useEffect(() => {
     if (receivableContract) {
-      const borrowAmountBN = BigNumber.from(borrowAmountBNJson)
+      const paymentAmountBN = BigNumber.from(paymentAmount)
       const maturityDate = moment().add(1, 'months').unix()
       send({
         contract: receivableContract,
         method: 'createReceivable',
-        params: [CURRENCY_CODE.USD, borrowAmountBN, maturityDate, ''],
+        params: [CURRENCY_CODE.USD, paymentAmountBN, maturityDate, ''],
         provider,
       })
     }
-  }, [borrowAmountBNJson, provider, receivableContract, send])
+  }, [paymentAmount, provider, receivableContract, send])
 
   return (
     <LoadingModal

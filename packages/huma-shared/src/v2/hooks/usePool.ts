@@ -4,7 +4,13 @@ import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
-import { ChainEnum, getContract, isChainEnum, POOL_NAME } from '../../utils'
+import {
+  ChainEnum,
+  getContract,
+  isChainEnum,
+  POOL_NAME,
+  RealWorldReceivableInfoBase,
+} from '../../utils'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import RECEIVABLE_V2_ABI from '../abis/Receivable.json'
@@ -740,4 +746,33 @@ export const useFirstLossCoverRequirement = (
   ])
 
   return [requirement, refresh]
+}
+
+export function useReceivableInfoV2(
+  poolName: POOL_NAME,
+  tokenId: string,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  const [receivableInfo, setReceivableInfo] =
+    useState<Partial<RealWorldReceivableInfoBase>>()
+  const receivableContract = useReceivableContractV2(
+    poolName,
+    provider,
+    account,
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (receivableContract) {
+        const receivableInfo = await receivableContract.receivableInfoMap(
+          tokenId,
+        )
+        setReceivableInfo(receivableInfo)
+      }
+    }
+    fetchData()
+  }, [receivableContract, tokenId])
+
+  return receivableInfo
 }

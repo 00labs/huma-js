@@ -1,15 +1,15 @@
 import {
   POOL_NAME,
-  RealWorldReceivableInfoBase,
   useCreditStatsV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
+  useReceivableInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { BigNumber } from 'ethers'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -19,34 +19,34 @@ import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChoosePaymentType } from './1-ChoosePaymentType'
 import { ChooseAmount } from './2-ChooseAmount'
 import { ApproveAllowance } from './3-ApproveAllowance'
-import { Transfer } from './6-Transfer'
-import { Success } from './7-Success'
 import { CreateReceivable } from './4-CreateReceivable'
 import { ApproveReceivable } from './5-ApproveReceivable'
+import { Transfer } from './6-Transfer'
+import { Success } from './7-Success'
 
 export enum PaymentType {
-  PaymentWithReceivable,
-  PaymentWithReceivableAndDrawdown,
+  PaymentWithReceivable = 1,
+  PaymentWithReceivableAndDrawdown = 2,
 }
 
 /**
  * Credit line pool payment props V2
  * @typedef {Object} CreditLinePaymentPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {RealWorldReceivableInfoBase} rwReceivableInfo The receivable details.
+ * @property {tokenId} tokenID The receivable token id.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the credit line pool payment action is successful.
  */
 export type ReceivableBackedCreditLinePaymentPropsV2 = {
   poolName: keyof typeof POOL_NAME
-  rwReceivableInfo: RealWorldReceivableInfoBase
+  tokenId: string
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function ReceivableBackedCreditLinePaymentV2({
   poolName: poolNameStr,
-  rwReceivableInfo,
+  tokenId,
   handleClose,
   handleSuccess,
 }: ReceivableBackedCreditLinePaymentPropsV2): React.ReactElement | null {
@@ -58,16 +58,25 @@ export function ReceivableBackedCreditLinePaymentV2({
   const [{ creditRecord }] = useCreditStatsV2(poolName, account, provider)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const [paymentType, setPaymentType] = useState<PaymentType>()
-  const payoffAmount = BigNumber.from(rwReceivableInfo.receivableAmount).sub(
-    rwReceivableInfo.paidAmount,
-  )
-  const [tokenId, setTokenId] = useState<string>()
+
+  const [borrowTokenId, setBorrowTokenId] = useState<string>()
+  const paymentReceivableInfo = useReceivableInfoV2(poolName, tokenId, provider)
+  const payoffAmount = paymentReceivableInfo
+    ? BigNumber.from(paymentReceivableInfo.receivableAmount!).sub(
+        paymentReceivableInfo.paidAmount!,
+      )
+    : BigNumber.from(0)
 
   useEffect(() => {
     dispatch(setStep(WIDGET_STEP.ChoosePaymentType))
   }, [dispatch])
 
-  if (!poolInfo || !creditRecord || !poolUnderlyingToken) {
+  if (
+    !poolInfo ||
+    !creditRecord ||
+    !poolUnderlyingToken ||
+    !paymentReceivableInfo
+  ) {
     return (
       <WidgetWrapper
         isOpen
@@ -109,21 +118,24 @@ export function ReceivableBackedCreditLinePaymentV2({
         />
       )}
       {step === WIDGET_STEP.MintNFT && (
-        <CreateReceivable poolInfo={poolInfo} setTokenId={setTokenId} />
+        <CreateReceivable poolInfo={poolInfo} setTokenId={setBorrowTokenId} />
       )}
-      {step === WIDGET_STEP.ApproveNFT && tokenId && (
-        <ApproveReceivable poolInfo={poolInfo} tokenId={tokenId} />
+      {step === WIDGET_STEP.ApproveNFT && borrowTokenId && (
+        <ApproveReceivable poolInfo={poolInfo} tokenId={borrowTokenId} />
       )}
       {step === WIDGET_STEP.Transfer && paymentType && (
         <Transfer
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           paymentType={paymentType}
+          paymentTokenId={tokenId}
+          borrowTokenId={borrowTokenId}
         />
       )}
-      {step === WIDGET_STEP.Done && (
+      {step === WIDGET_STEP.Done && paymentType && (
         <Success
           poolUnderlyingToken={poolUnderlyingToken}
+          paymentType={paymentType}
           handleAction={handleClose}
         />
       )}
