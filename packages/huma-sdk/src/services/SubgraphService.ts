@@ -6,6 +6,8 @@ import {
   requestPost,
   PoolSubgraphMap,
   RealWorldReceivableInfoBase,
+  CHAIN_POOLS_INFO_V2,
+  ChainEnum,
 } from '@huma-finance/shared'
 
 /**
@@ -146,7 +148,10 @@ function getRWReceivableInfo(
     return Promise.resolve([])
   }
 
-  const poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
+  let poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
+  if (!poolAddress) {
+    poolAddress = CHAIN_POOLS_INFO_V2[chainId as ChainEnum]?.[poolName]?.pool
+  }
 
   const RWReceivablesQuery = `
   query {

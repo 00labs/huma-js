@@ -14,6 +14,7 @@ export enum POOL_NAME {
   Jia = 'Jia',
   JiaV2 = 'JiaV2',
   ArfCreditPool1 = 'ArfCreditPool1',
+  ArfCreditPoolV2 = 'ArfCreditPoolV2',
   ArfUSDCMigrationTest = 'ArfUSDCMigrationTest',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
@@ -24,6 +25,7 @@ export enum POOL_TYPE {
   Invoice = 'Invoice',
   CreditLine = 'CreditLine',
   Stream = 'Stream',
+  ReceivableBackedCreditLine = 'ReceivableBackedCreditLine',
 }
 
 export type PoolMapType = {
@@ -172,6 +174,7 @@ export const PoolMap: PoolMapType = {
         'Earn active yield by participating in this crypto stream factoring market where loans are backed by collateralized streaming assets and paid back automatically every moment.',
     },
   },
+  [POOL_TYPE.ReceivableBackedCreditLine]: {},
 }
 
 export const PoolSubgraphMap: PoolSubgraphMapType = {

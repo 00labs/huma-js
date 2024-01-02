@@ -1073,6 +1073,131 @@ const _abi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint96',
+            name: 'receivableAmount',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint64',
+            name: 'receivableId',
+            type: 'uint64',
+          },
+        ],
+        internalType: 'struct ReceivableInput',
+        name: 'receivableInput',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'drawdownWithReceivable',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'receivableId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'makePaymentWithReceivable',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'paidoff',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'paymentReceivableId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'paymentAmount',
+        type: 'uint256',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint96',
+            name: 'receivableAmount',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint64',
+            name: 'receivableId',
+            type: 'uint64',
+          },
+        ],
+        internalType: 'struct ReceivableInput',
+        name: 'drawdownReceivableInput',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint256',
+        name: 'drawdownAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'makePrincipalPaymentAndDrawdownWithReceivable',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'paidoff',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const
 
 export class Credit__factory {

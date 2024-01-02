@@ -56,10 +56,18 @@ import {
   LendWithdrawPropsV2,
   LendWithdrawV2,
 } from './components/Lend/withdrawV2'
+import {
+  ReceivableBackedCreditLineBorrowPropsV2,
+  ReceivableBackedCreditLineBorrowV2,
+} from './components/ReceivableBackedCreditLine/borrow'
 import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  ReceivableBackedCreditLinePaymentPropsV2,
+  ReceivableBackedCreditLinePaymentV2,
+} from './components/ReceivableBackedCreditLine/payment'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -440,6 +448,56 @@ export function AutoPaybackWidgetV2(props: AutoPaybackWidgetPropsV2) {
   return (
     <Widget {...props}>
       <AutoPaybackV2 {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Receivable backed credit line pool borrow widget props V2
+ * @typedef {Object} ReceivableBackedCreditLineBorrowWidgetPropsV2
+ * @property {ReceivableBackedCreditLineBorrowPropsV2} ReceivableBackedCreditLineBorrowPropsV2 - Receivable backed credit line pool borrow props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type ReceivableBackedCreditLineBorrowWidgetPropsV2 =
+  ReceivableBackedCreditLineBorrowPropsV2 & WidgetProps
+
+/**
+ * Receivable backed credit line borrow widget V2
+ *
+ * @param {ReceivableBackedCreditLineBorrowWidgetPropsV2} props - The receivable backed credit line pool borrow widget props V2.
+ * @returns Receivable backed credit line pool borrow widget component V2
+ */
+export function ReceivableBackedCreditLineBorrowWidgetV2(
+  props: ReceivableBackedCreditLineBorrowWidgetPropsV2,
+) {
+  return (
+    <Widget {...props}>
+      <ReceivableBackedCreditLineBorrowV2 {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Receivable backed credit line pool payment widget props V2
+ * @typedef {Object} ReceivableBackedCreditLinePaymentWidgetPropsV2
+ * @property {ReceivableBackedCreditLinePaymentPropsV2} ReceivableBackedCreditLinePaymentPropsV2 - Receivable backed credit line pool payment props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type ReceivableBackedCreditLinePaymentWidgetPropsV2 =
+  ReceivableBackedCreditLinePaymentPropsV2 & WidgetProps
+
+/**
+ * Receivable backed credit line payment widget V2
+ *
+ * @param {ReceivableBackedCreditLinePaymentWidgetPropsV2} props - The receivable backed credit line pool payment widget props V2.
+ * @returns Receivable backed credit line pool payment widget component V2
+ */
+export function ReceivableBackedCreditLinePaymentWidgetV2(
+  props: ReceivableBackedCreditLinePaymentWidgetPropsV2,
+) {
+  return (
+    <Widget {...props}>
+      <ReceivableBackedCreditLinePaymentV2 {...props} />
     </Widget>
   )
 }

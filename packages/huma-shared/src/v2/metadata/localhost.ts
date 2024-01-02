@@ -25,37 +25,33 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Test Pool V2',
-    desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    KYC: {
-      provider: 'Securitize',
-      signInRequired: {
-        title: 'Sign In',
-        description:
-          'Please sign in to verify that you are the owner of the wallet.',
-      },
-      verifyIdentity: {
-        title: 'Verify Identity',
-        description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via Securitize.`,
-        buttonText: 'VERIFY MY IDENTITY',
-      },
-      emailSignatureLink: {
-        title: 'Pool Documents',
-        description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
-        buttonText: 'EMAIL DOCUSIGN LINK',
-      },
-      resendSignatureLink: {
-        title: 'Resend Documents',
-        description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
-        buttonText: 'RESEND DOCUSIGN LINK',
-      },
-      docUnderReview: {
-        title: 'Under Review',
-        description:
-          'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
-        buttonText: 'THANK YOU',
-      },
+    title: 'Jia V2 Testing Pool',
+    desc: 'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
+    supplyLink: 'https://app.huma.finance',
+  },
+  ArfCreditPoolV2: {
+    chainId: ChainEnum.Localhost,
+    poolVersion: 'v2',
+    poolName: POOL_NAME.ArfCreditPoolV2,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
+    pool: '0x4C4a2f8c81640e47606d3fd77B353E87Ba015584',
+    poolConfig: '0x162A433068F51e18b7d13932F27e66a3f99E6890',
+    poolCredit: '0x51A1ceB83B83F1985a81C295d1fF28Afef186E02',
+    poolCreditManager: '0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7',
+    poolSafe: '0x5081a39b8A5f0E35a8D959395a630b68B74Dd30f',
+    seniorTrancheVault: '0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2',
+    juniorTrancheVault: '0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43',
+    epochManager: '0x21dF544947ba3E8b3c32561399E88B52Dc8b2823',
+    firstLossCovers: {
+      [FirstLossCoverIndex.borrower]:
+        '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
+      [FirstLossCoverIndex.affiliate]:
+        '0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6',
     },
+    seniorAPY: '10-20%',
+    juniorAPY: '10-20%',
+    title: 'Arf V2 Testing Pool',
+    desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     supplyLink: 'https://app.huma.finance',
   },
 }
