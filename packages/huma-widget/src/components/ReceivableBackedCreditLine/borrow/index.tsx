@@ -103,6 +103,7 @@ export function ReceivableBackedCreditLineBorrowV2({
           poolUnderlyingToken={poolUnderlyingToken}
           accountStats={accountStats}
           needCreateReceivable={needCreateReceivable}
+          defaultTokenId={defaultTokenId}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (

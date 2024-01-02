@@ -3,10 +3,11 @@ import {
   PoolInfoV2,
   UnderlyingTokenInfo,
   usePoolSafeAllowanceV2,
+  useReceivableInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
-import React, { useCallback, useState } from 'react'
+import { BigNumber, ethers } from 'ethers'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
@@ -19,6 +20,7 @@ type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
   accountStats: CreditStatsV2
   needCreateReceivable: boolean
+  defaultTokenId?: string
 }
 
 export function ChooseAmount({
@@ -26,21 +28,41 @@ export function ChooseAmount({
   poolUnderlyingToken,
   accountStats,
   needCreateReceivable,
+  defaultTokenId,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken!
   const [currentAmount, setCurrentAmount] = useState(0)
   const { creditAvailable } = accountStats
-  const creditAvailableFormatted = creditAvailable
-    ? Number(ethers.utils.formatUnits(creditAvailable, decimals))
-    : 0
-
+  const receivableInfo = useReceivableInfoV2(
+    poolInfo.poolName,
+    defaultTokenId,
+    provider,
+  )
   const { autopayEnabled } = usePoolSafeAllowanceV2(
     poolInfo.poolName,
     account,
     provider,
   )
+  const [maxAmount, setMaxAmount] = useState(0)
+
+  useEffect(() => {
+    if (creditAvailable) {
+      let maxAmountBN: BigNumber = creditAvailable
+
+      if (receivableInfo) {
+        const receivableAmountBN = BigNumber.from(
+          receivableInfo.receivableAmount,
+        )
+        maxAmountBN = receivableAmountBN.lte(creditAvailable)
+          ? receivableAmountBN
+          : creditAvailable
+      }
+      setMaxAmount(Number(ethers.utils.formatUnits(maxAmountBN, decimals)))
+    }
+  }, [creditAvailable, decimals, receivableInfo])
+
   const handleChangeAmount = useCallback((newAmount: number) => {
     setCurrentAmount(newAmount)
   }, [])
@@ -67,7 +89,7 @@ export function ChooseAmount({
     )
   }, [autopayEnabled, currentAmount, decimals, dispatch, needCreateReceivable])
 
-  if (autopayEnabled === undefined) {
+  if (autopayEnabled === undefined || (defaultTokenId && !receivableInfo)) {
     return <LoadingModal title='Borrow' />
   }
 
@@ -75,7 +97,7 @@ export function ChooseAmount({
     <ChooseAmountModal
       title='Borrow'
       description1='Choose Amount'
-      sliderMax={creditAvailableFormatted}
+      sliderMax={maxAmount}
       currentAmount={currentAmount}
       tokenSymbol={symbol}
       handleChangeAmount={handleChangeAmount}
