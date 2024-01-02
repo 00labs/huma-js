@@ -29,4 +29,29 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     desc: 'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
     supplyLink: 'https://app.huma.finance',
   },
+  ArfCreditPoolV2: {
+    chainId: ChainEnum.HumaTestnet,
+    poolVersion: 'v2',
+    poolName: POOL_NAME.ArfCreditPoolV2,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
+    pool: '0x4C4a2f8c81640e47606d3fd77B353E87Ba015584',
+    poolConfig: '0x162A433068F51e18b7d13932F27e66a3f99E6890',
+    poolCredit: '0x51A1ceB83B83F1985a81C295d1fF28Afef186E02',
+    poolCreditManager: '0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7',
+    poolSafe: '0x5081a39b8A5f0E35a8D959395a630b68B74Dd30f',
+    seniorTrancheVault: '0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2',
+    juniorTrancheVault: '0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43',
+    epochManager: '0x21dF544947ba3E8b3c32561399E88B52Dc8b2823',
+    firstLossCovers: {
+      [FirstLossCoverIndex.borrower]:
+        '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d',
+      [FirstLossCoverIndex.affiliate]:
+        '0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6',
+    },
+    seniorAPY: '10-20%',
+    juniorAPY: '10-20%',
+    title: 'Arf V2 Testing Pool',
+    desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
+    supplyLink: 'https://app.huma.finance',
+  },
 }
