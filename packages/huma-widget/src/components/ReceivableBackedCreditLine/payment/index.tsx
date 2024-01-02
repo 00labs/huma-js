@@ -62,8 +62,8 @@ export function ReceivableBackedCreditLinePaymentV2({
   const [borrowTokenId, setBorrowTokenId] = useState<string>()
   const paymentReceivableInfo = useReceivableInfoV2(poolName, tokenId, provider)
   const payoffAmount = paymentReceivableInfo
-    ? BigNumber.from(paymentReceivableInfo.receivableAmount!).sub(
-        paymentReceivableInfo.paidAmount!,
+    ? BigNumber.from(paymentReceivableInfo.receivableAmount).sub(
+        paymentReceivableInfo.paidAmount,
       )
     : BigNumber.from(0)
 

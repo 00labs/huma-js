@@ -750,12 +750,12 @@ export const useFirstLossCoverRequirement = (
 
 export function useReceivableInfoV2(
   poolName: POOL_NAME,
-  tokenId: string,
+  tokenId: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
   account?: string,
 ) {
   const [receivableInfo, setReceivableInfo] =
-    useState<Partial<RealWorldReceivableInfoBase>>()
+    useState<Omit<RealWorldReceivableInfoBase, 'poolAddress' | 'tokenURI'>>()
   const receivableContract = useReceivableContractV2(
     poolName,
     provider,
@@ -764,11 +764,11 @@ export function useReceivableInfoV2(
 
   useEffect(() => {
     const fetchData = async () => {
-      if (receivableContract) {
+      if (receivableContract && tokenId) {
         const receivableInfo = await receivableContract.receivableInfoMap(
           tokenId,
         )
-        setReceivableInfo(receivableInfo)
+        setReceivableInfo({ ...receivableInfo, tokenId })
       }
     }
     fetchData()
