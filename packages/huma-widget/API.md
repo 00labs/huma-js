@@ -34,6 +34,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Supply first loss cover widget</p></dd>
 <dt><a href="#ReceivableBackedCreditLineBorrowWidgetV2">ReceivableBackedCreditLineBorrowWidgetV2(props)</a> ⇒</dt>
 <dd><p>Receivable backed credit line borrow widget V2</p></dd>
+<dt><a href="#ReceivableBackedCreditLinePaymentWidgetV2">ReceivableBackedCreditLinePaymentWidgetV2(props)</a> ⇒</dt>
+<dd><p>Receivable backed credit line payment widget V2</p></dd>
 </dl>
 
 ## Typedefs
@@ -105,6 +107,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Auto payback widget props V2</p></dd>
 <dt><a href="#ReceivableBackedCreditLineBorrowWidgetPropsV2">ReceivableBackedCreditLineBorrowWidgetPropsV2</a> : <code>Object</code></dt>
 <dd><p>Receivable backed credit line pool borrow widget props V2</p></dd>
+<dt><a href="#ReceivableBackedCreditLinePaymentWidgetPropsV2">ReceivableBackedCreditLinePaymentWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Receivable backed credit line pool payment widget props V2</p></dd>
 </dl>
 
 <a name="InvoiceFactoringBorrowWidget"></a>
@@ -299,6 +303,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>ReceivableBackedCreditLineBorrowWidgetPropsV2</code>](#ReceivableBackedCreditLineBorrowWidgetPropsV2) | <p>The receivable backed credit line pool borrow widget props V2.</p> |
+
+<a name="ReceivableBackedCreditLinePaymentWidgetV2"></a>
+
+## ReceivableBackedCreditLinePaymentWidgetV2(props) ⇒
+<p>Receivable backed credit line payment widget V2</p>
+
+**Kind**: global function  
+**Returns**: <p>Receivable backed credit line pool payment widget component V2</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>ReceivableBackedCreditLinePaymentWidgetPropsV2</code>](#ReceivableBackedCreditLinePaymentWidgetPropsV2) | <p>The receivable backed credit line pool payment widget props V2.</p> |
 
 <a name="CreditLineApproveProps"></a>
 
@@ -517,6 +533,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| tokenId | <code>tokenId</code> \| <code>undefined</code> | <p>The receivable token id.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool borrow action is successful.</p> |
 
@@ -531,7 +548,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
-| rwReceivableInfo | <code>RealWorldReceivableInfoBase</code> | <p>The receivable details.</p> |
+| tokenID | <code>tokenId</code> | <p>The receivable token id.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
 
@@ -754,5 +771,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | ReceivableBackedCreditLineBorrowPropsV2 | [<code>ReceivableBackedCreditLineBorrowPropsV2</code>](#ReceivableBackedCreditLineBorrowPropsV2) | <p>Receivable backed credit line pool borrow props V2.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="ReceivableBackedCreditLinePaymentWidgetPropsV2"></a>
+
+## ReceivableBackedCreditLinePaymentWidgetPropsV2 : <code>Object</code>
+<p>Receivable backed credit line pool payment widget props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| ReceivableBackedCreditLinePaymentPropsV2 | <code>ReceivableBackedCreditLinePaymentPropsV2</code> | <p>Receivable backed credit line pool payment props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
