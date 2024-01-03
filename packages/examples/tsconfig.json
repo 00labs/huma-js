@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "paths": {
+      "@huma-finance/shared": ["../huma-shared/src"],
+      "@huma-finance/sdk": ["../huma-sdk/src"]
+    }
+  },
   "references": [
     {
       "path": "../huma-shared"
