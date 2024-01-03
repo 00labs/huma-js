@@ -126,6 +126,16 @@ export const getChainPoolNamesV2 = (
   return Object.keys(CHAIN_POOLS_INFO_V2[chainId]) as POOL_NAME[]
 }
 
+export const isV2Pool = (chainId: number, pool: string): boolean => {
+  const chainPoolsInfo = CHAIN_POOLS_INFO_V2[chainId as ChainEnum]
+  if (!chainPoolsInfo) {
+    return false
+  }
+  return Object.values(chainPoolsInfo).some(
+    (poolInfo) => poolInfo.pool.toLowerCase() === pool.toLowerCase(),
+  )
+}
+
 export type UnderlyingTokenInfo = {
   address: string
   symbol: string

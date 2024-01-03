@@ -1,13 +1,14 @@
 import {
   CreditEvent,
-  PoolContractMap,
   POOL_NAME,
   POOL_TYPE,
-  requestPost,
+  PoolContractMap,
   PoolSubgraphMap,
   RealWorldReceivableInfoBase,
   CHAIN_POOLS_INFO_V2,
   ChainEnum,
+  isV2Pool,
+  requestPost,
 } from '@huma-finance/shared'
 
 /**
@@ -251,6 +252,101 @@ function getPoolStats(
 }
 
 /**
+ * Returns if user has borrow or lend history.
+ *
+ * @memberof SubgraphService
+ * @param {number} chainId - The ID of the chain.
+ * @param {string} pool - The address of the pool.
+ * @param {string} userAddress - The address of the user.
+ * @returns {Promise<{hasBorrowHistory: boolean, hasLendHistory: boolean}>} If user has borrow or lend history.
+ */
+function checkBorrowAndLendHistory(
+  chainId: number,
+  pool: string,
+  userAddress: string,
+): Promise<{ hasBorrowHistory: boolean; hasLendHistory: boolean } | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url || !userAddress || !pool) {
+    return Promise.resolve(undefined)
+  }
+
+  let borrowAndLendHistoryQuery = `
+  query {
+    creditEvents(
+      where: {
+        owner: "${userAddress.toLowerCase()}",
+        pool: "${pool.toLowerCase()}",
+      }
+    ) {
+      event
+    }
+  }
+`
+
+  if (isV2Pool(chainId, pool)) {
+    borrowAndLendHistoryQuery = `
+    query {
+      creditEvents(
+        where: {
+          owner: "${userAddress.toLowerCase()}",
+          pool: "${pool.toLowerCase()}",
+        }
+        ) {
+          event
+        }
+        lenders(
+          where: {
+            owner: "${userAddress.toLowerCase()}",
+            pool: "${pool.toLowerCase()}"
+          }
+          ) {
+            id
+            tranche {
+              id
+              type
+            }
+          }
+        }
+        `
+  }
+
+  return requestPost<{
+    errors?: unknown
+    data: {
+      creditEvents: {
+        pool: string
+        event: number
+      }[]
+      lenders: { id: string; tranche: { id: string; type: number } }[]
+    }
+  }>(url, JSON.stringify({ query: borrowAndLendHistoryQuery }), {
+    withCredentials: false,
+  }).then((res) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return undefined
+    }
+    const { creditEvents = [], lenders = [] } = res.data
+    const hasBorrowHistory = creditEvents.some((creditEvent) =>
+      [
+        CreditEvent.DrawdownMade,
+        CreditEvent.DrawdownMadeWithReceivable,
+      ].includes(creditEvent.event),
+    )
+    let hasLendHistory = creditEvents.some(
+      (creditEvent) => creditEvent.event === CreditEvent.LiquidityDeposited,
+    )
+    if (!hasLendHistory) {
+      const firstLossCoverTrancheType = 2
+      hasLendHistory = lenders.some(
+        (lender) => lender.tranche.type !== firstLossCoverTrancheType,
+      )
+    }
+    return { hasBorrowHistory, hasLendHistory }
+  })
+}
+
+/**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
  */
@@ -260,4 +356,5 @@ export const SubgraphService = {
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
   getPoolStats,
+  checkBorrowAndLendHistory,
 }

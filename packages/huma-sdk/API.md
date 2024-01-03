@@ -475,6 +475,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.getLastFactorizedAmountFromPool(userAddress, chainId, poolName, poolType)](#SubgraphService.getLastFactorizedAmountFromPool) ⇒ <code>Promise.&lt;number&gt;</code>
     * [.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getRWReceivableInfo) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
     * [.getPoolStats(chainId, pool)](#SubgraphService.getPoolStats) ⇒ <code>Promise.&lt;{PoolStats}&gt;</code>
+    * [.checkBorrowAndLendHistory(chainId, pool, userAddress)](#SubgraphService.checkBorrowAndLendHistory) ⇒ <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code>
 
 <a name="SubgraphService.getSubgraphUrlForChainId"></a>
 
@@ -547,6 +548,20 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | --- | --- | --- |
 | chainId | <code>number</code> | <p>The ID of the chain.</p> |
 | pool | <code>string</code> | <p>The address of the pool.</p> |
+
+<a name="SubgraphService.checkBorrowAndLendHistory"></a>
+
+### SubgraphService.checkBorrowAndLendHistory(chainId, pool, userAddress) ⇒ <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code>
+<p>Returns if user has borrow or lend history.</p>
+
+**Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
+**Returns**: <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code> - <p>If user has borrow or lend history.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chainId | <code>number</code> | <p>The ID of the chain.</p> |
+| pool | <code>string</code> | <p>The address of the pool.</p> |
+| userAddress | <code>string</code> | <p>The address of the user.</p> |
 
 <a name="defaultWrapper"></a>
 
