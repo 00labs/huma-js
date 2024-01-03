@@ -59,7 +59,7 @@ export enum LenderEvent {
 
 export const CreditEventText = {
   [String(CreditEvent.DrawdownMade)]: 'Borrow',
-  [String(CreditEvent.DrawdownMadeWithReceivable)]: 'Factoring',
+  [String(CreditEvent.DrawdownMadeWithReceivable)]: 'Borrow',
   [String(CreditEvent.PaymentMade)]: 'Pay',
   [String(CreditEvent.PaymentMadeWithReceivable)]: 'Pay',
   [String(CreditEvent.PrincipalPaymentMade)]: 'Pay',
