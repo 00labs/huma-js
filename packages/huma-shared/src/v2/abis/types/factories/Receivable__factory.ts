@@ -14,12 +14,17 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'notNFTOwner',
+    name: 'notReceivableOwnerOrCreator',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'todo',
+    name: 'receivableReferenceIdAlreadyExists',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'zeroAmountProvided',
     type: 'error',
   },
   {
@@ -222,6 +227,37 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'oldTokenURI',
+        type: 'string',
+      },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'newTokenURI',
+        type: 'string',
+      },
+    ],
+    name: 'ReceivableMetadataUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: 'bytes32',
         name: 'role',
         type: 'bytes32',
@@ -390,24 +426,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'bool',
-        name: 'approved',
-        type: 'bool',
-      },
-    ],
-    name: 'approveOrRejectReceivable',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'address',
         name: 'owner',
         type: 'address',
@@ -456,6 +474,11 @@ const _abi = [
       },
       {
         internalType: 'string',
+        name: 'referenceId',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
         name: 'uri',
         type: 'string',
       },
@@ -469,6 +492,25 @@ const _abi = [
       },
     ],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'creators',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -554,6 +596,30 @@ const _abi = [
         internalType: 'struct ReceivableInfo',
         name: 'receivable',
         type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'referenceId',
+        type: 'string',
+      },
+      {
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+    ],
+    name: 'getReferenceIdHash',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',
@@ -754,6 +820,25 @@ const _abi = [
         internalType: 'enum ReceivableState',
         name: 'state',
         type: 'uint8',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    name: 'referenceIdHashToTokenId',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -990,6 +1075,24 @@ const _abi = [
       },
     ],
     name: 'transferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: 'uri',
+        type: 'string',
+      },
+    ],
+    name: 'updateReceivableMetadata',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

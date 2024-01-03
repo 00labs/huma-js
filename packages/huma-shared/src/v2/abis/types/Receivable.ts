@@ -59,13 +59,14 @@ export interface ReceivableInterface extends utils.Interface {
     'MINTER_ROLE()': FunctionFragment
     'UPGRADER_ROLE()': FunctionFragment
     'approve(address,uint256)': FunctionFragment
-    'approveOrRejectReceivable(uint256,bool)': FunctionFragment
     'balanceOf(address)': FunctionFragment
     'burn(uint256)': FunctionFragment
-    'createReceivable(uint16,uint96,uint64,string)': FunctionFragment
+    'createReceivable(uint16,uint96,uint64,string,string)': FunctionFragment
+    'creators(uint256)': FunctionFragment
     'declarePayment(uint256,uint96)': FunctionFragment
     'getApproved(uint256)': FunctionFragment
     'getReceivable(uint256)': FunctionFragment
+    'getReferenceIdHash(string,address)': FunctionFragment
     'getRoleAdmin(bytes32)': FunctionFragment
     'getStatus(uint256)': FunctionFragment
     'grantRole(bytes32,address)': FunctionFragment
@@ -76,6 +77,7 @@ export interface ReceivableInterface extends utils.Interface {
     'ownerOf(uint256)': FunctionFragment
     'proxiableUUID()': FunctionFragment
     'receivableInfoMap(uint256)': FunctionFragment
+    'referenceIdHashToTokenId(bytes32)': FunctionFragment
     'renounceRole(bytes32,address)': FunctionFragment
     'revokeRole(bytes32,address)': FunctionFragment
     'safeTransferFrom(address,address,uint256)': FunctionFragment
@@ -88,6 +90,7 @@ export interface ReceivableInterface extends utils.Interface {
     'tokenURI(uint256)': FunctionFragment
     'totalSupply()': FunctionFragment
     'transferFrom(address,address,uint256)': FunctionFragment
+    'updateReceivableMetadata(uint256,string)': FunctionFragment
     'upgradeTo(address)': FunctionFragment
     'upgradeToAndCall(address,bytes)': FunctionFragment
   }
@@ -98,13 +101,14 @@ export interface ReceivableInterface extends utils.Interface {
       | 'MINTER_ROLE'
       | 'UPGRADER_ROLE'
       | 'approve'
-      | 'approveOrRejectReceivable'
       | 'balanceOf'
       | 'burn'
       | 'createReceivable'
+      | 'creators'
       | 'declarePayment'
       | 'getApproved'
       | 'getReceivable'
+      | 'getReferenceIdHash'
       | 'getRoleAdmin'
       | 'getStatus'
       | 'grantRole'
@@ -115,6 +119,7 @@ export interface ReceivableInterface extends utils.Interface {
       | 'ownerOf'
       | 'proxiableUUID'
       | 'receivableInfoMap'
+      | 'referenceIdHashToTokenId'
       | 'renounceRole'
       | 'revokeRole'
       | 'safeTransferFrom(address,address,uint256)'
@@ -127,6 +132,7 @@ export interface ReceivableInterface extends utils.Interface {
       | 'tokenURI'
       | 'totalSupply'
       | 'transferFrom'
+      | 'updateReceivableMetadata'
       | 'upgradeTo'
       | 'upgradeToAndCall',
   ): FunctionFragment
@@ -148,10 +154,6 @@ export interface ReceivableInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'approveOrRejectReceivable',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<boolean>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'balanceOf',
     values: [PromiseOrValue<string>],
   ): string
@@ -166,7 +168,12 @@ export interface ReceivableInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
+      PromiseOrValue<string>,
     ],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'creators',
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'declarePayment',
@@ -179,6 +186,10 @@ export interface ReceivableInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'getReceivable',
     values: [PromiseOrValue<BigNumberish>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'getReferenceIdHash',
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
   ): string
   encodeFunctionData(
     functionFragment: 'getRoleAdmin',
@@ -213,6 +224,10 @@ export interface ReceivableInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'receivableInfoMap',
     values: [PromiseOrValue<BigNumberish>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'referenceIdHashToTokenId',
+    values: [PromiseOrValue<BytesLike>],
   ): string
   encodeFunctionData(
     functionFragment: 'renounceRole',
@@ -273,6 +288,10 @@ export interface ReceivableInterface extends utils.Interface {
     ],
   ): string
   encodeFunctionData(
+    functionFragment: 'updateReceivableMetadata',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'upgradeTo',
     values: [PromiseOrValue<string>],
   ): string
@@ -291,16 +310,13 @@ export interface ReceivableInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'approveOrRejectReceivable',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'burn', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'createReceivable',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'creators', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'declarePayment',
     data: BytesLike,
@@ -308,6 +324,10 @@ export interface ReceivableInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'getApproved', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'getReceivable',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'getReferenceIdHash',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -330,6 +350,10 @@ export interface ReceivableInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'receivableInfoMap',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'referenceIdHashToTokenId',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -368,6 +392,10 @@ export interface ReceivableInterface extends utils.Interface {
     functionFragment: 'transferFrom',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(
+    functionFragment: 'updateReceivableMetadata',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'upgradeToAndCall',
@@ -384,6 +412,7 @@ export interface ReceivableInterface extends utils.Interface {
     'MetadataUpdate(uint256)': EventFragment
     'PaymentDeclared(address,uint256,uint16,uint256)': EventFragment
     'ReceivableCreated(address,uint256,uint256,uint64,uint16)': EventFragment
+    'ReceivableMetadataUpdated(address,uint256,string,string)': EventFragment
     'RoleAdminChanged(bytes32,bytes32,bytes32)': EventFragment
     'RoleGranted(bytes32,address,address)': EventFragment
     'RoleRevoked(bytes32,address,address)': EventFragment
@@ -400,6 +429,7 @@ export interface ReceivableInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'MetadataUpdate'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PaymentDeclared'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'ReceivableCreated'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'ReceivableMetadataUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RoleAdminChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RoleGranted'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RoleRevoked'): EventFragment
@@ -509,6 +539,20 @@ export type ReceivableCreatedEvent = TypedEvent<
 export type ReceivableCreatedEventFilter =
   TypedEventFilter<ReceivableCreatedEvent>
 
+export interface ReceivableMetadataUpdatedEventObject {
+  owner: string
+  tokenId: BigNumber
+  oldTokenURI: string
+  newTokenURI: string
+}
+export type ReceivableMetadataUpdatedEvent = TypedEvent<
+  [string, BigNumber, string, string],
+  ReceivableMetadataUpdatedEventObject
+>
+
+export type ReceivableMetadataUpdatedEventFilter =
+  TypedEventFilter<ReceivableMetadataUpdatedEvent>
+
 export interface RoleAdminChangedEventObject {
   role: string
   previousAdminRole: string
@@ -604,12 +648,6 @@ export interface Receivable extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    approveOrRejectReceivable(
-      tokenId: PromiseOrValue<BigNumberish>,
-      approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -624,9 +662,15 @@ export interface Receivable extends BaseContract {
       currencyCode: PromiseOrValue<BigNumberish>,
       receivableAmount: PromiseOrValue<BigNumberish>,
       maturityDate: PromiseOrValue<BigNumberish>,
+      referenceId: PromiseOrValue<string>,
       uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
+
+    creators(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[string]>
 
     declarePayment(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -645,6 +689,12 @@ export interface Receivable extends BaseContract {
     ): Promise<
       [ReceivableInfoStructOutput] & { receivable: ReceivableInfoStructOutput }
     >
+
+    getReferenceIdHash(
+      referenceId: PromiseOrValue<string>,
+      creator: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[string]>
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
@@ -700,6 +750,11 @@ export interface Receivable extends BaseContract {
         state: number
       }
     >
+
+    referenceIdHashToTokenId(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     renounceRole(
       role: PromiseOrValue<BytesLike>,
@@ -766,6 +821,12 @@ export interface Receivable extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
+    updateReceivableMetadata(
+      tokenId: PromiseOrValue<BigNumberish>,
+      uri: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     upgradeTo(
       newImplementation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -790,12 +851,6 @@ export interface Receivable extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  approveOrRejectReceivable(
-    tokenId: PromiseOrValue<BigNumberish>,
-    approved: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   balanceOf(
     owner: PromiseOrValue<string>,
     overrides?: CallOverrides,
@@ -810,9 +865,15 @@ export interface Receivable extends BaseContract {
     currencyCode: PromiseOrValue<BigNumberish>,
     receivableAmount: PromiseOrValue<BigNumberish>,
     maturityDate: PromiseOrValue<BigNumberish>,
+    referenceId: PromiseOrValue<string>,
     uri: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
+
+  creators(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<string>
 
   declarePayment(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -829,6 +890,12 @@ export interface Receivable extends BaseContract {
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<ReceivableInfoStructOutput>
+
+  getReferenceIdHash(
+    referenceId: PromiseOrValue<string>,
+    creator: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<string>
 
   getRoleAdmin(
     role: PromiseOrValue<BytesLike>,
@@ -884,6 +951,11 @@ export interface Receivable extends BaseContract {
       state: number
     }
   >
+
+  referenceIdHashToTokenId(
+    arg0: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   renounceRole(
     role: PromiseOrValue<BytesLike>,
@@ -950,6 +1022,12 @@ export interface Receivable extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
+  updateReceivableMetadata(
+    tokenId: PromiseOrValue<BigNumberish>,
+    uri: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   upgradeTo(
     newImplementation: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -974,12 +1052,6 @@ export interface Receivable extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    approveOrRejectReceivable(
-      tokenId: PromiseOrValue<BigNumberish>,
-      approved: PromiseOrValue<boolean>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -994,9 +1066,15 @@ export interface Receivable extends BaseContract {
       currencyCode: PromiseOrValue<BigNumberish>,
       receivableAmount: PromiseOrValue<BigNumberish>,
       maturityDate: PromiseOrValue<BigNumberish>,
+      referenceId: PromiseOrValue<string>,
       uri: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
+
+    creators(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<string>
 
     declarePayment(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1013,6 +1091,12 @@ export interface Receivable extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<ReceivableInfoStructOutput>
+
+    getReferenceIdHash(
+      referenceId: PromiseOrValue<string>,
+      creator: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<string>
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
@@ -1066,6 +1150,11 @@ export interface Receivable extends BaseContract {
         state: number
       }
     >
+
+    referenceIdHashToTokenId(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     renounceRole(
       role: PromiseOrValue<BytesLike>,
@@ -1129,6 +1218,12 @@ export interface Receivable extends BaseContract {
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    updateReceivableMetadata(
+      tokenId: PromiseOrValue<BigNumberish>,
+      uri: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -1223,6 +1318,19 @@ export interface Receivable extends BaseContract {
       currencyCode?: null,
     ): ReceivableCreatedEventFilter
 
+    'ReceivableMetadataUpdated(address,uint256,string,string)'(
+      owner?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      oldTokenURI?: null,
+      newTokenURI?: null,
+    ): ReceivableMetadataUpdatedEventFilter
+    ReceivableMetadataUpdated(
+      owner?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      oldTokenURI?: null,
+      newTokenURI?: null,
+    ): ReceivableMetadataUpdatedEventFilter
+
     'RoleAdminChanged(bytes32,bytes32,bytes32)'(
       role?: PromiseOrValue<BytesLike> | null,
       previousAdminRole?: PromiseOrValue<BytesLike> | null,
@@ -1288,12 +1396,6 @@ export interface Receivable extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    approveOrRejectReceivable(
-      tokenId: PromiseOrValue<BigNumberish>,
-      approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -1308,8 +1410,14 @@ export interface Receivable extends BaseContract {
       currencyCode: PromiseOrValue<BigNumberish>,
       receivableAmount: PromiseOrValue<BigNumberish>,
       maturityDate: PromiseOrValue<BigNumberish>,
+      referenceId: PromiseOrValue<string>,
       uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    creators(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>
 
     declarePayment(
@@ -1325,6 +1433,12 @@ export interface Receivable extends BaseContract {
 
     getReceivable(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
+
+    getReferenceIdHash(
+      referenceId: PromiseOrValue<string>,
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -1371,6 +1485,11 @@ export interface Receivable extends BaseContract {
 
     receivableInfoMap(
       arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
+
+    referenceIdHashToTokenId(
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -1439,6 +1558,12 @@ export interface Receivable extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
+    updateReceivableMetadata(
+      tokenId: PromiseOrValue<BigNumberish>,
+      uri: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     upgradeTo(
       newImplementation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -1464,12 +1589,6 @@ export interface Receivable extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    approveOrRejectReceivable(
-      tokenId: PromiseOrValue<BigNumberish>,
-      approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -1484,8 +1603,14 @@ export interface Receivable extends BaseContract {
       currencyCode: PromiseOrValue<BigNumberish>,
       receivableAmount: PromiseOrValue<BigNumberish>,
       maturityDate: PromiseOrValue<BigNumberish>,
+      referenceId: PromiseOrValue<string>,
       uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    creators(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
     declarePayment(
@@ -1501,6 +1626,12 @@ export interface Receivable extends BaseContract {
 
     getReceivable(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
+
+    getReferenceIdHash(
+      referenceId: PromiseOrValue<string>,
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -1547,6 +1678,11 @@ export interface Receivable extends BaseContract {
 
     receivableInfoMap(
       arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
+
+    referenceIdHashToTokenId(
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -1612,6 +1748,12 @@ export interface Receivable extends BaseContract {
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    updateReceivableMetadata(
+      tokenId: PromiseOrValue<BigNumberish>,
+      uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
