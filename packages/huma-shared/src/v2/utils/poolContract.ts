@@ -320,7 +320,7 @@ export const getTrancheSharesToAssetsV2 = async (
   return trancheVaultContract.convertToAssets(shares)
 }
 
-export const getCreditHash = (
+export const getCreditHashV2 = (
   poolName: POOL_NAME,
   chainId: number | undefined,
   account: string | undefined,
@@ -342,7 +342,7 @@ export const getCreditHash = (
   )
 }
 
-export const getCreditRecord = async (
+export const getCreditRecordV2 = async (
   poolName: POOL_NAME,
   chainId: number | undefined,
   account: string | undefined,
@@ -361,7 +361,7 @@ export const getCreditRecord = async (
     return undefined
   }
 
-  const creditHash = getCreditHash(poolName, chainId, account)
+  const creditHash = getCreditHashV2(poolName, chainId, account)
   if (!creditHash) {
     return undefined
   }
@@ -369,7 +369,7 @@ export const getCreditRecord = async (
   return creditContract.getCreditRecord(creditHash)
 }
 
-export const getCreditConfig = async (
+export const getCreditConfigV2 = async (
   poolName: POOL_NAME,
   chainId: number | undefined,
   account: string | undefined,
@@ -391,7 +391,7 @@ export const getCreditConfig = async (
     return undefined
   }
 
-  const creditHash = getCreditHash(poolName, chainId, account)
+  const creditHash = getCreditHashV2(poolName, chainId, account)
   if (!creditHash) {
     return undefined
   }
