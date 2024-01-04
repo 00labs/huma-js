@@ -77,7 +77,7 @@ export function CreateReceivable({
       send({
         contract: receivableContract,
         method: 'createReceivable',
-        params: [CURRENCY_CODE.USD, paymentAmountBN, maturityDate, ''],
+        params: [CURRENCY_CODE.USD, paymentAmountBN, maturityDate, '', ''],
         provider,
       })
     }

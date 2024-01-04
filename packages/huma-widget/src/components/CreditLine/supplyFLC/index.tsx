@@ -56,20 +56,20 @@ export function SupplyFirstLossCover({
     account,
     provider,
   )
-  const { amountToDeposit } = requirement || {}
+  const { minAmountToDeposit } = requirement || {}
   const title = 'Deposit First Loss Cover'
 
   useEffect(() => {
-    if (!step && amountToDeposit && allowance) {
-      if (amountToDeposit.gt(allowance!)) {
+    if (!step && minAmountToDeposit && allowance) {
+      if (minAmountToDeposit.gt(allowance!)) {
         dispatch(setStep(WIDGET_STEP.ApproveAllowance))
       } else {
         dispatch(setStep(WIDGET_STEP.Transfer))
       }
     }
-  }, [allowance, dispatch, amountToDeposit, step])
+  }, [allowance, dispatch, minAmountToDeposit, step])
 
-  if (!poolInfo || !poolUnderlyingToken || !amountToDeposit || !allowance) {
+  if (!poolInfo || !poolUnderlyingToken || !minAmountToDeposit || !allowance) {
     return (
       <WidgetWrapper
         isOpen
@@ -92,13 +92,13 @@ export function SupplyFirstLossCover({
         <ApproveAllowance
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          amountToDeposit={amountToDeposit}
+          amountToDeposit={minAmountToDeposit}
         />
       )}
       {step === WIDGET_STEP.Transfer && (
         <Transfer
           poolInfo={poolInfo}
-          amountToDeposit={amountToDeposit}
+          amountToDeposit={minAmountToDeposit}
           title={title}
         />
       )}
@@ -106,7 +106,7 @@ export function SupplyFirstLossCover({
         <Success
           poolUnderlyingToken={poolUnderlyingToken}
           handleAction={handleClose}
-          amountToDeposit={amountToDeposit}
+          amountToDeposit={minAmountToDeposit}
         />
       )}
       {step === WIDGET_STEP.Error && (

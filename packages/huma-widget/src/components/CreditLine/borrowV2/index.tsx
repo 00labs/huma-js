@@ -42,7 +42,7 @@ export interface CreditLineBorrowPropsV2 {
 export function CreditLineBorrowV2({
   poolName: poolNameStr,
   handleClose,
-  handleSuccess,
+  handleSuccess: handleSuccessCustom,
 }: CreditLineBorrowPropsV2): React.ReactElement | null {
   const dispatch = useDispatch()
   const poolName = POOL_NAME[poolNameStr]
@@ -50,7 +50,11 @@ export function CreditLineBorrowV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [accountStats] = useCreditStatsV2(poolName, account, provider)
+  const [accountStats, refreshAccountStats] = useCreditStatsV2(
+    poolName,
+    account,
+    provider,
+  )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const { creditRecord } = accountStats
@@ -71,6 +75,13 @@ export function CreditLineBorrowV2({
       handleClose()
     }
   }, [dispatch, handleClose, isFirstTimeNotifiUser, notifiChainSupported])
+
+  const handleSuccess = useCallback(() => {
+    refreshAccountStats()
+    if (handleSuccessCustom) {
+      handleSuccessCustom()
+    }
+  }, [handleSuccessCustom, refreshAccountStats])
 
   if (!poolInfo || !poolUnderlyingToken || !creditRecord) {
     return (
