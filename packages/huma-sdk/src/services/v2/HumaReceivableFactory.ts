@@ -1,23 +1,33 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import {
-  getReceivableContractV2,
-  getReceivableReferenceAlreadyExists,
-} from '@huma-finance/shared'
+import { ChainEnum } from '@huma-finance/shared'
 import { BigNumber, Overrides } from 'ethers'
 import { ARWeaveService } from '../ARWeaveService'
 import { ReceivableService } from '../ReceivableService'
 import { getDefaultGasOptions } from '../../utils'
 import { HumaContext } from './HumaContext'
+import {
+  getReceivableContractV2,
+  getReceivableReferenceAlreadyExists,
+} from '../../helpers/ReceivableV2ContractHelper'
 
 export class HumaReceivableFactory {
   #humaContext: HumaContext
 
-  constructor({ humaContext }: { humaContext: HumaContext }) {
+  #arWeavePaymentChainId?: ChainEnum
+
+  constructor({
+    humaContext,
+    arWeavePaymentChainId,
+  }: {
+    humaContext: HumaContext
+    arWeavePaymentChainId?: ChainEnum
+  }) {
     if (!humaContext) {
       throw new Error('All parameters are required')
     }
 
     this.#humaContext = humaContext
+    this.#arWeavePaymentChainId = arWeavePaymentChainId
   }
 
   async createReceivableWithMetadata(
@@ -35,19 +45,9 @@ export class HumaReceivableFactory {
       throw new Error('Input must be a JSON object.')
     }
 
-    // Check whether a token already exists with this reference ID
-    const signerAddress = await this.#humaContext.signer.getAddress()
-    const receivableAlreadyExists = await getReceivableReferenceAlreadyExists(
-      referenceId,
-      signerAddress,
-      this.#humaContext.poolName,
-      this.#humaContext.provider,
-    )
-    if (receivableAlreadyExists) {
-      throw new Error('A token already exists with this reference ID')
-    }
+    this.throwIfReferenceIdExists(referenceId)
 
-    const metadataURI = await this.uploadOrFetchMetadataURI(
+    const metadataURI = await this.uploadMetadata(
       privateKey,
       metadata,
       referenceId,
@@ -65,7 +65,7 @@ export class HumaReceivableFactory {
     )
   }
 
-  private async createReceivable(
+  async createReceivable(
     currencyCode: number,
     receivableAmount: BigNumber,
     maturityDate: number,
@@ -73,6 +73,8 @@ export class HumaReceivableFactory {
     referenceId: string = '',
     gasOpts: Overrides = {},
   ): Promise<TransactionResponse> {
+    this.throwIfReferenceIdExists(referenceId)
+
     const tokenId = await ReceivableService.getTokenIdByURI(
       this.#humaContext.signer,
       metadataURI,
@@ -85,7 +87,7 @@ export class HumaReceivableFactory {
 
     const contract = await getReceivableContractV2(
       this.#humaContext.poolName,
-      this.#humaContext.provider,
+      this.#humaContext.signer,
     )
     if (!contract) {
       throw new Error('Could not find Receivable contract')
@@ -103,7 +105,7 @@ export class HumaReceivableFactory {
     )
   }
 
-  private async uploadOrFetchMetadataURI(
+  async uploadMetadata(
     privateKey: string,
     metadata: Record<string, unknown>,
     referenceId: string = '',
@@ -116,7 +118,9 @@ export class HumaReceivableFactory {
 
     const signerAddress = await this.#humaContext.signer.getAddress()
     const config = ARWeaveService.getBundlrNetworkConfig(
-      this.#humaContext.chainId,
+      this.#arWeavePaymentChainId !== undefined
+        ? this.#arWeavePaymentChainId
+        : this.#humaContext.chainId,
     )
     const tags = [
       { name: 'Content-Type', value: 'application/json' },
@@ -146,5 +150,19 @@ export class HumaReceivableFactory {
     )
 
     return ARWeaveService.getURIFromARWeaveId(response.id)
+  }
+
+  private async throwIfReferenceIdExists(referenceId: string): Promise<void> {
+    // Check whether a token already exists with this reference ID
+    const signerAddress = await this.#humaContext.signer.getAddress()
+    const receivableAlreadyExists = await getReceivableReferenceAlreadyExists(
+      referenceId,
+      signerAddress,
+      this.#humaContext.poolName,
+      this.#humaContext.provider,
+    )
+    if (receivableAlreadyExists) {
+      throw new Error('A token already exists with this reference ID')
+    }
   }
 }

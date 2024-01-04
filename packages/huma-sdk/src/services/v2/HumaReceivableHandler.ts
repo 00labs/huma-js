@@ -1,11 +1,11 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import {
-  getReceivableContractV2,
-  getReceivableTokenIdFromReferenceId,
-} from '@huma-finance/shared'
 import { BigNumber, Overrides } from 'ethers'
 import { HumaContext } from './HumaContext'
 import { getDefaultGasOptions } from '../../utils'
+import {
+  getReceivableContractV2,
+  getReceivableTokenIdFromReferenceId,
+} from '../../helpers'
 
 export class HumaReceivableHandler {
   #humaContext: HumaContext

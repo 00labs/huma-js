@@ -6,26 +6,34 @@ require('dotenv').config()
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+    `http://localhost:8545`,
     {
-      name: 'Mumbai',
-      chainId: ChainEnum.Mumbai,
+      name: 'Localhost',
+      chainId: ChainEnum.Localhost,
     },
   )
   const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
+  const adminWallet = new Wallet(
+    '8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba',
+    provider,
+  )
 
   const humaContext = new HumaContext({
     signer: wallet,
-    provider,
-    chainId: ChainEnum.Mumbai,
+    provider: provider,
+    chainId: ChainEnum.Localhost,
     poolName: POOL_NAME.JiaV2,
     poolType: POOL_TYPE.CreditLine,
   })
   const receivableFactory = new HumaReceivableFactory({
     humaContext,
+    arWeavePaymentChainId: ChainEnum.Mumbai, // Use a Bundlr-supported network to pay for metadata uploading
   })
 
-  // Mint a receivable with metadata uploaded to ARWeave
+  // Mint a receivable with metadata uploaded to ARWeave.
+  // By specifying the arWeavePaymentChainId, the factory
+  // will use the given Bundlr-supported network to pay for the
+  // ARWeave upload.
   const tx = await receivableFactory.createReceivableWithMetadata(
     TEST_PRIVATE_KEY, // privateKey
     840, // currencyCode for USD
