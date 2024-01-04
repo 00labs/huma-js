@@ -71,7 +71,6 @@ async function getTokenIdByURI(
   )
 
   if (!receivablesData?.rwreceivables?.length) {
-    console.log('No receivables found with this URI.')
     return null
   }
   if (receivablesData?.rwreceivables?.length > 1) {
