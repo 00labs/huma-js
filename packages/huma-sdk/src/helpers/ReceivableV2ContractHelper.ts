@@ -14,7 +14,7 @@ import { getContract } from '../utils'
  *
  * @param {ethers.providers.Provider | ethers.Signer} signerOrProvider The provider or signer instance to use for the contract.
  * @param {number} chainId The chain id where the contract instance exists
- * @returns {Contract | null} A contract instance for the RealWorldReceivable contract or null if it could not be found.
+ * @returns {Contract | null} A contract instance for the Receivable contract or null if it could not be found.
  */
 export async function getReceivableContractV2(
   poolName: POOL_NAME,
