@@ -6,7 +6,7 @@ import {
 } from '@huma-finance/shared'
 
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { getContract } from '../utils'
+import { getContract } from '../../utils'
 
 /**
  * Returns an ethers contract instance for the V2 Receivable contract
