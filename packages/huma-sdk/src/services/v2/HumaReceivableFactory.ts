@@ -23,7 +23,7 @@ export class HumaReceivableFactory {
     arWeavePaymentChainId?: ChainEnum
   }) {
     if (!humaContext) {
-      throw new Error('All parameters are required')
+      throw new Error('Must provide a HumaContext')
     }
 
     this.#humaContext = humaContext
@@ -31,7 +31,7 @@ export class HumaReceivableFactory {
   }
 
   async createReceivableWithMetadata(
-    privateKey: string,
+    arweavePaymentPrivateKey: string,
     currencyCode: number,
     receivableAmount: BigNumber,
     maturityDate: number,
@@ -45,10 +45,10 @@ export class HumaReceivableFactory {
       throw new Error('Input must be a JSON object.')
     }
 
-    this.throwIfReferenceIdExists(referenceId)
+    await this.throwIfReferenceIdExists(referenceId)
 
     const metadataURI = await this.uploadMetadata(
-      privateKey,
+      arweavePaymentPrivateKey,
       metadata,
       referenceId,
       extraTags,
@@ -73,7 +73,7 @@ export class HumaReceivableFactory {
     referenceId: string = '',
     gasOpts: Overrides = {},
   ): Promise<TransactionResponse> {
-    this.throwIfReferenceIdExists(referenceId)
+    await this.throwIfReferenceIdExists(referenceId)
 
     const tokenId = await ReceivableService.getTokenIdByURI(
       this.#humaContext.signer,
@@ -106,7 +106,7 @@ export class HumaReceivableFactory {
   }
 
   async uploadMetadata(
-    privateKey: string,
+    arweavePaymentPrivateKey: string,
     metadata: Record<string, unknown>,
     referenceId: string = '',
     extraTags: { name: string; value: string }[] = [],
@@ -139,7 +139,7 @@ export class HumaReceivableFactory {
 
     const response = await ARWeaveService.storeData(
       config,
-      privateKey,
+      arweavePaymentPrivateKey,
       metadata,
       tags,
       lazyFund,

@@ -29,7 +29,6 @@ import {
   CreditManager,
 } from '../abis/types/CreditManager'
 import { FirstLossCoverIndex } from '../types'
-import { BP_FACTOR } from '../utils/const'
 import {
   CHAIN_POOLS_INFO_V2,
   PoolInfoV2,
@@ -61,7 +60,7 @@ export const usePoolInfoV2 = (
   return undefined
 }
 
-function usePoolContractV2(
+export function usePoolContractV2(
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ) {
@@ -594,33 +593,6 @@ export function useCreditStatsV2(
   return [creditStats, refresh]
 }
 
-export function useFirstLossCoverSufficientV2(
-  poolName: POOL_NAME,
-  firstLossCoverIndex: FirstLossCoverIndex,
-  account: string | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): [boolean | undefined, () => void] {
-  const contract = useFirstLossCoverContractV2(
-    poolName,
-    firstLossCoverIndex,
-    provider,
-  )
-  const [isSufficient, setIsSufficient] = useState<boolean>()
-  const [refreshCount, refresh] = useForceRefresh()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (contract && account) {
-        const isSufficient = await contract.isSufficient(account)
-        setIsSufficient(isSufficient)
-      }
-    }
-    fetchData()
-  }, [account, contract, refreshCount])
-
-  return [isSufficient, refresh]
-}
-
 export function useFirstLossCoverAllowanceV2(
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
@@ -674,9 +646,7 @@ export function useFirstLossCoverPositionV2(
 }
 
 type FirstLossCoverRequirement = {
-  minRequirement: BigNumber
   minAmountToDeposit: BigNumber
-  amountToDeposit: BigNumber
 }
 
 export const useFirstLossCoverRequirement = (
@@ -686,8 +656,6 @@ export const useFirstLossCoverRequirement = (
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [FirstLossCoverRequirement | undefined, () => void] => {
   const [requirement, setRequirement] = useState<FirstLossCoverRequirement>()
-  const poolContract = usePoolContractV2(poolName, provider)
-  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
   const firstLossCoverContract = useFirstLossCoverContractV2(
     poolName,
     firstLossCoverType,
@@ -697,53 +665,23 @@ export const useFirstLossCoverRequirement = (
 
   useEffect(() => {
     const fetchData = async () => {
-      if (
-        account &&
-        poolContract &&
-        poolConfigContract &&
-        firstLossCoverContract
-      ) {
-        const [
-          lossCoverProviderConfig,
-          lpConfig,
-          poolValue,
-          firstLossCoverAssets,
-        ] = await Promise.all([
-          firstLossCoverContract.getCoverProviderConfig(account),
-          poolConfigContract.getLPConfig(),
-          poolContract.totalAssets(),
-          firstLossCoverContract.totalAssetsOf(account),
+      if (account && firstLossCoverContract) {
+        const [minLiquidity, totalAssets] = await Promise.all([
+          firstLossCoverContract.getMinLiquidity(),
+          firstLossCoverContract.totalAssets(),
         ])
 
-        const poolCap = lpConfig.liquidityCap
-        const minFromPoolCap = poolCap
-          .mul(lossCoverProviderConfig.poolCapCoverageInBps)
-          .div(BP_FACTOR)
-        const minFromPoolValue = poolValue
-          .mul(lossCoverProviderConfig.poolValueCoverageInBps)
-          .div(BP_FACTOR)
-        const minRequirement = minFromPoolCap.gt(minFromPoolValue)
-          ? minFromPoolCap
-          : minFromPoolValue
-
-        const minAmountToDeposit = minRequirement.gt(firstLossCoverAssets)
-          ? minRequirement.sub(firstLossCoverAssets).add(1) // add 1 to round up
+        const minAmountToDeposit = minLiquidity.gt(totalAssets)
+          ? minLiquidity.sub(totalAssets)
           : BigNumber.from(0)
+
         setRequirement({
-          minRequirement,
           minAmountToDeposit,
-          amountToDeposit: minAmountToDeposit.mul(2),
         })
       }
     }
     fetchData()
-  }, [
-    account,
-    firstLossCoverContract,
-    poolConfigContract,
-    poolContract,
-    refreshCount,
-  ])
+  }, [account, firstLossCoverContract, refreshCount])
 
   return [requirement, refresh]
 }

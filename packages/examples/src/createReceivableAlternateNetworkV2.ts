@@ -13,10 +13,6 @@ async function main() {
     },
   )
   const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
-  const adminWallet = new Wallet(
-    '8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba',
-    provider,
-  )
 
   const humaContext = new HumaContext({
     signer: wallet,

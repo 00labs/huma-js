@@ -27,25 +27,13 @@ import type {
   PromiseOrValue,
 } from './common'
 
-export declare namespace FirstLossCoverStorage {
-  export type LossCoverProviderConfigStruct = {
-    poolCapCoverageInBps: PromiseOrValue<BigNumberish>
-    poolValueCoverageInBps: PromiseOrValue<BigNumberish>
-  }
-
-  export type LossCoverProviderConfigStructOutput = [number, number] & {
-    poolCapCoverageInBps: number
-    poolValueCoverageInBps: number
-  }
-}
-
 export interface FirstLossCoverInterface extends utils.Interface {
   functions: {
     'addCoverAssets(uint256)': FunctionFragment
+    'addCoverProvider(address)': FunctionFragment
     'allowance(address,address)': FunctionFragment
     'approve(address,uint256)': FunctionFragment
     'balanceOf(address)': FunctionFragment
-    'calcLossRecover(uint256)': FunctionFragment
     'convertToAssets(uint256)': FunctionFragment
     'convertToShares(uint256)': FunctionFragment
     'coverLoss(uint256)': FunctionFragment
@@ -54,20 +42,22 @@ export interface FirstLossCoverInterface extends utils.Interface {
     'decreaseAllowance(address,uint256)': FunctionFragment
     'depositCover(uint256)': FunctionFragment
     'depositCoverFor(uint256,address)': FunctionFragment
-    'getCapacity(uint256)': FunctionFragment
-    'getCoverProviderConfig(address)': FunctionFragment
+    'getAvailableCap()': FunctionFragment
+    'getCoverProviders()': FunctionFragment
+    'getMaxLiquidity()': FunctionFragment
+    'getMinLiquidity()': FunctionFragment
     'increaseAllowance(address,uint256)': FunctionFragment
     'initialize(string,string,address)': FunctionFragment
     'initialize(address)': FunctionFragment
-    'isSufficient(address)': FunctionFragment
+    'isSufficient()': FunctionFragment
     'name()': FunctionFragment
-    'payoutYield(address[])': FunctionFragment
+    'payoutYield()': FunctionFragment
     'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolSafe()': FunctionFragment
     'recoverLoss(uint256)': FunctionFragment
     'redeemCover(uint256,address)': FunctionFragment
-    'setCoverProvider(address,(uint16,uint16))': FunctionFragment
+    'removeCoverProvider(address)': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
     'symbol()': FunctionFragment
     'totalAssets()': FunctionFragment
@@ -82,10 +72,10 @@ export interface FirstLossCoverInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | 'addCoverAssets'
+      | 'addCoverProvider'
       | 'allowance'
       | 'approve'
       | 'balanceOf'
-      | 'calcLossRecover'
       | 'convertToAssets'
       | 'convertToShares'
       | 'coverLoss'
@@ -94,8 +84,10 @@ export interface FirstLossCoverInterface extends utils.Interface {
       | 'decreaseAllowance'
       | 'depositCover'
       | 'depositCoverFor'
-      | 'getCapacity'
-      | 'getCoverProviderConfig'
+      | 'getAvailableCap'
+      | 'getCoverProviders'
+      | 'getMaxLiquidity'
+      | 'getMinLiquidity'
       | 'increaseAllowance'
       | 'initialize(string,string,address)'
       | 'initialize(address)'
@@ -107,7 +99,7 @@ export interface FirstLossCoverInterface extends utils.Interface {
       | 'poolSafe'
       | 'recoverLoss'
       | 'redeemCover'
-      | 'setCoverProvider'
+      | 'removeCoverProvider'
       | 'setPoolConfig'
       | 'symbol'
       | 'totalAssets'
@@ -124,6 +116,10 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
+    functionFragment: 'addCoverProvider',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'allowance',
     values: [PromiseOrValue<string>, PromiseOrValue<string>],
   ): string
@@ -134,10 +130,6 @@ export interface FirstLossCoverInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'balanceOf',
     values: [PromiseOrValue<string>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'calcLossRecover',
-    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'convertToAssets',
@@ -169,12 +161,20 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'getCapacity',
-    values: [PromiseOrValue<BigNumberish>],
+    functionFragment: 'getAvailableCap',
+    values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'getCoverProviderConfig',
-    values: [PromiseOrValue<string>],
+    functionFragment: 'getCoverProviders',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
+    functionFragment: 'getMaxLiquidity',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
+    functionFragment: 'getMinLiquidity',
+    values?: undefined,
   ): string
   encodeFunctionData(
     functionFragment: 'increaseAllowance',
@@ -194,12 +194,12 @@ export interface FirstLossCoverInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'isSufficient',
-    values: [PromiseOrValue<string>],
+    values?: undefined,
   ): string
   encodeFunctionData(functionFragment: 'name', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'payoutYield',
-    values: [PromiseOrValue<string>[]],
+    values?: undefined,
   ): string
   encodeFunctionData(functionFragment: 'pool', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
@@ -213,11 +213,8 @@ export interface FirstLossCoverInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'setCoverProvider',
-    values: [
-      PromiseOrValue<string>,
-      FirstLossCoverStorage.LossCoverProviderConfigStruct,
-    ],
+    functionFragment: 'removeCoverProvider',
+    values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
     functionFragment: 'setPoolConfig',
@@ -261,13 +258,13 @@ export interface FirstLossCoverInterface extends utils.Interface {
     functionFragment: 'addCoverAssets',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(
+    functionFragment: 'addCoverProvider',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'calcLossRecover',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(
     functionFragment: 'convertToAssets',
     data: BytesLike,
@@ -291,9 +288,20 @@ export interface FirstLossCoverInterface extends utils.Interface {
     functionFragment: 'depositCoverFor',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(functionFragment: 'getCapacity', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'getCoverProviderConfig',
+    functionFragment: 'getAvailableCap',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'getCoverProviders',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'getMaxLiquidity',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'getMinLiquidity',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -320,7 +328,7 @@ export interface FirstLossCoverInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'recoverLoss', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'redeemCover', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'setCoverProvider',
+    functionFragment: 'removeCoverProvider',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -352,7 +360,8 @@ export interface FirstLossCoverInterface extends utils.Interface {
     'Approval(address,address,uint256)': EventFragment
     'AssetsAdded(uint256)': EventFragment
     'CoverDeposited(address,uint256,uint256)': EventFragment
-    'CoverProviderSet(address,uint256,uint256)': EventFragment
+    'CoverProviderAdded(address)': EventFragment
+    'CoverProviderRemoved(address)': EventFragment
     'CoverRedeemed(address,address,uint256,uint256)': EventFragment
     'Initialized(uint8)': EventFragment
     'LossCovered(uint256,uint256,uint256)': EventFragment
@@ -366,7 +375,8 @@ export interface FirstLossCoverInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'AssetsAdded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CoverDeposited'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'CoverProviderSet'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CoverProviderAdded'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CoverProviderRemoved'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CoverRedeemed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LossCovered'): EventFragment
@@ -408,18 +418,27 @@ export type CoverDepositedEvent = TypedEvent<
 
 export type CoverDepositedEventFilter = TypedEventFilter<CoverDepositedEvent>
 
-export interface CoverProviderSetEventObject {
+export interface CoverProviderAddedEventObject {
   account: string
-  poolCapCoverageInBps: BigNumber
-  poolValueCoverageInBps: BigNumber
 }
-export type CoverProviderSetEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  CoverProviderSetEventObject
+export type CoverProviderAddedEvent = TypedEvent<
+  [string],
+  CoverProviderAddedEventObject
 >
 
-export type CoverProviderSetEventFilter =
-  TypedEventFilter<CoverProviderSetEvent>
+export type CoverProviderAddedEventFilter =
+  TypedEventFilter<CoverProviderAddedEvent>
+
+export interface CoverProviderRemovedEventObject {
+  account: string
+}
+export type CoverProviderRemovedEvent = TypedEvent<
+  [string],
+  CoverProviderRemovedEventObject
+>
+
+export type CoverProviderRemovedEventFilter =
+  TypedEventFilter<CoverProviderRemovedEvent>
 
 export interface CoverRedeemedEventObject {
   by: string
@@ -542,6 +561,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
+    addCoverProvider(
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -558,16 +582,6 @@ export interface FirstLossCover extends BaseContract {
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>
-
-    calcLossRecover(
-      recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        remainingRecovery: BigNumber
-        recoveredAmount: BigNumber
-      }
-    >
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
@@ -605,15 +619,21 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    getCapacity(
-      poolAssets: PromiseOrValue<BigNumberish>,
+    getAvailableCap(
       overrides?: CallOverrides,
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber] & { availableCap: BigNumber }>
 
-    getCoverProviderConfig(
-      account: PromiseOrValue<string>,
+    getCoverProviders(
       overrides?: CallOverrides,
-    ): Promise<[FirstLossCoverStorage.LossCoverProviderConfigStructOutput]>
+    ): Promise<[string[]] & { providers: string[] }>
+
+    getMaxLiquidity(
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { maxLiquidity: BigNumber }>
+
+    getMinLiquidity(
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { minLiquidity: BigNumber }>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -634,14 +654,12 @@ export interface FirstLossCover extends BaseContract {
     ): Promise<ContractTransaction>
 
     isSufficient(
-      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
-    ): Promise<[boolean]>
+    ): Promise<[boolean] & { sufficient: boolean }>
 
     name(overrides?: CallOverrides): Promise<[string]>
 
     payoutYield(
-      providers: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -662,9 +680,8 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setCoverProvider(
+    removeCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -685,8 +702,8 @@ export interface FirstLossCover extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -709,6 +726,11 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
+  addCoverProvider(
+    account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   allowance(
     owner: PromiseOrValue<string>,
     spender: PromiseOrValue<string>,
@@ -725,16 +747,6 @@ export interface FirstLossCover extends BaseContract {
     account: PromiseOrValue<string>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>
-
-  calcLossRecover(
-    recovery: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<
-    [BigNumber, BigNumber] & {
-      remainingRecovery: BigNumber
-      recoveredAmount: BigNumber
-    }
-  >
 
   convertToAssets(
     shares: PromiseOrValue<BigNumberish>,
@@ -772,15 +784,13 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  getCapacity(
-    poolAssets: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>
+  getAvailableCap(overrides?: CallOverrides): Promise<BigNumber>
 
-  getCoverProviderConfig(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<FirstLossCoverStorage.LossCoverProviderConfigStructOutput>
+  getCoverProviders(overrides?: CallOverrides): Promise<string[]>
+
+  getMaxLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+
+  getMinLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
   increaseAllowance(
     spender: PromiseOrValue<string>,
@@ -800,15 +810,11 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  isSufficient(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<boolean>
+  isSufficient(overrides?: CallOverrides): Promise<boolean>
 
   name(overrides?: CallOverrides): Promise<string>
 
   payoutYield(
-    providers: PromiseOrValue<string>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -829,9 +835,8 @@ export interface FirstLossCover extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setCoverProvider(
+  removeCoverProvider(
     account: PromiseOrValue<string>,
-    config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -852,8 +857,8 @@ export interface FirstLossCover extends BaseContract {
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
   transfer(
-    to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -876,6 +881,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
+    addCoverProvider(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -892,16 +902,6 @@ export interface FirstLossCover extends BaseContract {
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
-
-    calcLossRecover(
-      recovery: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        remainingRecovery: BigNumber
-        recoveredAmount: BigNumber
-      }
-    >
 
     convertToAssets(
       shares: PromiseOrValue<BigNumberish>,
@@ -939,15 +939,13 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    getCapacity(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    getAvailableCap(overrides?: CallOverrides): Promise<BigNumber>
 
-    getCoverProviderConfig(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<FirstLossCoverStorage.LossCoverProviderConfigStructOutput>
+    getCoverProviders(overrides?: CallOverrides): Promise<string[]>
+
+    getMaxLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+
+    getMinLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -967,17 +965,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    isSufficient(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<boolean>
+    isSufficient(overrides?: CallOverrides): Promise<boolean>
 
     name(overrides?: CallOverrides): Promise<string>
 
-    payoutYield(
-      providers: PromiseOrValue<string>[],
-      overrides?: CallOverrides,
-    ): Promise<void>
+    payoutYield(overrides?: CallOverrides): Promise<void>
 
     pool(overrides?: CallOverrides): Promise<string>
 
@@ -988,7 +980,7 @@ export interface FirstLossCover extends BaseContract {
     recoverLoss(
       recovery: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<void>
+    ): Promise<BigNumber>
 
     redeemCover(
       shares: PromiseOrValue<BigNumberish>,
@@ -996,9 +988,8 @@ export interface FirstLossCover extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    setCoverProvider(
+    removeCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -1019,8 +1010,8 @@ export interface FirstLossCover extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>
 
@@ -1062,16 +1053,19 @@ export interface FirstLossCover extends BaseContract {
       shares?: null,
     ): CoverDepositedEventFilter
 
-    'CoverProviderSet(address,uint256,uint256)'(
+    'CoverProviderAdded(address)'(
       account?: PromiseOrValue<string> | null,
-      poolCapCoverageInBps?: null,
-      poolValueCoverageInBps?: null,
-    ): CoverProviderSetEventFilter
-    CoverProviderSet(
+    ): CoverProviderAddedEventFilter
+    CoverProviderAdded(
       account?: PromiseOrValue<string> | null,
-      poolCapCoverageInBps?: null,
-      poolValueCoverageInBps?: null,
-    ): CoverProviderSetEventFilter
+    ): CoverProviderAddedEventFilter
+
+    'CoverProviderRemoved(address)'(
+      account?: PromiseOrValue<string> | null,
+    ): CoverProviderRemovedEventFilter
+    CoverProviderRemoved(
+      account?: PromiseOrValue<string> | null,
+    ): CoverProviderRemovedEventFilter
 
     'CoverRedeemed(address,address,uint256,uint256)'(
       by?: PromiseOrValue<string> | null,
@@ -1152,6 +1146,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
+    addCoverProvider(
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -1166,11 +1165,6 @@ export interface FirstLossCover extends BaseContract {
 
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    calcLossRecover(
-      recovery: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -1210,15 +1204,13 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    getCapacity(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    getAvailableCap(overrides?: CallOverrides): Promise<BigNumber>
 
-    getCoverProviderConfig(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    getCoverProviders(overrides?: CallOverrides): Promise<BigNumber>
+
+    getMaxLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+
+    getMinLiquidity(overrides?: CallOverrides): Promise<BigNumber>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1238,15 +1230,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    isSufficient(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    isSufficient(overrides?: CallOverrides): Promise<BigNumber>
 
     name(overrides?: CallOverrides): Promise<BigNumber>
 
     payoutYield(
-      providers: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1267,9 +1255,8 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setCoverProvider(
+    removeCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1290,8 +1277,8 @@ export interface FirstLossCover extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1315,6 +1302,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
+    addCoverProvider(
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -1329,11 +1321,6 @@ export interface FirstLossCover extends BaseContract {
 
     balanceOf(
       account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
-    calcLossRecover(
-      recovery: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -1373,15 +1360,13 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    getCapacity(
-      poolAssets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
+    getAvailableCap(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getCoverProviderConfig(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
+    getCoverProviders(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    getMaxLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    getMinLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1401,15 +1386,11 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    isSufficient(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
+    isSufficient(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     payoutYield(
-      providers: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -1430,9 +1411,8 @@ export interface FirstLossCover extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setCoverProvider(
+    removeCoverProvider(
       account: PromiseOrValue<string>,
-      config: FirstLossCoverStorage.LossCoverProviderConfigStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -1453,8 +1433,8 @@ export interface FirstLossCover extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     transfer(
-      to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 

@@ -839,7 +839,7 @@ associated with the given pool name on the current chain.</p>
 associated with the given pool name on the current chain.</p>
 
 **Kind**: global function  
-**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the RealWorldReceivable contract or null if it could not be found.</p>  
+**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the Receivable contract or null if it could not be found.</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |
