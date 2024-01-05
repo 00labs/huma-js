@@ -50,7 +50,11 @@ export function CreditLineBorrowV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [accountStats] = useCreditStatsV2(poolName, account, provider)
+  const [accountStats, refreshAccountStats] = useCreditStatsV2(
+    poolName,
+    account,
+    provider,
+  )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const { creditRecord } = accountStats
@@ -72,6 +76,13 @@ export function CreditLineBorrowV2({
     }
   }, [dispatch, handleClose, isFirstTimeNotifiUser, notifiChainSupported])
 
+  const handleSuccessCallback = useCallback(() => {
+    refreshAccountStats()
+    if (handleSuccess) {
+      handleSuccess()
+    }
+  }, [handleSuccess, refreshAccountStats])
+
   if (!poolInfo || !poolUnderlyingToken || !creditRecord) {
     return (
       <WidgetWrapper
@@ -79,7 +90,7 @@ export function CreditLineBorrowV2({
         isLoading
         loadingTitle='Borrow'
         handleClose={handleClose}
-        handleSuccess={handleSuccess}
+        handleSuccess={handleSuccessCallback}
       />
     )
   }
@@ -89,7 +100,7 @@ export function CreditLineBorrowV2({
       isOpen
       loadingTitle='Borrow'
       handleClose={handleClose}
-      handleSuccess={handleSuccess}
+      handleSuccess={handleSuccessCallback}
     >
       {!step && <LoadingModal title='Borrow' />}
       {step === WIDGET_STEP.ChooseAmount && (
