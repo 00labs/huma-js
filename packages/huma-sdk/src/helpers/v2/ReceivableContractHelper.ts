@@ -1,12 +1,13 @@
-import { BigNumber, Contract, ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import {
   POOL_NAME,
+  v2Contracts,
   RECEIVABLE_V2_ABI,
   getPoolConfigContractV2,
 } from '@huma-finance/shared'
 
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { getContract } from '../utils'
+import { getContract } from '../../utils'
 
 /**
  * Returns an ethers contract instance for the V2 Receivable contract
@@ -19,7 +20,7 @@ import { getContract } from '../utils'
 export async function getReceivableContractV2(
   poolName: POOL_NAME,
   signerOrProvider: JsonRpcProvider | Web3Provider | ethers.Signer,
-): Promise<Contract | null> {
+): Promise<v2Contracts.Receivable | null> {
   let provider
   if (signerOrProvider instanceof ethers.Signer) {
     provider = signerOrProvider.provider as JsonRpcProvider | Web3Provider
@@ -35,7 +36,11 @@ export async function getReceivableContractV2(
 
   const receivableAsset = await poolConfigContract.receivableAsset()
 
-  return getContract(receivableAsset, RECEIVABLE_V2_ABI, signerOrProvider)
+  return getContract<v2Contracts.Receivable>(
+    receivableAsset,
+    RECEIVABLE_V2_ABI,
+    signerOrProvider,
+  )
 }
 
 export async function getReceivableTokenIdFromReferenceId(

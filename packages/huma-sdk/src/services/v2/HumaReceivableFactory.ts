@@ -8,7 +8,7 @@ import { HumaContext } from './HumaContext'
 import {
   getReceivableContractV2,
   getReceivableReferenceAlreadyExists,
-} from '../../helpers/ReceivableV2ContractHelper'
+} from '../../helpers/v2/ReceivableContractHelper'
 
 export class HumaReceivableFactory {
   #humaContext: HumaContext
