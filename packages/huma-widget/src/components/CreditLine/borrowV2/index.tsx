@@ -42,7 +42,7 @@ export interface CreditLineBorrowPropsV2 {
 export function CreditLineBorrowV2({
   poolName: poolNameStr,
   handleClose,
-  handleSuccess: handleSuccessCustom,
+  handleSuccess,
 }: CreditLineBorrowPropsV2): React.ReactElement | null {
   const dispatch = useDispatch()
   const poolName = POOL_NAME[poolNameStr]
@@ -76,12 +76,12 @@ export function CreditLineBorrowV2({
     }
   }, [dispatch, handleClose, isFirstTimeNotifiUser, notifiChainSupported])
 
-  const handleSuccess = useCallback(() => {
+  const handleSuccessCallback = useCallback(() => {
     refreshAccountStats()
-    if (handleSuccessCustom) {
-      handleSuccessCustom()
+    if (handleSuccess) {
+      handleSuccess()
     }
-  }, [handleSuccessCustom, refreshAccountStats])
+  }, [handleSuccess, refreshAccountStats])
 
   if (!poolInfo || !poolUnderlyingToken || !creditRecord) {
     return (
@@ -90,7 +90,7 @@ export function CreditLineBorrowV2({
         isLoading
         loadingTitle='Borrow'
         handleClose={handleClose}
-        handleSuccess={handleSuccess}
+        handleSuccess={handleSuccessCallback}
       />
     )
   }
@@ -100,7 +100,7 @@ export function CreditLineBorrowV2({
       isOpen
       loadingTitle='Borrow'
       handleClose={handleClose}
-      handleSuccess={handleSuccess}
+      handleSuccess={handleSuccessCallback}
     >
       {!step && <LoadingModal title='Borrow' />}
       {step === WIDGET_STEP.ChooseAmount && (

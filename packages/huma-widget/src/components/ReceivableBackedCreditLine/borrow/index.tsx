@@ -46,7 +46,7 @@ export function ReceivableBackedCreditLineBorrowV2({
   poolName: poolNameStr,
   tokenId: defaultTokenId,
   handleClose,
-  handleSuccess: handleSuccessCustom,
+  handleSuccess,
 }: ReceivableBackedCreditLineBorrowPropsV2): React.ReactElement | null {
   const dispatch = useDispatch()
   const poolName = POOL_NAME[poolNameStr]
@@ -82,12 +82,12 @@ export function ReceivableBackedCreditLineBorrowV2({
     }
   }, [dispatch, handleClose, isFirstTimeNotifiUser, notifiChainSupported])
 
-  const handleSuccess = useCallback(() => {
+  const handleSuccessCallback = useCallback(() => {
     refreshAccountStats()
-    if (handleSuccessCustom) {
-      handleSuccessCustom()
+    if (handleSuccess) {
+      handleSuccess()
     }
-  }, [handleSuccessCustom, refreshAccountStats])
+  }, [handleSuccess, refreshAccountStats])
 
   if (!poolInfo || !poolUnderlyingToken || !creditRecord || !step) {
     return (
@@ -96,7 +96,7 @@ export function ReceivableBackedCreditLineBorrowV2({
         isLoading
         loadingTitle='Borrow'
         handleClose={handleClose}
-        handleSuccess={handleSuccess}
+        handleSuccess={handleSuccessCallback}
       />
     )
   }
@@ -106,7 +106,7 @@ export function ReceivableBackedCreditLineBorrowV2({
       isOpen
       loadingTitle='Borrow'
       handleClose={handleClose}
-      handleSuccess={handleSuccess}
+      handleSuccess={handleSuccessCallback}
     >
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
