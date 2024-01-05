@@ -44,11 +44,7 @@ export function Transfer({ poolInfo, tokenId }: Props): React.ReactElement {
       title='Borrow'
       contract={creditContract}
       method='drawdownWithReceivable'
-      params={[
-        account,
-        { receivableAmount: borrowAmountBN, receivableId: tokenId },
-        borrowAmountBN,
-      ]}
+      params={[account, tokenId, borrowAmountBN]}
       handleSuccess={handleSuccess}
     />
   )

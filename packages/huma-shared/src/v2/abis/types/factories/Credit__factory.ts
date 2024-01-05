@@ -1081,21 +1081,9 @@ const _abi = [
         type: 'address',
       },
       {
-        components: [
-          {
-            internalType: 'uint96',
-            name: 'receivableAmount',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint64',
-            name: 'receivableId',
-            type: 'uint64',
-          },
-        ],
-        internalType: 'struct ReceivableInput',
-        name: 'receivableInput',
-        type: 'tuple',
+        internalType: 'uint256',
+        name: 'receivableId',
+        type: 'uint256',
       },
       {
         internalType: 'uint256',
@@ -1104,7 +1092,13 @@ const _abi = [
       },
     ],
     name: 'drawdownWithReceivable',
-    outputs: [],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'netAmountToBorrower',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -1160,21 +1154,9 @@ const _abi = [
         type: 'uint256',
       },
       {
-        components: [
-          {
-            internalType: 'uint96',
-            name: 'receivableAmount',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint64',
-            name: 'receivableId',
-            type: 'uint64',
-          },
-        ],
-        internalType: 'struct ReceivableInput',
-        name: 'drawdownReceivableInput',
-        type: 'tuple',
+        internalType: 'uint256',
+        name: 'drawdownReceivableId',
+        type: 'uint256',
       },
       {
         internalType: 'uint256',
@@ -1187,6 +1169,11 @@ const _abi = [
       {
         internalType: 'uint256',
         name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'netAmountToBorrower',
         type: 'uint256',
       },
       {

@@ -111,16 +111,6 @@ export type DueDetailStructOutput = [
   paid: BigNumber
 }
 
-export type ReceivableInputStruct = {
-  receivableAmount: PromiseOrValue<BigNumberish>
-  receivableId: PromiseOrValue<BigNumberish>
-}
-
-export type ReceivableInputStructOutput = [BigNumber, BigNumber] & {
-  receivableAmount: BigNumber
-  receivableId: BigNumber
-}
-
 export interface CreditInterface extends utils.Interface {
   functions: {
     'calendar()': FunctionFragment
@@ -146,9 +136,9 @@ export interface CreditInterface extends utils.Interface {
     'setPoolConfig(address)': FunctionFragment
     'updateDueInfo(bytes32)': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
-    'drawdownWithReceivable(address,(uint96,uint64),uint256)': FunctionFragment
+    'drawdownWithReceivable(address,uint256,uint256)': FunctionFragment
     'makePaymentWithReceivable(address,uint256,uint256)': FunctionFragment
-    'makePrincipalPaymentAndDrawdownWithReceivable(address,uint256,uint256,(uint96,uint64),uint256)': FunctionFragment
+    'makePrincipalPaymentAndDrawdownWithReceivable(address,uint256,uint256,uint256,uint256)': FunctionFragment
   }
 
   getFunction(
@@ -262,7 +252,7 @@ export interface CreditInterface extends utils.Interface {
     functionFragment: 'drawdownWithReceivable',
     values: [
       PromiseOrValue<string>,
-      ReceivableInputStruct,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
     ],
   ): string
@@ -280,7 +270,7 @@ export interface CreditInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
-      ReceivableInputStruct,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
     ],
   ): string
@@ -667,7 +657,7 @@ export interface Credit extends BaseContract {
 
     drawdownWithReceivable(
       borrower: PromiseOrValue<string>,
-      receivableInput: ReceivableInputStruct,
+      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
@@ -683,7 +673,7 @@ export interface Credit extends BaseContract {
       borrower: PromiseOrValue<string>,
       paymentReceivableId: PromiseOrValue<BigNumberish>,
       paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableInput: ReceivableInputStruct,
+      drawdownReceivableId: PromiseOrValue<BigNumberish>,
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
@@ -791,7 +781,7 @@ export interface Credit extends BaseContract {
 
   drawdownWithReceivable(
     borrower: PromiseOrValue<string>,
-    receivableInput: ReceivableInputStruct,
+    receivableId: PromiseOrValue<BigNumberish>,
     amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
@@ -807,7 +797,7 @@ export interface Credit extends BaseContract {
     borrower: PromiseOrValue<string>,
     paymentReceivableId: PromiseOrValue<BigNumberish>,
     paymentAmount: PromiseOrValue<BigNumberish>,
-    drawdownReceivableInput: ReceivableInputStruct,
+    drawdownReceivableId: PromiseOrValue<BigNumberish>,
     drawdownAmount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
@@ -922,10 +912,10 @@ export interface Credit extends BaseContract {
 
     drawdownWithReceivable(
       borrower: PromiseOrValue<string>,
-      receivableInput: ReceivableInputStruct,
+      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<void>
+    ): Promise<BigNumber>
 
     makePaymentWithReceivable(
       borrower: PromiseOrValue<string>,
@@ -940,11 +930,15 @@ export interface Credit extends BaseContract {
       borrower: PromiseOrValue<string>,
       paymentReceivableId: PromiseOrValue<BigNumberish>,
       paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableInput: ReceivableInputStruct,
+      drawdownReceivableId: PromiseOrValue<BigNumberish>,
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<
-      [BigNumber, boolean] & { amountPaid: BigNumber; paidoff: boolean }
+      [BigNumber, BigNumber, boolean] & {
+        amountPaid: BigNumber
+        netAmountToBorrower: BigNumber
+        paidoff: boolean
+      }
     >
   }
 
@@ -1177,7 +1171,7 @@ export interface Credit extends BaseContract {
 
     drawdownWithReceivable(
       borrower: PromiseOrValue<string>,
-      receivableInput: ReceivableInputStruct,
+      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
@@ -1193,7 +1187,7 @@ export interface Credit extends BaseContract {
       borrower: PromiseOrValue<string>,
       paymentReceivableId: PromiseOrValue<BigNumberish>,
       paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableInput: ReceivableInputStruct,
+      drawdownReceivableId: PromiseOrValue<BigNumberish>,
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
@@ -1302,7 +1296,7 @@ export interface Credit extends BaseContract {
 
     drawdownWithReceivable(
       borrower: PromiseOrValue<string>,
-      receivableInput: ReceivableInputStruct,
+      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
@@ -1318,7 +1312,7 @@ export interface Credit extends BaseContract {
       borrower: PromiseOrValue<string>,
       paymentReceivableId: PromiseOrValue<BigNumberish>,
       paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableInput: ReceivableInputStruct,
+      drawdownReceivableId: PromiseOrValue<BigNumberish>,
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>

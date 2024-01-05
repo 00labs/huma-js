@@ -53,7 +53,7 @@ export function Transfer({
           account,
           paymentTokenId,
           paymentAmountBN,
-          { receivableAmount: paymentAmountBN, receivableId: borrowTokenId },
+          borrowTokenId,
           paymentAmountBN,
         ]
 
