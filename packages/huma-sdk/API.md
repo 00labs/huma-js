@@ -45,10 +45,8 @@ associated with the given pool name on the current chain.</p></dd>
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#drawdownWithReceivable">drawdownWithReceivable(signer, poolName, receivableAmount, receivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
 <dd><p>Draws down from a pool using a receivable.</p></dd>
-<dt><a href="#makePaymentWithReceivable">makePaymentWithReceivable(signer, poolName, receivableId, paymentAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
+<dt><a href="#makePaymentWithReceivable">makePaymentWithReceivable(signer, poolName, receivableId, paymentAmount, principalOnly, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
 <dd><p>Makes a payment with a receivable.</p></dd>
-<dt><a href="#makePrincipalPaymentWithReceivable">makePrincipalPaymentWithReceivable(signer, poolName, receivableId, paymentAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
-<dd><p>Makes a principal payment with a receivable.</p></dd>
 <dt><a href="#makePrincipalPaymentAndDrawdownWithReceivable">makePrincipalPaymentAndDrawdownWithReceivable(signer, poolName, paymentReceivableId, paymentAmount, drawdownReceivableAmount, drawdownReceivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
 <dd><p>Makes a principal payment and drawdown with receivables.</p></dd>
 <dt><a href="#getReceivableContractV2">getReceivableContractV2(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
@@ -796,7 +794,7 @@ associated with the given pool name on the current chain.</p>
 
 <a name="makePaymentWithReceivable"></a>
 
-## makePaymentWithReceivable(signer, poolName, receivableId, paymentAmount, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+## makePaymentWithReceivable(signer, poolName, receivableId, paymentAmount, principalOnly, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
 <p>Makes a payment with a receivable.</p>
 
 **Kind**: global function  
@@ -810,24 +808,7 @@ associated with the given pool name on the current chain.</p>
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool to interact with.</p> |
 | receivableId | <code>BigNumberish</code> | <p>The ID of the receivable.</p> |
 | paymentAmount | <code>BigNumberish</code> | <p>The amount to payback.</p> |
-| [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
-
-<a name="makePrincipalPaymentWithReceivable"></a>
-
-## makePrincipalPaymentWithReceivable(signer, poolName, receivableId, paymentAmount, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
-<p>Makes a principal payment with a receivable.</p>
-
-**Kind**: global function  
-**Returns**: <code>Promise.&lt;TransactionResponse&gt;</code> - <ul>
-<li>A Promise of the transaction response.</li>
-</ul>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| signer | <code>ethers.Signer</code> | <p>The signer used to send the transaction.</p> |
-| poolName | <code>POOL\_NAME</code> | <p>The name of the pool to interact with.</p> |
-| receivableId | <code>number</code> | <p>The ID of the receivable.</p> |
-| paymentAmount | <code>BigNumberish</code> | <p>The amount to payback.</p> |
+| principalOnly | <code>boolean</code> | <p>Whether this payment should ONLY apply to the principal</p> |
 | [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
 
 <a name="makePrincipalPaymentAndDrawdownWithReceivable"></a>
