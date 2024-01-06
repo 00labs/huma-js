@@ -64,7 +64,7 @@ export function Transfer({
             tx = await makePrincipalPaymentAndDrawdownWithReceivable(
               provider.getSigner(),
               poolInfo.poolName,
-              Number(paymentTokenId),
+              paymentTokenId,
               paymentAmountBN,
               borrowTokenId!,
               paymentAmountBN,
