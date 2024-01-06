@@ -6,7 +6,7 @@ import {
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -21,30 +21,29 @@ import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseAmount } from './1-ChooseAmount'
 import { ApproveAllowance } from './2-ApproveAllowance'
-import { CreateReceivable } from './3-CreateReceivable'
-import { ApproveReceivable } from './4-ApproveReceivable'
-import { Transfer } from './5-Transfer'
-import { Success } from './6-Success'
-import { Notifications } from './7-Notifications'
+import { ApproveReceivable } from './3-ApproveReceivable'
+import { Transfer } from './4-Transfer'
+import { Success } from './5-Success'
+import { Notifications } from './6-Notifications'
 
 /**
  * Receivable backed credit line pool borrow props V2
  * @typedef {Object} ReceivableBackedCreditLineBorrowPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {tokenId|undefined} tokenId The receivable token id.
+ * @property {tokenId} tokenId The receivable token id.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the credit line pool borrow action is successful.
  */
 export interface ReceivableBackedCreditLineBorrowPropsV2 {
   poolName: keyof typeof POOL_NAME
-  tokenId?: string
+  tokenId: string
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function ReceivableBackedCreditLineBorrowV2({
   poolName: poolNameStr,
-  tokenId: defaultTokenId,
+  tokenId,
   handleClose,
   handleSuccess,
 }: ReceivableBackedCreditLineBorrowPropsV2): React.ReactElement | null {
@@ -63,8 +62,6 @@ export function ReceivableBackedCreditLineBorrowV2({
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
   const { creditRecord } = accountStats
   const accountState = creditRecord?.state
-  const [tokenId, setTokenId] = useState<string | undefined>(defaultTokenId)
-  const needCreateReceivable = !defaultTokenId
 
   useEffect(() => {
     if (!step && accountState !== undefined) {
@@ -113,19 +110,14 @@ export function ReceivableBackedCreditLineBorrowV2({
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           accountStats={accountStats}
-          needCreateReceivable={needCreateReceivable}
-          defaultTokenId={defaultTokenId}
+          tokenId={tokenId}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (
         <ApproveAllowance
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          needCreateReceivable={needCreateReceivable}
         />
-      )}
-      {step === WIDGET_STEP.MintNFT && (
-        <CreateReceivable poolInfo={poolInfo} setTokenId={setTokenId} />
       )}
       {step === WIDGET_STEP.ApproveNFT && tokenId && (
         <ApproveReceivable poolInfo={poolInfo} tokenId={tokenId} />

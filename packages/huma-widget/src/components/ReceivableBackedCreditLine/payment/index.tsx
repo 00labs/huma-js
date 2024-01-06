@@ -6,7 +6,7 @@ import {
   useReceivableInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -66,6 +66,8 @@ export function ReceivableBackedCreditLinePaymentV2({
         paymentReceivableInfo.paidAmount,
       )
     : BigNumber.from(0)
+  const [successTxReceipt, setSuccessTxReceipt] =
+    useState<ethers.ContractReceipt>()
 
   useEffect(() => {
     dispatch(setStep(WIDGET_STEP.ChoosePaymentType))
@@ -134,13 +136,15 @@ export function ReceivableBackedCreditLinePaymentV2({
           paymentType={paymentType}
           paymentTokenId={tokenId}
           borrowTokenId={borrowTokenId}
+          setSuccessTxReceipt={setSuccessTxReceipt}
         />
       )}
-      {step === WIDGET_STEP.Done && paymentType && (
+      {step === WIDGET_STEP.Done && paymentType && successTxReceipt && (
         <Success
           poolUnderlyingToken={poolUnderlyingToken}
           paymentType={paymentType}
           handleAction={handleClose}
+          successTxReceipt={successTxReceipt}
         />
       )}
       {step === WIDGET_STEP.Error && (

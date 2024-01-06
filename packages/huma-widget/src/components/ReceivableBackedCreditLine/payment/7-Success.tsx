@@ -2,40 +2,40 @@ import {
   decodeLogs,
   downScale,
   formatMoney,
-  sendTxAtom,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
-import { useAtom } from 'jotai'
+import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
-import { TxDoneModal } from '../../TxDoneModal'
 import { PaymentType } from '.'
+import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
   paymentType: PaymentType
+  successTxReceipt: ethers.ContractReceipt
   handleAction: () => void
 }
 
 export function Success({
   poolUnderlyingToken,
   paymentType,
+  successTxReceipt,
   handleAction,
 }: Props): React.ReactElement {
   const { symbol, decimals } = poolUnderlyingToken
-  const [{ txReceipt }] = useAtom(sendTxAtom)
   const [paidAmount, setPaidAmount] = useState<string | undefined>()
 
   useEffect(() => {
-    if (txReceipt) {
-      const [event] = decodeLogs(txReceipt.logs, TRANSFER_ABI)
+    if (successTxReceipt) {
+      const [event] = decodeLogs(successTxReceipt.logs, TRANSFER_ABI)
       if (event) {
         const paidAmount = downScale(event.args.value.toString(), decimals)
         setPaidAmount(paidAmount)
       }
     }
-  }, [decimals, txReceipt])
+  }, [decimals, successTxReceipt])
 
   const amoutFormatted = formatMoney(paidAmount)
   const content =

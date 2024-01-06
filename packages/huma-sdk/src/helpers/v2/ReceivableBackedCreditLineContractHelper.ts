@@ -194,7 +194,6 @@ export async function makePrincipalPaymentWithReceivable(
  * @param {POOL_NAME} poolName - The name of the pool to interact with.
  * @param {number} paymentReceivableId - The ID of the receivable for payment.
  * @param {BigNumberish} paymentAmount - The amount to payback.
- * @param {BigNumberish} drawdownReceivableAmount - The amount for the drawdown receivable.
  * @param {BigNumberish} drawdownReceivableId - The ID of the drawdown receivable.
  * @param {BigNumberish} drawdownAmount - The amount to drawdown.
  * @param {Overrides} [gasOpts] - The gas options to use for the transaction.
@@ -205,7 +204,6 @@ export async function makePrincipalPaymentAndDrawdownWithReceivable(
   poolName: POOL_NAME,
   paymentReceivableId: number,
   paymentAmount: BigNumberish,
-  drawdownReceivableAmount: BigNumberish,
   drawdownReceivableId: BigNumberish,
   drawdownAmount: BigNumberish,
   gasOpts: Overrides = {},
