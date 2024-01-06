@@ -88,6 +88,7 @@ export async function drawdownWithReceivable(
  * @param {POOL_NAME} poolName - The name of the pool to interact with.
  * @param {BigNumberish} receivableId - The ID of the receivable.
  * @param {BigNumberish} paymentAmount - The amount to payback.
+ * @param {boolean} principalOnly - Whether this payment should ONLY apply to the principal
  * @param {Overrides} [gasOpts] - The gas options to use for the transaction.
  * @returns {Promise<TransactionResponse>} - A Promise of the transaction response.
  */
@@ -96,6 +97,7 @@ export async function makePaymentWithReceivable(
   poolName: POOL_NAME,
   receivableId: BigNumberish,
   paymentAmount: BigNumberish,
+  principalOnly: boolean,
   gasOpts: Overrides = {},
 ): Promise<TransactionResponse> {
   const creditContract = await getReceivableBackedCreditlineContractV2(
@@ -122,65 +124,22 @@ export async function makePaymentWithReceivable(
     )
   }
 
-  const paymentTx = await creditContract.makePaymentWithReceivable(
-    await signer.getAddress(),
-    receivableId,
-    paymentAmount,
-    gasOpts,
-  )
-
-  return paymentTx
-}
-
-/**
- * Makes a principal payment with a receivable.
- *
- * @async
- * @function
- * @param {ethers.Signer} signer - The signer used to send the transaction.
- * @param {POOL_NAME} poolName - The name of the pool to interact with.
- * @param {number} receivableId - The ID of the receivable.
- * @param {BigNumberish} paymentAmount - The amount to payback.
- * @param {Overrides} [gasOpts] - The gas options to use for the transaction.
- * @returns {Promise<TransactionResponse>} - A Promise of the transaction response.
- */
-export async function makePrincipalPaymentWithReceivable(
-  signer: ethers.Signer,
-  poolName: POOL_NAME,
-  receivableId: number,
-  paymentAmount: BigNumberish,
-  gasOpts: Overrides = {},
-): Promise<TransactionResponse> {
-  const creditContract = await getReceivableBackedCreditlineContractV2(
-    poolName,
-    signer,
-  )
-
-  if (!creditContract) {
-    throw new Error('Could not find credit contract')
-  }
-
-  const underlyingToken = await getPoolUnderlyingTokenContractV2(
-    poolName,
-    signer.provider as JsonRpcProvider | Web3Provider | undefined,
-  )
-
-  if (underlyingToken) {
-    await approveERC20AllowanceIfInsufficient(
-      signer,
-      underlyingToken.address,
-      creditContract.address,
+  let paymentTx
+  if (principalOnly) {
+    paymentTx = await creditContract.makePrincipalPaymentWithReceivable(
+      await signer.getAddress(),
+      receivableId,
+      paymentAmount,
+      gasOpts,
+    )
+  } else {
+    paymentTx = await creditContract.makePaymentWithReceivable(
+      await signer.getAddress(),
+      receivableId,
       paymentAmount,
       gasOpts,
     )
   }
-
-  const paymentTx = await creditContract.makePrincipalPaymentWithReceivable(
-    await signer.getAddress(),
-    receivableId,
-    paymentAmount,
-    gasOpts,
-  )
 
   return paymentTx
 }
