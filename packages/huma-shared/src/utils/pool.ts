@@ -94,7 +94,6 @@ export type PoolInfo = {
 export type PoolSubgraphMapType = {
   [chainId: number]: {
     subgraph: string
-    receivablesSubgraph?: string
   }
 }
 
@@ -180,37 +179,24 @@ export const PoolMap: PoolMapType = {
 export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.Polygon]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-polygon',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-polygon',
   },
   [ChainEnum.Goerli]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-goerli',
   },
   [ChainEnum.Mumbai]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai-v2',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-mumbai',
   },
   [ChainEnum.Celo]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-celo',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-celo',
   },
   [ChainEnum.Alfajores]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-alfajores',
   },
   [ChainEnum.Localhost]: {
     subgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
-    receivablesSubgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
   },
   [ChainEnum.HumaTestnet]: {
     subgraph:
-      'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
-    receivablesSubgraph:
       'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
   },
 }
