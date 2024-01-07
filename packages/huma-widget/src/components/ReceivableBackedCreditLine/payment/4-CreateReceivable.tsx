@@ -1,6 +1,5 @@
 import { HumaContext, HumaReceivableFactory } from '@huma-finance/sdk'
 import {
-  ChainEnum,
   CURRENCY_CODE,
   PoolInfoV2,
   UnderlyingTokenInfo,
@@ -59,7 +58,6 @@ export function CreateReceivable({
           })
           const receivableFactory = new HumaReceivableFactory({
             humaContext,
-            arWeavePaymentChainId: ChainEnum.Mumbai,
           })
           const receivableAmountBN = ethers.utils.parseUnits(
             String(paymentAmount),
