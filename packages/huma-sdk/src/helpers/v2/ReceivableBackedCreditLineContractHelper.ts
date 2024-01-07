@@ -48,7 +48,6 @@ export async function getReceivableBackedCreditlineContractV2(
  * @function
  * @param {ethers.Signer} signer - The signer used to send the transaction.
  * @param {POOL_NAME} poolName - The name of the credit pool to drawdown from.
- * @param {BigNumberish} receivableAmount - The amount to drawdown.
  * @param {BigNumberish} receivableId - The ID of the receivable.
  * @param {BigNumberish} drawdownAmount - The amount to drawdown.
  * @param {Overrides} [gasOpts] - The gas options to use for the transaction.
@@ -57,7 +56,6 @@ export async function getReceivableBackedCreditlineContractV2(
 export async function drawdownWithReceivable(
   signer: ethers.Signer,
   poolName: POOL_NAME,
-  receivableAmount: BigNumberish,
   receivableId: BigNumberish,
   drawdownAmount: BigNumberish,
   gasOpts: Overrides = {},
@@ -73,7 +71,7 @@ export async function drawdownWithReceivable(
 
   const drawdownTx = await creditContract.drawdownWithReceivable(
     await signer.getAddress(),
-    { receivableAmount, receivableId },
+    receivableId,
     drawdownAmount,
     gasOpts,
   )
@@ -153,9 +151,8 @@ export async function makePaymentWithReceivable(
  * @function
  * @param {ethers.Signer} signer - The signer used to send the transaction.
  * @param {POOL_NAME} poolName - The name of the pool to interact with.
- * @param {number} paymentReceivableId - The ID of the receivable for payment.
+ * @param {BigNumberish} paymentReceivableId - The ID of the receivable for payment.
  * @param {BigNumberish} paymentAmount - The amount to payback.
- * @param {BigNumberish} drawdownReceivableAmount - The amount for the drawdown receivable.
  * @param {BigNumberish} drawdownReceivableId - The ID of the drawdown receivable.
  * @param {BigNumberish} drawdownAmount - The amount to drawdown.
  * @param {Overrides} [gasOpts] - The gas options to use for the transaction.
@@ -164,9 +161,8 @@ export async function makePaymentWithReceivable(
 export async function makePrincipalPaymentAndDrawdownWithReceivable(
   signer: ethers.Signer,
   poolName: POOL_NAME,
-  paymentReceivableId: number,
+  paymentReceivableId: BigNumberish,
   paymentAmount: BigNumberish,
-  drawdownReceivableAmount: BigNumberish,
   drawdownReceivableId: BigNumberish,
   drawdownAmount: BigNumberish,
   gasOpts: Overrides = {},
@@ -200,10 +196,7 @@ export async function makePrincipalPaymentAndDrawdownWithReceivable(
       await signer.getAddress(),
       paymentReceivableId,
       paymentAmount,
-      {
-        receivableAmount: drawdownReceivableAmount,
-        receivableId: drawdownReceivableId,
-      },
+      drawdownReceivableId,
       drawdownAmount,
       gasOpts,
     )

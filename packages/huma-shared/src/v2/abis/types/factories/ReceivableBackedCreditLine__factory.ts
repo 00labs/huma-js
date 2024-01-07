@@ -77,7 +77,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'paymentDetectionServiceAccountRequired',
+    name: 'sentinelServiceAccountRequired',
     type: 'error',
   },
   {
@@ -99,6 +99,38 @@ const _abi = [
     inputs: [],
     name: 'zeroReceivableIdProvided',
     type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'previousAdmin',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newAdmin',
+        type: 'address',
+      },
+    ],
+    name: 'AdminChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'beacon',
+        type: 'address',
+      },
+    ],
+    name: 'BeaconUpgraded',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -250,12 +282,6 @@ const _abi = [
         indexed: true,
         internalType: 'uint256',
         name: 'receivableId',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'receivableAmount',
         type: 'uint256',
       },
       {
@@ -510,17 +536,17 @@ const _abi = [
     type: 'event',
   },
   {
-    inputs: [],
-    name: 'calendar',
-    outputs: [
+    anonymous: false,
+    inputs: [
       {
-        internalType: 'contract ICalendar',
-        name: '',
+        indexed: true,
+        internalType: 'address',
+        name: 'implementation',
         type: 'address',
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    name: 'Upgraded',
+    type: 'event',
   },
   {
     inputs: [],
@@ -543,21 +569,9 @@ const _abi = [
         type: 'address',
       },
       {
-        components: [
-          {
-            internalType: 'uint96',
-            name: 'receivableAmount',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint64',
-            name: 'receivableId',
-            type: 'uint64',
-          },
-        ],
-        internalType: 'struct ReceivableInput',
-        name: 'receivableInput',
-        type: 'tuple',
+        internalType: 'uint256',
+        name: 'receivableId',
+        type: 'uint256',
       },
       {
         internalType: 'uint256',
@@ -566,7 +580,13 @@ const _abi = [
       },
     ],
     name: 'drawdownWithReceivable',
-    outputs: [],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'netAmountToBorrower',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -913,21 +933,9 @@ const _abi = [
         type: 'uint256',
       },
       {
-        components: [
-          {
-            internalType: 'uint96',
-            name: 'receivableAmount',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint64',
-            name: 'receivableId',
-            type: 'uint64',
-          },
-        ],
-        internalType: 'struct ReceivableInput',
-        name: 'drawdownReceivableInput',
-        type: 'tuple',
+        internalType: 'uint256',
+        name: 'drawdownReceivableId',
+        type: 'uint256',
       },
       {
         internalType: 'uint256',
@@ -940,6 +948,11 @@ const _abi = [
       {
         internalType: 'uint256',
         name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'netAmountToBorrower',
         type: 'uint256',
       },
       {
@@ -1040,6 +1053,19 @@ const _abi = [
         internalType: 'contract IPoolSafe',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'proxiableUUID',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',
@@ -1225,6 +1251,37 @@ const _abi = [
     name: 'updatePoolConfigData',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
 ] as const

@@ -9,8 +9,8 @@ import type { TrancheVault, TrancheVaultInterface } from '../TrancheVault'
 const _abi = [
   {
     inputs: [],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
+    name: 'alreadyLender',
+    type: 'error',
   },
   {
     inputs: [],
@@ -24,7 +24,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'maxSeniorJuniorRatioExceeded',
+    name: 'nonReinvestYieldLenderCapacityReached',
     type: 'error',
   },
   {
@@ -34,12 +34,32 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'notLender',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'permissionDeniedNotLender',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'poolLiquidityCapExceeded',
+    name: 'todo',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'trancheLiquidityCapExceeded',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'unsupportedFunction',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'withdrawTooSoon',
     type: 'error',
   },
   {
@@ -51,6 +71,25 @@ const _abi = [
     inputs: [],
     name: 'zeroAmountProvided',
     type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'previousAdmin',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newAdmin',
+        type: 'address',
+      },
+    ],
+    name: 'AdminChanged',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -75,6 +114,19 @@ const _abi = [
       },
     ],
     name: 'Approval',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'beacon',
+        type: 'address',
+      },
+    ],
+    name: 'BeaconUpgraded',
     type: 'event',
   },
   {
@@ -152,7 +204,13 @@ const _abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'account',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'receiver',
         type: 'address',
       },
       {
@@ -384,6 +442,19 @@ const _abi = [
       {
         indexed: true,
         internalType: 'address',
+        name: 'implementation',
+        type: 'address',
+      },
+    ],
+    name: 'Upgraded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
         name: 'account',
         type: 'address',
       },
@@ -547,6 +618,19 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'calendar',
+    outputs: [
+      {
+        internalType: 'contract ICalendar',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -618,7 +702,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'currentEpochInfo',
+    name: 'currentRedemptionSummary',
     outputs: [
       {
         components: [
@@ -643,8 +727,8 @@ const _abi = [
             type: 'uint96',
           },
         ],
-        internalType: 'struct EpochInfo',
-        name: 'epochInfo',
+        internalType: 'struct EpochRedemptionSummary',
+        name: 'redemptionSummary',
         type: 'tuple',
       },
     ],
@@ -716,29 +800,46 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'receiver',
+        name: '',
         type: 'address',
       },
     ],
+    name: 'depositRecords',
+    outputs: [
+      {
+        internalType: 'uint96',
+        name: 'principal',
+        type: 'uint96',
+      },
+      {
+        internalType: 'bool',
+        name: 'reinvestYield',
+        type: 'bool',
+      },
+      {
+        internalType: 'uint64',
+        name: 'lastDepositTime',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'disburse',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    name: 'epochIds',
+    inputs: [],
+    name: 'epochManager',
     outputs: [
       {
-        internalType: 'uint256',
+        internalType: 'contract IEpochManager',
         name: '',
-        type: 'uint256',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -752,7 +853,7 @@ const _abi = [
         type: 'uint256',
       },
     ],
-    name: 'epochInfoByEpochId',
+    name: 'epochRedemptionSummaries',
     outputs: [
       {
         internalType: 'uint64',
@@ -773,19 +874,6 @@ const _abi = [
         internalType: 'uint96',
         name: 'totalAmountProcessed',
         type: 'uint96',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'epochManager',
-    outputs: [
-      {
-        internalType: 'contract IEpochManager',
-        name: '',
-        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -816,19 +904,19 @@ const _abi = [
             type: 'uint96',
           },
         ],
-        internalType: 'struct EpochInfo',
-        name: 'epochProcessed',
+        internalType: 'struct EpochRedemptionSummary',
+        name: 'summaryProcessed',
         type: 'tuple',
       },
     ],
-    name: 'executeEpoch',
+    name: 'executeRedemptionSummary',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'getNumEpochsWithRedemption',
+    name: 'getNonReinvestingLendersLength',
     outputs: [
       {
         internalType: 'uint256',
@@ -968,6 +1056,45 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'lenderRedemptionRecords',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: 'nextEpochIdToProcess',
+        type: 'uint64',
+      },
+      {
+        internalType: 'uint96',
+        name: 'numSharesRequested',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint96',
+        name: 'principalRequested',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint96',
+        name: 'totalAmountProcessed',
+        type: 'uint96',
+      },
+      {
+        internalType: 'uint96',
+        name: 'totalAmountWithdrawn',
+        type: 'uint96',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'uint256',
         name: 'assets',
         type: 'uint256',
@@ -992,6 +1119,25 @@ const _abi = [
         internalType: 'string',
         name: '',
         type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'nonReinvestingLenders',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -1037,52 +1183,20 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address[]',
-        name: 'lenders',
-        type: 'address[]',
-      },
-    ],
+    inputs: [],
     name: 'processYieldForLenders',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'redemptionInfoByLender',
+    inputs: [],
+    name: 'proxiableUUID',
     outputs: [
       {
-        internalType: 'uint64',
-        name: 'lastUpdatedEpochIndex',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint96',
-        name: 'numSharesRequested',
-        type: 'uint96',
-      },
-      {
-        internalType: 'uint96',
-        name: 'principalRequested',
-        type: 'uint96',
-      },
-      {
-        internalType: 'uint96',
-        name: 'totalAmountProcessed',
-        type: 'uint96',
-      },
-      {
-        internalType: 'uint96',
-        name: 'totalAmountWithdrawn',
-        type: 'uint96',
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',
@@ -1262,12 +1376,12 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'to',
+        name: '',
         type: 'address',
       },
       {
         internalType: 'uint256',
-        name: 'amount',
+        name: '',
         type: 'uint256',
       },
     ],
@@ -1335,24 +1449,31 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: '',
+        name: 'newImplementation',
         type: 'address',
       },
     ],
-    name: 'userInfos',
-    outputs: [
+    name: 'upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
       {
-        internalType: 'uint96',
-        name: 'principal',
-        type: 'uint96',
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
       },
       {
-        internalType: 'bool',
-        name: 'reinvestYield',
-        type: 'bool',
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
       },
     ],
-    stateMutability: 'view',
+    name: 'upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
   {

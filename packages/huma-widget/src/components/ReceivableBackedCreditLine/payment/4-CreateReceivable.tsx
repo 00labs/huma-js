@@ -1,18 +1,13 @@
+import { HumaContext, HumaReceivableFactory } from '@huma-finance/sdk'
 import {
   CURRENCY_CODE,
   PoolInfoV2,
-  sendTxAtom,
-  txAtom,
-  TxStateType,
   UnderlyingTokenInfo,
-  useReceivableContractV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { ContractReceipt, ethers } from 'ethers'
-import { useAtom } from 'jotai'
-import { useResetAtom } from 'jotai/utils'
 import moment from 'moment'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
@@ -33,15 +28,9 @@ export function CreateReceivable({
   setTokenId,
 }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
-  const { provider, account } = useWeb3React()
+  const { provider, chainId } = useWeb3React()
   const { paymentAmount } = useAppSelector(selectWidgetState)
-  const [{ state, txHash, txReceipt }, send] = useAtom(sendTxAtom)
-  const reset = useResetAtom(txAtom)
-  const receivableContract = useReceivableContractV2(
-    poolInfo.poolName,
-    provider,
-    account,
-  )
+  const [txHash, setTxHash] = useState('')
 
   const getTokenIdFromReceipt = useCallback((txReceipt: ContractReceipt) => {
     if (!Array.isArray(txReceipt.events)) {
@@ -57,36 +46,54 @@ export function CreateReceivable({
   }, [])
 
   useEffect(() => {
-    if (state === TxStateType.Success && txReceipt) {
-      const tokenId = getTokenIdFromReceipt(txReceipt)
-      if (tokenId) {
-        setTokenId(tokenId)
+    const sendTx = async () => {
+      if (provider && chainId) {
+        try {
+          const humaContext = new HumaContext({
+            signer: provider.getSigner(),
+            provider,
+            chainId,
+            poolName: poolInfo.poolName,
+            poolType: poolInfo.poolType,
+          })
+          const receivableFactory = new HumaReceivableFactory({
+            humaContext,
+          })
+          const receivableAmountBN = ethers.utils.parseUnits(
+            String(paymentAmount),
+            poolUnderlyingToken.decimals,
+          )
+          const maturityDate = moment().add(1, 'months').unix()
+          const tx = await receivableFactory.createReceivable(
+            CURRENCY_CODE.USD,
+            receivableAmountBN,
+            maturityDate,
+            '',
+          )
+          setTxHash(tx.hash)
+          const txReceipt = await tx.wait()
+          const tokenId = getTokenIdFromReceipt(txReceipt)
+          if (tokenId) {
+            setTokenId(tokenId)
+          }
+          dispatch(setStep(WIDGET_STEP.ApproveNFT))
+        } catch (e) {
+          console.log(e)
+          dispatch(setStep(WIDGET_STEP.Error))
+        }
       }
-      reset()
-      dispatch(setStep(WIDGET_STEP.ApproveNFT))
     }
-  }, [dispatch, getTokenIdFromReceipt, reset, setTokenId, state, txReceipt])
-
-  useEffect(() => {
-    if (receivableContract) {
-      const paymentAmountBN = ethers.utils.parseUnits(
-        String(paymentAmount),
-        poolUnderlyingToken.decimals,
-      )
-      const maturityDate = moment().add(1, 'months').unix()
-      send({
-        contract: receivableContract,
-        method: 'createReceivable',
-        params: [CURRENCY_CODE.USD, paymentAmountBN, maturityDate, '', ''],
-        provider,
-      })
-    }
+    sendTx()
   }, [
+    chainId,
+    dispatch,
+    getTokenIdFromReceipt,
     paymentAmount,
+    poolInfo.poolName,
+    poolInfo.poolType,
     poolUnderlyingToken.decimals,
     provider,
-    receivableContract,
-    send,
+    setTokenId,
   ])
 
   return (

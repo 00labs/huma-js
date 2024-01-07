@@ -9,23 +9,17 @@ import { ApproveAllowanceModalV2 } from '../../ApproveAllowanceModalV2'
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  needCreateReceivable: boolean
 }
 
 export function ApproveAllowance({
   poolInfo,
   poolUnderlyingToken,
-  needCreateReceivable,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
 
   const handleSuccess = useCallback(() => {
-    dispatch(
-      setStep(
-        needCreateReceivable ? WIDGET_STEP.MintNFT : WIDGET_STEP.ApproveNFT,
-      ),
-    )
-  }, [dispatch, needCreateReceivable])
+    dispatch(setStep(WIDGET_STEP.ApproveNFT))
+  }, [dispatch])
 
   return (
     <ApproveAllowanceModalV2
