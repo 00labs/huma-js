@@ -41,7 +41,7 @@ export function Transfer({
     <TxSendModalV2
       contract={trancheVaultContract}
       method='disburse'
-      params={[account]}
+      params={[]}
       handleSuccess={handleSuccess}
     />
   )
