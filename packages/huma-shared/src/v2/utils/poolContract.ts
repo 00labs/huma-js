@@ -24,7 +24,10 @@ import {
   PoolConfig,
   TrancheVault,
 } from '../abis/types'
-import { CreditRecordStructOutput } from '../abis/types/Credit'
+import {
+  CreditRecordStructOutput,
+  DueDetailStructOutput,
+} from '../abis/types/Credit'
 import {
   CreditConfigStructOutput,
   CreditManager,
@@ -367,6 +370,33 @@ export const getCreditRecordV2 = async (
   }
 
   return creditContract.getCreditRecord(creditHash)
+}
+
+export const getDueDetailV2 = async (
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<DueDetailStructOutput | undefined> => {
+  if (!account) {
+    return undefined
+  }
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return undefined
+  }
+
+  const creditContract = await getPoolCreditContractV2(poolName, provider)
+  if (!creditContract) {
+    return undefined
+  }
+
+  const creditHash = getCreditHashV2(poolName, chainId, account)
+  if (!creditHash) {
+    return undefined
+  }
+
+  return creditContract.getDueDetail(creditHash)
 }
 
 export const getCreditConfigV2 = async (
