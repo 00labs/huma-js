@@ -92,7 +92,10 @@ export const getTransactionErrorFromHash = async (
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getTransactionErrorFromError = (e: any) => {
-  const errorCode = e.error?.data?.originalError?.data || e.error?.data?.data
+  const errorCode =
+    e.error?.data?.originalError?.data ||
+    e.error?.data?.data?.data ||
+    e.error?.data?.data
   if (errorCode) {
     const contractErrorMessage = findContractErrorMessage(errorCode)
     if (contractErrorMessage) {
