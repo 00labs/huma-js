@@ -39,6 +39,7 @@ import {
   getCreditConfigV2,
   getCreditHashV2,
   getCreditRecordV2,
+  getDueDetailV2,
   getPoolUnderlyingTokenBalanceV2,
   getPoolUnderlyingTokenInfoV2,
 } from '../utils/poolContract'
@@ -554,16 +555,18 @@ export function useCreditStatsV2(
       if (account) {
         const creditHash = getCreditHashV2(poolName, chainId, account)
         if (creditHash) {
-          const [creditRecord, creditConfig, poolTokenBalance] =
+          const [creditRecord, dueDetail, creditConfig, poolTokenBalance] =
             await Promise.all([
               getCreditRecordV2(poolName, chainId, account, provider),
+              getDueDetailV2(poolName, chainId, account, provider),
               getCreditConfigV2(poolName, chainId, account, provider),
               getPoolUnderlyingTokenBalanceV2(poolName, account, provider),
             ])
-          if (creditRecord && creditConfig && poolTokenBalance) {
+          if (creditRecord && dueDetail && creditConfig && poolTokenBalance) {
             const principal = creditRecord.unbilledPrincipal
               .add(creditRecord.nextDue)
-              .add(creditRecord.totalPastDue)
+              .sub(creditRecord.yieldDue)
+              .add(dueDetail.principalPastDue)
             const unusedCredit = creditConfig.creditLimit.sub(principal)
             // Set available credit to the minimum of the pool balance or the credit available amount,
             // since both are upper bounds on the amount of credit that can be borrowed.
