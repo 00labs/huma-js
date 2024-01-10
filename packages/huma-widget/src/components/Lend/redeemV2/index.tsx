@@ -79,7 +79,7 @@ export function LendRedeemV2({
   const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const { step, errorMessage } = useAppSelector(selectWidgetState)
+  const { step, errorMessage, errorReason } = useAppSelector(selectWidgetState)
   const [seniorRedemptionInfo, refreshSeniorRedemptionInfo] =
     useCancellableRedemptionInfoV2(poolName, 'senior', account, provider)
   const [juniorRedemptionInfo, refreshJuniorRedemptionInfo] =
@@ -162,6 +162,7 @@ export function LendRedeemV2({
     >
       {step === WIDGET_STEP.ChooseTranche && (
         <ChooseAction
+          poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           seniorRedemptionInfo={seniorRedemptionInfo}
           juniorRedemptionInfo={juniorRedemptionInfo}
@@ -196,7 +197,7 @@ export function LendRedeemV2({
       {step === WIDGET_STEP.Error && (
         <ErrorModal
           title='Redeem'
-          errorReason='Sorry there was an error'
+          errorReason={errorReason}
           errorMessage={errorMessage}
           handleOk={handleClose}
         />

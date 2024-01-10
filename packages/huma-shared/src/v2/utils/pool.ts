@@ -20,6 +20,7 @@ import POOL_ABI from '../abis/Pool.json'
 import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
+import CALENDAR_ABI from '../abis/Calendar.json'
 
 export type TrancheType = 'senior' | 'junior'
 
@@ -54,6 +55,7 @@ export type PoolInfoV2 = {
   trancheVaultAbi?: unknown
   firstLossCoverAbi?: unknown
   epochManagerAbi?: unknown
+  calendarAbi?: unknown
   seniorAPY: string
   juniorAPY: string
   title: string
@@ -101,6 +103,7 @@ const getMetadataWithAbis = (metadata: PoolsInfoV2) => {
       pool.trancheVaultAbi = TRANCHE_VAULT_ABI
       pool.firstLossCoverAbi = FIRST_LOSS_COVER_ABI
       pool.epochManagerAbi = EPOCH_MANAGER_ABI
+      pool.calendarAbi = CALENDAR_ABI
     }
   })
   return metadata

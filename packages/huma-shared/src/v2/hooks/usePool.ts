@@ -11,10 +11,12 @@ import {
   POOL_NAME,
   RealWorldReceivableInfoBase,
 } from '../../utils'
+import CALENDAR_V2_ABI from '../abis/Calendar.json'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
 import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import RECEIVABLE_V2_ABI from '../abis/Receivable.json'
 import {
+  Calendar,
   Credit,
   FirstLossCover,
   Pool,
@@ -28,6 +30,10 @@ import {
   CreditConfigStructOutput,
   CreditManager,
 } from '../abis/types/CreditManager'
+import {
+  LPConfigStructOutput,
+  PoolSettingsStructOutput,
+} from '../abis/types/PoolConfig'
 import { FirstLossCoverIndex } from '../types'
 import {
   CHAIN_POOLS_INFO_V2,
@@ -205,6 +211,35 @@ export function useReceivableContractV2(
   return receivableContract
 }
 
+export function useCalendarContractV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
+) {
+  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
+  const [calendarContract, setCalendarContract] = useState<Calendar>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolConfigContract) {
+        const calendar = await poolConfigContract.calendar()
+        const calendarContract = getContract<Calendar>(
+          calendar,
+          CALENDAR_V2_ABI,
+          provider,
+          account,
+        )
+        if (calendarContract) {
+          setCalendarContract(calendarContract)
+        }
+      }
+    }
+    fetchData()
+  }, [account, poolConfigContract, provider])
+
+  return calendarContract
+}
+
 export function useContractValueV2<T = BigNumber>(
   contract: Contract | null,
   method: string,
@@ -351,6 +386,39 @@ export function useLenderPositionV2(
   }, [account, vaultContract, refreshCount])
 
   return [position, refresh]
+}
+
+type DepositRecord = {
+  principal: BigNumber
+  reinvestYield: boolean
+  lastDepositTime: BigNumber
+}
+
+export function useLenderDepositRecordV2(
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [DepositRecord | undefined, () => void] {
+  const [depositRecord, setDepositRecord] = useState<DepositRecord>()
+  const vaultContract = useTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (vaultContract && account) {
+        const position = await vaultContract.depositRecords(account)
+        setDepositRecord(position)
+      }
+    }
+    fetchData()
+  }, [account, vaultContract, refreshCount])
+
+  return [depositRecord, refresh]
 }
 
 export function usePoolUnderlyingTokenContractV2(
@@ -716,4 +784,70 @@ export function useReceivableInfoV2(
   }, [receivableContract, tokenId])
 
   return receivableInfo
+}
+
+export function useLPConfigV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const [lpConfig, setLPConfig] = useState<LPConfigStructOutput>()
+  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolConfigContract) {
+        const lpConfig = await poolConfigContract.getLPConfig()
+        setLPConfig(lpConfig)
+      }
+    }
+    fetchData()
+  }, [poolConfigContract])
+
+  return lpConfig
+}
+
+export function usePoolSettingsV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const [poolSettings, setPoolSettings] = useState<PoolSettingsStructOutput>()
+  const poolConfigContract = usePoolConfigContractV2(poolName, provider)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolConfigContract) {
+        const poolSettings = await poolConfigContract.getPoolSettings()
+        setPoolSettings(poolSettings)
+      }
+    }
+    fetchData()
+  }, [poolConfigContract])
+
+  return poolSettings
+}
+
+export function useNextEpochStartTimeV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const [nextEpochStartTime, setNextEpochStartTime] = useState<number>()
+  const calendarContract = useCalendarContractV2(poolName, provider)
+  const poolSettings = usePoolSettingsV2(poolName, provider)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolSettings && calendarContract && provider) {
+        const block = await provider.getBlock('latest')
+        const nextEpochStartTime =
+          await calendarContract.getStartDateOfNextPeriod(
+            poolSettings.payPeriodDuration,
+            block.timestamp,
+          )
+        setNextEpochStartTime(nextEpochStartTime.toNumber())
+      }
+    }
+    fetchData()
+  }, [calendarContract, poolSettings, provider])
+
+  return nextEpochStartTime
 }
