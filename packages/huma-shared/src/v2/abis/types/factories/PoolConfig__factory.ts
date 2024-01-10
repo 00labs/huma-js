@@ -14,87 +14,82 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'adminRewardRateTooHigh',
+    name: 'AdminRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'creditLineTooHigh',
+    name: 'AdminRewardRateTooHigh',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'evaluationAgentNotEnoughLiquidity',
+    name: 'AuthorizedContractCallerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'invalidBasisPointHigherThan10000',
+    name: 'EvaluationAgentInsufficientLiquidity',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'lessThanRequiredCover',
+    name: 'InsufficientFirstLossCover',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notPool',
+    name: 'InvalidBasisPointHigherThan10000',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notPoolOwner',
+    name: 'MinDepositAmountTooLow',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notPoolOwnerOrEA',
+    name: 'PoolIsNotOn',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'permissionDeniedNotAdmin',
+    name: 'PoolOperatorRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'poolIsNotOn',
+    name: 'PoolOwnerInsufficientLiquidity',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'poolOperatorRequired',
+    name: 'PoolOwnerOrEARequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'poolOwnerNotEnoughLiquidity',
+    name: 'PoolOwnerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'proposedEADoesNotOwnProvidedEANFT',
+    name: 'ProposedEADoesNotOwnProvidedEANFT',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'protocolIsPaused',
+    name: 'ProtocolIsPaused',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'underlyingTokenNotApprovedForHumaProtocol',
+    name: 'UnderlyingTokenNotApprovedForHumaProtocol',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'zeroAddressProvided',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'zeroAmountProvided',
+    name: 'ZeroAddressProvided',
     type: 'error',
   },
   {
@@ -102,18 +97,31 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'advanceRateInBps',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'previousAdmin',
+        type: 'address',
       },
       {
         indexed: false,
         internalType: 'address',
-        name: 'by',
+        name: 'newAdmin',
         type: 'address',
       },
     ],
-    name: 'AdvanceRateInBpsChanged',
+    name: 'AdminChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'beacon',
+        type: 'address',
+      },
+    ],
+    name: 'BeaconUpgraded',
     type: 'event',
   },
   {
@@ -133,25 +141,6 @@ const _abi = [
       },
     ],
     name: 'CalendarChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'durationInDays',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'CreditApprovalExpirationChanged',
     type: 'event',
   },
   {
@@ -253,31 +242,6 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'address',
-        name: 'receiver',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'EvaluationAgentRewardsWithdrawn',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: 'uint16',
         name: 'yieldInBps',
         type: 'uint16',
@@ -290,21 +254,9 @@ const _abi = [
       },
       {
         indexed: false,
-        internalType: 'uint96',
-        name: 'lateFeeFlat',
-        type: 'uint96',
-      },
-      {
-        indexed: false,
         internalType: 'uint16',
         name: 'lateFeeBps',
         type: 'uint16',
-      },
-      {
-        indexed: false,
-        internalType: 'uint96',
-        name: 'membershipFee',
-        type: 'uint96',
       },
       {
         indexed: false,
@@ -334,31 +286,31 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint16',
-        name: 'coverRateInBps',
+        name: 'coverRatePerLossInBps',
         type: 'uint16',
       },
       {
         indexed: false,
         internalType: 'uint96',
-        name: 'coverCap',
+        name: 'coverCapPerLoss',
         type: 'uint96',
       },
       {
         indexed: false,
         internalType: 'uint96',
-        name: 'liquidityCap',
+        name: 'maxLiquidity',
+        type: 'uint96',
+      },
+      {
+        indexed: false,
+        internalType: 'uint96',
+        name: 'minLiquidity',
         type: 'uint96',
       },
       {
         indexed: false,
         internalType: 'uint16',
-        name: 'maxPercentOfPoolValueInBps',
-        type: 'uint16',
-      },
-      {
-        indexed: false,
-        internalType: 'uint16',
-        name: 'riskYieldMultiplier',
+        name: 'riskYieldMultiplierInBps',
         type: 'uint16',
       },
       {
@@ -433,21 +385,9 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'bool',
-        name: 'permissioned',
-        type: 'bool',
-      },
-      {
-        indexed: false,
         internalType: 'uint96',
         name: 'liquidityCap',
         type: 'uint96',
-      },
-      {
-        indexed: false,
-        internalType: 'uint8',
-        name: 'withdrawalLockoutInMonths',
-        type: 'uint8',
       },
       {
         indexed: false,
@@ -469,50 +409,18 @@ const _abi = [
       },
       {
         indexed: false,
+        internalType: 'uint16',
+        name: 'withdrawalLockoutInDays',
+        type: 'uint16',
+      },
+      {
+        indexed: false,
         internalType: 'address',
         name: 'by',
         type: 'address',
       },
     ],
     name: 'LPConfigChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'gracePeriodInDays',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'LatePaymentGracePeriodChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'maxCreditLine',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'MaxCreditLineChanged',
     type: 'event',
   },
   {
@@ -539,25 +447,6 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'gracePeriodInMonths',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'PoolDefaultGracePeriodChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: 'address',
         name: 'poolFeeManager',
         type: 'address',
@@ -570,50 +459,6 @@ const _abi = [
       },
     ],
     name: 'PoolFeeManagerChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'enabled',
-        type: 'bool',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'windowInEpoch',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'PoolFlexCallChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'liquidityCap',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'PoolLiquidityCapChanged',
     type: 'event',
   },
   {
@@ -684,44 +529,6 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'enum PayPeriodDuration',
-        name: 'payPeriodDuration',
-        type: 'uint8',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'PoolPayPeriodChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'receiver',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'PoolRewardsWithdrawn',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: 'address',
         name: 'poolSafe',
         type: 'address',
@@ -734,6 +541,61 @@ const _abi = [
       },
     ],
     name: 'PoolSafeChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint96',
+        name: 'maxCreditLine',
+        type: 'uint96',
+      },
+      {
+        indexed: false,
+        internalType: 'uint96',
+        name: 'minDepositAmount',
+        type: 'uint96',
+      },
+      {
+        indexed: false,
+        internalType: 'enum PayPeriodDuration',
+        name: 'payPeriodDuration',
+        type: 'uint8',
+      },
+      {
+        indexed: false,
+        internalType: 'uint8',
+        name: 'latePaymentGracePeriodInDays',
+        type: 'uint8',
+      },
+      {
+        indexed: false,
+        internalType: 'uint16',
+        name: 'defaultGracePeriodInDays',
+        type: 'uint16',
+      },
+      {
+        indexed: false,
+        internalType: 'uint16',
+        name: 'advanceRateInBps',
+        type: 'uint16',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'receivableAutoApproval',
+        type: 'bool',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
+      },
+    ],
+    name: 'PoolSettingsChanged',
     type: 'event',
   },
   {
@@ -761,31 +623,6 @@ const _abi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'receiver',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'ProtocolRewardsWithdrawn',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
         name: 'receivableAsset',
         type: 'address',
       },
@@ -797,44 +634,6 @@ const _abi = [
       },
     ],
     name: 'ReceivableAssetChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'receivableAutoApproval',
-        type: 'bool',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'ReceivableAutoApproval',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'receivableRequiredInBps',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'ReceivableRequiredInBpsChanged',
     type: 'event',
   },
   {
@@ -960,38 +759,13 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'lockoutPeriodInMonths',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
+        indexed: true,
         internalType: 'address',
-        name: 'by',
+        name: 'implementation',
         type: 'address',
       },
     ],
-    name: 'WithdrawalLockoutPeriodChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'aprInBps',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-    ],
-    name: 'YieldChanged',
+    name: 'Upgraded',
     type: 'event',
   },
   {
@@ -1036,19 +810,6 @@ const _abi = [
   {
     inputs: [],
     name: 'checkFirstLossCoverRequirementsForAdmin',
-    outputs: [],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'lender',
-        type: 'address',
-      },
-    ],
-    name: 'checkFirstLossCoverRequirementsForRedemption',
     outputs: [],
     stateMutability: 'view',
     type: 'function',
@@ -1213,16 +974,6 @@ const _abi = [
             name: 'liquidityRateInBpsByPoolOwner',
             type: 'uint16',
           },
-          {
-            internalType: 'uint16',
-            name: 'rewardRateInBpsForPoolCover',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint16',
-            name: 'liquidityRateInBpsByPoolCover',
-            type: 'uint16',
-          },
         ],
         internalType: 'struct AdminRnR',
         name: '',
@@ -1234,22 +985,29 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'getFees',
+    name: 'getFeeStructure',
     outputs: [
       {
-        internalType: 'uint256',
-        name: '_lateFeeFlat',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_lateFeeBps',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_membershipFee',
-        type: 'uint256',
+        components: [
+          {
+            internalType: 'uint16',
+            name: 'yieldInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'minPrincipalRateInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'lateFeeBps',
+            type: 'uint16',
+          },
+        ],
+        internalType: 'struct FeeStructure',
+        name: '',
+        type: 'tuple',
       },
     ],
     stateMutability: 'view',
@@ -1288,27 +1046,27 @@ const _abi = [
         components: [
           {
             internalType: 'uint16',
-            name: 'coverRateInBps',
+            name: 'coverRatePerLossInBps',
             type: 'uint16',
           },
           {
             internalType: 'uint96',
-            name: 'coverCap',
+            name: 'coverCapPerLoss',
             type: 'uint96',
           },
           {
             internalType: 'uint96',
-            name: 'liquidityCap',
+            name: 'maxLiquidity',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'minLiquidity',
             type: 'uint96',
           },
           {
             internalType: 'uint16',
-            name: 'maxPercentOfPoolValueInBps',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint16',
-            name: 'riskYieldMultiplier',
+            name: 'riskYieldMultiplierInBps',
             type: 'uint16',
           },
         ],
@@ -1358,19 +1116,9 @@ const _abi = [
       {
         components: [
           {
-            internalType: 'bool',
-            name: 'permissioned',
-            type: 'bool',
-          },
-          {
             internalType: 'uint96',
             name: 'liquidityCap',
             type: 'uint96',
-          },
-          {
-            internalType: 'uint8',
-            name: 'withdrawalLockoutInMonths',
-            type: 'uint8',
           },
           {
             internalType: 'uint8',
@@ -1387,23 +1135,15 @@ const _abi = [
             name: 'tranchesRiskAdjustmentInBps',
             type: 'uint16',
           },
+          {
+            internalType: 'uint16',
+            name: 'withdrawalLockoutPeriodInDays',
+            type: 'uint16',
+          },
         ],
         internalType: 'struct LPConfig',
         name: '',
         type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getMinPrincipalRateInBps',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '_minPrincipalRate',
-        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -1421,14 +1161,14 @@ const _abi = [
             type: 'uint96',
           },
           {
+            internalType: 'uint96',
+            name: 'minDepositAmount',
+            type: 'uint96',
+          },
+          {
             internalType: 'enum PayPeriodDuration',
             name: 'payPeriodDuration',
             type: 'uint8',
-          },
-          {
-            internalType: 'uint16',
-            name: 'creditApprovalExpirationInDays',
-            type: 'uint16',
           },
           {
             internalType: 'uint8',
@@ -1437,28 +1177,13 @@ const _abi = [
           },
           {
             internalType: 'uint16',
-            name: 'defaultGracePeriodInMonths',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint16',
-            name: 'receivableRequiredInBps',
+            name: 'defaultGracePeriodInDays',
             type: 'uint16',
           },
           {
             internalType: 'uint16',
             name: 'advanceRateInBps',
             type: 'uint16',
-          },
-          {
-            internalType: 'bool',
-            name: 'singleBorrower',
-            type: 'bool',
-          },
-          {
-            internalType: 'bool',
-            name: 'singleCreditPerBorrower',
-            type: 'bool',
           },
           {
             internalType: 'bool',
@@ -1469,64 +1194,6 @@ const _abi = [
         internalType: 'struct PoolSettings',
         name: '',
         type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getPoolSummary',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'yieldInBps',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum PayPeriodDuration',
-        name: 'payPeriodDuration',
-        type: 'uint8',
-      },
-      {
-        internalType: 'uint256',
-        name: 'maxCreditAmount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'liquidityCap',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: 'name',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'symbol',
-        type: 'string',
-      },
-      {
-        internalType: 'uint8',
-        name: 'decimals',
-        type: 'uint8',
-      },
-      {
-        internalType: 'uint256',
-        name: 'eaId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: 'eaNFTAddress',
-        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -1546,25 +1213,6 @@ const _abi = [
         internalType: 'bytes32',
         name: '',
         type: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'index',
-        type: 'uint256',
-      },
-    ],
-    name: 'getTrancheLiquidityCap',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'cap',
-        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -1683,6 +1331,19 @@ const _abi = [
         type: 'address',
       },
     ],
+    name: 'onlyHumaMasterAdmin',
+    outputs: [],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
     name: 'onlyOwnerOrHumaMasterAdmin',
     outputs: [],
     stateMutability: 'view',
@@ -1743,6 +1404,19 @@ const _abi = [
         type: 'address',
       },
     ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'onlyPoolOwnerOrSentinelServiceAccount',
+    outputs: [],
     stateMutability: 'view',
     type: 'function',
   },
@@ -1820,6 +1494,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'proxiableUUID',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'receivableAsset',
     outputs: [
       {
@@ -1883,19 +1570,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'advanceRateInBps',
-        type: 'uint256',
-      },
-    ],
-    name: 'setAdvanceRateInBps',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'address',
         name: '_calendar',
         type: 'address',
@@ -1915,19 +1589,6 @@ const _abi = [
       },
     ],
     name: 'setCredit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'durationInDays',
-        type: 'uint256',
-      },
-    ],
-    name: 'setCreditApprovalExpiration',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -1996,19 +1657,9 @@ const _abi = [
             type: 'uint16',
           },
           {
-            internalType: 'uint96',
-            name: 'lateFeeFlat',
-            type: 'uint96',
-          },
-          {
             internalType: 'uint16',
             name: 'lateFeeBps',
             type: 'uint16',
-          },
-          {
-            internalType: 'uint96',
-            name: 'membershipFee',
-            type: 'uint96',
           },
         ],
         internalType: 'struct FeeStructure',
@@ -2037,27 +1688,27 @@ const _abi = [
         components: [
           {
             internalType: 'uint16',
-            name: 'coverRateInBps',
+            name: 'coverRatePerLossInBps',
             type: 'uint16',
           },
           {
             internalType: 'uint96',
-            name: 'coverCap',
+            name: 'coverCapPerLoss',
             type: 'uint96',
           },
           {
             internalType: 'uint96',
-            name: 'liquidityCap',
+            name: 'maxLiquidity',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'minLiquidity',
             type: 'uint96',
           },
           {
             internalType: 'uint16',
-            name: 'maxPercentOfPoolValueInBps',
-            type: 'uint16',
-          },
-          {
-            internalType: 'uint16',
-            name: 'riskYieldMultiplier',
+            name: 'riskYieldMultiplierInBps',
             type: 'uint16',
           },
         ],
@@ -2114,19 +1765,9 @@ const _abi = [
       {
         components: [
           {
-            internalType: 'bool',
-            name: 'permissioned',
-            type: 'bool',
-          },
-          {
             internalType: 'uint96',
             name: 'liquidityCap',
             type: 'uint96',
-          },
-          {
-            internalType: 'uint8',
-            name: 'withdrawalLockoutInMonths',
-            type: 'uint8',
           },
           {
             internalType: 'uint8',
@@ -2143,6 +1784,11 @@ const _abi = [
             name: 'tranchesRiskAdjustmentInBps',
             type: 'uint16',
           },
+          {
+            internalType: 'uint16',
+            name: 'withdrawalLockoutPeriodInDays',
+            type: 'uint16',
+          },
         ],
         internalType: 'struct LPConfig',
         name: 'lpConfig',
@@ -2150,32 +1796,6 @@ const _abi = [
       },
     ],
     name: 'setLPConfig',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'gracePeriodInDays',
-        type: 'uint256',
-      },
-    ],
-    name: 'setLatePaymentGracePeriodInDays',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'creditLine',
-        type: 'uint256',
-      },
-    ],
-    name: 'setMaxCreditLine',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -2196,38 +1816,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'gracePeriod',
-        type: 'uint256',
-      },
-    ],
-    name: 'setPoolDefaultGracePeriod',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'address',
         name: '_poolFeeManager',
         type: 'address',
       },
     ],
     name: 'setPoolFeeManager',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'liquidityCap',
-        type: 'uint256',
-      },
-    ],
-    name: 'setPoolLiquidityCap',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -2279,12 +1873,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'enum PayPeriodDuration',
-        name: 'duration',
-        type: 'uint8',
+        internalType: 'address',
+        name: '_poolSafe',
+        type: 'address',
       },
     ],
-    name: 'setPoolPayPeriod',
+    name: 'setPoolSafe',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -2292,12 +1886,49 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_poolSafe',
-        type: 'address',
+        components: [
+          {
+            internalType: 'uint96',
+            name: 'maxCreditLine',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'minDepositAmount',
+            type: 'uint96',
+          },
+          {
+            internalType: 'enum PayPeriodDuration',
+            name: 'payPeriodDuration',
+            type: 'uint8',
+          },
+          {
+            internalType: 'uint8',
+            name: 'latePaymentGracePeriodInDays',
+            type: 'uint8',
+          },
+          {
+            internalType: 'uint16',
+            name: 'defaultGracePeriodInDays',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'advanceRateInBps',
+            type: 'uint16',
+          },
+          {
+            internalType: 'bool',
+            name: 'receivableAutoApproval',
+            type: 'bool',
+          },
+        ],
+        internalType: 'struct PoolSettings',
+        name: 'settings',
+        type: 'tuple',
       },
     ],
-    name: 'setPoolSafe',
+    name: 'setPoolSettings',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -2331,32 +1962,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'bool',
-        name: 'autoApproval',
-        type: 'bool',
-      },
-    ],
-    name: 'setReceivableAutoApproval',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'receivableRequiredInBps',
-        type: 'uint256',
-      },
-    ],
-    name: 'setReceivableRequiredInBps',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'address',
         name: '_seniorTranche',
         type: 'address',
@@ -2381,32 +1986,6 @@ const _abi = [
       },
     ],
     name: 'setTranchesPolicy',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'lockoutPeriod',
-        type: 'uint256',
-      },
-    ],
-    name: 'setWithdrawalLockoutPeriod',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_yieldInBps',
-        type: 'uint256',
-      },
-    ],
-    name: 'setYield',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -2454,6 +2033,37 @@ const _abi = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
 ] as const

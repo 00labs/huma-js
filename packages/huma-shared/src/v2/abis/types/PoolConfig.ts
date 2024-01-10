@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -32,130 +33,97 @@ export type AdminRnRStruct = {
   rewardRateInBpsForPoolOwner: PromiseOrValue<BigNumberish>
   liquidityRateInBpsByEA: PromiseOrValue<BigNumberish>
   liquidityRateInBpsByPoolOwner: PromiseOrValue<BigNumberish>
-  rewardRateInBpsForPoolCover: PromiseOrValue<BigNumberish>
-  liquidityRateInBpsByPoolCover: PromiseOrValue<BigNumberish>
 }
 
-export type AdminRnRStructOutput = [
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-] & {
+export type AdminRnRStructOutput = [number, number, number, number] & {
   rewardRateInBpsForEA: number
   rewardRateInBpsForPoolOwner: number
   liquidityRateInBpsByEA: number
   liquidityRateInBpsByPoolOwner: number
-  rewardRateInBpsForPoolCover: number
-  liquidityRateInBpsByPoolCover: number
+}
+
+export type FeeStructureStruct = {
+  yieldInBps: PromiseOrValue<BigNumberish>
+  minPrincipalRateInBps: PromiseOrValue<BigNumberish>
+  lateFeeBps: PromiseOrValue<BigNumberish>
+}
+
+export type FeeStructureStructOutput = [number, number, number] & {
+  yieldInBps: number
+  minPrincipalRateInBps: number
+  lateFeeBps: number
 }
 
 export type FirstLossCoverConfigStruct = {
-  coverRateInBps: PromiseOrValue<BigNumberish>
-  coverCap: PromiseOrValue<BigNumberish>
-  liquidityCap: PromiseOrValue<BigNumberish>
-  maxPercentOfPoolValueInBps: PromiseOrValue<BigNumberish>
-  riskYieldMultiplier: PromiseOrValue<BigNumberish>
+  coverRatePerLossInBps: PromiseOrValue<BigNumberish>
+  coverCapPerLoss: PromiseOrValue<BigNumberish>
+  maxLiquidity: PromiseOrValue<BigNumberish>
+  minLiquidity: PromiseOrValue<BigNumberish>
+  riskYieldMultiplierInBps: PromiseOrValue<BigNumberish>
 }
 
 export type FirstLossCoverConfigStructOutput = [
   number,
   BigNumber,
   BigNumber,
-  number,
+  BigNumber,
   number,
 ] & {
-  coverRateInBps: number
-  coverCap: BigNumber
-  liquidityCap: BigNumber
-  maxPercentOfPoolValueInBps: number
-  riskYieldMultiplier: number
+  coverRatePerLossInBps: number
+  coverCapPerLoss: BigNumber
+  maxLiquidity: BigNumber
+  minLiquidity: BigNumber
+  riskYieldMultiplierInBps: number
 }
 
 export type LPConfigStruct = {
-  permissioned: PromiseOrValue<boolean>
   liquidityCap: PromiseOrValue<BigNumberish>
-  withdrawalLockoutInMonths: PromiseOrValue<BigNumberish>
   maxSeniorJuniorRatio: PromiseOrValue<BigNumberish>
   fixedSeniorYieldInBps: PromiseOrValue<BigNumberish>
   tranchesRiskAdjustmentInBps: PromiseOrValue<BigNumberish>
+  withdrawalLockoutPeriodInDays: PromiseOrValue<BigNumberish>
 }
 
 export type LPConfigStructOutput = [
-  boolean,
   BigNumber,
   number,
   number,
   number,
   number,
 ] & {
-  permissioned: boolean
   liquidityCap: BigNumber
-  withdrawalLockoutInMonths: number
   maxSeniorJuniorRatio: number
   fixedSeniorYieldInBps: number
   tranchesRiskAdjustmentInBps: number
+  withdrawalLockoutPeriodInDays: number
 }
 
 export type PoolSettingsStruct = {
   maxCreditLine: PromiseOrValue<BigNumberish>
+  minDepositAmount: PromiseOrValue<BigNumberish>
   payPeriodDuration: PromiseOrValue<BigNumberish>
-  creditApprovalExpirationInDays: PromiseOrValue<BigNumberish>
   latePaymentGracePeriodInDays: PromiseOrValue<BigNumberish>
-  defaultGracePeriodInMonths: PromiseOrValue<BigNumberish>
-  receivableRequiredInBps: PromiseOrValue<BigNumberish>
+  defaultGracePeriodInDays: PromiseOrValue<BigNumberish>
   advanceRateInBps: PromiseOrValue<BigNumberish>
-  singleBorrower: PromiseOrValue<boolean>
-  singleCreditPerBorrower: PromiseOrValue<boolean>
   receivableAutoApproval: PromiseOrValue<boolean>
 }
 
 export type PoolSettingsStructOutput = [
   BigNumber,
+  BigNumber,
   number,
   number,
   number,
   number,
-  number,
-  number,
-  boolean,
-  boolean,
   boolean,
 ] & {
   maxCreditLine: BigNumber
+  minDepositAmount: BigNumber
   payPeriodDuration: number
-  creditApprovalExpirationInDays: number
   latePaymentGracePeriodInDays: number
-  defaultGracePeriodInMonths: number
-  receivableRequiredInBps: number
+  defaultGracePeriodInDays: number
   advanceRateInBps: number
-  singleBorrower: boolean
-  singleCreditPerBorrower: boolean
   receivableAutoApproval: boolean
-}
-
-export type FeeStructureStruct = {
-  yieldInBps: PromiseOrValue<BigNumberish>
-  minPrincipalRateInBps: PromiseOrValue<BigNumberish>
-  lateFeeFlat: PromiseOrValue<BigNumberish>
-  lateFeeBps: PromiseOrValue<BigNumberish>
-  membershipFee: PromiseOrValue<BigNumberish>
-}
-
-export type FeeStructureStructOutput = [
-  number,
-  number,
-  BigNumber,
-  number,
-  BigNumber,
-] & {
-  yieldInBps: number
-  minPrincipalRateInBps: number
-  lateFeeFlat: BigNumber
-  lateFeeBps: number
-  membershipFee: BigNumber
 }
 
 export type FrontLoadingFeesStructureStruct = {
@@ -174,7 +142,6 @@ export interface PoolConfigInterface extends utils.Interface {
     'POOL_OPERATOR_ROLE()': FunctionFragment
     'calendar()': FunctionFragment
     'checkFirstLossCoverRequirementsForAdmin()': FunctionFragment
-    'checkFirstLossCoverRequirementsForRedemption(address)': FunctionFragment
     'checkLiquidityRequirementForEA(uint256)': FunctionFragment
     'checkLiquidityRequirementForPoolOwner(uint256)': FunctionFragment
     'checkLiquidityRequirementForRedemption(address,address,uint256)': FunctionFragment
@@ -186,72 +153,64 @@ export interface PoolConfigInterface extends utils.Interface {
     'evaluationAgent()': FunctionFragment
     'evaluationAgentId()': FunctionFragment
     'getAdminRnR()': FunctionFragment
-    'getFees()': FunctionFragment
+    'getFeeStructure()': FunctionFragment
     'getFirstLossCover(uint256)': FunctionFragment
     'getFirstLossCoverConfig(address)': FunctionFragment
     'getFirstLossCovers()': FunctionFragment
     'getFrontLoadingFees()': FunctionFragment
     'getLPConfig()': FunctionFragment
-    'getMinPrincipalRateInBps()': FunctionFragment
     'getPoolSettings()': FunctionFragment
-    'getPoolSummary()': FunctionFragment
     'getRoleAdmin(bytes32)': FunctionFragment
-    'getTrancheLiquidityCap(uint256)': FunctionFragment
     'grantRole(bytes32,address)': FunctionFragment
     'hasRole(bytes32,address)': FunctionFragment
     'humaConfig()': FunctionFragment
     'initialize(string,address[])': FunctionFragment
     'isFirstLossCover(address)': FunctionFragment
     'juniorTranche()': FunctionFragment
+    'onlyHumaMasterAdmin(address)': FunctionFragment
     'onlyOwnerOrHumaMasterAdmin(address)': FunctionFragment
     'onlyPool(address)': FunctionFragment
     'onlyPoolOperator(address)': FunctionFragment
     'onlyPoolOwner(address)': FunctionFragment
     'onlyPoolOwnerOrEA(address)': FunctionFragment
+    'onlyPoolOwnerOrSentinelServiceAccount(address)': FunctionFragment
     'onlyProtocolAndPoolOn()': FunctionFragment
     'pool()': FunctionFragment
     'poolFeeManager()': FunctionFragment
     'poolName()': FunctionFragment
     'poolOwnerTreasury()': FunctionFragment
     'poolSafe()': FunctionFragment
+    'proxiableUUID()': FunctionFragment
     'receivableAsset()': FunctionFragment
     'renounceRole(bytes32,address)': FunctionFragment
     'revokeRole(bytes32,address)': FunctionFragment
     'seniorTranche()': FunctionFragment
-    'setAdvanceRateInBps(uint256)': FunctionFragment
     'setCalendar(address)': FunctionFragment
     'setCredit(address)': FunctionFragment
-    'setCreditApprovalExpiration(uint256)': FunctionFragment
     'setEARewardsAndLiquidity(uint256,uint256)': FunctionFragment
     'setEpochManager(address)': FunctionFragment
     'setEvaluationAgent(uint256,address)': FunctionFragment
-    'setFeeStructure((uint16,uint16,uint96,uint16,uint96))': FunctionFragment
-    'setFirstLossCover(uint8,address,(uint16,uint96,uint96,uint16,uint16))': FunctionFragment
+    'setFeeStructure((uint16,uint16,uint16))': FunctionFragment
+    'setFirstLossCover(uint8,address,(uint16,uint96,uint96,uint96,uint16))': FunctionFragment
     'setFrontLoadingFees((uint96,uint16))': FunctionFragment
     'setHumaConfig(address)': FunctionFragment
-    'setLPConfig((bool,uint96,uint8,uint8,uint16,uint16))': FunctionFragment
-    'setLatePaymentGracePeriodInDays(uint256)': FunctionFragment
-    'setMaxCreditLine(uint256)': FunctionFragment
+    'setLPConfig((uint96,uint8,uint16,uint16,uint16))': FunctionFragment
     'setPool(address)': FunctionFragment
-    'setPoolDefaultGracePeriod(uint256)': FunctionFragment
     'setPoolFeeManager(address)': FunctionFragment
-    'setPoolLiquidityCap(uint256)': FunctionFragment
     'setPoolName(string)': FunctionFragment
     'setPoolOwnerRewardsAndLiquidity(uint256,uint256)': FunctionFragment
     'setPoolOwnerTreasury(address)': FunctionFragment
-    'setPoolPayPeriod(uint8)': FunctionFragment
     'setPoolSafe(address)': FunctionFragment
+    'setPoolSettings((uint96,uint96,uint8,uint8,uint16,uint16,bool))': FunctionFragment
     'setPoolUnderlyingToken(address)': FunctionFragment
     'setReceivableAsset(address)': FunctionFragment
-    'setReceivableAutoApproval(bool)': FunctionFragment
-    'setReceivableRequiredInBps(uint256)': FunctionFragment
     'setTranches(address,address)': FunctionFragment
     'setTranchesPolicy(address)': FunctionFragment
-    'setWithdrawalLockoutPeriod(uint256)': FunctionFragment
-    'setYield(uint256)': FunctionFragment
     'supportsInterface(bytes4)': FunctionFragment
     'tranchesPolicy()': FunctionFragment
     'underlyingToken()': FunctionFragment
+    'upgradeTo(address)': FunctionFragment
+    'upgradeToAndCall(address,bytes)': FunctionFragment
   }
 
   getFunction(
@@ -260,7 +219,6 @@ export interface PoolConfigInterface extends utils.Interface {
       | 'POOL_OPERATOR_ROLE'
       | 'calendar'
       | 'checkFirstLossCoverRequirementsForAdmin'
-      | 'checkFirstLossCoverRequirementsForRedemption'
       | 'checkLiquidityRequirementForEA'
       | 'checkLiquidityRequirementForPoolOwner'
       | 'checkLiquidityRequirementForRedemption'
@@ -272,42 +230,40 @@ export interface PoolConfigInterface extends utils.Interface {
       | 'evaluationAgent'
       | 'evaluationAgentId'
       | 'getAdminRnR'
-      | 'getFees'
+      | 'getFeeStructure'
       | 'getFirstLossCover'
       | 'getFirstLossCoverConfig'
       | 'getFirstLossCovers'
       | 'getFrontLoadingFees'
       | 'getLPConfig'
-      | 'getMinPrincipalRateInBps'
       | 'getPoolSettings'
-      | 'getPoolSummary'
       | 'getRoleAdmin'
-      | 'getTrancheLiquidityCap'
       | 'grantRole'
       | 'hasRole'
       | 'humaConfig'
       | 'initialize'
       | 'isFirstLossCover'
       | 'juniorTranche'
+      | 'onlyHumaMasterAdmin'
       | 'onlyOwnerOrHumaMasterAdmin'
       | 'onlyPool'
       | 'onlyPoolOperator'
       | 'onlyPoolOwner'
       | 'onlyPoolOwnerOrEA'
+      | 'onlyPoolOwnerOrSentinelServiceAccount'
       | 'onlyProtocolAndPoolOn'
       | 'pool'
       | 'poolFeeManager'
       | 'poolName'
       | 'poolOwnerTreasury'
       | 'poolSafe'
+      | 'proxiableUUID'
       | 'receivableAsset'
       | 'renounceRole'
       | 'revokeRole'
       | 'seniorTranche'
-      | 'setAdvanceRateInBps'
       | 'setCalendar'
       | 'setCredit'
-      | 'setCreditApprovalExpiration'
       | 'setEARewardsAndLiquidity'
       | 'setEpochManager'
       | 'setEvaluationAgent'
@@ -316,28 +272,22 @@ export interface PoolConfigInterface extends utils.Interface {
       | 'setFrontLoadingFees'
       | 'setHumaConfig'
       | 'setLPConfig'
-      | 'setLatePaymentGracePeriodInDays'
-      | 'setMaxCreditLine'
       | 'setPool'
-      | 'setPoolDefaultGracePeriod'
       | 'setPoolFeeManager'
-      | 'setPoolLiquidityCap'
       | 'setPoolName'
       | 'setPoolOwnerRewardsAndLiquidity'
       | 'setPoolOwnerTreasury'
-      | 'setPoolPayPeriod'
       | 'setPoolSafe'
+      | 'setPoolSettings'
       | 'setPoolUnderlyingToken'
       | 'setReceivableAsset'
-      | 'setReceivableAutoApproval'
-      | 'setReceivableRequiredInBps'
       | 'setTranches'
       | 'setTranchesPolicy'
-      | 'setWithdrawalLockoutPeriod'
-      | 'setYield'
       | 'supportsInterface'
       | 'tranchesPolicy'
-      | 'underlyingToken',
+      | 'underlyingToken'
+      | 'upgradeTo'
+      | 'upgradeToAndCall',
   ): FunctionFragment
 
   encodeFunctionData(
@@ -352,10 +302,6 @@ export interface PoolConfigInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'checkFirstLossCoverRequirementsForAdmin',
     values?: undefined,
-  ): string
-  encodeFunctionData(
-    functionFragment: 'checkFirstLossCoverRequirementsForRedemption',
-    values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
     functionFragment: 'checkLiquidityRequirementForEA',
@@ -402,7 +348,10 @@ export interface PoolConfigInterface extends utils.Interface {
     functionFragment: 'getAdminRnR',
     values?: undefined,
   ): string
-  encodeFunctionData(functionFragment: 'getFees', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'getFeeStructure',
+    values?: undefined,
+  ): string
   encodeFunctionData(
     functionFragment: 'getFirstLossCover',
     values: [PromiseOrValue<BigNumberish>],
@@ -424,24 +373,12 @@ export interface PoolConfigInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'getMinPrincipalRateInBps',
-    values?: undefined,
-  ): string
-  encodeFunctionData(
     functionFragment: 'getPoolSettings',
-    values?: undefined,
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getPoolSummary',
     values?: undefined,
   ): string
   encodeFunctionData(
     functionFragment: 'getRoleAdmin',
     values: [PromiseOrValue<BytesLike>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getTrancheLiquidityCap',
-    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'grantRole',
@@ -465,6 +402,10 @@ export interface PoolConfigInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
+    functionFragment: 'onlyHumaMasterAdmin',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'onlyOwnerOrHumaMasterAdmin',
     values: [PromiseOrValue<string>],
   ): string
@@ -485,6 +426,10 @@ export interface PoolConfigInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
+    functionFragment: 'onlyPoolOwnerOrSentinelServiceAccount',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
     functionFragment: 'onlyProtocolAndPoolOn',
     values?: undefined,
   ): string
@@ -499,6 +444,10 @@ export interface PoolConfigInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(functionFragment: 'poolSafe', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'proxiableUUID',
+    values?: undefined,
+  ): string
   encodeFunctionData(
     functionFragment: 'receivableAsset',
     values?: undefined,
@@ -516,20 +465,12 @@ export interface PoolConfigInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'setAdvanceRateInBps',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'setCalendar',
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
     functionFragment: 'setCredit',
     values: [PromiseOrValue<string>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setCreditApprovalExpiration',
-    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'setEARewardsAndLiquidity',
@@ -568,28 +509,12 @@ export interface PoolConfigInterface extends utils.Interface {
     values: [LPConfigStruct],
   ): string
   encodeFunctionData(
-    functionFragment: 'setLatePaymentGracePeriodInDays',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setMaxCreditLine',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'setPool',
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'setPoolDefaultGracePeriod',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'setPoolFeeManager',
     values: [PromiseOrValue<string>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setPoolLiquidityCap',
-    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'setPoolName',
@@ -604,12 +529,12 @@ export interface PoolConfigInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'setPoolPayPeriod',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'setPoolSafe',
     values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'setPoolSettings',
+    values: [PoolSettingsStruct],
   ): string
   encodeFunctionData(
     functionFragment: 'setPoolUnderlyingToken',
@@ -620,28 +545,12 @@ export interface PoolConfigInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'setReceivableAutoApproval',
-    values: [PromiseOrValue<boolean>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setReceivableRequiredInBps',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'setTranches',
     values: [PromiseOrValue<string>, PromiseOrValue<string>],
   ): string
   encodeFunctionData(
     functionFragment: 'setTranchesPolicy',
     values: [PromiseOrValue<string>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setWithdrawalLockoutPeriod',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setYield',
-    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'supportsInterface',
@@ -655,6 +564,14 @@ export interface PoolConfigInterface extends utils.Interface {
     functionFragment: 'underlyingToken',
     values?: undefined,
   ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeTo',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeToAndCall',
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>],
+  ): string
 
   decodeFunctionResult(
     functionFragment: 'DEFAULT_ADMIN_ROLE',
@@ -667,10 +584,6 @@ export interface PoolConfigInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'calendar', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'checkFirstLossCoverRequirementsForAdmin',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'checkFirstLossCoverRequirementsForRedemption',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -711,7 +624,10 @@ export interface PoolConfigInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'getAdminRnR', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'getFees', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'getFeeStructure',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
     functionFragment: 'getFirstLossCover',
     data: BytesLike,
@@ -730,23 +646,11 @@ export interface PoolConfigInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(functionFragment: 'getLPConfig', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'getMinPrincipalRateInBps',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
     functionFragment: 'getPoolSettings',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'getPoolSummary',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
     functionFragment: 'getRoleAdmin',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getTrancheLiquidityCap',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'grantRole', data: BytesLike): Result
@@ -759,6 +663,10 @@ export interface PoolConfigInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'juniorTranche',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'onlyHumaMasterAdmin',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -779,6 +687,10 @@ export interface PoolConfigInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
+    functionFragment: 'onlyPoolOwnerOrSentinelServiceAccount',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'onlyProtocolAndPoolOn',
     data: BytesLike,
   ): Result
@@ -794,6 +706,10 @@ export interface PoolConfigInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(functionFragment: 'poolSafe', data: BytesLike): Result
   decodeFunctionResult(
+    functionFragment: 'proxiableUUID',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'receivableAsset',
     data: BytesLike,
   ): Result
@@ -806,16 +722,8 @@ export interface PoolConfigInterface extends utils.Interface {
     functionFragment: 'seniorTranche',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(
-    functionFragment: 'setAdvanceRateInBps',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'setCalendar', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'setCredit', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'setCreditApprovalExpiration',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(
     functionFragment: 'setEARewardsAndLiquidity',
     data: BytesLike,
@@ -845,25 +753,9 @@ export interface PoolConfigInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'setLPConfig', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'setLatePaymentGracePeriodInDays',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'setMaxCreditLine',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'setPool', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'setPoolDefaultGracePeriod',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
     functionFragment: 'setPoolFeeManager',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'setPoolLiquidityCap',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'setPoolName', data: BytesLike): Result
@@ -875,11 +767,11 @@ export interface PoolConfigInterface extends utils.Interface {
     functionFragment: 'setPoolOwnerTreasury',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'setPoolSafe', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'setPoolPayPeriod',
+    functionFragment: 'setPoolSettings',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(functionFragment: 'setPoolSafe', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'setPoolUnderlyingToken',
     data: BytesLike,
@@ -888,24 +780,11 @@ export interface PoolConfigInterface extends utils.Interface {
     functionFragment: 'setReceivableAsset',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(
-    functionFragment: 'setReceivableAutoApproval',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'setReceivableRequiredInBps',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'setTranches', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'setTranchesPolicy',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(
-    functionFragment: 'setWithdrawalLockoutPeriod',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(functionFragment: 'setYield', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'supportsInterface',
     data: BytesLike,
@@ -918,117 +797,97 @@ export interface PoolConfigInterface extends utils.Interface {
     functionFragment: 'underlyingToken',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'upgradeToAndCall',
+    data: BytesLike,
+  ): Result
 
   events: {
-    'AdvanceRateInBpsChanged(uint256,address)': EventFragment
+    'AdminChanged(address,address)': EventFragment
+    'BeaconUpgraded(address)': EventFragment
     'CalendarChanged(address,address)': EventFragment
-    'CreditApprovalExpirationChanged(uint256,address)': EventFragment
     'CreditChanged(address,address)': EventFragment
     'EARewardsAndLiquidityChanged(uint256,uint256,address)': EventFragment
     'EpochManagerChanged(address,address)': EventFragment
     'EvaluationAgentChanged(address,address,uint256,address)': EventFragment
-    'EvaluationAgentRewardsWithdrawn(address,uint256,address)': EventFragment
-    'FeeStructureChanged(uint16,uint16,uint96,uint16,uint96,address)': EventFragment
-    'FirstLossCoverChanged(uint8,address,uint16,uint96,uint96,uint16,uint16,address)': EventFragment
+    'FeeStructureChanged(uint16,uint16,uint16,address)': EventFragment
+    'FirstLossCoverChanged(uint8,address,uint16,uint96,uint96,uint96,uint16,address)': EventFragment
     'FrontLoadingFeesChanged(uint96,uint16,address)': EventFragment
     'HumaConfigChanged(address,address)': EventFragment
     'Initialized(uint8)': EventFragment
-    'LPConfigChanged(bool,uint96,uint8,uint8,uint16,uint16,address)': EventFragment
-    'LatePaymentGracePeriodChanged(uint256,address)': EventFragment
-    'MaxCreditLineChanged(uint256,address)': EventFragment
+    'LPConfigChanged(uint96,uint8,uint16,uint16,uint16,address)': EventFragment
     'PoolChanged(address,address)': EventFragment
-    'PoolDefaultGracePeriodChanged(uint256,address)': EventFragment
     'PoolFeeManagerChanged(address,address)': EventFragment
-    'PoolFlexCallChanged(bool,uint256,address)': EventFragment
-    'PoolLiquidityCapChanged(uint256,address)': EventFragment
     'PoolNameChanged(string,address)': EventFragment
     'PoolOwnerRewardsAndLiquidityChanged(uint256,uint256,address)': EventFragment
     'PoolOwnerTreasuryChanged(address,address)': EventFragment
-    'PoolPayPeriodChanged(uint8,address)': EventFragment
-    'PoolRewardsWithdrawn(address,uint256)': EventFragment
     'PoolSafeChanged(address,address)': EventFragment
+    'PoolSettingsChanged(uint96,uint96,uint8,uint8,uint16,uint16,bool,address)': EventFragment
     'PoolUnderlyingTokenChanged(address,address)': EventFragment
-    'ProtocolRewardsWithdrawn(address,uint256,address)': EventFragment
     'ReceivableAssetChanged(address,address)': EventFragment
-    'ReceivableAutoApproval(bool,address)': EventFragment
-    'ReceivableRequiredInBpsChanged(uint256,address)': EventFragment
     'RoleAdminChanged(bytes32,bytes32,bytes32)': EventFragment
     'RoleGranted(bytes32,address,address)': EventFragment
     'RoleRevoked(bytes32,address,address)': EventFragment
     'TranchesChanged(address,address,address)': EventFragment
     'TranchesPolicyChanged(address,address)': EventFragment
-    'WithdrawalLockoutPeriodChanged(uint256,address)': EventFragment
-    'YieldChanged(uint256,address)': EventFragment
+    'Upgraded(address)': EventFragment
   }
 
-  getEvent(nameOrSignatureOrTopic: 'AdvanceRateInBpsChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'AdminChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'BeaconUpgraded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CalendarChanged'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'CreditApprovalExpirationChanged',
-  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CreditChanged'): EventFragment
   getEvent(
     nameOrSignatureOrTopic: 'EARewardsAndLiquidityChanged',
   ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'EpochManagerChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'EvaluationAgentChanged'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'EvaluationAgentRewardsWithdrawn',
-  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'FeeStructureChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'FirstLossCoverChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'FrontLoadingFeesChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'HumaConfigChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LPConfigChanged'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'LatePaymentGracePeriodChanged',
-  ): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'MaxCreditLineChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolChanged'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'PoolDefaultGracePeriodChanged',
-  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolFeeManagerChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PoolFlexCallChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PoolLiquidityCapChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolNameChanged'): EventFragment
   getEvent(
     nameOrSignatureOrTopic: 'PoolOwnerRewardsAndLiquidityChanged',
   ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolOwnerTreasuryChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PoolPayPeriodChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PoolRewardsWithdrawn'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolSafeChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolSettingsChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolUnderlyingTokenChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ProtocolRewardsWithdrawn'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'ReceivableAssetChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ReceivableAutoApproval'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'ReceivableRequiredInBpsChanged',
-  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RoleAdminChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RoleGranted'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'RoleRevoked'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'TranchesChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'TranchesPolicyChanged'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'WithdrawalLockoutPeriodChanged',
-  ): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'YieldChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment
 }
 
-export interface AdvanceRateInBpsChangedEventObject {
-  advanceRateInBps: BigNumber
-  by: string
+export interface AdminChangedEventObject {
+  previousAdmin: string
+  newAdmin: string
 }
-export type AdvanceRateInBpsChangedEvent = TypedEvent<
-  [BigNumber, string],
-  AdvanceRateInBpsChangedEventObject
+export type AdminChangedEvent = TypedEvent<
+  [string, string],
+  AdminChangedEventObject
 >
 
-export type AdvanceRateInBpsChangedEventFilter =
-  TypedEventFilter<AdvanceRateInBpsChangedEvent>
+export type AdminChangedEventFilter = TypedEventFilter<AdminChangedEvent>
+
+export interface BeaconUpgradedEventObject {
+  beacon: string
+}
+export type BeaconUpgradedEvent = TypedEvent<
+  [string],
+  BeaconUpgradedEventObject
+>
+
+export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>
 
 export interface CalendarChangedEventObject {
   calendar: string
@@ -1040,18 +899,6 @@ export type CalendarChangedEvent = TypedEvent<
 >
 
 export type CalendarChangedEventFilter = TypedEventFilter<CalendarChangedEvent>
-
-export interface CreditApprovalExpirationChangedEventObject {
-  durationInDays: BigNumber
-  by: string
-}
-export type CreditApprovalExpirationChangedEvent = TypedEvent<
-  [BigNumber, string],
-  CreditApprovalExpirationChangedEventObject
->
-
-export type CreditApprovalExpirationChangedEventFilter =
-  TypedEventFilter<CreditApprovalExpirationChangedEvent>
 
 export interface CreditChangedEventObject {
   credit: string
@@ -1103,29 +950,14 @@ export type EvaluationAgentChangedEvent = TypedEvent<
 export type EvaluationAgentChangedEventFilter =
   TypedEventFilter<EvaluationAgentChangedEvent>
 
-export interface EvaluationAgentRewardsWithdrawnEventObject {
-  receiver: string
-  amount: BigNumber
-  by: string
-}
-export type EvaluationAgentRewardsWithdrawnEvent = TypedEvent<
-  [string, BigNumber, string],
-  EvaluationAgentRewardsWithdrawnEventObject
->
-
-export type EvaluationAgentRewardsWithdrawnEventFilter =
-  TypedEventFilter<EvaluationAgentRewardsWithdrawnEvent>
-
 export interface FeeStructureChangedEventObject {
   yieldInBps: number
   minPrincipalRateInBps: number
-  lateFeeFlat: BigNumber
   lateFeeBps: number
-  membershipFee: BigNumber
   by: string
 }
 export type FeeStructureChangedEvent = TypedEvent<
-  [number, number, BigNumber, number, BigNumber, string],
+  [number, number, number, string],
   FeeStructureChangedEventObject
 >
 
@@ -1135,15 +967,15 @@ export type FeeStructureChangedEventFilter =
 export interface FirstLossCoverChangedEventObject {
   index: number
   firstLossCover: string
-  coverRateInBps: number
-  coverCap: BigNumber
-  liquidityCap: BigNumber
-  maxPercentOfPoolValueInBps: number
-  riskYieldMultiplier: number
+  coverRatePerLossInBps: number
+  coverCapPerLoss: BigNumber
+  maxLiquidity: BigNumber
+  minLiquidity: BigNumber
+  riskYieldMultiplierInBps: number
   by: string
 }
 export type FirstLossCoverChangedEvent = TypedEvent<
-  [number, string, number, BigNumber, BigNumber, number, number, string],
+  [number, string, number, BigNumber, BigNumber, BigNumber, number, string],
   FirstLossCoverChangedEventObject
 >
 
@@ -1183,44 +1015,19 @@ export type InitializedEvent = TypedEvent<[number], InitializedEventObject>
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
 export interface LPConfigChangedEventObject {
-  permissioned: boolean
   liquidityCap: BigNumber
-  withdrawalLockoutInMonths: number
   maxSeniorJuniorRatio: number
   fixedSeniorYieldInBps: number
   tranchesRiskAdjustmentInBps: number
+  withdrawalLockoutInDays: number
   by: string
 }
 export type LPConfigChangedEvent = TypedEvent<
-  [boolean, BigNumber, number, number, number, number, string],
+  [BigNumber, number, number, number, number, string],
   LPConfigChangedEventObject
 >
 
 export type LPConfigChangedEventFilter = TypedEventFilter<LPConfigChangedEvent>
-
-export interface LatePaymentGracePeriodChangedEventObject {
-  gracePeriodInDays: BigNumber
-  by: string
-}
-export type LatePaymentGracePeriodChangedEvent = TypedEvent<
-  [BigNumber, string],
-  LatePaymentGracePeriodChangedEventObject
->
-
-export type LatePaymentGracePeriodChangedEventFilter =
-  TypedEventFilter<LatePaymentGracePeriodChangedEvent>
-
-export interface MaxCreditLineChangedEventObject {
-  maxCreditLine: BigNumber
-  by: string
-}
-export type MaxCreditLineChangedEvent = TypedEvent<
-  [BigNumber, string],
-  MaxCreditLineChangedEventObject
->
-
-export type MaxCreditLineChangedEventFilter =
-  TypedEventFilter<MaxCreditLineChangedEvent>
 
 export interface PoolChangedEventObject {
   pool: string
@@ -1233,18 +1040,6 @@ export type PoolChangedEvent = TypedEvent<
 
 export type PoolChangedEventFilter = TypedEventFilter<PoolChangedEvent>
 
-export interface PoolDefaultGracePeriodChangedEventObject {
-  gracePeriodInMonths: BigNumber
-  by: string
-}
-export type PoolDefaultGracePeriodChangedEvent = TypedEvent<
-  [BigNumber, string],
-  PoolDefaultGracePeriodChangedEventObject
->
-
-export type PoolDefaultGracePeriodChangedEventFilter =
-  TypedEventFilter<PoolDefaultGracePeriodChangedEvent>
-
 export interface PoolFeeManagerChangedEventObject {
   poolFeeManager: string
   by: string
@@ -1256,31 +1051,6 @@ export type PoolFeeManagerChangedEvent = TypedEvent<
 
 export type PoolFeeManagerChangedEventFilter =
   TypedEventFilter<PoolFeeManagerChangedEvent>
-
-export interface PoolFlexCallChangedEventObject {
-  enabled: boolean
-  windowInEpoch: BigNumber
-  by: string
-}
-export type PoolFlexCallChangedEvent = TypedEvent<
-  [boolean, BigNumber, string],
-  PoolFlexCallChangedEventObject
->
-
-export type PoolFlexCallChangedEventFilter =
-  TypedEventFilter<PoolFlexCallChangedEvent>
-
-export interface PoolLiquidityCapChangedEventObject {
-  liquidityCap: BigNumber
-  by: string
-}
-export type PoolLiquidityCapChangedEvent = TypedEvent<
-  [BigNumber, string],
-  PoolLiquidityCapChangedEventObject
->
-
-export type PoolLiquidityCapChangedEventFilter =
-  TypedEventFilter<PoolLiquidityCapChangedEvent>
 
 export interface PoolNameChangedEventObject {
   name: string
@@ -1318,30 +1088,6 @@ export type PoolOwnerTreasuryChangedEvent = TypedEvent<
 export type PoolOwnerTreasuryChangedEventFilter =
   TypedEventFilter<PoolOwnerTreasuryChangedEvent>
 
-export interface PoolPayPeriodChangedEventObject {
-  payPeriodDuration: number
-  by: string
-}
-export type PoolPayPeriodChangedEvent = TypedEvent<
-  [number, string],
-  PoolPayPeriodChangedEventObject
->
-
-export type PoolPayPeriodChangedEventFilter =
-  TypedEventFilter<PoolPayPeriodChangedEvent>
-
-export interface PoolRewardsWithdrawnEventObject {
-  receiver: string
-  amount: BigNumber
-}
-export type PoolRewardsWithdrawnEvent = TypedEvent<
-  [string, BigNumber],
-  PoolRewardsWithdrawnEventObject
->
-
-export type PoolRewardsWithdrawnEventFilter =
-  TypedEventFilter<PoolRewardsWithdrawnEvent>
-
 export interface PoolSafeChangedEventObject {
   poolSafe: string
   by: string
@@ -1352,6 +1098,24 @@ export type PoolSafeChangedEvent = TypedEvent<
 >
 
 export type PoolSafeChangedEventFilter = TypedEventFilter<PoolSafeChangedEvent>
+
+export interface PoolSettingsChangedEventObject {
+  maxCreditLine: BigNumber
+  minDepositAmount: BigNumber
+  payPeriodDuration: number
+  latePaymentGracePeriodInDays: number
+  defaultGracePeriodInDays: number
+  advanceRateInBps: number
+  receivableAutoApproval: boolean
+  by: string
+}
+export type PoolSettingsChangedEvent = TypedEvent<
+  [BigNumber, BigNumber, number, number, number, number, boolean, string],
+  PoolSettingsChangedEventObject
+>
+
+export type PoolSettingsChangedEventFilter =
+  TypedEventFilter<PoolSettingsChangedEvent>
 
 export interface PoolUnderlyingTokenChangedEventObject {
   underlyingToken: string
@@ -1365,19 +1129,6 @@ export type PoolUnderlyingTokenChangedEvent = TypedEvent<
 export type PoolUnderlyingTokenChangedEventFilter =
   TypedEventFilter<PoolUnderlyingTokenChangedEvent>
 
-export interface ProtocolRewardsWithdrawnEventObject {
-  receiver: string
-  amount: BigNumber
-  by: string
-}
-export type ProtocolRewardsWithdrawnEvent = TypedEvent<
-  [string, BigNumber, string],
-  ProtocolRewardsWithdrawnEventObject
->
-
-export type ProtocolRewardsWithdrawnEventFilter =
-  TypedEventFilter<ProtocolRewardsWithdrawnEvent>
-
 export interface ReceivableAssetChangedEventObject {
   receivableAsset: string
   by: string
@@ -1389,30 +1140,6 @@ export type ReceivableAssetChangedEvent = TypedEvent<
 
 export type ReceivableAssetChangedEventFilter =
   TypedEventFilter<ReceivableAssetChangedEvent>
-
-export interface ReceivableAutoApprovalEventObject {
-  receivableAutoApproval: boolean
-  by: string
-}
-export type ReceivableAutoApprovalEvent = TypedEvent<
-  [boolean, string],
-  ReceivableAutoApprovalEventObject
->
-
-export type ReceivableAutoApprovalEventFilter =
-  TypedEventFilter<ReceivableAutoApprovalEvent>
-
-export interface ReceivableRequiredInBpsChangedEventObject {
-  receivableRequiredInBps: BigNumber
-  by: string
-}
-export type ReceivableRequiredInBpsChangedEvent = TypedEvent<
-  [BigNumber, string],
-  ReceivableRequiredInBpsChangedEventObject
->
-
-export type ReceivableRequiredInBpsChangedEventFilter =
-  TypedEventFilter<ReceivableRequiredInBpsChangedEvent>
 
 export interface RoleAdminChangedEventObject {
   role: string
@@ -1475,28 +1202,12 @@ export type TranchesPolicyChangedEvent = TypedEvent<
 export type TranchesPolicyChangedEventFilter =
   TypedEventFilter<TranchesPolicyChangedEvent>
 
-export interface WithdrawalLockoutPeriodChangedEventObject {
-  lockoutPeriodInMonths: BigNumber
-  by: string
+export interface UpgradedEventObject {
+  implementation: string
 }
-export type WithdrawalLockoutPeriodChangedEvent = TypedEvent<
-  [BigNumber, string],
-  WithdrawalLockoutPeriodChangedEventObject
->
+export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>
 
-export type WithdrawalLockoutPeriodChangedEventFilter =
-  TypedEventFilter<WithdrawalLockoutPeriodChangedEvent>
-
-export interface YieldChangedEventObject {
-  aprInBps: BigNumber
-  by: string
-}
-export type YieldChangedEvent = TypedEvent<
-  [BigNumber, string],
-  YieldChangedEventObject
->
-
-export type YieldChangedEventFilter = TypedEventFilter<YieldChangedEvent>
+export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>
 
 export interface PoolConfig extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
@@ -1535,11 +1246,6 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[void]>
 
-    checkFirstLossCoverRequirementsForRedemption(
-      lender: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<[void]>
-
     checkLiquidityRequirementForEA(
       balance: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
@@ -1573,13 +1279,9 @@ export interface PoolConfig extends BaseContract {
 
     getAdminRnR(overrides?: CallOverrides): Promise<[AdminRnRStructOutput]>
 
-    getFees(overrides?: CallOverrides): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        _lateFeeFlat: BigNumber
-        _lateFeeBps: BigNumber
-        _membershipFee: BigNumber
-      }
-    >
+    getFeeStructure(
+      overrides?: CallOverrides,
+    ): Promise<[FeeStructureStructOutput]>
 
     getFirstLossCover(
       index: PromiseOrValue<BigNumberish>,
@@ -1599,49 +1301,14 @@ export interface PoolConfig extends BaseContract {
 
     getLPConfig(overrides?: CallOverrides): Promise<[LPConfigStructOutput]>
 
-    getMinPrincipalRateInBps(
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { _minPrincipalRate: BigNumber }>
-
     getPoolSettings(
       overrides?: CallOverrides,
     ): Promise<[PoolSettingsStructOutput]>
-
-    getPoolSummary(overrides?: CallOverrides): Promise<
-      [
-        string,
-        BigNumber,
-        number,
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        number,
-        BigNumber,
-        string,
-      ] & {
-        token: string
-        yieldInBps: BigNumber
-        payPeriodDuration: number
-        maxCreditAmount: BigNumber
-        liquidityCap: BigNumber
-        name: string
-        symbol: string
-        decimals: number
-        eaId: BigNumber
-        eaNFTAddress: string
-      }
-    >
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<[string]>
-
-    getTrancheLiquidityCap(
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { cap: BigNumber }>
 
     grantRole(
       role: PromiseOrValue<BytesLike>,
@@ -1670,6 +1337,11 @@ export interface PoolConfig extends BaseContract {
 
     juniorTranche(overrides?: CallOverrides): Promise<[string]>
 
+    onlyHumaMasterAdmin(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[void]>
+
     onlyOwnerOrHumaMasterAdmin(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -1695,6 +1367,11 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[string]>
 
+    onlyPoolOwnerOrSentinelServiceAccount(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[void]>
+
     onlyProtocolAndPoolOn(overrides?: CallOverrides): Promise<[void]>
 
     pool(overrides?: CallOverrides): Promise<[string]>
@@ -1706,6 +1383,8 @@ export interface PoolConfig extends BaseContract {
     poolOwnerTreasury(overrides?: CallOverrides): Promise<[string]>
 
     poolSafe(overrides?: CallOverrides): Promise<[string]>
+
+    proxiableUUID(overrides?: CallOverrides): Promise<[string]>
 
     receivableAsset(overrides?: CallOverrides): Promise<[string]>
 
@@ -1723,11 +1402,6 @@ export interface PoolConfig extends BaseContract {
 
     seniorTranche(overrides?: CallOverrides): Promise<[string]>
 
-    setAdvanceRateInBps(
-      advanceRateInBps: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
     setCalendar(
       _calendar: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -1735,11 +1409,6 @@ export interface PoolConfig extends BaseContract {
 
     setCredit(
       _credit: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setCreditApprovalExpiration(
-      durationInDays: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1787,33 +1456,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setLatePaymentGracePeriodInDays(
-      gracePeriodInDays: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setMaxCreditLine(
-      creditLine: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
     setPool(
       _pool: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setPoolDefaultGracePeriod(
-      gracePeriod: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
     setPoolFeeManager(
       _poolFeeManager: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setPoolLiquidityCap(
-      liquidityCap: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1833,13 +1482,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setPoolPayPeriod(
-      duration: PromiseOrValue<BigNumberish>,
+    setPoolSafe(
+      _poolSafe: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setPoolSafe(
-      _poolSafe: PromiseOrValue<string>,
+    setPoolSettings(
+      settings: PoolSettingsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1850,16 +1499,6 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setReceivableAutoApproval(
-      autoApproval: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setReceivableRequiredInBps(
-      receivableRequiredInBps: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1874,16 +1513,6 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setWithdrawalLockoutPeriod(
-      lockoutPeriod: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setYield(
-      _yieldInBps: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
@@ -1892,6 +1521,17 @@ export interface PoolConfig extends BaseContract {
     tranchesPolicy(overrides?: CallOverrides): Promise<[string]>
 
     underlyingToken(overrides?: CallOverrides): Promise<[string]>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
   }
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>
@@ -1901,11 +1541,6 @@ export interface PoolConfig extends BaseContract {
   calendar(overrides?: CallOverrides): Promise<string>
 
   checkFirstLossCoverRequirementsForAdmin(
-    overrides?: CallOverrides,
-  ): Promise<void>
-
-  checkFirstLossCoverRequirementsForRedemption(
-    lender: PromiseOrValue<string>,
     overrides?: CallOverrides,
   ): Promise<void>
 
@@ -1942,13 +1577,7 @@ export interface PoolConfig extends BaseContract {
 
   getAdminRnR(overrides?: CallOverrides): Promise<AdminRnRStructOutput>
 
-  getFees(overrides?: CallOverrides): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      _lateFeeFlat: BigNumber
-      _lateFeeBps: BigNumber
-      _membershipFee: BigNumber
-    }
-  >
+  getFeeStructure(overrides?: CallOverrides): Promise<FeeStructureStructOutput>
 
   getFirstLossCover(
     index: PromiseOrValue<BigNumberish>,
@@ -1968,45 +1597,12 @@ export interface PoolConfig extends BaseContract {
 
   getLPConfig(overrides?: CallOverrides): Promise<LPConfigStructOutput>
 
-  getMinPrincipalRateInBps(overrides?: CallOverrides): Promise<BigNumber>
-
   getPoolSettings(overrides?: CallOverrides): Promise<PoolSettingsStructOutput>
-
-  getPoolSummary(overrides?: CallOverrides): Promise<
-    [
-      string,
-      BigNumber,
-      number,
-      BigNumber,
-      BigNumber,
-      string,
-      string,
-      number,
-      BigNumber,
-      string,
-    ] & {
-      token: string
-      yieldInBps: BigNumber
-      payPeriodDuration: number
-      maxCreditAmount: BigNumber
-      liquidityCap: BigNumber
-      name: string
-      symbol: string
-      decimals: number
-      eaId: BigNumber
-      eaNFTAddress: string
-    }
-  >
 
   getRoleAdmin(
     role: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides,
   ): Promise<string>
-
-  getTrancheLiquidityCap(
-    index: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>
 
   grantRole(
     role: PromiseOrValue<BytesLike>,
@@ -2035,6 +1631,11 @@ export interface PoolConfig extends BaseContract {
 
   juniorTranche(overrides?: CallOverrides): Promise<string>
 
+  onlyHumaMasterAdmin(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<void>
+
   onlyOwnerOrHumaMasterAdmin(
     account: PromiseOrValue<string>,
     overrides?: CallOverrides,
@@ -2060,6 +1661,11 @@ export interface PoolConfig extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<string>
 
+  onlyPoolOwnerOrSentinelServiceAccount(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<void>
+
   onlyProtocolAndPoolOn(overrides?: CallOverrides): Promise<void>
 
   pool(overrides?: CallOverrides): Promise<string>
@@ -2071,6 +1677,8 @@ export interface PoolConfig extends BaseContract {
   poolOwnerTreasury(overrides?: CallOverrides): Promise<string>
 
   poolSafe(overrides?: CallOverrides): Promise<string>
+
+  proxiableUUID(overrides?: CallOverrides): Promise<string>
 
   receivableAsset(overrides?: CallOverrides): Promise<string>
 
@@ -2088,11 +1696,6 @@ export interface PoolConfig extends BaseContract {
 
   seniorTranche(overrides?: CallOverrides): Promise<string>
 
-  setAdvanceRateInBps(
-    advanceRateInBps: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   setCalendar(
     _calendar: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -2100,11 +1703,6 @@ export interface PoolConfig extends BaseContract {
 
   setCredit(
     _credit: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setCreditApprovalExpiration(
-    durationInDays: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -2152,33 +1750,13 @@ export interface PoolConfig extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setLatePaymentGracePeriodInDays(
-    gracePeriodInDays: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setMaxCreditLine(
-    creditLine: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   setPool(
     _pool: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setPoolDefaultGracePeriod(
-    gracePeriod: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   setPoolFeeManager(
     _poolFeeManager: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setPoolLiquidityCap(
-    liquidityCap: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -2198,13 +1776,13 @@ export interface PoolConfig extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setPoolPayPeriod(
-    duration: PromiseOrValue<BigNumberish>,
+  setPoolSafe(
+    _poolSafe: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setPoolSafe(
-    _poolSafe: PromiseOrValue<string>,
+  setPoolSettings(
+    settings: PoolSettingsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -2215,16 +1793,6 @@ export interface PoolConfig extends BaseContract {
 
   setReceivableAsset(
     _receivableAsset: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setReceivableAutoApproval(
-    autoApproval: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setReceivableRequiredInBps(
-    receivableRequiredInBps: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -2239,16 +1807,6 @@ export interface PoolConfig extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setWithdrawalLockoutPeriod(
-    lockoutPeriod: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setYield(
-    _yieldInBps: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides,
@@ -2258,6 +1816,17 @@ export interface PoolConfig extends BaseContract {
 
   underlyingToken(overrides?: CallOverrides): Promise<string>
 
+  upgradeTo(
+    newImplementation: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  upgradeToAndCall(
+    newImplementation: PromiseOrValue<string>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>
 
@@ -2266,11 +1835,6 @@ export interface PoolConfig extends BaseContract {
     calendar(overrides?: CallOverrides): Promise<string>
 
     checkFirstLossCoverRequirementsForAdmin(
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    checkFirstLossCoverRequirementsForRedemption(
-      lender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2307,13 +1871,9 @@ export interface PoolConfig extends BaseContract {
 
     getAdminRnR(overrides?: CallOverrides): Promise<AdminRnRStructOutput>
 
-    getFees(overrides?: CallOverrides): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        _lateFeeFlat: BigNumber
-        _lateFeeBps: BigNumber
-        _membershipFee: BigNumber
-      }
-    >
+    getFeeStructure(
+      overrides?: CallOverrides,
+    ): Promise<FeeStructureStructOutput>
 
     getFirstLossCover(
       index: PromiseOrValue<BigNumberish>,
@@ -2333,47 +1893,14 @@ export interface PoolConfig extends BaseContract {
 
     getLPConfig(overrides?: CallOverrides): Promise<LPConfigStructOutput>
 
-    getMinPrincipalRateInBps(overrides?: CallOverrides): Promise<BigNumber>
-
     getPoolSettings(
       overrides?: CallOverrides,
     ): Promise<PoolSettingsStructOutput>
-
-    getPoolSummary(overrides?: CallOverrides): Promise<
-      [
-        string,
-        BigNumber,
-        number,
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        number,
-        BigNumber,
-        string,
-      ] & {
-        token: string
-        yieldInBps: BigNumber
-        payPeriodDuration: number
-        maxCreditAmount: BigNumber
-        liquidityCap: BigNumber
-        name: string
-        symbol: string
-        decimals: number
-        eaId: BigNumber
-        eaNFTAddress: string
-      }
-    >
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<string>
-
-    getTrancheLiquidityCap(
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
 
     grantRole(
       role: PromiseOrValue<BytesLike>,
@@ -2402,6 +1929,11 @@ export interface PoolConfig extends BaseContract {
 
     juniorTranche(overrides?: CallOverrides): Promise<string>
 
+    onlyHumaMasterAdmin(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     onlyOwnerOrHumaMasterAdmin(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -2427,6 +1959,11 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<string>
 
+    onlyPoolOwnerOrSentinelServiceAccount(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     onlyProtocolAndPoolOn(overrides?: CallOverrides): Promise<void>
 
     pool(overrides?: CallOverrides): Promise<string>
@@ -2438,6 +1975,8 @@ export interface PoolConfig extends BaseContract {
     poolOwnerTreasury(overrides?: CallOverrides): Promise<string>
 
     poolSafe(overrides?: CallOverrides): Promise<string>
+
+    proxiableUUID(overrides?: CallOverrides): Promise<string>
 
     receivableAsset(overrides?: CallOverrides): Promise<string>
 
@@ -2455,11 +1994,6 @@ export interface PoolConfig extends BaseContract {
 
     seniorTranche(overrides?: CallOverrides): Promise<string>
 
-    setAdvanceRateInBps(
-      advanceRateInBps: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
     setCalendar(
       _calendar: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -2467,11 +2001,6 @@ export interface PoolConfig extends BaseContract {
 
     setCredit(
       _credit: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setCreditApprovalExpiration(
-      durationInDays: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2519,33 +2048,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setLatePaymentGracePeriodInDays(
-      gracePeriodInDays: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setMaxCreditLine(
-      creditLine: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
     setPool(
       _pool: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setPoolDefaultGracePeriod(
-      gracePeriod: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
     setPoolFeeManager(
       _poolFeeManager: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setPoolLiquidityCap(
-      liquidityCap: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2565,13 +2074,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setPoolPayPeriod(
-      duration: PromiseOrValue<BigNumberish>,
+    setPoolSafe(
+      _poolSafe: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setPoolSafe(
-      _poolSafe: PromiseOrValue<string>,
+    setPoolSettings(
+      settings: PoolSettingsStruct,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2582,16 +2091,6 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setReceivableAutoApproval(
-      autoApproval: PromiseOrValue<boolean>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setReceivableRequiredInBps(
-      receivableRequiredInBps: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -2606,16 +2105,6 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setWithdrawalLockoutPeriod(
-      lockoutPeriod: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setYield(
-      _yieldInBps: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
@@ -2624,32 +2113,38 @@ export interface PoolConfig extends BaseContract {
     tranchesPolicy(overrides?: CallOverrides): Promise<string>
 
     underlyingToken(overrides?: CallOverrides): Promise<string>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides,
+    ): Promise<void>
   }
 
   filters: {
-    'AdvanceRateInBpsChanged(uint256,address)'(
-      advanceRateInBps?: null,
-      by?: null,
-    ): AdvanceRateInBpsChangedEventFilter
-    AdvanceRateInBpsChanged(
-      advanceRateInBps?: null,
-      by?: null,
-    ): AdvanceRateInBpsChangedEventFilter
+    'AdminChanged(address,address)'(
+      previousAdmin?: null,
+      newAdmin?: null,
+    ): AdminChangedEventFilter
+    AdminChanged(previousAdmin?: null, newAdmin?: null): AdminChangedEventFilter
+
+    'BeaconUpgraded(address)'(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+    BeaconUpgraded(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
 
     'CalendarChanged(address,address)'(
       calendar?: null,
       by?: null,
     ): CalendarChangedEventFilter
     CalendarChanged(calendar?: null, by?: null): CalendarChangedEventFilter
-
-    'CreditApprovalExpirationChanged(uint256,address)'(
-      durationInDays?: null,
-      by?: null,
-    ): CreditApprovalExpirationChangedEventFilter
-    CreditApprovalExpirationChanged(
-      durationInDays?: null,
-      by?: null,
-    ): CreditApprovalExpirationChangedEventFilter
 
     'CreditChanged(address,address)'(
       credit?: null,
@@ -2690,52 +2185,37 @@ export interface PoolConfig extends BaseContract {
       by?: null,
     ): EvaluationAgentChangedEventFilter
 
-    'EvaluationAgentRewardsWithdrawn(address,uint256,address)'(
-      receiver?: null,
-      amount?: null,
-      by?: null,
-    ): EvaluationAgentRewardsWithdrawnEventFilter
-    EvaluationAgentRewardsWithdrawn(
-      receiver?: null,
-      amount?: null,
-      by?: null,
-    ): EvaluationAgentRewardsWithdrawnEventFilter
-
-    'FeeStructureChanged(uint16,uint16,uint96,uint16,uint96,address)'(
+    'FeeStructureChanged(uint16,uint16,uint16,address)'(
       yieldInBps?: null,
       minPrincipalRateInBps?: null,
-      lateFeeFlat?: null,
       lateFeeBps?: null,
-      membershipFee?: null,
       by?: null,
     ): FeeStructureChangedEventFilter
     FeeStructureChanged(
       yieldInBps?: null,
       minPrincipalRateInBps?: null,
-      lateFeeFlat?: null,
       lateFeeBps?: null,
-      membershipFee?: null,
       by?: null,
     ): FeeStructureChangedEventFilter
 
-    'FirstLossCoverChanged(uint8,address,uint16,uint96,uint96,uint16,uint16,address)'(
+    'FirstLossCoverChanged(uint8,address,uint16,uint96,uint96,uint96,uint16,address)'(
       index?: null,
       firstLossCover?: null,
-      coverRateInBps?: null,
-      coverCap?: null,
-      liquidityCap?: null,
-      maxPercentOfPoolValueInBps?: null,
-      riskYieldMultiplier?: null,
+      coverRatePerLossInBps?: null,
+      coverCapPerLoss?: null,
+      maxLiquidity?: null,
+      minLiquidity?: null,
+      riskYieldMultiplierInBps?: null,
       by?: null,
     ): FirstLossCoverChangedEventFilter
     FirstLossCoverChanged(
       index?: null,
       firstLossCover?: null,
-      coverRateInBps?: null,
-      coverCap?: null,
-      liquidityCap?: null,
-      maxPercentOfPoolValueInBps?: null,
-      riskYieldMultiplier?: null,
+      coverRatePerLossInBps?: null,
+      coverCapPerLoss?: null,
+      maxLiquidity?: null,
+      minLiquidity?: null,
+      riskYieldMultiplierInBps?: null,
       by?: null,
     ): FirstLossCoverChangedEventFilter
 
@@ -2762,57 +2242,28 @@ export interface PoolConfig extends BaseContract {
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
-    'LPConfigChanged(bool,uint96,uint8,uint8,uint16,uint16,address)'(
-      permissioned?: null,
+    'LPConfigChanged(uint96,uint8,uint16,uint16,uint16,address)'(
       liquidityCap?: null,
-      withdrawalLockoutInMonths?: null,
       maxSeniorJuniorRatio?: null,
       fixedSeniorYieldInBps?: null,
       tranchesRiskAdjustmentInBps?: null,
+      withdrawalLockoutInDays?: null,
       by?: null,
     ): LPConfigChangedEventFilter
     LPConfigChanged(
-      permissioned?: null,
       liquidityCap?: null,
-      withdrawalLockoutInMonths?: null,
       maxSeniorJuniorRatio?: null,
       fixedSeniorYieldInBps?: null,
       tranchesRiskAdjustmentInBps?: null,
+      withdrawalLockoutInDays?: null,
       by?: null,
     ): LPConfigChangedEventFilter
-
-    'LatePaymentGracePeriodChanged(uint256,address)'(
-      gracePeriodInDays?: null,
-      by?: null,
-    ): LatePaymentGracePeriodChangedEventFilter
-    LatePaymentGracePeriodChanged(
-      gracePeriodInDays?: null,
-      by?: null,
-    ): LatePaymentGracePeriodChangedEventFilter
-
-    'MaxCreditLineChanged(uint256,address)'(
-      maxCreditLine?: null,
-      by?: null,
-    ): MaxCreditLineChangedEventFilter
-    MaxCreditLineChanged(
-      maxCreditLine?: null,
-      by?: null,
-    ): MaxCreditLineChangedEventFilter
 
     'PoolChanged(address,address)'(
       pool?: null,
       by?: null,
     ): PoolChangedEventFilter
     PoolChanged(pool?: null, by?: null): PoolChangedEventFilter
-
-    'PoolDefaultGracePeriodChanged(uint256,address)'(
-      gracePeriodInMonths?: null,
-      by?: null,
-    ): PoolDefaultGracePeriodChangedEventFilter
-    PoolDefaultGracePeriodChanged(
-      gracePeriodInMonths?: null,
-      by?: null,
-    ): PoolDefaultGracePeriodChangedEventFilter
 
     'PoolFeeManagerChanged(address,address)'(
       poolFeeManager?: null,
@@ -2822,26 +2273,6 @@ export interface PoolConfig extends BaseContract {
       poolFeeManager?: null,
       by?: null,
     ): PoolFeeManagerChangedEventFilter
-
-    'PoolFlexCallChanged(bool,uint256,address)'(
-      enabled?: null,
-      windowInEpoch?: null,
-      by?: null,
-    ): PoolFlexCallChangedEventFilter
-    PoolFlexCallChanged(
-      enabled?: null,
-      windowInEpoch?: null,
-      by?: null,
-    ): PoolFlexCallChangedEventFilter
-
-    'PoolLiquidityCapChanged(uint256,address)'(
-      liquidityCap?: null,
-      by?: null,
-    ): PoolLiquidityCapChangedEventFilter
-    PoolLiquidityCapChanged(
-      liquidityCap?: null,
-      by?: null,
-    ): PoolLiquidityCapChangedEventFilter
 
     'PoolNameChanged(string,address)'(
       name?: null,
@@ -2869,29 +2300,32 @@ export interface PoolConfig extends BaseContract {
       by?: PromiseOrValue<string> | null,
     ): PoolOwnerTreasuryChangedEventFilter
 
-    'PoolPayPeriodChanged(uint8,address)'(
-      payPeriodDuration?: null,
-      by?: null,
-    ): PoolPayPeriodChangedEventFilter
-    PoolPayPeriodChanged(
-      payPeriodDuration?: null,
-      by?: null,
-    ): PoolPayPeriodChangedEventFilter
-
-    'PoolRewardsWithdrawn(address,uint256)'(
-      receiver?: null,
-      amount?: null,
-    ): PoolRewardsWithdrawnEventFilter
-    PoolRewardsWithdrawn(
-      receiver?: null,
-      amount?: null,
-    ): PoolRewardsWithdrawnEventFilter
-
     'PoolSafeChanged(address,address)'(
       poolSafe?: null,
       by?: null,
     ): PoolSafeChangedEventFilter
     PoolSafeChanged(poolSafe?: null, by?: null): PoolSafeChangedEventFilter
+
+    'PoolSettingsChanged(uint96,uint96,uint8,uint8,uint16,uint16,bool,address)'(
+      maxCreditLine?: null,
+      minDepositAmount?: null,
+      payPeriodDuration?: null,
+      latePaymentGracePeriodInDays?: null,
+      defaultGracePeriodInDays?: null,
+      advanceRateInBps?: null,
+      receivableAutoApproval?: null,
+      by?: null,
+    ): PoolSettingsChangedEventFilter
+    PoolSettingsChanged(
+      maxCreditLine?: null,
+      minDepositAmount?: null,
+      payPeriodDuration?: null,
+      latePaymentGracePeriodInDays?: null,
+      defaultGracePeriodInDays?: null,
+      advanceRateInBps?: null,
+      receivableAutoApproval?: null,
+      by?: null,
+    ): PoolSettingsChangedEventFilter
 
     'PoolUnderlyingTokenChanged(address,address)'(
       underlyingToken?: null,
@@ -2902,17 +2336,6 @@ export interface PoolConfig extends BaseContract {
       by?: null,
     ): PoolUnderlyingTokenChangedEventFilter
 
-    'ProtocolRewardsWithdrawn(address,uint256,address)'(
-      receiver?: null,
-      amount?: null,
-      by?: null,
-    ): ProtocolRewardsWithdrawnEventFilter
-    ProtocolRewardsWithdrawn(
-      receiver?: null,
-      amount?: null,
-      by?: null,
-    ): ProtocolRewardsWithdrawnEventFilter
-
     'ReceivableAssetChanged(address,address)'(
       receivableAsset?: null,
       by?: null,
@@ -2921,24 +2344,6 @@ export interface PoolConfig extends BaseContract {
       receivableAsset?: null,
       by?: null,
     ): ReceivableAssetChangedEventFilter
-
-    'ReceivableAutoApproval(bool,address)'(
-      receivableAutoApproval?: null,
-      by?: null,
-    ): ReceivableAutoApprovalEventFilter
-    ReceivableAutoApproval(
-      receivableAutoApproval?: null,
-      by?: null,
-    ): ReceivableAutoApprovalEventFilter
-
-    'ReceivableRequiredInBpsChanged(uint256,address)'(
-      receivableRequiredInBps?: null,
-      by?: null,
-    ): ReceivableRequiredInBpsChangedEventFilter
-    ReceivableRequiredInBpsChanged(
-      receivableRequiredInBps?: null,
-      by?: null,
-    ): ReceivableRequiredInBpsChangedEventFilter
 
     'RoleAdminChanged(bytes32,bytes32,bytes32)'(
       role?: PromiseOrValue<BytesLike> | null,
@@ -2993,20 +2398,12 @@ export interface PoolConfig extends BaseContract {
       by?: null,
     ): TranchesPolicyChangedEventFilter
 
-    'WithdrawalLockoutPeriodChanged(uint256,address)'(
-      lockoutPeriodInMonths?: null,
-      by?: null,
-    ): WithdrawalLockoutPeriodChangedEventFilter
-    WithdrawalLockoutPeriodChanged(
-      lockoutPeriodInMonths?: null,
-      by?: null,
-    ): WithdrawalLockoutPeriodChangedEventFilter
-
-    'YieldChanged(uint256,address)'(
-      aprInBps?: null,
-      by?: null,
-    ): YieldChangedEventFilter
-    YieldChanged(aprInBps?: null, by?: null): YieldChangedEventFilter
+    'Upgraded(address)'(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
+    Upgraded(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
   }
 
   estimateGas: {
@@ -3017,11 +2414,6 @@ export interface PoolConfig extends BaseContract {
     calendar(overrides?: CallOverrides): Promise<BigNumber>
 
     checkFirstLossCoverRequirementsForAdmin(
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    checkFirstLossCoverRequirementsForRedemption(
-      lender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -3058,7 +2450,7 @@ export interface PoolConfig extends BaseContract {
 
     getAdminRnR(overrides?: CallOverrides): Promise<BigNumber>
 
-    getFees(overrides?: CallOverrides): Promise<BigNumber>
+    getFeeStructure(overrides?: CallOverrides): Promise<BigNumber>
 
     getFirstLossCover(
       index: PromiseOrValue<BigNumberish>,
@@ -3076,19 +2468,10 @@ export interface PoolConfig extends BaseContract {
 
     getLPConfig(overrides?: CallOverrides): Promise<BigNumber>
 
-    getMinPrincipalRateInBps(overrides?: CallOverrides): Promise<BigNumber>
-
     getPoolSettings(overrides?: CallOverrides): Promise<BigNumber>
-
-    getPoolSummary(overrides?: CallOverrides): Promise<BigNumber>
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    getTrancheLiquidityCap(
-      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -3119,6 +2502,11 @@ export interface PoolConfig extends BaseContract {
 
     juniorTranche(overrides?: CallOverrides): Promise<BigNumber>
 
+    onlyHumaMasterAdmin(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
+
     onlyOwnerOrHumaMasterAdmin(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -3144,6 +2532,11 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
+    onlyPoolOwnerOrSentinelServiceAccount(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
+
     onlyProtocolAndPoolOn(overrides?: CallOverrides): Promise<BigNumber>
 
     pool(overrides?: CallOverrides): Promise<BigNumber>
@@ -3155,6 +2548,8 @@ export interface PoolConfig extends BaseContract {
     poolOwnerTreasury(overrides?: CallOverrides): Promise<BigNumber>
 
     poolSafe(overrides?: CallOverrides): Promise<BigNumber>
+
+    proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>
 
     receivableAsset(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -3172,11 +2567,6 @@ export interface PoolConfig extends BaseContract {
 
     seniorTranche(overrides?: CallOverrides): Promise<BigNumber>
 
-    setAdvanceRateInBps(
-      advanceRateInBps: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
     setCalendar(
       _calendar: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -3184,11 +2574,6 @@ export interface PoolConfig extends BaseContract {
 
     setCredit(
       _credit: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setCreditApprovalExpiration(
-      durationInDays: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -3236,33 +2621,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setLatePaymentGracePeriodInDays(
-      gracePeriodInDays: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setMaxCreditLine(
-      creditLine: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
     setPool(
       _pool: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setPoolDefaultGracePeriod(
-      gracePeriod: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
     setPoolFeeManager(
       _poolFeeManager: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setPoolLiquidityCap(
-      liquidityCap: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -3282,13 +2647,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setPoolPayPeriod(
-      duration: PromiseOrValue<BigNumberish>,
+    setPoolSafe(
+      _poolSafe: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setPoolSafe(
-      _poolSafe: PromiseOrValue<string>,
+    setPoolSettings(
+      settings: PoolSettingsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -3299,16 +2664,6 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setReceivableAutoApproval(
-      autoApproval: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setReceivableRequiredInBps(
-      receivableRequiredInBps: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -3323,16 +2678,6 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setWithdrawalLockoutPeriod(
-      lockoutPeriod: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setYield(
-      _yieldInBps: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
@@ -3341,6 +2686,17 @@ export interface PoolConfig extends BaseContract {
     tranchesPolicy(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<BigNumber>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
   }
 
   populateTransaction: {
@@ -3351,11 +2707,6 @@ export interface PoolConfig extends BaseContract {
     calendar(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     checkFirstLossCoverRequirementsForAdmin(
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
-    checkFirstLossCoverRequirementsForRedemption(
-      lender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -3394,7 +2745,7 @@ export interface PoolConfig extends BaseContract {
 
     getAdminRnR(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getFees(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getFeeStructure(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     getFirstLossCover(
       index: PromiseOrValue<BigNumberish>,
@@ -3414,21 +2765,10 @@ export interface PoolConfig extends BaseContract {
 
     getLPConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getMinPrincipalRateInBps(
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
     getPoolSettings(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    getPoolSummary(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     getRoleAdmin(
       role: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
-    getTrancheLiquidityCap(
-      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -3459,6 +2799,11 @@ export interface PoolConfig extends BaseContract {
 
     juniorTranche(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
+    onlyHumaMasterAdmin(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
+
     onlyOwnerOrHumaMasterAdmin(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -3484,6 +2829,11 @@ export interface PoolConfig extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
+    onlyPoolOwnerOrSentinelServiceAccount(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
+
     onlyProtocolAndPoolOn(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
@@ -3497,6 +2847,8 @@ export interface PoolConfig extends BaseContract {
     poolOwnerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolSafe(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     receivableAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
@@ -3514,11 +2866,6 @@ export interface PoolConfig extends BaseContract {
 
     seniorTranche(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    setAdvanceRateInBps(
-      advanceRateInBps: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
     setCalendar(
       _calendar: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -3526,11 +2873,6 @@ export interface PoolConfig extends BaseContract {
 
     setCredit(
       _credit: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setCreditApprovalExpiration(
-      durationInDays: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -3578,33 +2920,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setLatePaymentGracePeriodInDays(
-      gracePeriodInDays: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setMaxCreditLine(
-      creditLine: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
     setPool(
       _pool: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setPoolDefaultGracePeriod(
-      gracePeriod: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
     setPoolFeeManager(
       _poolFeeManager: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setPoolLiquidityCap(
-      liquidityCap: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -3624,13 +2946,13 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setPoolPayPeriod(
-      duration: PromiseOrValue<BigNumberish>,
+    setPoolSafe(
+      _poolSafe: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setPoolSafe(
-      _poolSafe: PromiseOrValue<string>,
+    setPoolSettings(
+      settings: PoolSettingsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -3641,16 +2963,6 @@ export interface PoolConfig extends BaseContract {
 
     setReceivableAsset(
       _receivableAsset: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setReceivableAutoApproval(
-      autoApproval: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setReceivableRequiredInBps(
-      receivableRequiredInBps: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -3665,16 +2977,6 @@ export interface PoolConfig extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setWithdrawalLockoutPeriod(
-      lockoutPeriod: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setYield(
-      _yieldInBps: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
@@ -3683,5 +2985,16 @@ export interface PoolConfig extends BaseContract {
     tranchesPolicy(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
   }
 }
