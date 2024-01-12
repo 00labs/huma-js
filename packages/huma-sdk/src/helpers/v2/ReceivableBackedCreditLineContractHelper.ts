@@ -69,14 +69,12 @@ export async function drawdownWithReceivable(
     throw new Error('Could not find credit contract')
   }
 
-  const drawdownTx = await creditContract.drawdownWithReceivable(
+  return creditContract.drawdownWithReceivable(
     await signer.getAddress(),
     receivableId,
     drawdownAmount,
     gasOpts,
   )
-
-  return drawdownTx
 }
 
 /**
@@ -191,15 +189,12 @@ export async function makePrincipalPaymentAndDrawdownWithReceivable(
     )
   }
 
-  const paymentTx =
-    await creditContract.makePrincipalPaymentAndDrawdownWithReceivable(
-      await signer.getAddress(),
-      paymentReceivableId,
-      paymentAmount,
-      drawdownReceivableId,
-      drawdownAmount,
-      gasOpts,
-    )
-
-  return paymentTx
+  return creditContract.makePrincipalPaymentAndDrawdownWithReceivable(
+    await signer.getAddress(),
+    paymentReceivableId,
+    paymentAmount,
+    drawdownReceivableId,
+    drawdownAmount,
+    gasOpts,
+  )
 }
