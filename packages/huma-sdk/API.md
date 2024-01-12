@@ -40,7 +40,7 @@ attempt to first increase the allowance of the pool.</p></dd>
 <dt><a href="#getRealWorldReceivableContract">getRealWorldReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the RealWorldReceivable contract
 associated with the given pool name on the current chain.</p></dd>
-<dt><a href="#getReceivableBackedCreditlineContractV2">getReceivableBackedCreditlineContractV2(signerOrProvider, poolName)</a> ⇒ <code>ReceivableBackedCreditLine</code> | <code>null</code></dt>
+<dt><a href="#getReceivableBackedCreditLineContractV2">getReceivableBackedCreditLineContractV2(signerOrProvider, poolName)</a> ⇒ <code>ReceivableBackedCreditLine</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#drawdownWithReceivable">drawdownWithReceivable(signer, poolName, receivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
@@ -759,9 +759,9 @@ associated with the given pool name on the current chain.</p>
 | signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
 | chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
 
-<a name="getReceivableBackedCreditlineContractV2"></a>
+<a name="getReceivableBackedCreditLineContractV2"></a>
 
-## getReceivableBackedCreditlineContractV2(signerOrProvider, poolName) ⇒ <code>ReceivableBackedCreditLine</code> \| <code>null</code>
+## getReceivableBackedCreditLineContractV2(signerOrProvider, poolName) ⇒ <code>ReceivableBackedCreditLine</code> \| <code>null</code>
 <p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p>
 

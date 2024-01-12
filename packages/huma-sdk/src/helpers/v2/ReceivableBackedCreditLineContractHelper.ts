@@ -24,7 +24,7 @@ import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'
  * @param {POOL_NAME} poolName - The name of the credit pool to get the contract instance for.
  * @returns {ReceivableBackedCreditLine | null} A contract instance for the ReceivableBackedCreditLine contract or null if it could not be found.
  */
-export async function getReceivableBackedCreditlineContractV2(
+export async function getReceivableBackedCreditLineContractV2(
   poolName: POOL_NAME,
   signerOrProvider: JsonRpcProvider | Web3Provider | ethers.Signer,
 ): Promise<ReceivableBackedCreditLine | null> {
@@ -60,7 +60,7 @@ export async function drawdownWithReceivable(
   drawdownAmount: BigNumberish,
   gasOpts: Overrides = {},
 ): Promise<TransactionResponse> {
-  const creditContract = await getReceivableBackedCreditlineContractV2(
+  const creditContract = await getReceivableBackedCreditLineContractV2(
     poolName,
     signer,
   )
@@ -98,7 +98,7 @@ export async function makePaymentWithReceivable(
   principalOnly: boolean,
   gasOpts: Overrides = {},
 ): Promise<TransactionResponse> {
-  const creditContract = await getReceivableBackedCreditlineContractV2(
+  const creditContract = await getReceivableBackedCreditLineContractV2(
     poolName,
     signer,
   )
@@ -165,7 +165,7 @@ export async function makePrincipalPaymentAndDrawdownWithReceivable(
   drawdownAmount: BigNumberish,
   gasOpts: Overrides = {},
 ): Promise<TransactionResponse> {
-  const creditContract = await getReceivableBackedCreditlineContractV2(
+  const creditContract = await getReceivableBackedCreditLineContractV2(
     poolName,
     signer,
   )
