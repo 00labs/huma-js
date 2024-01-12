@@ -4,15 +4,15 @@ import {
   Web3Provider,
 } from '@ethersproject/providers'
 import {
-  POOL_NAME,
-  getPoolInfoV2,
   getChainIdFromSignerOrProvider,
+  getPoolInfoV2,
+  getPoolUnderlyingTokenContractV2,
+  POOL_NAME,
   POOL_TYPE,
   RECEIVABLE_BACKED_CREDIT_LINE_V2_ABI,
-  getPoolUnderlyingTokenContractV2,
 } from '@huma-finance/shared'
 import { ReceivableBackedCreditLine } from '@huma-finance/shared/src/v2/abis/types'
-import { BigNumberish, Overrides, ethers } from 'ethers'
+import { BigNumberish, ethers, Overrides } from 'ethers'
 import { getContract } from '../../utils'
 import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'
 
@@ -21,8 +21,8 @@ import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'
  * associated with the given pool name on the current chain.
  *
  * @param {ethers.providers.Provider | ethers.Signer} signerOrProvider The provider or signer instance to use for the contract.
- * @param {number} chainId The chain id where the contract instance exists
- * @returns {Contract | null} A contract instance for the RealWorldReceivable contract or null if it could not be found.
+ * @param {POOL_NAME} poolName - The name of the credit pool to get the contract instance for.
+ * @returns {ReceivableBackedCreditLine | null} A contract instance for the ReceivableBackedCreditLine contract or null if it could not be found.
  */
 export async function getReceivableBackedCreditlineContractV2(
   poolName: POOL_NAME,

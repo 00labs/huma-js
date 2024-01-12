@@ -40,7 +40,7 @@ attempt to first increase the allowance of the pool.</p></dd>
 <dt><a href="#getRealWorldReceivableContract">getRealWorldReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the RealWorldReceivable contract
 associated with the given pool name on the current chain.</p></dd>
-<dt><a href="#getReceivableBackedCreditlineContractV2">getReceivableBackedCreditlineContractV2(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
+<dt><a href="#getReceivableBackedCreditlineContractV2">getReceivableBackedCreditlineContractV2(signerOrProvider, poolName)</a> ⇒ <code>ReceivableBackedCreditLine</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#drawdownWithReceivable">drawdownWithReceivable(signer, poolName, receivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
@@ -761,17 +761,17 @@ associated with the given pool name on the current chain.</p>
 
 <a name="getReceivableBackedCreditlineContractV2"></a>
 
-## getReceivableBackedCreditlineContractV2(signerOrProvider, chainId) ⇒ <code>Contract</code> \| <code>null</code>
+## getReceivableBackedCreditlineContractV2(signerOrProvider, poolName) ⇒ <code>ReceivableBackedCreditLine</code> \| <code>null</code>
 <p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p>
 
 **Kind**: global function  
-**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the RealWorldReceivable contract or null if it could not be found.</p>  
+**Returns**: <code>ReceivableBackedCreditLine</code> \| <code>null</code> - <p>A contract instance for the ReceivableBackedCreditLine contract or null if it could not be found.</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
 
 <a name="drawdownWithReceivable"></a>
 
