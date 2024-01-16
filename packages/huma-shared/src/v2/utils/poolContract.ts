@@ -2,6 +2,7 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, ethers } from 'ethers'
 
 import {
+  BP_FACTOR,
   CHAIN_POOLS_INFO_V2,
   PoolInfoV2,
   TrancheType,
@@ -442,4 +443,28 @@ export const getCurrentEpochInfoV2 = async (
   }
 
   return epochManagerContract.currentEpoch()
+}
+
+export const getPoolFeeStructureV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<
+  | {
+      yield: number
+      minPrincipalRate: number
+      lateFee: number
+    }
+  | undefined
+> => {
+  const poolConfigContract = await getPoolConfigContractV2(poolName, provider)
+  if (!poolConfigContract) {
+    return undefined
+  }
+
+  const feeStructure = await poolConfigContract.getFeeStructure()
+  return {
+    yield: feeStructure.yieldInBps / BP_FACTOR.toNumber(),
+    minPrincipalRate: feeStructure.minPrincipalRateInBps / BP_FACTOR.toNumber(),
+    lateFee: feeStructure.lateFeeBps / BP_FACTOR.toNumber(),
+  }
 }
