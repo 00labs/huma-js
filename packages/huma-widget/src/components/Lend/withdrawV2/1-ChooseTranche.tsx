@@ -162,7 +162,7 @@ export function ChooseTranche({
   return (
     <WrapperModal title={`Withdraw ${symbol}`}>
       <FormControl>
-        <FormLabel css={styles.subTitle}>Select Tranche Type</FormLabel>
+        <FormLabel css={styles.subTitle}>Select Withdraw Type</FormLabel>
         <RadioGroup
           aria-labelledby='buttons-group-label'
           name='radio-buttons-group'
