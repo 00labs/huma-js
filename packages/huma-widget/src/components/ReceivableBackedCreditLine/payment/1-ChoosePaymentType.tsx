@@ -75,7 +75,7 @@ export function ChoosePaymentType({
   return (
     <WrapperModal title='Pay'>
       <FormControl>
-        <FormLabel css={styles.subTitle}>Select Tranche Type</FormLabel>
+        <FormLabel css={styles.subTitle}>Select Payment Type</FormLabel>
         <RadioGroup
           aria-labelledby='buttons-group-label'
           name='radio-buttons-group'
