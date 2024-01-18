@@ -18,6 +18,7 @@ export enum POOL_NAME {
   ImpactMarket = 'ImpactMarket',
   Symplifi = 'Symplifi',
   Raincards = 'Raincards',
+  Quipu = 'Quipu',
 }
 
 export enum POOL_TYPE {
@@ -141,12 +142,18 @@ export const PoolMap: PoolMapType = {
       estAPY: '20%',
     },
     [POOL_NAME.Raincards]: {
-      name: 'Raincards Pool',
+      name: 'Rain Receivables Pool',
       borrowDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'The Rain Receivables Pool is reshaping spend management for Web3 teams, enabling Web3 entities like DAOs and protocols to effortlessly manage fiat expenses through corporate cards.',
       lendDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      estAPY: '20%',
+        'The Rain Receivables Pool is reshaping spend management for Web3 teams, enabling Web3 entities like DAOs and protocols to effortlessly manage fiat expenses through corporate cards.',
+      estAPY: '15%',
+    },
+    [POOL_NAME.Quipu]: {
+      name: 'Quipu Pool',
+      borrowDesc: 'The Quipu Pool. [Note: This is not visible publicly]',
+      lendDesc: 'The Quipu Pool. [Note: This is not visible publicly]',
+      estAPY: 'N/A%',
     },
   },
   [POOL_TYPE.Invoice]: {
@@ -295,6 +302,53 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0xd581AEDAB50a0431D52829F03d42d0C61bc36119',
           disableBorrow: true,
           detailsPage: true,
+        },
+      },
+      [POOL_NAME.Raincards]: {
+        basePoolConfig: '0xBD239B764731b15664F62c32b7E0a6cd78a4E34B',
+        pool: '0x82a76045dc4543fa4776df1bcad11f2aa6ea51d2',
+        poolFeeManager: '0x4384560Eb9d4108fcb90981e7a0f03C21bf782d8',
+        poolUnderlyingToken: {
+          address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.Raincards,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x238F9076D0136dE0FaAe79450Ad73250A6bcD90e',
+          abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0xdbE3976d8Bac43410f421cA69aae0eC54D8155C2',
+          disableBorrow: true,
+          detailsPage: true,
+        },
+      },
+      [POOL_NAME.Quipu]: {
+        basePoolConfig: '0x26446BF777dA4e1F4A85396bb6Ddc453b868Ae90',
+        pool: '0x1a820fd242ba87dd396519caf4c8a762b19dfdb5',
+        poolFeeManager: '0x09Ddc0aD35d2663a3F5446D373EB5CF01601A599',
+        poolUnderlyingToken: {
+          address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.Quipu,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0xF3133bd55E6783292c6e56d17D8D0f0E696d69bB',
+          abi: HDT_ABI,
+        },
+        extra: {
+          hidden: true,
+          borrower: '0xC00Ac1b17B62bb953e991807a047E7268e554910',
         },
       },
     },
@@ -527,6 +581,53 @@ export const PoolContractMap: PoolContractMapType = {
           rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           disableBorrow: true,
           detailsPage: true,
+        },
+      },
+      [POOL_NAME.Jia]: {
+        basePoolConfig: '0x75be4c971c730e197cae5e643e0f05ce7b4a58fe',
+        pool: '0xa190A0ab76F58b491Cc36205B268e8cF5650c576',
+        poolFeeManager: '0x0c092Bb9d5bc8DEA9d98FFda84E943816AD6E710',
+        poolUnderlyingToken: {
+          address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          symbol: 'cUSD',
+          decimals: 18,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.Jia,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x3Ce8221DBd48122de424e49F649D7A57EF722439',
+          abi: HDT_ABI,
+        },
+        extra: {
+          disableBorrow: true,
+          detailsPage: true,
+          borrower: '0xD3CCe1eC5a3981B27bD998f33A7eafdD27Ad2dF4',
+        },
+      },
+      [POOL_NAME.Quipu]: {
+        basePoolConfig: '0x8b0a09032cd485321f640dc1e9cbdeb2b16d41ab',
+        pool: '0xaf2e8cfabf419be03a3bfe732f7f29037b0d1fa5',
+        poolFeeManager: '0x58806a6F90764eb31fc002A68947fA4825FF9f2D',
+        poolUnderlyingToken: {
+          address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          symbol: 'cUSD',
+          decimals: 18,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.Quipu,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x42B396894229961407a24664A344c6A3AfDB3131',
+          abi: HDT_ABI,
+        },
+        extra: {
+          hidden: true,
+          borrower: '0xF2278F9F36f69c85E0F40673186fA281AC7CDD2E',
         },
       },
     },
