@@ -3,7 +3,7 @@ name: Beta NPM Packages Publishing
 on:
   pull_request:
     types: [closed]
-    branches: ["develop"]
+    branches: ["develop", "v2"]
 
 jobs:
   deploy-beta:
