@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches: ["develop", "v2"]
+  workflow_dispatch:
 
 jobs:
   deploy-beta:
