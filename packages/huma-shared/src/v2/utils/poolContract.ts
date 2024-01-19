@@ -26,6 +26,7 @@ import {
   HumaConfig,
   Pool,
   PoolConfig,
+  PoolSafe,
   TrancheVault,
 } from '../abis/types'
 import {
@@ -181,6 +182,22 @@ export const getFirstLossCoverContractV2 = async (
   return getContract<FirstLossCover>(
     poolInfo.firstLossCovers[firstLossCoverType],
     poolInfo.firstLossCoverAbi,
+    provider,
+  )
+}
+
+export const getPoolSafeContractV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return null
+  }
+  return getContract<PoolSafe>(
+    poolInfo.poolSafe,
+    poolInfo.poolSafeAbi,
     provider,
   )
 }
@@ -351,13 +368,13 @@ export const getCreditHashV2 = (
 
 export const getCreditRecordV2 = async (
   poolName: POOL_NAME,
-  chainId: number | undefined,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<CreditRecordStructOutput | undefined> => {
   if (!account) {
     return undefined
   }
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return undefined
@@ -378,13 +395,13 @@ export const getCreditRecordV2 = async (
 
 export const getDueDetailV2 = async (
   poolName: POOL_NAME,
-  chainId: number | undefined,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<DueDetailStructOutput | undefined> => {
   if (!account) {
     return undefined
   }
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return undefined
@@ -405,13 +422,13 @@ export const getDueDetailV2 = async (
 
 export const getCreditConfigV2 = async (
   poolName: POOL_NAME,
-  chainId: number | undefined,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<CreditConfigStructOutput | undefined> => {
   if (!account) {
     return undefined
   }
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return undefined
@@ -475,7 +492,6 @@ export const getPoolFeeStructureV2 = async (
 // Please check poolContract.md about the formula
 export const getApyV2 = async (
   poolName: POOL_NAME,
-  chainId: number | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<
   | {
@@ -485,6 +501,7 @@ export const getApyV2 = async (
     }
   | undefined
 > => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
     return undefined
@@ -600,4 +617,47 @@ export const getApyV2 = async (
     juniorTrancheApy,
     firstLossCoverApy,
   }
+}
+
+export const getUtilizationRateV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<number | undefined> => {
+  const chainId = await getChainIdFromSignerOrProvider(provider)
+  const poolInfo = getPoolInfoV2(poolName, chainId)
+  if (!poolInfo) {
+    return undefined
+  }
+  const poolSafeContract = await getPoolSafeContractV2(poolName, provider)
+  if (!poolSafeContract) {
+    return undefined
+  }
+
+  const [
+    seniorTrancheAssets,
+    juniorTrancheAssets,
+    seniorTrancheUnprocessedProfit,
+    juniorTrancheUnprocessedProfit,
+    totalBalance,
+    availableBalance,
+  ] = await Promise.all([
+    getTrancheVaultAssetsV2(poolName, 'senior', provider),
+    getTrancheVaultAssetsV2(poolName, 'junior', provider),
+    poolSafeContract.unprocessedTrancheProfit(poolInfo.seniorTrancheVault),
+    poolSafeContract.unprocessedTrancheProfit(poolInfo.juniorTrancheVault),
+    poolSafeContract.totalBalance(),
+    poolSafeContract.getAvailableBalanceForPool(),
+  ])
+
+  const trancheTotalAssets = seniorTrancheAssets!.add(juniorTrancheAssets!)
+  const trancheUnprocessedProfit = seniorTrancheUnprocessedProfit!.add(
+    juniorTrancheUnprocessedProfit!,
+  )
+  const totalSupply = trancheTotalAssets.sub(trancheUnprocessedProfit)
+  const borrowedBalance = totalBalance.sub(availableBalance)
+
+  if (borrowedBalance.gt(0) && totalSupply.gt(0)) {
+    return borrowedBalance.toNumber() / totalSupply.toNumber()
+  }
+  return 0
 }
