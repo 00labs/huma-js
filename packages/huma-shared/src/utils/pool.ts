@@ -192,6 +192,10 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.Alfajores]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
   },
+  [ChainEnum.Sepolia]: {
+    subgraph:
+      'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-sepolia-test',
+  },
   [ChainEnum.Localhost]: {
     subgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
   },
