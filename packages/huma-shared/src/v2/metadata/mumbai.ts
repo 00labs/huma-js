@@ -20,8 +20,7 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x048B50b463Af8ccCA0BE2b08149720739aD466eB',
-      [FirstLossCoverIndex.affiliate]:
-        '0x83EeFf2D39C1387C18E1B888A40B3Bf4a0E1C34C',
+      [FirstLossCoverIndex.admin]: '0x83EeFf2D39C1387C18E1B888A40B3Bf4a0E1C34C',
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
@@ -45,8 +44,7 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x81aA17cC36BA98d61542F7D17Ea8a3a621Cc5666',
-      [FirstLossCoverIndex.affiliate]:
-        '0xa36c775a88E9A7c55B526EeefDcAFF7Bcca5aD1E',
+      [FirstLossCoverIndex.admin]: '0xa36c775a88E9A7c55B526EeefDcAFF7Bcca5aD1E',
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',

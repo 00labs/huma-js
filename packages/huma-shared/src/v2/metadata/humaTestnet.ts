@@ -20,8 +20,7 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE',
-      [FirstLossCoverIndex.affiliate]:
-        '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c',
+      [FirstLossCoverIndex.admin]: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c',
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
@@ -45,8 +44,7 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25',
-      [FirstLossCoverIndex.affiliate]:
-        '0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5',
+      [FirstLossCoverIndex.admin]: '0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5',
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',

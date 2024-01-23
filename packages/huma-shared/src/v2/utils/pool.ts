@@ -8,10 +8,7 @@ import {
   POOL_TYPE,
   PoolVersion,
 } from '../../utils'
-import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
-import { LOCALHOST_METADATA } from '../metadata/localhost'
-import { MUMBAI_METADATA } from '../metadata/mumbai'
-import { FirstLossCoverIndex } from '../types'
+import CALENDAR_ABI from '../abis/Calendar.json'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
 import POOL_CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
 import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
@@ -20,7 +17,11 @@ import POOL_ABI from '../abis/Pool.json'
 import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
-import CALENDAR_ABI from '../abis/Calendar.json'
+import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
+import { LOCALHOST_METADATA } from '../metadata/localhost'
+import { MUMBAI_METADATA } from '../metadata/mumbai'
+import { SEPOLIA_METADATA } from '../metadata/sepolia'
+import { FirstLossCoverIndex } from '../types'
 
 export type TrancheType = 'senior' | 'junior'
 
@@ -45,7 +46,7 @@ export type PoolInfoV2 = {
   epochManager: string
   firstLossCovers: {
     [FirstLossCoverIndex.borrower]: string
-    [FirstLossCoverIndex.affiliate]: string
+    [FirstLossCoverIndex.admin]: string
   }
   poolAbi?: unknown
   poolCreditAbi?: unknown
@@ -111,6 +112,7 @@ const getMetadataWithAbis = (metadata: PoolsInfoV2) => {
 
 export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Mumbai]: getMetadataWithAbis(MUMBAI_METADATA),
+  [ChainEnum.Sepolia]: getMetadataWithAbis(SEPOLIA_METADATA),
   [ChainEnum.HumaTestnet]: getMetadataWithAbis(HUMA_TESTNET_METADATA),
   [ChainEnum.Localhost]: getMetadataWithAbis(LOCALHOST_METADATA),
 } as ChainPoolsInfoV2

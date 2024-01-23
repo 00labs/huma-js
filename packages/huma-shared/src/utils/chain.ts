@@ -43,6 +43,7 @@ export enum ChainEnum {
   Alfajores = 44787,
   Localhost = 31338,
   HumaTestnet = 31337,
+  Sepolia = 11155111,
 }
 
 export const CHAINS: {
@@ -118,6 +119,16 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Celo',
+  },
+  [ChainEnum.Sepolia]: {
+    id: ChainEnum.Sepolia,
+    urls: ['https://rpc.sepolia.org'],
+    name: 'Sepolia',
+    nativeCurrency: ETH,
+    explorer: 'https://sepolia.etherscan.io',
+    wait: 1,
+    isTestnet: true,
+    icon: 'Ethereum',
   },
 }
 
