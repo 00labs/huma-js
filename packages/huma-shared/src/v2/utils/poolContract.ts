@@ -576,7 +576,7 @@ export const getApyV2 = async (
     (1 - protocolFeeInBps / BP_FACTOR_NUMBER) *
     (1 -
       adminRnR.rewardRateInBpsForPoolOwner / BP_FACTOR_NUMBER -
-      adminRnR.rewardRateInBpsForPoolOwner / BP_FACTOR_NUMBER)
+      adminRnR.rewardRateInBpsForEA / BP_FACTOR_NUMBER)
   const poolPostProfit = totalProfit * postPoolProfitRatio
 
   let seniorTrancheApy = 0
@@ -628,23 +628,20 @@ export const getUtilizationRateV2 = async (
     juniorTrancheAssets,
     seniorTrancheUnprocessedProfit,
     juniorTrancheUnprocessedProfit,
-    totalBalance,
     availableBalance,
   ] = await Promise.all([
     getTrancheVaultAssetsV2(poolName, 'senior', provider),
     getTrancheVaultAssetsV2(poolName, 'junior', provider),
     poolSafeContract.unprocessedTrancheProfit(poolInfo.seniorTrancheVault),
     poolSafeContract.unprocessedTrancheProfit(poolInfo.juniorTrancheVault),
-    poolSafeContract.totalBalance(),
     poolSafeContract.getAvailableBalanceForPool(),
   ])
-
   const trancheTotalAssets = seniorTrancheAssets!.add(juniorTrancheAssets!)
   const trancheUnprocessedProfit = seniorTrancheUnprocessedProfit!.add(
     juniorTrancheUnprocessedProfit!,
   )
   const totalSupply = trancheTotalAssets.sub(trancheUnprocessedProfit)
-  const borrowedBalance = totalBalance.sub(availableBalance)
+  const borrowedBalance = totalSupply.sub(availableBalance)
 
   if (borrowedBalance.gt(0) && totalSupply.gt(0)) {
     return borrowedBalance.toNumber() / totalSupply.toNumber()
