@@ -133,7 +133,7 @@ export function ChooseAmount({
       subTitle={
         redemptionActionInfo.action === 'Create'
           ? `Select ${symbol} amount to redeem from ${redemptionActionInfo.tranche} tranche`
-          : `Cancel ${symbol} amount from ${redemptionActionInfo.tranche} tranche redemption request`
+          : `Select the amount of the redemption request in ${symbol} that you wish to cancel from the ${redemptionActionInfo.tranche} tranche`
       }
     >
       <Box css={styles.sliderWrapper}>
