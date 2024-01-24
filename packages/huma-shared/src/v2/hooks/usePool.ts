@@ -625,9 +625,9 @@ export function useCreditStatsV2(
         if (creditHash) {
           const [creditRecord, dueDetail, creditConfig, poolTokenBalance] =
             await Promise.all([
-              getCreditRecordV2(poolName, chainId, account, provider),
-              getDueDetailV2(poolName, chainId, account, provider),
-              getCreditConfigV2(poolName, chainId, account, provider),
+              getCreditRecordV2(poolName, account, provider),
+              getDueDetailV2(poolName, account, provider),
+              getCreditConfigV2(poolName, account, provider),
               getPoolUnderlyingTokenBalanceV2(poolName, account, provider),
             ])
           if (creditRecord && dueDetail && creditConfig && poolTokenBalance) {

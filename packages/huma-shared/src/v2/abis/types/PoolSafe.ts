@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -31,18 +32,21 @@ export interface PoolSafeInterface extends utils.Interface {
   functions: {
     'addUnprocessedProfit(address,uint256)': FunctionFragment
     'deposit(address,uint256)': FunctionFragment
-    'getAvailableLiquidityForFees()': FunctionFragment
-    'getPoolLiquidity()': FunctionFragment
+    'getAvailableBalanceForFees()': FunctionFragment
+    'getAvailableBalanceForPool()': FunctionFragment
     'initialize(address)': FunctionFragment
     'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolFeeManager()': FunctionFragment
+    'proxiableUUID()': FunctionFragment
     'resetUnprocessedProfit()': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
-    'totalLiquidity()': FunctionFragment
+    'totalBalance()': FunctionFragment
     'underlyingToken()': FunctionFragment
     'unprocessedTrancheProfit(address)': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
+    'upgradeTo(address)': FunctionFragment
+    'upgradeToAndCall(address,bytes)': FunctionFragment
     'withdraw(address,uint256)': FunctionFragment
   }
 
@@ -50,18 +54,21 @@ export interface PoolSafeInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | 'addUnprocessedProfit'
       | 'deposit'
-      | 'getAvailableLiquidityForFees'
-      | 'getPoolLiquidity'
+      | 'getAvailableBalanceForFees'
+      | 'getAvailableBalanceForPool'
       | 'initialize'
       | 'pool'
       | 'poolConfig'
       | 'poolFeeManager'
+      | 'proxiableUUID'
       | 'resetUnprocessedProfit'
       | 'setPoolConfig'
-      | 'totalLiquidity'
+      | 'totalBalance'
       | 'underlyingToken'
       | 'unprocessedTrancheProfit'
       | 'updatePoolConfigData'
+      | 'upgradeTo'
+      | 'upgradeToAndCall'
       | 'withdraw',
   ): FunctionFragment
 
@@ -74,11 +81,11 @@ export interface PoolSafeInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'getAvailableLiquidityForFees',
+    functionFragment: 'getAvailableBalanceForFees',
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'getPoolLiquidity',
+    functionFragment: 'getAvailableBalanceForPool',
     values?: undefined,
   ): string
   encodeFunctionData(
@@ -92,6 +99,10 @@ export interface PoolSafeInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
+    functionFragment: 'proxiableUUID',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
     functionFragment: 'resetUnprocessedProfit',
     values?: undefined,
   ): string
@@ -100,7 +111,7 @@ export interface PoolSafeInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'totalLiquidity',
+    functionFragment: 'totalBalance',
     values?: undefined,
   ): string
   encodeFunctionData(
@@ -114,6 +125,14 @@ export interface PoolSafeInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'updatePoolConfigData',
     values?: undefined,
+  ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeTo',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeToAndCall',
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>],
   ): string
   encodeFunctionData(
     functionFragment: 'withdraw',
@@ -126,11 +145,11 @@ export interface PoolSafeInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'getAvailableLiquidityForFees',
+    functionFragment: 'getAvailableBalanceForFees',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'getPoolLiquidity',
+    functionFragment: 'getAvailableBalanceForPool',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
@@ -138,6 +157,10 @@ export interface PoolSafeInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'poolFeeManager',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'proxiableUUID',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -149,7 +172,7 @@ export interface PoolSafeInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'totalLiquidity',
+    functionFragment: 'totalBalance',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -164,18 +187,50 @@ export interface PoolSafeInterface extends utils.Interface {
     functionFragment: 'updatePoolConfigData',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'upgradeToAndCall',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result
 
   events: {
+    'AdminChanged(address,address)': EventFragment
+    'BeaconUpgraded(address)': EventFragment
     'Initialized(uint8)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
+    'Upgraded(address)': EventFragment
   }
 
+  getEvent(nameOrSignatureOrTopic: 'AdminChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'BeaconUpgraded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment
 }
+
+export interface AdminChangedEventObject {
+  previousAdmin: string
+  newAdmin: string
+}
+export type AdminChangedEvent = TypedEvent<
+  [string, string],
+  AdminChangedEventObject
+>
+
+export type AdminChangedEventFilter = TypedEventFilter<AdminChangedEvent>
+
+export interface BeaconUpgradedEventObject {
+  beacon: string
+}
+export type BeaconUpgradedEvent = TypedEvent<
+  [string],
+  BeaconUpgradedEventObject
+>
+
+export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>
 
 export interface InitializedEventObject {
   version: number
@@ -206,6 +261,13 @@ export type PoolConfigChangedEvent = TypedEvent<
 
 export type PoolConfigChangedEventFilter =
   TypedEventFilter<PoolConfigChangedEvent>
+
+export interface UpgradedEventObject {
+  implementation: string
+}
+export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>
+
+export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>
 
 export interface PoolSafe extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
@@ -246,13 +308,13 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    getAvailableLiquidityForFees(
+    getAvailableBalanceForFees(
       overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { liquidity: BigNumber }>
+    ): Promise<[BigNumber] & { availableBalance: BigNumber }>
 
-    getPoolLiquidity(
+    getAvailableBalanceForPool(
       overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { liquidity: BigNumber }>
+    ): Promise<[BigNumber] & { availableBalance: BigNumber }>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
@@ -265,6 +327,8 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<[string]>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<[string]>
+
     resetUnprocessedProfit(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
@@ -274,7 +338,7 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    totalLiquidity(
+    totalBalance(
       overrides?: CallOverrides,
     ): Promise<[BigNumber] & { liquidity: BigNumber }>
 
@@ -287,6 +351,17 @@ export interface PoolSafe extends BaseContract {
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
     withdraw(
@@ -308,9 +383,9 @@ export interface PoolSafe extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
+  getAvailableBalanceForFees(overrides?: CallOverrides): Promise<BigNumber>
 
-  getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+  getAvailableBalanceForPool(overrides?: CallOverrides): Promise<BigNumber>
 
   initialize(
     _poolConfig: PromiseOrValue<string>,
@@ -323,6 +398,8 @@ export interface PoolSafe extends BaseContract {
 
   poolFeeManager(overrides?: CallOverrides): Promise<string>
 
+  proxiableUUID(overrides?: CallOverrides): Promise<string>
+
   resetUnprocessedProfit(
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
@@ -332,7 +409,7 @@ export interface PoolSafe extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+  totalBalance(overrides?: CallOverrides): Promise<BigNumber>
 
   underlyingToken(overrides?: CallOverrides): Promise<string>
 
@@ -343,6 +420,17 @@ export interface PoolSafe extends BaseContract {
 
   updatePoolConfigData(
     overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  upgradeTo(
+    newImplementation: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  upgradeToAndCall(
+    newImplementation: PromiseOrValue<string>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
   withdraw(
@@ -364,9 +452,9 @@ export interface PoolSafe extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
+    getAvailableBalanceForFees(overrides?: CallOverrides): Promise<BigNumber>
 
-    getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getAvailableBalanceForPool(overrides?: CallOverrides): Promise<BigNumber>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
@@ -379,6 +467,8 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<string>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<string>
+
     resetUnprocessedProfit(overrides?: CallOverrides): Promise<void>
 
     setPoolConfig(
@@ -386,7 +476,7 @@ export interface PoolSafe extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    totalBalance(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<string>
 
@@ -397,6 +487,17 @@ export interface PoolSafe extends BaseContract {
 
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>
 
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     withdraw(
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -405,6 +506,19 @@ export interface PoolSafe extends BaseContract {
   }
 
   filters: {
+    'AdminChanged(address,address)'(
+      previousAdmin?: null,
+      newAdmin?: null,
+    ): AdminChangedEventFilter
+    AdminChanged(previousAdmin?: null, newAdmin?: null): AdminChangedEventFilter
+
+    'BeaconUpgraded(address)'(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+    BeaconUpgraded(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
@@ -423,6 +537,13 @@ export interface PoolSafe extends BaseContract {
       newPoolConfig?: PromiseOrValue<string> | null,
       oldPoolConfig?: PromiseOrValue<string> | null,
     ): PoolConfigChangedEventFilter
+
+    'Upgraded(address)'(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
+    Upgraded(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
   }
 
   estimateGas: {
@@ -438,9 +559,9 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    getAvailableLiquidityForFees(overrides?: CallOverrides): Promise<BigNumber>
+    getAvailableBalanceForFees(overrides?: CallOverrides): Promise<BigNumber>
 
-    getPoolLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getAvailableBalanceForPool(overrides?: CallOverrides): Promise<BigNumber>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
@@ -453,6 +574,8 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<BigNumber>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>
+
     resetUnprocessedProfit(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
@@ -462,7 +585,7 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    totalBalance(overrides?: CallOverrides): Promise<BigNumber>
 
     underlyingToken(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -473,6 +596,17 @@ export interface PoolSafe extends BaseContract {
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     withdraw(
@@ -495,11 +629,13 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    getAvailableLiquidityForFees(
+    getAvailableBalanceForFees(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    getPoolLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getAvailableBalanceForPool(
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     initialize(
       _poolConfig: PromiseOrValue<string>,
@@ -512,6 +648,8 @@ export interface PoolSafe extends BaseContract {
 
     poolFeeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
     resetUnprocessedProfit(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
@@ -521,7 +659,7 @@ export interface PoolSafe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    totalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    totalBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     underlyingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
@@ -532,6 +670,17 @@ export interface PoolSafe extends BaseContract {
 
     updatePoolConfigData(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     withdraw(

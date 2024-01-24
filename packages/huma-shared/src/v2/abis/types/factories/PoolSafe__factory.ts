@@ -9,23 +9,50 @@ import type { PoolSafe, PoolSafeInterface } from '../PoolSafe'
 const _abi = [
   {
     inputs: [],
-    name: 'notAuthorizedCaller',
+    name: 'AuthorizedContractCallerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notPool',
+    name: 'TrancheRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'todo',
+    name: 'ZeroAddressProvided',
     type: 'error',
   },
   {
-    inputs: [],
-    name: 'zeroAddressProvided',
-    type: 'error',
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'previousAdmin',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newAdmin',
+        type: 'address',
+      },
+    ],
+    name: 'AdminChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'beacon',
+        type: 'address',
+      },
+    ],
+    name: 'BeaconUpgraded',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -73,6 +100,19 @@ const _abi = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'implementation',
+        type: 'address',
+      },
+    ],
+    name: 'Upgraded',
+    type: 'event',
+  },
+  {
     inputs: [
       {
         internalType: 'address',
@@ -110,11 +150,11 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'getAvailableLiquidityForFees',
+    name: 'getAvailableBalanceForFees',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'liquidity',
+        name: 'availableBalance',
         type: 'uint256',
       },
     ],
@@ -123,11 +163,11 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'getPoolLiquidity',
+    name: 'getAvailableBalanceForPool',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'liquidity',
+        name: 'availableBalance',
         type: 'uint256',
       },
     ],
@@ -188,6 +228,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'proxiableUUID',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'resetUnprocessedProfit',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -208,7 +261,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'totalLiquidity',
+    name: 'totalBalance',
     outputs: [
       {
         internalType: 'uint256',
@@ -256,6 +309,37 @@ const _abi = [
     name: 'updatePoolConfigData',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
   {
