@@ -615,12 +615,13 @@ export function useCreditStatsV2(
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [CreditStatsV2, () => void] {
   const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
   const [creditStats, setCreditStats] = useState<CreditStatsV2>({})
   const [refreshCount, refresh] = useForceRefresh()
 
   useEffect(() => {
     const fetchData = async () => {
-      if (account) {
+      if (account && poolInfo) {
         const creditHash = getCreditHashV2(poolName, chainId, account)
         if (creditHash) {
           const [creditRecord, dueDetail, creditConfig, poolTokenBalance] =
@@ -628,7 +629,11 @@ export function useCreditStatsV2(
               getCreditRecordV2(poolName, account, provider),
               getDueDetailV2(poolName, account, provider),
               getCreditConfigV2(poolName, account, provider),
-              getPoolUnderlyingTokenBalanceV2(poolName, account, provider),
+              getPoolUnderlyingTokenBalanceV2(
+                poolName,
+                poolInfo.poolSafe,
+                provider,
+              ),
             ])
           if (creditRecord && dueDetail && creditConfig && poolTokenBalance) {
             const principal = creditRecord.unbilledPrincipal
@@ -642,6 +647,7 @@ export function useCreditStatsV2(
             let creditAvailable = unusedCredit.lt(poolTokenBalance)
               ? unusedCredit
               : poolTokenBalance
+
             creditAvailable = creditAvailable.lt(0)
               ? BigNumber.from(0)
               : creditAvailable
@@ -659,7 +665,7 @@ export function useCreditStatsV2(
       }
     }
     fetchData()
-  }, [account, chainId, poolName, provider, refreshCount])
+  }, [account, chainId, poolInfo, poolName, provider, refreshCount])
 
   return [creditStats, refresh]
 }
