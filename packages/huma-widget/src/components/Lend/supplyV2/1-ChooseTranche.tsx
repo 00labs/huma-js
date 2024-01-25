@@ -1,10 +1,4 @@
-import {
-  openInNewTab,
-  PoolInfoV2,
-  TrancheType,
-  UnderlyingTokenInfo,
-  useLenderApprovedV2,
-} from '@huma-finance/shared'
+import { TrancheType, UnderlyingTokenInfo } from '@huma-finance/shared'
 import {
   css,
   FormControl,
@@ -14,7 +8,6 @@ import {
   RadioGroup,
   useTheme,
 } from '@mui/material'
-import { useWeb3React } from '@web3-react/core'
 import React from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -22,39 +15,20 @@ import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
-import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
-  poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
   changeTranche: (tranche: TrancheType) => void
 }
 
 export function ChooseTranche({
-  poolInfo,
   poolUnderlyingToken,
   selectedTranche,
   changeTranche,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
-  const { poolName } = poolInfo
   const dispatch = useAppDispatch()
-  const { account, provider } = useWeb3React()
-  const [lenderApprovedSenior] = useLenderApprovedV2(
-    poolName,
-    'senior',
-    account,
-    provider,
-  )
-  const [lenderApprovedJunior] = useLenderApprovedV2(
-    poolName,
-    'junior',
-    account,
-    provider,
-  )
-  const isLoading =
-    lenderApprovedSenior === undefined || lenderApprovedJunior === undefined
 
   const styles = {
     subTitle: css`
@@ -84,16 +58,7 @@ export function ChooseTranche({
   }
 
   const handleNext = () => {
-    if (
-      (selectedTranche === 'senior' && lenderApprovedSenior) ||
-      (selectedTranche === 'junior' && lenderApprovedJunior)
-    ) {
-      dispatch(setStep(WIDGET_STEP.ChooseAmount))
-    } else if (poolInfo.KYC) {
-      dispatch(setStep(WIDGET_STEP.Evaluation))
-    } else if (poolInfo.supplyLink) {
-      openInNewTab(poolInfo.supplyLink)
-    }
+    dispatch(setStep(WIDGET_STEP.ChooseAmount))
   }
 
   const items: {
@@ -109,10 +74,6 @@ export function ChooseTranche({
       value: 'junior',
     },
   ]
-
-  if (isLoading) {
-    return <LoadingModal title={`Supply ${poolUnderlyingToken.symbol}`} />
-  }
 
   return (
     <WrapperModal title={`Supply ${poolUnderlyingToken.symbol}`}>

@@ -1,6 +1,8 @@
 import {
   POOL_NAME,
   TrancheType,
+  openInNewTab,
+  useLenderApprovedV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
@@ -42,19 +44,66 @@ export function LendSupplyV2({
 }: LendSupplyPropsV2): React.ReactElement | null {
   const dispatch = useDispatch()
   const poolName = POOL_NAME[poolNameStr]
-  const { chainId, provider } = useWeb3React()
+  const { chainId, provider, account } = useWeb3React()
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
 
-  useEffect(() => {
-    if (!step) {
-      dispatch(setStep(WIDGET_STEP.ChooseTranche))
-    }
-  }, [dispatch, step])
+  const [lenderApprovedSenior] = useLenderApprovedV2(
+    poolName,
+    'senior',
+    account,
+    provider,
+  )
+  const [lenderApprovedJunior] = useLenderApprovedV2(
+    poolName,
+    'junior',
+    account,
+    provider,
+  )
 
-  if (!poolInfo || !poolUnderlyingToken) {
+  const lenderApproveStatusFetched =
+    lenderApprovedSenior !== undefined && lenderApprovedJunior !== undefined
+
+  useEffect(() => {
+    if (!step && poolInfo && lenderApproveStatusFetched) {
+      if (lenderApprovedJunior && !lenderApprovedSenior) {
+        setSelectedTranche('junior')
+        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+        return
+      }
+
+      if (lenderApprovedSenior && !lenderApprovedJunior) {
+        setSelectedTranche('senior')
+        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+        return
+      }
+
+      if (lenderApprovedJunior && lenderApprovedSenior) {
+        dispatch(setStep(WIDGET_STEP.ChooseTranche))
+        return
+      }
+
+      if (poolInfo.KYC) {
+        dispatch(setStep(WIDGET_STEP.Evaluation))
+        return
+      }
+
+      if (poolInfo.supplyLink) {
+        openInNewTab(poolInfo.supplyLink)
+      }
+    }
+  }, [
+    dispatch,
+    lenderApproveStatusFetched,
+    lenderApprovedJunior,
+    lenderApprovedSenior,
+    poolInfo,
+    step,
+  ])
+
+  if (!poolInfo || !poolUnderlyingToken || !lenderApproveStatusFetched) {
     return (
       <WidgetWrapper
         isOpen
@@ -75,7 +124,6 @@ export function LendSupplyV2({
     >
       {step === WIDGET_STEP.ChooseTranche && (
         <ChooseTranche
-          poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
           changeTranche={setSelectedTranche}
