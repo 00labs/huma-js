@@ -1,5 +1,6 @@
 import {
   CreditStatsV2,
+  formatNumber,
   PoolInfoV2,
   UnderlyingTokenInfo,
   usePoolSafeAllowanceV2,
@@ -11,7 +12,7 @@ import React, { useCallback, useState } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setBorrowInfo } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { ChooseAmountModal } from '../../ChooseAmountModal'
+import { InputAmountModal } from '../../InputAmountModal'
 import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
@@ -65,15 +66,16 @@ export function ChooseAmount({
   }
 
   return (
-    <ChooseAmountModal
+    <InputAmountModal
       title='Borrow'
-      description1='Choose Amount'
-      sliderMax={creditAvailableFormatted}
-      currentAmount={currentAmount}
+      subTitle='Choose Amount'
       tokenSymbol={symbol}
+      currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
+      maxAmount={creditAvailableFormatted}
+      info={`${formatNumber(creditAvailableFormatted)} Available`}
       handleAction={handleAction}
-      actionText='borrow'
+      actionText='BORROW'
     />
   )
 }
