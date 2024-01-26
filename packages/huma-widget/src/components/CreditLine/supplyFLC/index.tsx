@@ -2,7 +2,7 @@ import {
   FirstLossCoverIndex,
   POOL_NAME,
   useFirstLossCoverAllowanceV2,
-  useFirstLossCoverRequirement,
+  useFirstLossCoverRequirementV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
@@ -44,7 +44,7 @@ export function SupplyFirstLossCover({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [requirement] = useFirstLossCoverRequirement(
+  const [requirement] = useFirstLossCoverRequirementV2(
     poolName,
     FirstLossCoverIndex.borrower,
     account,
