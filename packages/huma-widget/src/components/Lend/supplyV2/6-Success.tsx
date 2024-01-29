@@ -45,11 +45,8 @@ export function Success({
       const events = decodeLogs(txReceipt.logs, TRANSFER_ABI)
       if (events) {
         events.forEach((event) => {
-          const { from, to, value } = event.args
-          if (
-            from.toLowerCase() === account?.toLowerCase() &&
-            to.toLowerCase() === poolInfo.poolSafe.toLowerCase()
-          ) {
+          const { from, value } = event.args
+          if (from.toLowerCase() === account?.toLowerCase()) {
             setSupplyAmount(downScale(value.toString(), decimals))
           }
         })

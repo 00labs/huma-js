@@ -1,51 +1,80 @@
 import {
+  FirstLossCoverIndex,
   PoolInfoV2,
-  TrancheType,
   UnderlyingTokenInfo,
-  formatNumber,
+  useFirstLossCoverAllowanceV2,
   usePoolSafeAllowanceV2,
-  usePoolUnderlyingTokenBalanceV2,
 } from '@huma-finance/shared'
+import { Box, css, TextField, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import React, { useState } from 'react'
 
+import { SupplyType } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { InputAmountModal } from '../../InputAmountModal'
+import { BottomButton } from '../../BottomButton'
+import { NumericFormatCustom } from '../../NumericFormatCustom'
+import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  selectedTranche: TrancheType | undefined
+  selectedSupplyType: SupplyType
 }
 
 export function ChooseAmount({
   poolInfo,
   poolUnderlyingToken,
-  selectedTranche,
+  selectedSupplyType,
 }: Props): React.ReactElement | null {
+  const theme = useTheme()
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
-  const { allowance = BigNumber.from(0) } = usePoolSafeAllowanceV2(
-    poolInfo.poolName,
-    account,
-    provider,
-  )
-  const [balance] = usePoolUnderlyingTokenBalanceV2(
-    poolInfo.poolName,
-    account,
-    provider,
-  )
-  const maxAmountFormatted = ethers.utils.formatUnits(
-    balance,
-    poolUnderlyingToken.decimals,
-  )
+  const { allowance: poolSafeAllowance = BigNumber.from(0) } =
+    usePoolSafeAllowanceV2(poolInfo.poolName, account, provider)
+  const [firstLossCoverAllowance = BigNumber.from(0)] =
+    useFirstLossCoverAllowanceV2(
+      poolInfo.poolName,
+      selectedSupplyType.value as FirstLossCoverIndex,
+      account,
+      provider,
+    )
+  const [inputTouched, setInputTouched] = useState(false)
 
-  const handleChangeAmount = (newAmount: number) => {
+  const styles = {
+    inputAmountWrapper: css`
+      margin-bottom: ${theme.spacing(1)};
+      margin-top: ${theme.spacing(16)};
+    `,
+    inputAmount: css`
+      ${theme.cssMixins.rowSpaceBetweened};
+    `,
+    inputField: css`
+      input {
+        width: 100%;
+        color: ${theme.palette.text.primary};
+        font-family: 'Uni-Neue-Black';
+        font-size: 40px;
+        line-height: 133.4%;
+      }
+    `,
+    inputFieldSymbol: css`
+      color: ${theme.palette.text.primary};
+      font-family: 'Uni-Neue-Black';
+      font-size: 40px;
+      line-height: 133.4%;
+    `,
+  }
+
+  const handleChangeAmount = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setInputTouched(true)
+    const newAmount = event.target.value
     setCurrentAmount(newAmount)
     dispatch(setSupplyAmount(Number(newAmount)))
   }
@@ -55,23 +84,52 @@ export function ChooseAmount({
       String(currentAmount),
       decimals,
     )
-    const step = currentAmountBN.gt(allowance)
-      ? WIDGET_STEP.ApproveAllowance
-      : WIDGET_STEP.Transfer
-    dispatch(setStep(step))
+    if (selectedSupplyType.type === 'tranche') {
+      const step = currentAmountBN.gt(poolSafeAllowance)
+        ? WIDGET_STEP.ApproveAllowance
+        : WIDGET_STEP.Transfer
+      dispatch(setStep(step))
+    } else {
+      const step = currentAmountBN.gt(firstLossCoverAllowance)
+        ? WIDGET_STEP.ApproveAllowance
+        : WIDGET_STEP.Transfer
+      dispatch(setStep(step))
+    }
   }
 
   return (
-    <InputAmountModal
+    <WrapperModal
       title='Enter Amount'
-      subTitle={`Supplying ${symbol} with ${selectedTranche}`}
-      tokenSymbol={symbol}
-      currentAmount={currentAmount}
-      handleChangeAmount={handleChangeAmount}
-      maxAmount={maxAmountFormatted}
-      info={`${formatNumber(maxAmountFormatted)} Available`}
-      handleAction={handleAction}
-      actionText='SUPPLY'
-    />
+      subTitle={`Supplying ${symbol} with ${selectedSupplyType?.label}`}
+    >
+      <Box css={styles.inputAmountWrapper}>
+        <Box css={styles.inputAmount}>
+          <TextField
+            css={styles.inputField}
+            value={!inputTouched && currentAmount === 0 ? '' : currentAmount}
+            onChange={handleChangeAmount}
+            InputProps={{
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              inputComponent: NumericFormatCustom as any,
+              endAdornment: (
+                <Box component='span' css={styles.inputFieldSymbol}>
+                  {symbol}
+                </Box>
+              ),
+            }}
+            placeholder='0'
+            variant='standard'
+          />
+        </Box>
+      </Box>
+
+      <BottomButton
+        variant='contained'
+        onClick={handleAction}
+        disabled={Number(currentAmount) <= 0}
+      >
+        SUPPLY
+      </BottomButton>
+    </WrapperModal>
   )
 }

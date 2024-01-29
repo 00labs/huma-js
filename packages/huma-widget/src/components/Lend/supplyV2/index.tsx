@@ -1,7 +1,9 @@
 import {
-  POOL_NAME,
-  TrancheType,
+  capitalizeFirstLetter,
+  FirstLossCoverIndex,
   openInNewTab,
+  POOL_NAME,
+  useFirstLossCoverStatsV2,
   useLenderApprovedV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
@@ -16,13 +18,19 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { ChooseTranche } from './1-ChooseTranche'
+import { ChooseSupplyType } from './1-ChooseTranche'
 import { Evaluation } from './2-Evaluation'
 import { ChooseAmount } from './3-ChooseAmount'
 import { ApproveAllowance } from './4-ApproveAllowance'
 import { Transfer } from './5-Transfer'
 import { Success } from './6-Success'
 import { Notifications } from './7-Notifications'
+
+export type SupplyType = {
+  label: string
+  value: string | number
+  type: 'tranche' | 'firstLossCover'
+}
 
 /**
  * Lend pool supply props
@@ -47,7 +55,8 @@ export function LendSupplyV2({
   const { chainId, provider, account } = useWeb3React()
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [supplyTypes, setSupplyTypes] = useState<SupplyType[]>([])
+  const [selectedSupplyType, setSelectedSupplyType] = useState<SupplyType>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
 
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -62,25 +71,49 @@ export function LendSupplyV2({
     account,
     provider,
   )
+  const [flcStats] = useFirstLossCoverStatsV2(poolName, account, provider)
 
   const lenderApproveStatusFetched =
-    lenderApprovedSenior !== undefined && lenderApprovedJunior !== undefined
+    lenderApprovedSenior !== undefined &&
+    lenderApprovedJunior !== undefined &&
+    flcStats !== undefined
 
   useEffect(() => {
     if (!step && poolInfo && lenderApproveStatusFetched) {
-      if (lenderApprovedJunior && !lenderApprovedSenior) {
-        setSelectedTranche('junior')
+      const items: SupplyType[] = []
+      if (lenderApprovedJunior) {
+        items.push({
+          label: 'Junior Tranche',
+          value: 'junior',
+          type: 'tranche',
+        })
+      }
+      if (lenderApprovedSenior) {
+        items.push({
+          label: 'Senior Tranche',
+          value: 'senior',
+          type: 'tranche',
+        })
+      }
+      flcStats
+        .filter((flc) => flc.isApproved)
+        .forEach((flc) => {
+          items.push({
+            label: `${capitalizeFirstLetter(
+              FirstLossCoverIndex[flc.firstLossCoverIndex],
+            )} First Loss Cover`,
+            value: flc.firstLossCoverIndex,
+            type: 'firstLossCover',
+          })
+        })
+
+      if (items.length === 1) {
+        setSelectedSupplyType(items[0])
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
         return
       }
-
-      if (lenderApprovedSenior && !lenderApprovedJunior) {
-        setSelectedTranche('senior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
-        return
-      }
-
-      if (lenderApprovedJunior && lenderApprovedSenior) {
+      if (items.length > 1) {
+        setSupplyTypes(items)
         dispatch(setStep(WIDGET_STEP.ChooseTranche))
         return
       }
@@ -96,6 +129,7 @@ export function LendSupplyV2({
     }
   }, [
     dispatch,
+    flcStats,
     lenderApproveStatusFetched,
     lenderApprovedJunior,
     lenderApprovedSenior,
@@ -115,6 +149,9 @@ export function LendSupplyV2({
     )
   }
 
+  console.log('step', step)
+  console.log('selectedSupplyType', selectedSupplyType)
+
   return (
     <WidgetWrapper
       isOpen
@@ -123,33 +160,35 @@ export function LendSupplyV2({
       handleSuccess={handleSuccess}
     >
       {step === WIDGET_STEP.ChooseTranche && (
-        <ChooseTranche
+        <ChooseSupplyType
           poolUnderlyingToken={poolUnderlyingToken}
-          selectedTranche={selectedTranche}
-          changeTranche={setSelectedTranche}
+          selectedSupplyType={selectedSupplyType}
+          supplyTypes={supplyTypes}
+          changeSupplyType={setSelectedSupplyType}
         />
       )}
       {step === WIDGET_STEP.Evaluation && (
         <Evaluation poolInfo={poolInfo} handleClose={handleClose} />
       )}
-      {step === WIDGET_STEP.ChooseAmount && (
+      {step === WIDGET_STEP.ChooseAmount && selectedSupplyType && (
         <ChooseAmount
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          selectedTranche={selectedTranche}
+          selectedSupplyType={selectedSupplyType}
         />
       )}
-      {step === WIDGET_STEP.ApproveAllowance && (
+      {step === WIDGET_STEP.ApproveAllowance && selectedSupplyType && (
         <ApproveAllowance
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
+          selectedSupplyType={selectedSupplyType}
         />
       )}
-      {step === WIDGET_STEP.Transfer && selectedTranche && (
+      {step === WIDGET_STEP.Transfer && selectedSupplyType && (
         <Transfer
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          trancheType={selectedTranche}
+          selectedSupplyType={selectedSupplyType}
         />
       )}
       {step === WIDGET_STEP.Done && (

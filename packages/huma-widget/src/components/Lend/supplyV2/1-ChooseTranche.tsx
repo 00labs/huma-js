@@ -1,4 +1,4 @@
-import { TrancheType, UnderlyingTokenInfo } from '@huma-finance/shared'
+import { UnderlyingTokenInfo } from '@huma-finance/shared'
 import {
   css,
   FormControl,
@@ -10,6 +10,7 @@ import {
 } from '@mui/material'
 import React from 'react'
 
+import { SupplyType } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -18,14 +19,16 @@ import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
-  selectedTranche: TrancheType | undefined
-  changeTranche: (tranche: TrancheType) => void
+  selectedSupplyType: SupplyType | undefined
+  supplyTypes: SupplyType[]
+  changeSupplyType: (supplyType: SupplyType) => void
 }
 
-export function ChooseTranche({
+export function ChooseSupplyType({
   poolUnderlyingToken,
-  selectedTranche,
-  changeTranche,
+  selectedSupplyType,
+  supplyTypes,
+  changeSupplyType,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
@@ -57,23 +60,18 @@ export function ChooseTranche({
     `,
   }
 
+  const handleChangeSupplyType = (supplyTypeValue: string | number) => {
+    const supplyType = supplyTypes.find(
+      (item) => item.value === supplyTypeValue,
+    )
+    if (supplyType) {
+      changeSupplyType(supplyType)
+    }
+  }
+
   const handleNext = () => {
     dispatch(setStep(WIDGET_STEP.ChooseAmount))
   }
-
-  const items: {
-    label: string
-    value: TrancheType
-  }[] = [
-    {
-      label: 'Senior',
-      value: 'senior',
-    },
-    {
-      label: 'Junior',
-      value: 'junior',
-    },
-  ]
 
   return (
     <WrapperModal title={`Supply ${poolUnderlyingToken.symbol}`}>
@@ -83,9 +81,9 @@ export function ChooseTranche({
           aria-labelledby='buttons-group-label'
           name='radio-buttons-group'
           css={styles.radioGroup}
-          onChange={(e) => changeTranche(e.target.value as TrancheType)}
+          onChange={(e) => handleChangeSupplyType(e.target.value)}
         >
-          {items.map((item) => (
+          {supplyTypes.map((item) => (
             <FormControlLabel
               key={item.label}
               value={item.value}
@@ -106,7 +104,7 @@ export function ChooseTranche({
       </FormControl>
       <BottomButton
         variant='contained'
-        disabled={!selectedTranche}
+        disabled={!selectedSupplyType}
         onClick={handleNext}
       >
         NEXT
