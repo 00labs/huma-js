@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber, Contract } from 'ethers'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import {
@@ -362,6 +362,67 @@ export function useLenderApprovedV2(
   return [approved, refresh]
 }
 
+type FlcStats = {
+  firstLossCoverIndex: FirstLossCoverIndex
+  isApproved: boolean
+  totalAssets: BigNumber
+}
+
+export function useFirstLossCoverStatsV2(
+  poolName: POOL_NAME,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [FlcStats[] | undefined, () => void] {
+  const chainId = provider?.network?.chainId
+  const poolInfo = usePoolInfoV2(poolName, chainId)
+  const [flcStats, setFlcStats] = useState<FlcStats[] | undefined>(undefined)
+  const [refreshCount, refresh] = useForceRefresh()
+
+  const getFirstLossCoverStats = useCallback(
+    async (firstLossCoverIndex: FirstLossCoverIndex, account: string) => {
+      const firstLossCover = poolInfo!.firstLossCovers[firstLossCoverIndex]
+      const firstLossCoverContract = getContract<FirstLossCover>(
+        firstLossCover,
+        FIRST_LOSS_COVER_ABI,
+        provider,
+      )
+      if (firstLossCoverContract) {
+        const coverProviders = await firstLossCoverContract.getCoverProviders()
+        const isApproved = coverProviders.includes(account)
+        let totalAssets = BigNumber.from(0)
+        if (isApproved) {
+          totalAssets = await firstLossCoverContract.totalAssetsOf(account)
+        }
+
+        return {
+          firstLossCoverIndex,
+          isApproved,
+          totalAssets,
+        }
+      }
+      return undefined
+    },
+    [poolInfo, provider],
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolInfo && account) {
+        const firstLossCoverIndexes = Object.keys(poolInfo.firstLossCovers)
+        const flcStats = await Promise.all(
+          firstLossCoverIndexes.map((firstLossCoverIndex) =>
+            getFirstLossCoverStats(Number(firstLossCoverIndex), account),
+          ),
+        )
+        setFlcStats(flcStats.filter((item) => !!item) as FlcStats[])
+      }
+    }
+    fetchData()
+  }, [account, getFirstLossCoverStats, poolInfo, refreshCount])
+
+  return [flcStats, refresh]
+}
+
 export function useLenderPositionV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
@@ -557,7 +618,7 @@ export const useFirstLossCoverAssetsV2 = (
   return [totalAssets, refresh]
 }
 
-export function useWithdrawableAssetsV2(
+export function useTrancheWithdrawableAssetsV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
   account: string | undefined,

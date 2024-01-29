@@ -3,7 +3,7 @@ import {
   TrancheType,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-  useWithdrawableAssetsV2,
+  useTrancheWithdrawableAssetsV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -44,9 +44,9 @@ export function LendWithdrawV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [seniorWithdrawableAmount, refreshSeniorWithdrawableAmount] =
-    useWithdrawableAssetsV2(poolName, 'senior', account, provider)
+    useTrancheWithdrawableAssetsV2(poolName, 'senior', account, provider)
   const [juniorWithdrawableAmount, refreshJuniorWithdrawableAmount] =
-    useWithdrawableAssetsV2(poolName, 'junior', account, provider)
+    useTrancheWithdrawableAssetsV2(poolName, 'junior', account, provider)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const [withdrawAmount, setWithdrawAmount] = useState<BigNumber>()

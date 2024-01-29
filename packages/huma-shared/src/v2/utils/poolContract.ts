@@ -648,3 +648,14 @@ export const getUtilizationRateV2 = async (
   }
   return 0
 }
+
+export const getPoolIsReadyForFlcWithdrawalV2 = async (
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) => {
+  const poolContract = await getPoolContractV2(poolName, provider)
+  if (!poolContract) {
+    return undefined
+  }
+  return poolContract.readyForFirstLossCoverWithdrawal()
+}
