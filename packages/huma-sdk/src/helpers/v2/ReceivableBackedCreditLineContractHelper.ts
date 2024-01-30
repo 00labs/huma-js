@@ -6,6 +6,7 @@ import {
 import {
   getChainIdFromSignerOrProvider,
   getPoolInfoV2,
+  getPoolSafeContractV2,
   getPoolUnderlyingTokenContractV2,
   POOL_NAME,
   POOL_TYPE,
@@ -15,6 +16,7 @@ import { ReceivableBackedCreditLine } from '@huma-finance/shared/src/v2/abis/typ
 import { BigNumberish, ethers, Overrides } from 'ethers'
 import { getContract } from '../../utils'
 import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'
+import { approveReceivableTransferIfNeeded } from './ReceivableContractHelper'
 
 /**
  * Returns an ethers contract instance for the V2 Receivable contract
@@ -69,6 +71,13 @@ export async function drawdownWithReceivable(
     throw new Error('Could not find credit contract')
   }
 
+  const approveTx = await approveReceivableTransferIfNeeded(
+    signer,
+    poolName,
+    receivableId,
+  )
+  await approveTx?.wait(5)
+
   return creditContract.drawdownWithReceivable(
     await signer.getAddress(),
     receivableId,
@@ -107,20 +116,31 @@ export async function makePaymentWithReceivable(
     throw new Error('Could not find credit contract')
   }
 
+  const poolSafeContract = await getPoolSafeContractV2(
+    poolName,
+    signer.provider as JsonRpcProvider | Web3Provider | undefined,
+  )
+
+  if (!poolSafeContract) {
+    throw new Error('Could not find pool safe contract')
+  }
+
   const underlyingToken = await getPoolUnderlyingTokenContractV2(
     poolName,
     signer.provider as JsonRpcProvider | Web3Provider | undefined,
   )
 
-  if (underlyingToken) {
-    await approveERC20AllowanceIfInsufficient(
-      signer,
-      underlyingToken.address,
-      creditContract.address,
-      paymentAmount,
-      gasOpts,
-    )
+  if (!underlyingToken) {
+    throw new Error('Could not find underlying token contract')
   }
+  const approveERC20Tx = await approveERC20AllowanceIfInsufficient(
+    signer,
+    underlyingToken.address,
+    poolSafeContract.address,
+    paymentAmount,
+    gasOpts,
+  )
+  await approveERC20Tx?.wait(5)
 
   let paymentTx
   if (principalOnly) {
@@ -179,15 +199,34 @@ export async function makePrincipalPaymentAndDrawdownWithReceivable(
     signer.provider as JsonRpcProvider | Web3Provider | undefined,
   )
 
-  if (underlyingToken) {
-    await approveERC20AllowanceIfInsufficient(
-      signer,
-      underlyingToken.address,
-      creditContract.address,
-      paymentAmount,
-      gasOpts,
-    )
+  const poolSafeContract = await getPoolSafeContractV2(
+    poolName,
+    signer.provider as JsonRpcProvider | Web3Provider | undefined,
+  )
+
+  if (!poolSafeContract) {
+    throw new Error('Could not find pool safe contract')
   }
+
+  if (!underlyingToken) {
+    throw new Error('Could not find underlying token contract')
+  }
+
+  const approveERC20Tx = await approveERC20AllowanceIfInsufficient(
+    signer,
+    underlyingToken.address,
+    poolSafeContract.address,
+    paymentAmount,
+    gasOpts,
+  )
+  await approveERC20Tx?.wait(5)
+
+  const approveTx = await approveReceivableTransferIfNeeded(
+    signer,
+    poolName,
+    drawdownReceivableId,
+  )
+  await approveTx?.wait(5)
 
   return creditContract.makePrincipalPaymentAndDrawdownWithReceivable(
     await signer.getAddress(),
