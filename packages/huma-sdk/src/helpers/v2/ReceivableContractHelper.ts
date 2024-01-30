@@ -1,12 +1,17 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, BigNumberish, Overrides, ethers } from 'ethers'
 import {
   POOL_NAME,
   v2Contracts,
   RECEIVABLE_V2_ABI,
   getPoolConfigContractV2,
+  getPoolCreditContractV2,
 } from '@huma-finance/shared'
 
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import {
+  JsonRpcProvider,
+  TransactionResponse,
+  Web3Provider,
+} from '@ethersproject/providers'
 import { getContract } from '../../utils'
 
 /**
@@ -33,7 +38,6 @@ export async function getReceivableContractV2(
   if (!poolConfigContract) {
     throw new Error('Could not find PoolConfig contract')
   }
-
   const receivableAsset = await poolConfigContract.receivableAsset()
 
   return getContract<v2Contracts.Receivable>(
@@ -76,4 +80,39 @@ export async function getReceivableReferenceAlreadyExists(
   )
 
   return !tokenId.isZero()
+}
+
+export async function approveReceivableTransferIfNeeded(
+  signer: ethers.Signer,
+  poolName: POOL_NAME,
+  receivableId: BigNumberish,
+  gasOpts: Overrides = {},
+): Promise<TransactionResponse | null> {
+  const receivableContract = await getReceivableContractV2(poolName, signer)
+
+  if (!receivableContract) {
+    throw new Error('Could not find Receivable contract')
+  }
+
+  // Check if the pool is already approved to transfer the receivable
+  const provider = signer.provider as JsonRpcProvider | Web3Provider
+  const poolCreditContract = await getPoolCreditContractV2(poolName, provider)
+
+  if (!poolCreditContract) {
+    throw new Error('Could not find pool credit contract')
+  }
+
+  const approvedAddress = await receivableContract.getApproved(receivableId)
+  if (
+    poolCreditContract.address &&
+    approvedAddress === poolCreditContract.address
+  ) {
+    return null
+  }
+
+  return receivableContract.approve(
+    poolCreditContract.address,
+    receivableId,
+    gasOpts,
+  )
 }

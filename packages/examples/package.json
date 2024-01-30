@@ -12,6 +12,7 @@
     "startPay": "ts-node src/payReceivable.ts",
     "startPayReference": "ts-node src/payReceivableWithReferenceId.ts",
     "startDrawdownPayback": "ts-node src/drawdownAndPaybackToPool.ts",
+    "startDrawdownPaybackV2": "ts-node src/drawdownAndPaybackReceivableV2.ts",
     "startPoolHelpers": "ts-node src/poolContract.ts",
     "startPreapprove": "ts-node src/preapprove.ts",
     "startSubgraphTest": "ts-node src/subgraphService.ts",
