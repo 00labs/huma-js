@@ -945,3 +945,26 @@ export function useNextBillRefreshDateV2(
 
   return nextBillRefreshDate
 }
+
+export function usePoolIsReadyForFlcWithdrawalV2(
+  poolName: POOL_NAME,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const [isReadyForFlcWithdrawal, setIsReadyForFlcWithdrawal] = useState<
+    boolean | undefined
+  >(undefined)
+  const poolContract = usePoolContractV2(poolName, provider)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poolContract && provider) {
+        const isReadyForFlcWithdrawal =
+          await poolContract.readyForFirstLossCoverWithdrawal()
+        setIsReadyForFlcWithdrawal(isReadyForFlcWithdrawal)
+      }
+    }
+    fetchData()
+  }, [poolContract, provider])
+
+  return isReadyForFlcWithdrawal
+}

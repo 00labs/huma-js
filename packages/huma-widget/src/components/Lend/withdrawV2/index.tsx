@@ -1,15 +1,19 @@
 import {
+  capitalizeFirstLetter,
+  FirstLossCoverIndex,
+  formatBNFixed,
   POOL_NAME,
-  TrancheType,
+  useFirstLossCoverStatsV2,
   usePoolInfoV2,
+  usePoolIsReadyForFlcWithdrawalV2,
   usePoolUnderlyingTokenInfoV2,
   useTrancheWithdrawableAssetsV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { BigNumber } from 'ethers'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -17,8 +21,16 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseTranche } from './1-ChooseTranche'
-import { Transfer } from './2-Transfer'
-import { Done } from './3-Done'
+import { ChooseAmount } from './2-ChooseAmount'
+import { Transfer } from './3-Transfer'
+import { Done } from './4-Done'
+
+export type WithdrawType = {
+  label: string
+  value: string
+  type: 'tranche' | 'firstLossCover'
+  withdrawableAmount: BigNumber
+}
 
 /**
  * Lend pool withdraw props
@@ -43,49 +55,117 @@ export function LendWithdrawV2({
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
+  const [withdrawTypes, setWithdrawTypes] = useState<WithdrawType[]>([])
+  const [selectedWithdrawType, setSelectedWithdrawType] =
+    useState<WithdrawType>()
+
   const [seniorWithdrawableAmount, refreshSeniorWithdrawableAmount] =
     useTrancheWithdrawableAssetsV2(poolName, 'senior', account, provider)
   const [juniorWithdrawableAmount, refreshJuniorWithdrawableAmount] =
     useTrancheWithdrawableAssetsV2(poolName, 'junior', account, provider)
+  const isReadyForFlcWithdrawal = usePoolIsReadyForFlcWithdrawalV2(
+    poolName,
+    provider,
+  )
+  const [flcStats, refreshFlcStats] = useFirstLossCoverStatsV2(
+    poolName,
+    account,
+    provider,
+  )
+
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-  const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
-  const [withdrawAmount, setWithdrawAmount] = useState<BigNumber>()
+  const { symbol, decimals } = poolUnderlyingToken || {}
+
+  const isLoading =
+    !poolInfo ||
+    !poolUnderlyingToken ||
+    isReadyForFlcWithdrawal === undefined ||
+    !seniorWithdrawableAmount ||
+    !juniorWithdrawableAmount ||
+    !flcStats
 
   useEffect(() => {
-    if (!step) {
-      dispatch(setStep(WIDGET_STEP.ChooseTranche))
+    if (!step && !isLoading) {
+      const items: WithdrawType[] = []
+      if (seniorWithdrawableAmount.gt(0)) {
+        items.push({
+          label: `Withdraw ${formatBNFixed(
+            seniorWithdrawableAmount,
+            decimals!,
+          )} ${symbol} from Senior Tranche`,
+          value: 'senior',
+          type: 'tranche',
+          withdrawableAmount: seniorWithdrawableAmount,
+        })
+      }
+      if (juniorWithdrawableAmount.gt(0)) {
+        items.push({
+          label: `Withdraw ${formatBNFixed(
+            juniorWithdrawableAmount,
+            decimals!,
+          )} ${symbol} from Junior Tranche`,
+          value: 'junior',
+          type: 'tranche',
+          withdrawableAmount: juniorWithdrawableAmount,
+        })
+      }
+      if (isReadyForFlcWithdrawal) {
+        flcStats
+          .filter((flc) => flc.totalAssets.gt(0))
+          .forEach((flc) => {
+            items.push({
+              label: `Withdraw ${symbol} from ${capitalizeFirstLetter(
+                FirstLossCoverIndex[flc.firstLossCoverIndex],
+              )} First Loss Cover`,
+              value: String(flc.firstLossCoverIndex),
+              type: 'firstLossCover',
+              withdrawableAmount: flc.totalAssets,
+            })
+          })
+      }
+
+      setWithdrawTypes(items)
+      if (items.length === 1) {
+        setSelectedWithdrawType(items[0])
+        const step =
+          items[0].type === 'firstLossCover'
+            ? WIDGET_STEP.ChooseAmount
+            : WIDGET_STEP.Transfer
+        dispatch(setStep(step))
+      } else if (items.length > 1) {
+        dispatch(setStep(WIDGET_STEP.ChooseTranche))
+      }
     }
-  }, [dispatch, step])
+  }, [
+    decimals,
+    dispatch,
+    flcStats,
+    isLoading,
+    isReadyForFlcWithdrawal,
+    juniorWithdrawableAmount,
+    seniorWithdrawableAmount,
+    step,
+    symbol,
+  ])
 
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
       refreshSeniorWithdrawableAmount()
       refreshJuniorWithdrawableAmount()
+      refreshFlcStats()
       if (handleSuccess) {
         handleSuccess(blockNumber)
       }
     },
     [
       handleSuccess,
+      refreshFlcStats,
       refreshJuniorWithdrawableAmount,
       refreshSeniorWithdrawableAmount,
     ],
   )
 
-  const handleChangeTranche = useCallback(
-    (tranche: TrancheType) => {
-      setSelectedTranche(tranche)
-      if (tranche === 'senior') {
-        setWithdrawAmount(seniorWithdrawableAmount)
-      }
-      if (tranche === 'junior') {
-        setWithdrawAmount(juniorWithdrawableAmount)
-      }
-    },
-    [juniorWithdrawableAmount, seniorWithdrawableAmount],
-  )
-
-  if (!poolInfo || !poolUnderlyingToken) {
+  if (isLoading) {
     return null
   }
 
@@ -98,21 +178,30 @@ export function LendWithdrawV2({
     >
       {step === WIDGET_STEP.ChooseTranche && (
         <ChooseTranche
-          poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          selectedTranche={selectedTranche}
-          changeTranche={handleChangeTranche}
-          seniorWithdrawableAmount={seniorWithdrawableAmount}
-          juniorWithdrawableAmount={juniorWithdrawableAmount}
+          selectedWithdrawType={selectedWithdrawType}
+          withdrawTypes={withdrawTypes}
+          changeWithdrawType={setSelectedWithdrawType}
         />
       )}
-      {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer poolInfo={poolInfo} selectedTranche={selectedTranche} />
+      {step === WIDGET_STEP.ChooseAmount && selectedWithdrawType && (
+        <ChooseAmount
+          poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
+          selectedWithdrawType={selectedWithdrawType}
+        />
       )}
-      {step === WIDGET_STEP.Done && withdrawAmount && (
+      {step === WIDGET_STEP.Transfer && selectedWithdrawType && (
+        <Transfer
+          poolInfo={poolInfo}
+          poolUnderlyingToken={poolUnderlyingToken}
+          selectedWithdrawType={selectedWithdrawType}
+        />
+      )}
+      {step === WIDGET_STEP.Done && selectedWithdrawType && (
         <Done
           poolUnderlyingToken={poolUnderlyingToken}
-          withdrawAmount={withdrawAmount}
+          withdrawAmount={selectedWithdrawType.withdrawableAmount}
           handleAction={handleClose}
         />
       )}

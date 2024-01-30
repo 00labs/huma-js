@@ -28,7 +28,7 @@ import { Notifications } from './7-Notifications'
 
 export type SupplyType = {
   label: string
-  value: string | number
+  value: string
   type: 'tranche' | 'firstLossCover'
 }
 
@@ -81,17 +81,17 @@ export function LendSupplyV2({
   useEffect(() => {
     if (!step && poolInfo && lenderApproveStatusFetched) {
       const items: SupplyType[] = []
-      if (lenderApprovedJunior) {
-        items.push({
-          label: 'Junior Tranche',
-          value: 'junior',
-          type: 'tranche',
-        })
-      }
       if (lenderApprovedSenior) {
         items.push({
           label: 'Senior Tranche',
           value: 'senior',
+          type: 'tranche',
+        })
+      }
+      if (lenderApprovedJunior) {
+        items.push({
+          label: 'Junior Tranche',
+          value: 'junior',
           type: 'tranche',
         })
       }
@@ -102,7 +102,7 @@ export function LendSupplyV2({
             label: `${capitalizeFirstLetter(
               FirstLossCoverIndex[flc.firstLossCoverIndex],
             )} First Loss Cover`,
-            value: flc.firstLossCoverIndex,
+            value: String(flc.firstLossCoverIndex),
             type: 'firstLossCover',
           })
         })
@@ -110,20 +110,12 @@ export function LendSupplyV2({
       if (items.length === 1) {
         setSelectedSupplyType(items[0])
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
-        return
-      }
-      if (items.length > 1) {
+      } else if (items.length > 1) {
         setSupplyTypes(items)
         dispatch(setStep(WIDGET_STEP.ChooseTranche))
-        return
-      }
-
-      if (poolInfo.KYC) {
+      } else if (poolInfo.KYC) {
         dispatch(setStep(WIDGET_STEP.Evaluation))
-        return
-      }
-
-      if (poolInfo.supplyLink) {
+      } else if (poolInfo.supplyLink) {
         openInNewTab(poolInfo.supplyLink)
       }
     }
@@ -148,9 +140,6 @@ export function LendSupplyV2({
       />
     )
   }
-
-  console.log('step', step)
-  console.log('selectedSupplyType', selectedSupplyType)
 
   return (
     <WidgetWrapper

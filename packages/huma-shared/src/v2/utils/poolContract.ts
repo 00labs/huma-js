@@ -135,6 +135,7 @@ export const getTrancheVaultContractV2 = async (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
 ): Promise<TrancheVault | null> => {
   const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
@@ -149,6 +150,7 @@ export const getTrancheVaultContractV2 = async (
     poolInfo[trancheVault],
     poolInfo.trancheVaultAbi,
     provider,
+    account,
   )
 }
 
@@ -172,6 +174,7 @@ export const getFirstLossCoverContractV2 = async (
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
   provider: JsonRpcProvider | Web3Provider | undefined,
+  account?: string,
 ) => {
   const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
@@ -182,6 +185,7 @@ export const getFirstLossCoverContractV2 = async (
     poolInfo.firstLossCovers[firstLossCoverType],
     poolInfo.firstLossCoverAbi,
     provider,
+    account,
   )
 }
 

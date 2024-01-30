@@ -76,6 +76,6 @@ export const LenderEventText = {
   [String(LenderEvent.RedemptionRequestAdded)]: 'Request redemption',
   [String(LenderEvent.RedemptionRequestRemoved)]: 'Cancel redemption request',
   [String(LenderEvent.LenderFundDisbursed)]: 'Withdraw',
-  [String(LenderEvent.CoverDeposited)]: 'Supply first loss cover',
-  [String(LenderEvent.CoverRedeemed)]: 'Redeem first loss cover',
+  [String(LenderEvent.CoverDeposited)]: 'Supply',
+  [String(LenderEvent.CoverRedeemed)]: 'Withdraw',
 }

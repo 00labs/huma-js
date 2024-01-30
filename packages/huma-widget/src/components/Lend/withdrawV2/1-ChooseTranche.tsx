@@ -1,10 +1,4 @@
-import {
-  formatBNFixed,
-  getTrancheVaultContractV2,
-  PoolInfoV2,
-  TrancheType,
-  UnderlyingTokenInfo,
-} from '@huma-finance/shared'
+import { UnderlyingTokenInfo } from '@huma-finance/shared'
 import {
   css,
   FormControl,
@@ -14,86 +8,31 @@ import {
   RadioGroup,
   useTheme,
 } from '@mui/material'
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
+import { WithdrawType } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
-import { LoadingModal } from '../../LoadingModal'
 import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
-  poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  selectedTranche: TrancheType | undefined
-  seniorWithdrawableAmount: BigNumber | undefined
-  juniorWithdrawableAmount: BigNumber | undefined
-  changeTranche: (tranche: TrancheType) => void
+  selectedWithdrawType: WithdrawType | undefined
+  withdrawTypes: WithdrawType[]
+  changeWithdrawType: (WithdrawType: WithdrawType) => void
 }
 
 export function ChooseTranche({
-  poolInfo,
   poolUnderlyingToken,
-  selectedTranche,
-  seniorWithdrawableAmount,
-  juniorWithdrawableAmount,
-  changeTranche,
+  selectedWithdrawType,
+  withdrawTypes,
+  changeWithdrawType,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
-  const { provider } = useWeb3React()
-  const { symbol, decimals } = poolUnderlyingToken
-  const [seniorWithdrawableShares, setSeniorWithdrawableShares] = useState(
-    BigNumber.from(0),
-  )
-  const [juniorWithdrawableShares, setJuniorWithdrawableShares] = useState(
-    BigNumber.from(0),
-  )
-
-  const isLoading =
-    seniorWithdrawableAmount === undefined ||
-    juniorWithdrawableAmount === undefined
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (seniorWithdrawableAmount?.gt(0)) {
-        const seniorVaultContract = await getTrancheVaultContractV2(
-          poolInfo.poolName,
-          'senior',
-          provider,
-        )
-        if (seniorVaultContract) {
-          const shares = await seniorVaultContract.convertToShares(
-            seniorWithdrawableAmount,
-          )
-          setSeniorWithdrawableShares(shares)
-        }
-      }
-    }
-    fetchData()
-  }, [poolInfo.poolName, provider, seniorWithdrawableAmount])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (juniorWithdrawableAmount?.gt(0)) {
-        const juniorVaultContract = await getTrancheVaultContractV2(
-          poolInfo.poolName,
-          'senior',
-          provider,
-        )
-        if (juniorVaultContract) {
-          const shares = await juniorVaultContract.convertToShares(
-            juniorWithdrawableAmount,
-          )
-          setJuniorWithdrawableShares(shares)
-        }
-      }
-    }
-    fetchData()
-  }, [poolInfo.poolName, provider, juniorWithdrawableAmount])
+  const { symbol } = poolUnderlyingToken
 
   const styles = {
     subTitle: css`
@@ -122,41 +61,21 @@ export function ChooseTranche({
     `,
   }
 
-  const handleNext = () => {
-    dispatch(setStep(WIDGET_STEP.Transfer))
+  const handleChangeWithdrawType = (withdrawTypeValue: string | number) => {
+    const withdrawType = withdrawTypes.find(
+      (item) => item.value === withdrawTypeValue,
+    )
+    if (withdrawType) {
+      changeWithdrawType(withdrawType)
+    }
   }
 
-  const items: {
-    label: string
-    value: TrancheType
-    disabled: boolean | undefined
-  }[] = [
-    {
-      label: `Withdraw ${formatBNFixed(
-        seniorWithdrawableAmount,
-        decimals,
-      )} ${symbol} from Senior vault (${formatBNFixed(
-        seniorWithdrawableShares,
-        decimals,
-      )} shares)`,
-      value: 'senior',
-      disabled: seniorWithdrawableAmount?.lte(0) ?? true,
-    },
-    {
-      label: `Withdraw ${formatBNFixed(
-        juniorWithdrawableAmount,
-        decimals,
-      )} ${symbol} from Junior vault (${formatBNFixed(
-        juniorWithdrawableShares,
-        decimals,
-      )} shares)`,
-      value: 'junior',
-      disabled: juniorWithdrawableAmount?.lte(0) ?? true,
-    },
-  ]
-
-  if (isLoading) {
-    return <LoadingModal title={`Withdraw ${symbol}`} />
+  const handleNext = () => {
+    if (selectedWithdrawType?.type === 'firstLossCover') {
+      dispatch(setStep(WIDGET_STEP.ChooseAmount))
+    } else {
+      dispatch(setStep(WIDGET_STEP.Transfer))
+    }
   }
 
   return (
@@ -167,13 +86,12 @@ export function ChooseTranche({
           aria-labelledby='buttons-group-label'
           name='radio-buttons-group'
           css={styles.radioGroup}
-          onChange={(e) => changeTranche(e.target.value as TrancheType)}
+          onChange={(e) => handleChangeWithdrawType(e.target.value)}
         >
-          {items.map((item) => (
+          {withdrawTypes.map((item) => (
             <FormControlLabel
               key={item.label}
               value={item.value}
-              disabled={item.disabled}
               control={
                 <Radio
                   sx={{
@@ -191,7 +109,7 @@ export function ChooseTranche({
       </FormControl>
       <BottomButton
         variant='contained'
-        disabled={!selectedTranche}
+        disabled={!selectedWithdrawType}
         onClick={handleNext}
       >
         NEXT

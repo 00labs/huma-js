@@ -7,10 +7,10 @@ import {
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { SupplyType } from '.'
+import { WithdrawType } from '.'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -21,22 +21,20 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  selectedSupplyType: SupplyType
+  selectedWithdrawType: WithdrawType
 }
 
 export function Transfer({
   poolInfo,
   poolUnderlyingToken,
-  selectedSupplyType,
-}: Props): React.ReactElement {
+  selectedWithdrawType,
+}: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
-  const { supplyAmount } = useAppSelector(selectWidgetState)
-  const { decimals } = poolUnderlyingToken
-  const supplyBigNumber = ethers.utils.parseUnits(
-    String(supplyAmount),
-    decimals,
-  )
+  const { withdrawAmount } = useAppSelector(selectWidgetState)
+  const [firstLossCoverShares, setFirstLossCoverShares] = React.useState<
+    BigNumber | undefined
+  >(undefined)
   const [contract, setContract] = useState<ethers.Contract | undefined>(
     undefined,
   )
@@ -44,10 +42,10 @@ export function Transfer({
   useEffect(() => {
     const fetchData = async () => {
       if (account) {
-        if (selectedSupplyType.type === 'tranche') {
+        if (selectedWithdrawType.type === 'tranche') {
           const trancheVaultContract = await getTrancheVaultContractV2(
             poolInfo.poolName,
-            selectedSupplyType.value as TrancheType,
+            selectedWithdrawType.value as TrancheType,
             provider,
             account,
           )
@@ -55,14 +53,21 @@ export function Transfer({
             setContract(trancheVaultContract)
           }
         }
-        if (selectedSupplyType.type === 'firstLossCover') {
+        if (selectedWithdrawType.type === 'firstLossCover') {
           const firstLossCoverContract = await getFirstLossCoverContractV2(
             poolInfo.poolName,
-            Number(selectedSupplyType.value) as FirstLossCoverIndex,
+            Number(selectedWithdrawType.value) as FirstLossCoverIndex,
             provider,
             account,
           )
           if (firstLossCoverContract) {
+            const shares = await firstLossCoverContract.convertToShares(
+              ethers.utils.parseUnits(
+                String(withdrawAmount),
+                poolUnderlyingToken.decimals,
+              ),
+            )
+            setFirstLossCoverShares(shares)
             setContract(firstLossCoverContract)
           }
         }
@@ -72,23 +77,25 @@ export function Transfer({
   }, [
     account,
     poolInfo.poolName,
+    poolUnderlyingToken.decimals,
     provider,
-    selectedSupplyType.type,
-    selectedSupplyType.value,
+    selectedWithdrawType.type,
+    selectedWithdrawType.value,
+    withdrawAmount,
   ])
 
   const method =
-    selectedSupplyType.type === 'tranche' ? 'deposit' : 'depositCover'
+    selectedWithdrawType.type === 'tranche' ? 'disburse' : 'redeemCover'
   const params =
-    selectedSupplyType.type === 'tranche'
-      ? [supplyBigNumber, account]
-      : [supplyBigNumber]
+    selectedWithdrawType.type === 'tranche'
+      ? []
+      : [firstLossCoverShares, account]
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))
   }, [dispatch])
 
-  if (!contract) {
+  if (!account || !contract) {
     return <LoadingModal title='Transaction Pending' />
   }
 
