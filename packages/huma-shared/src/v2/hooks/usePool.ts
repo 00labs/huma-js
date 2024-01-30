@@ -54,6 +54,7 @@ export type CreditStatsV2 = {
   creditRecord?: CreditRecordStructOutput
   creditConfig?: CreditConfigStructOutput
   creditAvailable?: BigNumber
+  totalDueAmount?: BigNumber
   payoffAmount?: BigNumber
 }
 
@@ -656,6 +657,9 @@ export function useCreditStatsV2(
               creditRecord,
               creditConfig,
               creditAvailable,
+              totalDueAmount: creditRecord.nextDue.add(
+                creditRecord.totalPastDue,
+              ),
               payoffAmount: creditRecord.unbilledPrincipal
                 .add(creditRecord.nextDue)
                 .add(creditRecord.totalPastDue),

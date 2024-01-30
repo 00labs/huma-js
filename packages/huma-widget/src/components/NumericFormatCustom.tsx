@@ -4,13 +4,14 @@ import { NumericFormat, NumericFormatProps } from 'react-number-format'
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void
   name: string
+  suffix?: string
 }
 
 export const NumericFormatCustom = React.forwardRef<
   NumericFormatProps,
   CustomProps
 >((props, ref) => {
-  const { onChange, ...other } = props
+  const { onChange, suffix, ...other } = props
 
   return (
     <NumericFormat
@@ -26,6 +27,7 @@ export const NumericFormatCustom = React.forwardRef<
       }}
       thousandSeparator
       valueIsNumericString
+      suffix={suffix}
     />
   )
 })

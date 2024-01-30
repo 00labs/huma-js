@@ -1,4 +1,5 @@
 import {
+  formatNumber,
   PoolInfoV2,
   toBigNumber,
   UnderlyingTokenInfo,
@@ -12,7 +13,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setPaymentAmount, setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { ChooseAmountModal } from '../../ChooseAmountModal'
+import { InputAmountModal } from '../../InputAmountModal'
 import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
@@ -44,6 +45,15 @@ export function ChooseAmount({
     ethers.utils.formatUnits(payoffAmountBN, decimals),
   )
 
+  console.log('totalDueAmountBN', totalDueAmountBN.toString())
+  console.log('payoffAmountBN', payoffAmountBN.toString())
+  console.log('payoffAmount', payoffAmount)
+  console.log('currentAmount', currentAmount)
+
+  useEffect(() => {
+    setCurrentAmount(totalDueAmount)
+  }, [totalDueAmount])
+
   useEffect(() => {
     setCurrentAmount(totalDueAmount)
     dispatch(setPaymentAmount({ paymentAmount: totalDueAmount }))
@@ -70,17 +80,17 @@ export function ChooseAmount({
   }
 
   return (
-    <ChooseAmountModal
+    <InputAmountModal
       title='Pay'
-      description1='Choose amount'
-      sliderMax={payoffAmount}
-      currentAmount={currentAmount}
+      subTitle='Enter Amount'
       tokenSymbol={symbol}
+      currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
+      maxAmount={payoffAmount}
+      maxAmountText='Pay Off'
+      info={`${formatNumber(totalDueAmount.toFixed(0))} Due`}
       handleAction={handleAction}
-      actionText='pay'
-      payoffAmount={payoffAmount}
-      hideTerms
+      actionText='PAY'
     />
   )
 }

@@ -42,7 +42,7 @@ export function CreditLinePaymentV2({
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [{ creditRecord, payoffAmount }] = useCreditStatsV2(
+  const [{ creditRecord, totalDueAmount, payoffAmount }] = useCreditStatsV2(
     poolName,
     account,
     provider,
@@ -78,7 +78,7 @@ export function CreditLinePaymentV2({
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           payoffAmount={payoffAmount!}
-          totalDueAmount={creditRecord.totalPastDue}
+          totalDueAmount={totalDueAmount!}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (

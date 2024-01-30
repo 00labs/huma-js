@@ -135,6 +135,7 @@ export function ChooseAction({
       )
       return
     }
+
     dispatch(setStep(WIDGET_STEP.ChooseAmount))
   }
 
