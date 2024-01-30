@@ -70,9 +70,13 @@ async function main() {
   const receivableHandler = new HumaReceivableHandler({
     humaContext,
   })
-  await receivableHandler.declarePayment(
+  const declarePaymentTx = await receivableHandler.declarePayment(
     BigNumber.from(10),
     referenceId1.toString(),
+  )
+  const declarePaymentTxResponse = await declarePaymentTx.wait()
+  console.log(
+    `Declare payment success. Tx hash: ${declarePaymentTxResponse.transactionHash}`,
   )
 
   // Mint a new receivable to drawdown with
