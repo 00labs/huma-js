@@ -1185,6 +1185,25 @@ const _abi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'getNextBillRefreshDate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'refreshDate',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const
 
 export class Credit__factory {

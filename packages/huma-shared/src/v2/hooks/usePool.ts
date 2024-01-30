@@ -730,7 +730,7 @@ type FirstLossCoverRequirement = {
   minAmountToDeposit: BigNumber
 }
 
-export const useFirstLossCoverRequirement = (
+export const useFirstLossCoverRequirementV2 = (
   poolName: POOL_NAME,
   firstLossCoverType: FirstLossCoverIndex,
   account: string | undefined,
@@ -860,4 +860,27 @@ export function useNextEpochStartTimeV2(
   }, [calendarContract, poolSettings, provider])
 
   return nextEpochStartTime
+}
+
+export function useNextBillRefreshDateV2(
+  poolName: POOL_NAME,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const [nextBillRefreshDate, setNextBillRefreshDate] = useState<number>()
+  const creditContract = useCreditContractV2(poolName, provider)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (account && creditContract && provider) {
+        const nextBillRefreshDate = await creditContract.getNextBillRefreshDate(
+          account,
+        )
+        setNextBillRefreshDate(nextBillRefreshDate.toNumber())
+      }
+    }
+    fetchData()
+  }, [account, creditContract, provider])
+
+  return nextBillRefreshDate
 }

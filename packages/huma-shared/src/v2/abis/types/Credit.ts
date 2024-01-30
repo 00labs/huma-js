@@ -139,6 +139,7 @@ export interface CreditInterface extends utils.Interface {
     'drawdownWithReceivable(address,uint256,uint256)': FunctionFragment
     'makePaymentWithReceivable(address,uint256,uint256)': FunctionFragment
     'makePrincipalPaymentAndDrawdownWithReceivable(address,uint256,uint256,uint256,uint256)': FunctionFragment
+    'getNextBillRefreshDate(address)': FunctionFragment
   }
 
   getFunction(
@@ -168,7 +169,8 @@ export interface CreditInterface extends utils.Interface {
       | 'updatePoolConfigData'
       | 'drawdownWithReceivable'
       | 'makePaymentWithReceivable'
-      | 'makePrincipalPaymentAndDrawdownWithReceivable',
+      | 'makePrincipalPaymentAndDrawdownWithReceivable'
+      | 'getNextBillRefreshDate',
   ): FunctionFragment
 
   encodeFunctionData(functionFragment: 'calendar', values?: undefined): string
@@ -274,6 +276,10 @@ export interface CreditInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
     ],
   ): string
+  encodeFunctionData(
+    functionFragment: 'getNextBillRefreshDate',
+    values: [PromiseOrValue<string>],
+  ): string
 
   decodeFunctionResult(functionFragment: 'calendar', data: BytesLike): Result
   decodeFunctionResult(
@@ -350,6 +356,10 @@ export interface CreditInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'makePrincipalPaymentAndDrawdownWithReceivable',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'getNextBillRefreshDate',
     data: BytesLike,
   ): Result
 
@@ -677,6 +687,11 @@ export interface Credit extends BaseContract {
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
+
+    getNextBillRefreshDate(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber] & { refreshDate: BigNumber }>
   }
 
   calendar(overrides?: CallOverrides): Promise<string>
@@ -801,6 +816,11 @@ export interface Credit extends BaseContract {
     drawdownAmount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
+
+  getNextBillRefreshDate(
+    borrower: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   callStatic: {
     calendar(overrides?: CallOverrides): Promise<string>
@@ -940,6 +960,11 @@ export interface Credit extends BaseContract {
         paidoff: boolean
       }
     >
+
+    getNextBillRefreshDate(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
   }
 
   filters: {
@@ -1191,6 +1216,11 @@ export interface Credit extends BaseContract {
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
+
+    getNextBillRefreshDate(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
   }
 
   populateTransaction: {
@@ -1315,6 +1345,11 @@ export interface Credit extends BaseContract {
       drawdownReceivableId: PromiseOrValue<BigNumberish>,
       drawdownAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    getNextBillRefreshDate(
+      borrower: PromiseOrValue<string>,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
   }
 }
