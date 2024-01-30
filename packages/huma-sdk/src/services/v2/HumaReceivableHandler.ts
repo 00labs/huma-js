@@ -25,7 +25,7 @@ export class HumaReceivableHandler {
   ): Promise<TransactionResponse> {
     const contract = await getReceivableContractV2(
       this.#humaContext.poolName,
-      this.#humaContext.provider,
+      this.#humaContext.signer,
     )
     if (!contract) {
       throw new Error('Could not find Receivable contract')
