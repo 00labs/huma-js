@@ -7,7 +7,6 @@ import {
   useNextEpochStartTimeV2,
 } from '@huma-finance/shared'
 import {
-  Box,
   css,
   FormControl,
   FormControlLabel,
@@ -17,10 +16,9 @@ import {
   useTheme,
 } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber, ethers } from 'ethers'
 import React from 'react'
 
-import { REDEMPTION_TYPE, RedemptionInfo } from '.'
+import { ActionType } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError, setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -31,23 +29,17 @@ import { WrapperModal } from '../../WrapperModal'
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
-  seniorRedemptionInfo: RedemptionInfo | undefined
-  juniorRedemptionInfo: RedemptionInfo | undefined
-  redemptionType: REDEMPTION_TYPE | undefined
-  seniorPosition: BigNumber | undefined
-  juniorPosition: BigNumber | undefined
-  changeRedemptionType: (tranche: REDEMPTION_TYPE) => void
+  selectedActionType: ActionType | undefined
+  actionTypes: ActionType[]
+  changeActionType: (ActionType: ActionType) => void
 }
 
 export function ChooseAction({
   poolInfo,
   poolUnderlyingToken,
-  seniorRedemptionInfo,
-  juniorRedemptionInfo,
-  redemptionType,
-  seniorPosition,
-  juniorPosition,
-  changeRedemptionType,
+  selectedActionType,
+  actionTypes,
+  changeActionType,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
@@ -71,13 +63,7 @@ export function ChooseAction({
     provider,
   )
 
-  const isLoading =
-    seniorRedemptionInfo === undefined ||
-    juniorRedemptionInfo === undefined ||
-    seniorDepositRecord === undefined ||
-    juniorDepositRecord === undefined ||
-    lpConfig === undefined ||
-    nextEpochStartTime === undefined
+  const isLoading = lpConfig === undefined || nextEpochStartTime === undefined
 
   const styles = {
     subTitle: css`
@@ -107,74 +93,51 @@ export function ChooseAction({
   }
 
   const handleNext = () => {
-    if (isLoading) {
-      return
+    if (selectedActionType!.action === 'cancelRedemption') {
+      const depositRecord =
+        selectedActionType!.value === 'senior'
+          ? seniorDepositRecord
+          : juniorDepositRecord
+
+      const SECONDS_IN_A_DAY = 24 * 60 * 60
+      if (
+        nextEpochStartTime! <
+        depositRecord!.lastDepositTime.toNumber() +
+          lpConfig!.withdrawalLockoutPeriodInDays * SECONDS_IN_A_DAY
+      ) {
+        dispatch(setStep(WIDGET_STEP.Error))
+        dispatch(
+          setError({
+            errorReason: 'Redemption request too soon',
+            errorMessage: `Your last deposit was on ${timestampToLL(
+              depositRecord!.lastDepositTime.toNumber(),
+            )}. Depositors need to wait ${
+              lpConfig!.withdrawalLockoutPeriodInDays
+            } days before redemption request`,
+          }),
+        )
+        return
+      }
     }
 
-    const depositRecord =
-      redemptionType === REDEMPTION_TYPE.AddSeniorRedemption
-        ? seniorDepositRecord
-        : juniorDepositRecord
-
-    const SECONDS_IN_A_DAY = 24 * 60 * 60
     if (
-      nextEpochStartTime <
-      depositRecord.lastDepositTime.toNumber() +
-        lpConfig.withdrawalLockoutPeriodInDays * SECONDS_IN_A_DAY
+      selectedActionType!.action === 'withdraw' &&
+      ['senior', 'junior'].includes(selectedActionType!.type)
     ) {
-      dispatch(setStep(WIDGET_STEP.Error))
-      dispatch(
-        setError({
-          errorReason: 'Redemption request too soon',
-          errorMessage: `Your last deposit was on ${timestampToLL(
-            depositRecord.lastDepositTime.toNumber(),
-          )}. Depositors need to wait ${
-            lpConfig.withdrawalLockoutPeriodInDays
-          } days before redemption request`,
-        }),
-      )
-      return
+      dispatch(setStep(WIDGET_STEP.Transfer))
+    } else {
+      dispatch(setStep(WIDGET_STEP.ChooseAmount))
     }
-
-    dispatch(setStep(WIDGET_STEP.ChooseAmount))
   }
 
-  const formatAmount = (amount?: BigNumber) => {
-    if (!amount || amount.lte(0)) {
-      return undefined
+  const handleChangeActionType = (actionTypeValue: string | number) => {
+    const actionType = actionTypes.find(
+      (item) => item.value === actionTypeValue,
+    )
+    if (actionType) {
+      changeActionType(actionType)
     }
-    return ethers.utils.formatUnits(amount, poolUnderlyingToken.decimals)
   }
-
-  const items: {
-    label: string
-    value: REDEMPTION_TYPE
-    amount?: string
-    show: boolean
-  }[] = [
-    {
-      label: 'Request Senior Tranche Redemption',
-      value: REDEMPTION_TYPE.AddSeniorRedemption,
-      show: seniorPosition?.gt(0) ?? false,
-    },
-    {
-      label: 'Cancel Senior Tranche Redemption',
-      value: REDEMPTION_TYPE.CancelSeniorRedemption,
-      amount: formatAmount(seniorRedemptionInfo?.amount),
-      show: seniorRedemptionInfo?.amount.gt(0) ?? false,
-    },
-    {
-      label: 'Request Junior Tranche Redemption',
-      value: REDEMPTION_TYPE.AddJuniorRedemption,
-      show: juniorPosition?.gt(0) ?? false,
-    },
-    {
-      label: 'Cancel Junior Tranche Redemption',
-      value: REDEMPTION_TYPE.CancelJuniorRedemption,
-      amount: formatAmount(juniorRedemptionInfo?.amount),
-      show: juniorRedemptionInfo?.amount.gt(0) ?? false,
-    },
-  ]
 
   if (isLoading) {
     return <LoadingModal title={`Redeem ${symbol}`} />
@@ -188,46 +151,30 @@ export function ChooseAction({
           aria-labelledby='buttons-group-label'
           name='radio-buttons-group'
           css={styles.radioGroup}
-          onChange={(e) => changeRedemptionType(Number(e.target.value))}
+          onChange={(e) => handleChangeActionType(e.target.value)}
         >
-          {items
-            .filter((item) => item.show)
-            .map((item) => {
-              const { label } = item
-              let labelNode = <Box>{label}</Box>
-              if (item.amount) {
-                labelNode = (
-                  <>
-                    <Box>{label}</Box>
-                    <Box>
-                      ({item.amount} {symbol} available)
-                    </Box>
-                  </>
-                )
-              }
-              return (
-                <FormControlLabel
-                  key={item.label}
-                  value={item.value}
-                  control={
-                    <Radio
-                      sx={{
-                        '& .MuiSvgIcon-root': {
-                          fontSize: 24,
-                        },
-                      }}
-                    />
-                  }
-                  label={labelNode}
-                  css={styles.formControl}
+          {actionTypes.map((item) => (
+            <FormControlLabel
+              key={item.label}
+              value={item.value}
+              control={
+                <Radio
+                  sx={{
+                    '& .MuiSvgIcon-root': {
+                      fontSize: 24,
+                    },
+                  }}
                 />
-              )
-            })}
+              }
+              label={item.label}
+              css={styles.formControl}
+            />
+          ))}
         </RadioGroup>
       </FormControl>
       <BottomButton
         variant='contained'
-        disabled={redemptionType === undefined}
+        disabled={!selectedActionType}
         onClick={handleNext}
       >
         NEXT

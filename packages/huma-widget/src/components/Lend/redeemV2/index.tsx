@@ -1,9 +1,15 @@
 import {
+  FirstLossCoverIndex,
   POOL_NAME,
+  capitalizeFirstLetter,
+  formatBNFixed,
   useCancellableRedemptionInfoV2,
+  useFirstLossCoverStatsV2,
   useLenderPositionV2,
   usePoolInfoV2,
+  usePoolIsReadyForFlcWithdrawalV2,
   usePoolUnderlyingTokenInfoV2,
+  useTrancheWithdrawableAssetsV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -17,9 +23,17 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseAction } from './1-ChooseAction'
-import { ChooseAmount } from './2-ChooseAmount'
-import { Transfer } from './3-Transfer'
-import { Done } from './4-Done'
+// import { ChooseAmount } from './2-ChooseAmount'
+// import { Transfer } from './3-Transfer'
+// import { Done } from './4-Done'
+
+export type ActionType = {
+  label: string
+  value: string
+  action: 'redemption' | 'cancelRedemption' | 'withdraw'
+  type: 'senior' | 'junior' | 'firstLossCover'
+  availableAmount: BigNumber
+}
 
 /**
  * Lend pool withdraw props
@@ -34,42 +48,6 @@ export type LendRedeemPropsV2 = {
   handleSuccess?: (blockNumber?: number) => void
 }
 
-export enum REDEMPTION_TYPE {
-  AddSeniorRedemption = 1,
-  CancelSeniorRedemption = 2,
-  AddJuniorRedemption = 3,
-  CancelJuniorRedemption = 4,
-}
-
-export const RedemptionActionInfo: {
-  [key in REDEMPTION_TYPE]: {
-    action: 'Create' | 'Cancel'
-    tranche: 'senior' | 'junior'
-  }
-} = {
-  [REDEMPTION_TYPE.AddSeniorRedemption]: {
-    action: 'Create',
-    tranche: 'senior',
-  },
-  [REDEMPTION_TYPE.CancelSeniorRedemption]: {
-    action: 'Cancel',
-    tranche: 'senior',
-  },
-  [REDEMPTION_TYPE.AddJuniorRedemption]: {
-    action: 'Create',
-    tranche: 'junior',
-  },
-  [REDEMPTION_TYPE.CancelJuniorRedemption]: {
-    action: 'Cancel',
-    tranche: 'junior',
-  },
-}
-
-export type RedemptionInfo = {
-  shares: BigNumber
-  amount: BigNumber
-}
-
 export function LendRedeemV2({
   poolName: poolNameStr,
   handleClose,
@@ -80,68 +58,194 @@ export function LendRedeemV2({
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage, errorReason } = useAppSelector(selectWidgetState)
-  const [seniorRedemptionInfo, refreshSeniorRedemptionInfo] =
-    useCancellableRedemptionInfoV2(poolName, 'senior', account, provider)
-  const [juniorRedemptionInfo, refreshJuniorRedemptionInfo] =
-    useCancellableRedemptionInfoV2(poolName, 'junior', account, provider)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-  const [seniorPosition, refreshSeniorPosition] = useLenderPositionV2(
+  const { symbol, decimals } = poolUnderlyingToken || {}
+  const [actionTypes, setActionTypes] = useState<ActionType[]>([])
+  const [selectedActionType, setSelectedActionType] = useState<ActionType>()
+  const [seniorPosition] = useLenderPositionV2(
     poolName,
     'senior',
     account,
     provider,
   )
-  const [juniorPosition, refreshJuniorPosition] = useLenderPositionV2(
+  const [juniorPosition] = useLenderPositionV2(
     poolName,
     'junior',
     account,
     provider,
   )
-  const [redemptionType, setRedemptionType] = useState<REDEMPTION_TYPE>()
-  const redemptionActionInfo = redemptionType
-    ? RedemptionActionInfo[redemptionType]
-    : undefined
+  const [seniorRedemptionInfo] = useCancellableRedemptionInfoV2(
+    poolName,
+    'senior',
+    account,
+    provider,
+  )
+  const [juniorRedemptionInfo] = useCancellableRedemptionInfoV2(
+    poolName,
+    'junior',
+    account,
+    provider,
+  )
+  const [seniorWithdrawableAmount] = useTrancheWithdrawableAssetsV2(
+    poolName,
+    'senior',
+    account,
+    provider,
+  )
+  const [juniorWithdrawableAmount] = useTrancheWithdrawableAssetsV2(
+    poolName,
+    'junior',
+    account,
+    provider,
+  )
+  const isReadyForFlcWithdrawal = usePoolIsReadyForFlcWithdrawalV2(
+    poolName,
+    provider,
+  )
+  const [flcStats] = useFirstLossCoverStatsV2(poolName, account, provider)
+
+  const isLoading =
+    !poolInfo ||
+    !poolUnderlyingToken ||
+    !seniorRedemptionInfo ||
+    !juniorRedemptionInfo ||
+    !juniorRedemptionInfo ||
+    !seniorPosition ||
+    !juniorPosition ||
+    isReadyForFlcWithdrawal === undefined ||
+    !seniorWithdrawableAmount ||
+    !juniorWithdrawableAmount ||
+    !flcStats
 
   useEffect(() => {
-    if (!step) {
-      dispatch(setStep(WIDGET_STEP.ChooseTranche))
+    if (!step && !isLoading) {
+      const items: ActionType[] = []
+      if (seniorPosition.gt(0)) {
+        items.push({
+          label: `Redeem ${formatBNFixed(
+            seniorPosition,
+            decimals!,
+          )} ${symbol} from Senior Tranche`,
+          value: 'seniorRedemption',
+          action: 'redemption',
+          type: 'senior',
+          availableAmount: seniorPosition,
+        })
+      }
+      if (seniorRedemptionInfo.amount.gt(0)) {
+        items.push({
+          label: `Cancel ${formatBNFixed(
+            seniorRedemptionInfo.amount,
+            decimals!,
+          )} ${symbol} Senior Tranche Redemption`,
+          value: 'cancelSeniorRedemption',
+          action: 'cancelRedemption',
+          type: 'senior',
+          availableAmount: seniorRedemptionInfo.amount,
+        })
+      }
+      if (juniorPosition.gt(0)) {
+        items.push({
+          label: `Redeem ${formatBNFixed(
+            juniorPosition,
+            decimals!,
+          )} ${symbol} from Junior Tranche`,
+          value: 'juniorRedemption',
+          action: 'redemption',
+          type: 'junior',
+          availableAmount: juniorPosition,
+        })
+      }
+      if (juniorRedemptionInfo.amount.gt(0)) {
+        items.push({
+          label: `Cancel ${formatBNFixed(
+            juniorRedemptionInfo.amount,
+            decimals!,
+          )} ${symbol} Junior Tranche Redemption`,
+          value: 'cancelJuniorRedemption',
+          action: 'cancelRedemption',
+          type: 'junior',
+          availableAmount: juniorRedemptionInfo.amount,
+        })
+      }
+      if (seniorWithdrawableAmount.gt(0)) {
+        items.push({
+          label: `Withdraw ${formatBNFixed(
+            seniorWithdrawableAmount,
+            decimals!,
+          )} ${symbol} from Senior Tranche`,
+          value: 'seniorWithdraw',
+          action: 'withdraw',
+          type: 'senior',
+          availableAmount: seniorWithdrawableAmount,
+        })
+      }
+      if (juniorWithdrawableAmount.gt(0)) {
+        items.push({
+          label: `Withdraw ${formatBNFixed(
+            juniorWithdrawableAmount,
+            decimals!,
+          )} ${symbol} from Junior Tranche`,
+          value: 'juniorWithdraw',
+          action: 'withdraw',
+          type: 'junior',
+          availableAmount: juniorWithdrawableAmount,
+        })
+      }
+      if (isReadyForFlcWithdrawal) {
+        flcStats
+          .filter((flc) => flc.totalAssets.gt(0))
+          .forEach((flc) => {
+            items.push({
+              label: `Withdraw ${symbol} from ${capitalizeFirstLetter(
+                FirstLossCoverIndex[flc.firstLossCoverIndex],
+              )} First Loss Cover`,
+              value: String(flc.firstLossCoverIndex),
+              action: 'withdraw',
+              type: 'firstLossCover',
+              availableAmount: flc.totalAssets,
+            })
+          })
+      }
+
+      setActionTypes(items)
+      if (items.length === 1) {
+        setSelectedActionType(items[0])
+        const step =
+          items[0].type === 'firstLossCover'
+            ? WIDGET_STEP.ChooseAmount
+            : WIDGET_STEP.Transfer
+        dispatch(setStep(step))
+      } else if (items.length > 1) {
+        dispatch(setStep(WIDGET_STEP.ChooseTranche))
+      }
     }
-  }, [dispatch, step])
+  }, [
+    decimals,
+    dispatch,
+    flcStats,
+    isLoading,
+    isReadyForFlcWithdrawal,
+    juniorPosition,
+    juniorRedemptionInfo?.amount,
+    juniorWithdrawableAmount,
+    seniorPosition,
+    seniorRedemptionInfo?.amount,
+    seniorWithdrawableAmount,
+    step,
+    symbol,
+  ])
 
   const handleRedeemSuccess = useCallback(
     (blockNumber: number) => {
-      refreshSeniorRedemptionInfo()
-      refreshJuniorRedemptionInfo()
-      refreshSeniorPosition()
-      refreshJuniorPosition()
       if (handleSuccess) {
         handleSuccess(blockNumber)
       }
     },
-    [
-      handleSuccess,
-      refreshJuniorPosition,
-      refreshJuniorRedemptionInfo,
-      refreshSeniorPosition,
-      refreshSeniorRedemptionInfo,
-    ],
+    [handleSuccess],
   )
 
-  const getMaxAmount = () => {
-    if (redemptionActionInfo?.tranche === 'senior') {
-      return redemptionActionInfo?.action === 'Create'
-        ? seniorPosition
-        : seniorRedemptionInfo?.amount
-    }
-    if (redemptionActionInfo?.tranche === 'junior') {
-      return redemptionActionInfo?.action === 'Create'
-        ? juniorPosition
-        : juniorRedemptionInfo?.amount
-    }
-    return undefined
-  }
-
-  if (!poolInfo || !poolUnderlyingToken) {
+  if (isLoading) {
     return (
       <WidgetWrapper
         isOpen
@@ -164,15 +268,12 @@ export function LendRedeemV2({
         <ChooseAction
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          seniorRedemptionInfo={seniorRedemptionInfo}
-          juniorRedemptionInfo={juniorRedemptionInfo}
-          redemptionType={redemptionType}
-          changeRedemptionType={setRedemptionType}
-          seniorPosition={seniorPosition}
-          juniorPosition={juniorPosition}
+          selectedActionType={selectedActionType}
+          actionTypes={actionTypes}
+          changeActionType={setSelectedActionType}
         />
       )}
-      {step === WIDGET_STEP.ChooseAmount && redemptionType && (
+      {/* {step === WIDGET_STEP.ChooseAmount && redemptionType && (
         <ChooseAmount
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
@@ -193,7 +294,7 @@ export function LendRedeemV2({
           handleAction={handleClose}
           redemptionType={redemptionType}
         />
-      )}
+      )} */}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
           title='Redeem'
