@@ -3,6 +3,7 @@ import {
   POOL_NAME,
   capitalizeFirstLetter,
   formatBNFixed,
+  formatNumber,
   useCancellableRedemptionInfoV2,
   useFirstLossCoverStatsV2,
   useLenderPositionV2,
@@ -23,12 +24,11 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseAction } from './1-ChooseAction'
-// import { ChooseAmount } from './2-ChooseAmount'
-// import { Transfer } from './3-Transfer'
-// import { Done } from './4-Done'
+import { ChooseAmount } from './2-ChooseAmount'
 
 export type ActionType = {
   label: string
+  subTitle: string
   value: string
   action: 'redemption' | 'cancelRedemption' | 'withdraw'
   type: 'senior' | 'junior' | 'firstLossCover'
@@ -122,10 +122,10 @@ export function LendRedeemV2({
       const items: ActionType[] = []
       if (seniorPosition.gt(0)) {
         items.push({
-          label: `Redeem ${formatBNFixed(
-            seniorPosition,
-            decimals!,
+          label: `Redeem up to ${formatNumber(
+            formatBNFixed(seniorPosition, decimals!),
           )} ${symbol} from Senior Tranche`,
+          subTitle: `Input ${symbol} amount to redeem from senior tranche`,
           value: 'seniorRedemption',
           action: 'redemption',
           type: 'senior',
@@ -134,10 +134,10 @@ export function LendRedeemV2({
       }
       if (seniorRedemptionInfo.amount.gt(0)) {
         items.push({
-          label: `Cancel ${formatBNFixed(
-            seniorRedemptionInfo.amount,
-            decimals!,
+          label: `Cancel up to ${formatNumber(
+            formatBNFixed(seniorRedemptionInfo.amount, decimals!),
           )} ${symbol} Senior Tranche Redemption`,
+          subTitle: `Input the amount of the redemption request in ${symbol} that you wish to cancel from the senior tranche`,
           value: 'cancelSeniorRedemption',
           action: 'cancelRedemption',
           type: 'senior',
@@ -146,10 +146,10 @@ export function LendRedeemV2({
       }
       if (juniorPosition.gt(0)) {
         items.push({
-          label: `Redeem ${formatBNFixed(
-            juniorPosition,
-            decimals!,
+          label: `Redeem up to ${formatNumber(
+            formatBNFixed(juniorPosition, decimals!),
           )} ${symbol} from Junior Tranche`,
+          subTitle: `Input ${symbol} amount to redeem from junior tranche`,
           value: 'juniorRedemption',
           action: 'redemption',
           type: 'junior',
@@ -158,10 +158,10 @@ export function LendRedeemV2({
       }
       if (juniorRedemptionInfo.amount.gt(0)) {
         items.push({
-          label: `Cancel ${formatBNFixed(
-            juniorRedemptionInfo.amount,
-            decimals!,
+          label: `Cancel up to ${formatNumber(
+            formatBNFixed(juniorRedemptionInfo.amount, decimals!),
           )} ${symbol} Junior Tranche Redemption`,
+          subTitle: `Input the amount of the redemption request in ${symbol} that you wish to cancel from the junior tranche`,
           value: 'cancelJuniorRedemption',
           action: 'cancelRedemption',
           type: 'junior',
@@ -170,10 +170,10 @@ export function LendRedeemV2({
       }
       if (seniorWithdrawableAmount.gt(0)) {
         items.push({
-          label: `Withdraw ${formatBNFixed(
-            seniorWithdrawableAmount,
-            decimals!,
+          label: `Withdraw ${formatNumber(
+            formatBNFixed(seniorWithdrawableAmount, decimals!),
           )} ${symbol} from Senior Tranche`,
+          subTitle: `Input ${symbol} amount to withdraw from senior tranche`,
           value: 'seniorWithdraw',
           action: 'withdraw',
           type: 'senior',
@@ -182,10 +182,10 @@ export function LendRedeemV2({
       }
       if (juniorWithdrawableAmount.gt(0)) {
         items.push({
-          label: `Withdraw ${formatBNFixed(
-            juniorWithdrawableAmount,
-            decimals!,
+          label: `Withdraw ${formatNumber(
+            formatBNFixed(juniorWithdrawableAmount, decimals!),
           )} ${symbol} from Junior Tranche`,
+          subTitle: `Input ${symbol} amount to withdraw from junior tranche`,
           value: 'juniorWithdraw',
           action: 'withdraw',
           type: 'junior',
@@ -196,10 +196,14 @@ export function LendRedeemV2({
         flcStats
           .filter((flc) => flc.totalAssets.gt(0))
           .forEach((flc) => {
+            const flcName = `${capitalizeFirstLetter(
+              FirstLossCoverIndex[flc.firstLossCoverIndex],
+            )} First Loss Cover`
             items.push({
-              label: `Withdraw ${symbol} from ${capitalizeFirstLetter(
-                FirstLossCoverIndex[flc.firstLossCoverIndex],
-              )} First Loss Cover`,
+              label: `Withdraw up to ${formatNumber(
+                formatBNFixed(flc.totalAssets, decimals!),
+              )} ${symbol} from ${flcName}`,
+              subTitle: `Input ${symbol} amount to withdraw from ${flcName}`,
               value: String(flc.firstLossCoverIndex),
               action: 'withdraw',
               type: 'firstLossCover',
@@ -273,15 +277,14 @@ export function LendRedeemV2({
           changeActionType={setSelectedActionType}
         />
       )}
-      {/* {step === WIDGET_STEP.ChooseAmount && redemptionType && (
+      {step === WIDGET_STEP.ChooseAmount && selectedActionType && (
         <ChooseAmount
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
-          redemptionType={redemptionType}
-          maxAmount={getMaxAmount() ?? BigNumber.from(0)}
+          selectedActionType={selectedActionType}
         />
       )}
-      {step === WIDGET_STEP.Transfer && redemptionType && (
+      {/* {step === WIDGET_STEP.Transfer && redemptionType && (
         <Transfer
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
