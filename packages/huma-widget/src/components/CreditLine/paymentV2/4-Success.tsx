@@ -1,7 +1,7 @@
 import {
   decodeLogs,
   downScale,
-  formatMoney,
+  formatNumber,
   sendTxAtom,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
@@ -35,7 +35,7 @@ export function Success({
   }, [decimals, txReceipt])
 
   const content = [
-    `You successfully paid ${formatMoney(paidAmount)} ${symbol}.`,
+    `You successfully paid ${formatNumber(paidAmount)} ${symbol}.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

@@ -1,4 +1,9 @@
-import { CreditRecordType, PoolInfoType, timeUtil } from '@huma-finance/shared'
+import {
+  CreditRecordType,
+  PoolInfoType,
+  formatNumber,
+  timeUtil,
+} from '@huma-finance/shared'
 import React from 'react'
 
 import { useAppSelector } from '../../../hooks/useRedux'
@@ -24,7 +29,7 @@ export function Success({
   const dueDate = timeUtil.timestampToLL(creditRecord?.dueDate.toNumber())
 
   const content = [
-    `${borrowAmountNet} ${symbol} is now in your wallet.`,
+    `${formatNumber(borrowAmountNet)} ${symbol} is now in your wallet.`,
     `Note: your payment will be automatically deducted on ${dueDate}.`,
   ]
 

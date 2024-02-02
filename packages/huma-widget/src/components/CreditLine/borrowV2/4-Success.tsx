@@ -1,5 +1,6 @@
 import {
   CreditStatsV2,
+  formatNumber,
   timeUtil,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
@@ -27,7 +28,7 @@ export function Success({
   const dueDate = timeUtil.timestampToLL(creditRecord?.nextDueDate.toNumber())
 
   const content = [
-    `${borrowAmountNet} ${symbol} is now in your wallet.`,
+    `${formatNumber(borrowAmountNet)} ${symbol} is now in your wallet.`,
     `Note: your payment will be automatically deducted on ${dueDate}.`,
   ]
 
