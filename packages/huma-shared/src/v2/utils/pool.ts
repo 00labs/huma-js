@@ -45,7 +45,7 @@ export type PoolInfoV2 = {
   epochManager: string
   firstLossCovers: {
     [FirstLossCoverIndex.borrower]: string
-    [FirstLossCoverIndex.affiliate]: string
+    [FirstLossCoverIndex.admin]: string
   }
   poolAbi?: unknown
   poolCreditAbi?: unknown
