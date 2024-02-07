@@ -28,6 +28,13 @@ export const formatMoney = (
   return moneyFormatter.format(numCast)
 }
 
+export const formatAssets = (
+  assets: string | undefined,
+  decimals: number | undefined,
+  notation?: Intl.NumberFormatOptions['notation'],
+) =>
+  formatMoney(ethers.utils.formatUnits(assets ?? 0, decimals), notation) ?? '--'
+
 export const formatNumber = (num: number | string | undefined) => {
   if (isEmpty(num) || Number.isNaN(num)) {
     return num
