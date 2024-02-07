@@ -1,7 +1,7 @@
 import {
   decodeLogs,
   downScale,
-  formatMoney,
+  formatNumber,
   PoolInfoType,
   sendTxAtom,
   TRANSFER_ABI,
@@ -32,7 +32,7 @@ export function Success({ poolInfo, handleAction }: Props): React.ReactElement {
   }, [decimals, txReceipt])
 
   const content = [
-    `You successfully paid ${formatMoney(payedAmount)} ${symbol}.`,
+    `You successfully paid ${formatNumber(payedAmount)} ${symbol}.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

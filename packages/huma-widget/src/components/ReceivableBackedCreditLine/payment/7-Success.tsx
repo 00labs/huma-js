@@ -1,7 +1,7 @@
 import {
   decodeLogs,
   downScale,
-  formatMoney,
+  formatNumber,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
@@ -37,12 +37,12 @@ export function Success({
     }
   }, [decimals, successTxReceipt])
 
-  const amoutFormatted = formatMoney(paidAmount)
+  const amountFormatted = formatNumber(paidAmount)
   const content =
     paymentType === PaymentType.PaymentWithReceivable
-      ? [`You successfully paid ${amoutFormatted} ${symbol}.`]
+      ? [`You successfully paid ${amountFormatted} ${symbol}.`]
       : [
-          `You successfully paid ${amoutFormatted} ${symbol} and borrowed ${amoutFormatted} ${symbol}.`,
+          `You successfully paid ${amountFormatted} ${symbol} and borrowed ${amountFormatted} ${symbol}.`,
         ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

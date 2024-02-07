@@ -1,4 +1,6 @@
+import { formatNumber } from '@huma-finance/shared'
 import React from 'react'
+
 import { useAppSelector } from '../../../hooks/useRedux'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { TxDoneModal } from '../../TxDoneModal'
@@ -11,7 +13,7 @@ export function Success({ handleAction }: Props): React.ReactElement {
   const { borrowAmount, approval } = useAppSelector(selectWidgetState)
 
   const content = [
-    `${borrowAmount?.toFixed(2)} ${
+    `${formatNumber(borrowAmount)} ${
       approval?.token.symbol
     } is now in your wallet.`,
   ]
