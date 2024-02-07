@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, BigNumberish, ethers } from 'ethers'
 import { isEmpty } from './common'
 import { scientificToDecimal } from './scientificToDecimal'
 
@@ -29,7 +29,7 @@ export const formatMoney = (
 }
 
 export const formatAssets = (
-  assets: string | undefined,
+  assets: BigNumberish | undefined,
   decimals: number | undefined,
   notation?: Intl.NumberFormatOptions['notation'],
 ) =>
@@ -46,6 +46,16 @@ export const formatNumber = (num: number | string | undefined) => {
     numCast = Math.round(numCast)
   }
   return numberFormatter.format(numCast)
+}
+
+export const formatAmount = (
+  assets: BigNumberish | undefined,
+  decimals: number | undefined,
+) => {
+  if (!assets || !decimals) {
+    return '--'
+  }
+  return formatNumber(ethers.utils.formatUnits(assets, decimals))
 }
 
 export const downScale = <T = string>(
