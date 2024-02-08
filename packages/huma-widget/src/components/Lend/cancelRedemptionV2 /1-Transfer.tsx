@@ -6,6 +6,7 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 
+import { RedemptionInfo } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -13,18 +14,20 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 
 type Props = {
   poolInfo: PoolInfoV2
-  tranche: TrancheType
+  trancheType: TrancheType
+  redemptionInfo: RedemptionInfo
 }
 
 export function Transfer({
   poolInfo,
-  tranche,
+  trancheType,
+  redemptionInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
   const trancheVaultContract = useTrancheVaultContractV2(
     poolInfo.poolName,
-    tranche,
+    trancheType,
     provider,
     account,
   )
@@ -33,15 +36,15 @@ export function Transfer({
     dispatch(setStep(WIDGET_STEP.Done))
   }, [dispatch])
 
-  if (!trancheVaultContract || !account) {
+  if (!trancheVaultContract) {
     return null
   }
 
   return (
     <TxSendModalV2
       contract={trancheVaultContract}
-      method='disburse'
-      params={[]}
+      method='cancelRedemptionRequest'
+      params={[redemptionInfo.shares]}
       handleSuccess={handleSuccess}
     />
   )

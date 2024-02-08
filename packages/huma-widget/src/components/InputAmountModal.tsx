@@ -10,6 +10,7 @@ type Props = {
   subTitle: string
   actionText: string
   tokenSymbol: string
+  suffix?: string
   currentAmount: number | string
   maxAmount: number | string
   maxAmountText?: string
@@ -23,6 +24,7 @@ export function InputAmountModal({
   subTitle,
   actionText,
   tokenSymbol,
+  suffix: defaultSuffix,
   currentAmount,
   maxAmount,
   maxAmountText = 'MAX',
@@ -32,7 +34,7 @@ export function InputAmountModal({
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const [inputTouched, setInputTouched] = useState(false)
-  const suffix = ` ${tokenSymbol}`
+  const suffix = ` ${defaultSuffix ?? tokenSymbol}`
 
   const styles = {
     inputAmountWrapper: css`

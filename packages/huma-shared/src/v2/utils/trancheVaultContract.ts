@@ -1,6 +1,6 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-
 import { BigNumber } from 'ethers'
+
 import {
   getChainIdFromSignerOrProvider,
   getContract,
@@ -31,7 +31,7 @@ export const getTrancheVaultContractV2 = async (
   )
 }
 
-type TrancheRedemptionStatus = {
+export type TrancheRedemptionStatus = {
   trancheType: TrancheType
   lenderRedemptionRecords: {
     nextEpochIdToProcess: BigNumber
@@ -114,5 +114,37 @@ export const getRedemptionStatusV2 = async (
   return {
     seniorRedemptionStatus,
     juniorRedemptionStatus,
+  }
+}
+
+export const getTrancheAssetsAndShares = async (
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): Promise<
+  | {
+      assets: BigNumber
+      shares: BigNumber
+    }
+  | undefined
+> => {
+  if (!account) {
+    return undefined
+  }
+  const trancheVault = await getTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  if (!trancheVault) {
+    return undefined
+  }
+
+  const assets = await trancheVault.totalAssetsOf(account)
+  const shares = await trancheVault.convertToShares(assets)
+  return {
+    assets,
+    shares,
   }
 }
