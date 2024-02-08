@@ -287,7 +287,7 @@ export function useFirstLossCoverTotalAssetsV2(
   )
   const flcAffiliateContract = useFirstLossCoverContractV2(
     poolName,
-    FirstLossCoverIndex.affiliate,
+    FirstLossCoverIndex.admin,
     provider,
   )
   const [assets, setAssets] = useState<BigNumber>()

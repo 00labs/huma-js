@@ -17,12 +17,10 @@ import {
 } from '../../utils'
 import CREDIT_ABI from '../abis/Credit.json'
 import CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
-import HUMA_CONFIG_ABI from '../abis/HumaConfig.json'
 import {
   Credit,
   EpochManager,
   FirstLossCover,
-  HumaConfig,
   Pool,
   PoolConfig,
   PoolSafe,
@@ -485,127 +483,6 @@ export const getPoolFeeStructureV2 = async (
     yield: feeStructure.yieldInBps / BP_FACTOR.toNumber(),
     minPrincipalRate: feeStructure.minPrincipalRateInBps / BP_FACTOR.toNumber(),
     lateFee: feeStructure.lateFeeBps / BP_FACTOR.toNumber(),
-  }
-}
-
-// Please refer to: https://docs.google.com/spreadsheets/d/1Pkqj7pcJ6OxFG8ZTYQLAeAKf3ouD0mAzT9AKoH1ym4s/edit#gid=0
-export const getApyV2 = async (
-  poolName: POOL_NAME,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<
-  | {
-      seniorTrancheApy: number
-      juniorTrancheApy: number
-      firstLossCoverApy: number
-    }
-  | undefined
-> => {
-  const chainId = await getChainIdFromSignerOrProvider(provider)
-  const poolInfo = getPoolInfoV2(poolName, chainId)
-  if (!poolInfo) {
-    return undefined
-  }
-  const poolConfigContract = await getPoolConfigContractV2(poolName, provider)
-  if (!poolConfigContract) {
-    return undefined
-  }
-
-  const getProtocolFeeInBps = async () => {
-    const humaConfig = await poolConfigContract.humaConfig()
-    const humaConfigContract = getContract(
-      humaConfig,
-      HUMA_CONFIG_ABI,
-      provider,
-    ) as HumaConfig
-    return humaConfigContract.protocolFeeInBps()
-  }
-
-  const getFlcTotalAssetsAndTotalAssetsAfterRisk = async () => {
-    const flcConfigs = await Promise.all(
-      Object.values(poolInfo.firstLossCovers)
-        .filter(
-          (firstLossCover) => firstLossCover !== ethers.constants.AddressZero,
-        )
-        .map((firstLossCover: string) =>
-          poolConfigContract.getFirstLossCoverConfig(firstLossCover),
-        ),
-    )
-
-    const result = {
-      flcTotalAssets: BigNumber.from(0),
-      flcTotalAssetsAfterRisk: BigNumber.from(0),
-    }
-    flcConfigs.forEach((flcConfig) => {
-      result.flcTotalAssets = result.flcTotalAssets.add(flcConfig.minLiquidity)
-      result.flcTotalAssetsAfterRisk = result.flcTotalAssetsAfterRisk.add(
-        flcConfig.minLiquidity
-          .mul(flcConfig.riskYieldMultiplierInBps)
-          .div(BP_FACTOR),
-      )
-    })
-    return {
-      flcTotalAssets: result.flcTotalAssets.toNumber(),
-      flcTotalAssetsAfterRisk: result.flcTotalAssetsAfterRisk.toNumber(),
-    }
-  }
-
-  const [
-    protocolFeeInBps,
-    feeStructure,
-    adminRnR,
-    lpConfig,
-    flcTotalAssetsAndTotalAssetsAfterRisk,
-  ] = await Promise.all([
-    getProtocolFeeInBps(),
-    poolConfigContract.getFeeStructure(),
-    poolConfigContract.getAdminRnR(),
-    poolConfigContract.getLPConfig(),
-    getFlcTotalAssetsAndTotalAssetsAfterRisk(),
-  ])
-
-  const BP_FACTOR_NUMBER = BP_FACTOR.toNumber()
-  // APY = (1+APR/12)^12 - 1
-  const APY = (1 + feeStructure.yieldInBps / BP_FACTOR_NUMBER / 12) ** 12 - 1
-
-  const poolCap = lpConfig.liquidityCap.toNumber()
-  const juniorAssets = poolCap / (lpConfig.maxSeniorJuniorRatio + 1)
-  const seniorAssets = poolCap - juniorAssets
-
-  const totalProfit = poolCap * APY
-  const postPoolProfitRatio =
-    (1 - protocolFeeInBps / BP_FACTOR_NUMBER) *
-    (1 -
-      adminRnR.rewardRateInBpsForPoolOwner / BP_FACTOR_NUMBER -
-      adminRnR.rewardRateInBpsForEA / BP_FACTOR_NUMBER)
-  const poolPostProfit = totalProfit * postPoolProfitRatio
-
-  let seniorTrancheApy = 0
-  let seniorPostProfit = 0
-  if (lpConfig.fixedSeniorYieldInBps > 0) {
-    seniorTrancheApy = lpConfig.fixedSeniorYieldInBps / BP_FACTOR_NUMBER
-    seniorPostProfit = poolPostProfit - seniorAssets * seniorTrancheApy
-  } else {
-    const riskAdjustment =
-      lpConfig.tranchesRiskAdjustmentInBps / BP_FACTOR_NUMBER
-    const seniorProfit =
-      seniorAssets * (postPoolProfitRatio * (1 - riskAdjustment) * APY)
-    seniorTrancheApy = postPoolProfitRatio * (1 - riskAdjustment) * APY
-    seniorPostProfit = poolPostProfit - seniorProfit
-  }
-
-  const { flcTotalAssets, flcTotalAssetsAfterRisk } =
-    flcTotalAssetsAndTotalAssetsAfterRisk
-  const weight = juniorAssets + flcTotalAssetsAfterRisk
-
-  const juniorProfit = (juniorAssets / weight) * seniorPostProfit
-  const juniorTrancheApy = juniorProfit / juniorAssets
-  const flcProfit = (flcTotalAssetsAfterRisk / weight) * seniorPostProfit
-  const firstLossCoverApy = flcProfit / flcTotalAssets
-
-  return {
-    seniorTrancheApy,
-    juniorTrancheApy,
-    firstLossCoverApy,
   }
 }
 
