@@ -17,7 +17,7 @@ import { getPoolConfigContractV2, getPoolInfoV2 } from './poolContract'
 const getProtocolFeeInBps = async (
   poolConfigContract: PoolConfig,
   provider: JsonRpcProvider | Web3Provider | undefined,
-) => {
+): Promise<number> => {
   const humaConfig = await poolConfigContract.humaConfig()
   const humaConfigContract = getContract(
     humaConfig,
@@ -30,7 +30,7 @@ const getProtocolFeeInBps = async (
 const getFlcConfigs = async (
   poolInfo: PoolInfoV2,
   poolConfigContract: PoolConfig,
-) => {
+): Promise<FirstLossCoverConfigStructOutput[]> => {
   const flcConfigs = await Promise.all(
     Object.values(poolInfo.firstLossCovers).map((firstLossCover: string) =>
       poolConfigContract.getFirstLossCoverConfig(firstLossCover),
@@ -41,7 +41,7 @@ const getFlcConfigs = async (
 
 const getFlcTotalAssetsAfterRisk = (
   flcConfigs: FirstLossCoverConfigStructOutput[],
-) => {
+): number => {
   const flcTotalAssetsAfterRisk = flcConfigs.reduce(
     (acc, flcConfig) =>
       acc.add(
