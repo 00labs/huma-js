@@ -59,8 +59,8 @@ export class HumaReceivableFactory {
       currencyCode,
       receivableAmount,
       maturityDate,
-      referenceId,
       metadataURI,
+      referenceId,
       gasOpts,
     )
   }
