@@ -48,7 +48,14 @@ import {
   InvoiceFactoringPayment,
   InvoiceFactoringPaymentProps,
 } from './components/InvoiceFactoring/payment'
-import { LendRedeemPropsV2, LendRedeemV2 } from './components/Lend/redeemV2'
+import {
+  AddRedemptionPropsV2,
+  AddRedemptionV2,
+} from './components/Lend/addRedemptionV2'
+import {
+  CancelRedemptionPropsV2,
+  CancelRedemptionV2,
+} from './components/Lend/cancelRedemptionV2 '
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
 import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
@@ -60,14 +67,14 @@ import {
   ReceivableBackedCreditLineBorrowPropsV2,
   ReceivableBackedCreditLineBorrowV2,
 } from './components/ReceivableBackedCreditLine/borrow'
-import { SuperfluidFactoring } from './components/SuperfluidFactoring'
-import { store } from './store'
-import { themeHuma } from './theme'
-import { WCProps } from './utilTypes'
 import {
   ReceivableBackedCreditLinePaymentPropsV2,
   ReceivableBackedCreditLinePaymentV2,
 } from './components/ReceivableBackedCreditLine/payment'
+import { SuperfluidFactoring } from './components/SuperfluidFactoring'
+import { store } from './store'
+import { themeHuma } from './theme'
+import { WCProps } from './utilTypes'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -350,7 +357,7 @@ export function LendWithdrawWidget(props: LendWithdrawWidgetProps) {
 
 /**
  * Lend pool supply widget props V2
- * @typedef {Object} LendSupplyWidgetPropsV2
+ * @typedef {Object} LendWithdrawWidgetPropsV2
  * @property {LendWithdrawPropsV2} LendSupplyPropsV2 - Lend pool supply props V2.
  * @property {WidgetProps} WidgetProps - Widget general props.
  */
@@ -371,23 +378,45 @@ export function LendWithdrawWidgetV2(props: LendWithdrawWidgetPropsV2) {
 }
 
 /**
- * Lend pool redeem widget props V2
- * @typedef {Object} LendRedeemWidgetPropsV2
- * @property {LendRedeemPropsV2} LendRedeemPropsV2 - Lend pool redeem props V2.
+ * Lend pool add redemption widget props V2
+ * @typedef {Object} AddRedemptionWidgetPropsV2
+ * @property {AddRedemptionWidgetPropsV2} AddRedemptionWidgetPropsV2 - Lend pool add redemption props V2.
  * @property {WidgetProps} WidgetProps - Widget general props.
  */
-type LendRedeemWidgetPropsV2 = LendRedeemPropsV2 & WidgetProps
+type AddRedemptionWidgetPropsV2 = AddRedemptionPropsV2 & WidgetProps
 
 /**
- * Lend redeem widget V2
+ * Add redemption widget V2
  *
- * @param {LendRedeemWidgetPropsV2} props - The lend pool redeem widget props V2.
- * @returns Lend pool redeem widget component V2
+ * @param {AddRedemptionWidgetPropsV2} props - The lend pool add redemption widget props V2.
+ * @returns Lend pool add redemption widget component V2
  */
-export function LendRedeemWidgetV2(props: LendRedeemWidgetPropsV2) {
+export function AddRedemptionWidgetV2(props: AddRedemptionWidgetPropsV2) {
   return (
     <Widget {...props}>
-      <LendRedeemV2 {...props} />
+      <AddRedemptionV2 {...props} />
+    </Widget>
+  )
+}
+
+/**
+ * Lend pool cancel redemption widget props V2
+ * @typedef {Object} CancelRedemptionWidgetPropsV2
+ * @property {CancelRedemptionWidgetPropsV2} CancelRedemptionWidgetPropsV2 - Lend pool cancel redemption props V2.
+ * @property {WidgetProps} WidgetProps - Widget general props.
+ */
+type CancelRedemptionWidgetPropsV2 = CancelRedemptionPropsV2 & WidgetProps
+
+/**
+ * Cancel redemption widget V2
+ *
+ * @param {CancelRedemptionWidgetPropsV2} props - The lend pool cancel redemption widget props V2.
+ * @returns Lend pool cancel redemption widget component V2
+ */
+export function CancelRedemptionWidgetV2(props: CancelRedemptionWidgetPropsV2) {
+  return (
+    <Widget {...props}>
+      <CancelRedemptionV2 {...props} />
     </Widget>
   )
 }

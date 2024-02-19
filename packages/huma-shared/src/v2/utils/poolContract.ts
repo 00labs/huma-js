@@ -24,7 +24,6 @@ import {
   Pool,
   PoolConfig,
   PoolSafe,
-  TrancheVault,
 } from '../abis/types'
 import {
   CreditRecordStructOutput,
@@ -35,6 +34,7 @@ import {
   CreditManager,
 } from '../abis/types/CreditManager'
 import { FirstLossCoverIndex } from '../types'
+import { getTrancheVaultContractV2 } from './trancheVaultContract'
 
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
@@ -125,27 +125,6 @@ export const getPoolCreditManagerContractV2 = async (
   return getContract<CreditManager>(
     poolInfo.poolCreditManager,
     CREDIT_MANAGER_ABI,
-    provider,
-  )
-}
-
-export const getTrancheVaultContractV2 = async (
-  poolName: POOL_NAME,
-  trancheType: TrancheType,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<TrancheVault | null> => {
-  const chainId = await getChainIdFromSignerOrProvider(provider)
-  const poolInfo = getPoolInfoV2(poolName, chainId)
-  if (!poolInfo) {
-    return null
-  }
-
-  const trancheVault = `${trancheType}TrancheVault` as
-    | 'seniorTrancheVault'
-    | 'juniorTrancheVault'
-  return getContract<TrancheVault>(
-    poolInfo[trancheVault],
-    poolInfo.trancheVaultAbi,
     provider,
   )
 }

@@ -1,12 +1,12 @@
 import {
-  getTrancheRedemptionStatusV2,
   POOL_NAME,
-  TrancheRedemptionStatus,
   TrancheType,
+  useCancellableRedemptionInfoV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -16,67 +16,56 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { ConfirmTransfer } from './1-ConfirmTransfer'
-import { Transfer } from './2-Transfer'
-import { Done } from './3-Done'
+import { Transfer } from './1-Transfer'
+import { Done } from './2-Done'
+
+export type RedemptionInfo = {
+  shares: BigNumber
+  amount: BigNumber
+}
 
 /**
- * Lend pool withdraw props
- * @typedef {Object} LendWithdrawPropsV2
+ * Lend pool cancel redemption request props
+ * @typedef {Object} CancelRedemptionPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {TrancheType} trancheType The type of the tranche.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool withdraw action is successful.
  */
-export type LendWithdrawPropsV2 = {
+export type CancelRedemptionPropsV2 = {
   poolName: keyof typeof POOL_NAME
   trancheType: TrancheType
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
-export function LendWithdrawV2({
+export function CancelRedemptionV2({
   poolName: poolNameStr,
   trancheType,
   handleClose,
   handleSuccess,
-}: LendWithdrawPropsV2): React.ReactElement | null {
+}: CancelRedemptionPropsV2): React.ReactElement | null {
+  const title = 'Cancel redemption'
   const dispatch = useDispatch()
   const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  const { step, errorMessage } = useAppSelector(selectWidgetState)
+  const { step, errorMessage, errorReason } = useAppSelector(selectWidgetState)
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-  const title = poolUnderlyingToken
-    ? `Withdraw ${poolUnderlyingToken.symbol}`
-    : 'Withdraw'
-
-  const [redemptionStatus, setRedemptionStatus] = React.useState<
-    TrancheRedemptionStatus | undefined
-  >()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (account && provider) {
-        const result = await getTrancheRedemptionStatusV2(
-          poolName,
-          trancheType,
-          account,
-          provider,
-        )
-        setRedemptionStatus(result)
-      }
-    }
-    fetchData()
-  }, [account, poolName, provider, trancheType])
+  const [redemptionInfo] = useCancellableRedemptionInfoV2(
+    poolName,
+    trancheType,
+    account,
+    provider,
+  )
 
   useEffect(() => {
     if (!step) {
-      dispatch(setStep(WIDGET_STEP.ConfirmTransfer))
+      dispatch(setStep(WIDGET_STEP.Transfer))
     }
   }, [dispatch, step])
 
-  const handleWithdrawSuccess = useCallback(
+  const handleRedeemSuccess = useCallback(
     (blockNumber: number) => {
       if (handleSuccess) {
         handleSuccess(blockNumber)
@@ -85,7 +74,7 @@ export function LendWithdrawV2({
     [handleSuccess],
   )
 
-  if (!poolInfo || !poolUnderlyingToken || !redemptionStatus) {
+  if (!poolInfo || !poolUnderlyingToken || !redemptionInfo) {
     return (
       <WidgetWrapper
         isOpen
@@ -102,30 +91,26 @@ export function LendWithdrawV2({
       isOpen
       loadingTitle={title}
       handleClose={handleClose}
-      handleSuccess={handleWithdrawSuccess}
+      handleSuccess={handleRedeemSuccess}
     >
-      {step === WIDGET_STEP.ConfirmTransfer && (
-        <ConfirmTransfer
-          poolInfo={poolInfo}
-          tranche={trancheType}
-          redemptionStatus={redemptionStatus}
-          poolUnderlyingToken={poolUnderlyingToken}
-        />
-      )}
       {step === WIDGET_STEP.Transfer && (
-        <Transfer poolInfo={poolInfo} tranche={trancheType} />
+        <Transfer
+          poolInfo={poolInfo}
+          trancheType={trancheType}
+          redemptionInfo={redemptionInfo}
+        />
       )}
       {step === WIDGET_STEP.Done && (
         <Done
           poolUnderlyingToken={poolUnderlyingToken}
-          withdrawAmount={redemptionStatus.withdrawableAssets}
           handleAction={handleClose}
+          redemptionInfo={redemptionInfo}
         />
       )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
           title={title}
-          errorReason='Sorry there was an error'
+          errorReason={errorReason}
           errorMessage={errorMessage}
           handleOk={handleClose}
         />

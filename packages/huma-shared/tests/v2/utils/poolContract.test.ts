@@ -18,8 +18,8 @@ import {
   getTrancheAssetsToSharesV2,
   getTrancheSharesToAssetsV2,
   getTrancheVaultAssetsV2,
-  getTrancheVaultContractV2,
 } from '../../../src/v2/utils'
+import { getTrancheVaultContractV2 } from '../../../src/v2/utils/trancheVaultContract'
 
 jest.mock('../../../src/utils/web3', () => ({
   getContract: jest.fn(),

@@ -24,8 +24,10 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend withdraw widget</p></dd>
 <dt><a href="#LendWithdrawWidgetV2">LendWithdrawWidgetV2(props)</a> ⇒</dt>
 <dd><p>Lend withdraw widget V2</p></dd>
-<dt><a href="#LendRedeemWidgetV2">LendRedeemWidgetV2(props)</a> ⇒</dt>
-<dd><p>Lend redeem widget V2</p></dd>
+<dt><a href="#AddRedemptionWidgetV2">AddRedemptionWidgetV2(props)</a> ⇒</dt>
+<dd><p>Add redemption widget V2</p></dd>
+<dt><a href="#CancelRedemptionWidgetV2">CancelRedemptionWidgetV2(props)</a> ⇒</dt>
+<dd><p>Cancel redemption widget V2</p></dd>
 <dt><a href="#SupplyFirstLossCoverWidget">SupplyFirstLossCoverWidget(props)</a> ⇒</dt>
 <dd><p>Supply first loss cover widget</p></dd>
 <dt><a href="#SuperfluidFactoringWidget">SuperfluidFactoringWidget(props)</a> ⇒</dt>
@@ -59,8 +61,10 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Invoice factoring pool borrow props</p></dd>
 <dt><a href="#InvoiceFactoringPaymentProps">InvoiceFactoringPaymentProps</a> : <code>Object</code></dt>
 <dd><p>Invoice factoring pool payment props</p></dd>
-<dt><a href="#LendRedeemPropsV2">LendRedeemPropsV2</a> : <code>Object</code></dt>
-<dd><p>Lend pool withdraw props</p></dd>
+<dt><a href="#AddRedemptionPropsV2">AddRedemptionPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool add redemption props</p></dd>
+<dt><a href="#CancelRedemptionPropsV2">CancelRedemptionPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool cancel redemption request props</p></dd>
 <dt><a href="#LendSupplyProps">LendSupplyProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendSupplyPropsV2">LendSupplyPropsV2</a> : <code>Object</code></dt>
@@ -97,10 +101,12 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply widget props V2</p></dd>
 <dt><a href="#LendWithdrawWidgetProps">LendWithdrawWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool withdraw widget props</p></dd>
-<dt><a href="#LendSupplyWidgetPropsV2">LendSupplyWidgetPropsV2</a> : <code>Object</code></dt>
+<dt><a href="#LendWithdrawWidgetPropsV2">LendWithdrawWidgetPropsV2</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props V2</p></dd>
-<dt><a href="#LendRedeemWidgetPropsV2">LendRedeemWidgetPropsV2</a> : <code>Object</code></dt>
-<dd><p>Lend pool redeem widget props V2</p></dd>
+<dt><a href="#AddRedemptionWidgetPropsV2">AddRedemptionWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool add redemption widget props V2</p></dd>
+<dt><a href="#CancelRedemptionWidgetPropsV2">CancelRedemptionWidgetPropsV2</a> : <code>Object</code></dt>
+<dd><p>Lend pool cancel redemption widget props V2</p></dd>
 <dt><a href="#SupplyFirstLossCoverWidgetProps">SupplyFirstLossCoverWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Supply first loss cover widget props</p></dd>
 <dt><a href="#AutoPaybackWidgetPropsV2">AutoPaybackWidgetPropsV2</a> : <code>Object</code></dt>
@@ -242,19 +248,31 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | <code>LendWithdrawWidgetPropsV2</code> | <p>The lend pool supply widget props V2.</p> |
+| props | [<code>LendWithdrawWidgetPropsV2</code>](#LendWithdrawWidgetPropsV2) | <p>The lend pool supply widget props V2.</p> |
 
-<a name="LendRedeemWidgetV2"></a>
+<a name="AddRedemptionWidgetV2"></a>
 
-## LendRedeemWidgetV2(props) ⇒
-<p>Lend redeem widget V2</p>
+## AddRedemptionWidgetV2(props) ⇒
+<p>Add redemption widget V2</p>
 
 **Kind**: global function  
-**Returns**: <p>Lend pool redeem widget component V2</p>  
+**Returns**: <p>Lend pool add redemption widget component V2</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>LendRedeemWidgetPropsV2</code>](#LendRedeemWidgetPropsV2) | <p>The lend pool redeem widget props V2.</p> |
+| props | [<code>AddRedemptionWidgetPropsV2</code>](#AddRedemptionWidgetPropsV2) | <p>The lend pool add redemption widget props V2.</p> |
+
+<a name="CancelRedemptionWidgetV2"></a>
+
+## CancelRedemptionWidgetV2(props) ⇒
+<p>Cancel redemption widget V2</p>
+
+**Kind**: global function  
+**Returns**: <p>Lend pool cancel redemption widget component V2</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>CancelRedemptionWidgetPropsV2</code>](#CancelRedemptionWidgetPropsV2) | <p>The lend pool cancel redemption widget props V2.</p> |
 
 <a name="SupplyFirstLossCoverWidget"></a>
 
@@ -450,10 +468,10 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the invoice pool payment action is successful.</p> |
 
-<a name="LendRedeemPropsV2"></a>
+<a name="AddRedemptionPropsV2"></a>
 
-## LendRedeemPropsV2 : <code>Object</code>
-<p>Lend pool withdraw props</p>
+## AddRedemptionPropsV2 : <code>Object</code>
+<p>Lend pool add redemption props</p>
 
 **Kind**: global typedef  
 **Properties**
@@ -461,6 +479,21 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
+
+<a name="CancelRedemptionPropsV2"></a>
+
+## CancelRedemptionPropsV2 : <code>Object</code>
+<p>Lend pool cancel redemption request props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| trancheType | <code>TrancheType</code> | <p>The type of the tranche.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
@@ -519,6 +552,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| trancheType | <code>TrancheType</code> | <p>The type of the tranche.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
@@ -708,9 +742,9 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | LendWithdrawProps | [<code>LendWithdrawProps</code>](#LendWithdrawProps) | <p>Lend pool withdraw props.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
-<a name="LendSupplyWidgetPropsV2"></a>
+<a name="LendWithdrawWidgetPropsV2"></a>
 
-## LendSupplyWidgetPropsV2 : <code>Object</code>
+## LendWithdrawWidgetPropsV2 : <code>Object</code>
 <p>Lend pool supply widget props V2</p>
 
 **Kind**: global typedef  
@@ -721,17 +755,30 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | LendSupplyPropsV2 | [<code>LendWithdrawPropsV2</code>](#LendWithdrawPropsV2) | <p>Lend pool supply props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
-<a name="LendRedeemWidgetPropsV2"></a>
+<a name="AddRedemptionWidgetPropsV2"></a>
 
-## LendRedeemWidgetPropsV2 : <code>Object</code>
-<p>Lend pool redeem widget props V2</p>
+## AddRedemptionWidgetPropsV2 : <code>Object</code>
+<p>Lend pool add redemption widget props V2</p>
 
 **Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| LendRedeemPropsV2 | [<code>LendRedeemPropsV2</code>](#LendRedeemPropsV2) | <p>Lend pool redeem props V2.</p> |
+| AddRedemptionWidgetPropsV2 | [<code>AddRedemptionWidgetPropsV2</code>](#AddRedemptionWidgetPropsV2) | <p>Lend pool add redemption props V2.</p> |
+| WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
+
+<a name="CancelRedemptionWidgetPropsV2"></a>
+
+## CancelRedemptionWidgetPropsV2 : <code>Object</code>
+<p>Lend pool cancel redemption widget props V2</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| CancelRedemptionWidgetPropsV2 | [<code>CancelRedemptionWidgetPropsV2</code>](#CancelRedemptionWidgetPropsV2) | <p>Lend pool cancel redemption props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
 <a name="SupplyFirstLossCoverWidgetProps"></a>
