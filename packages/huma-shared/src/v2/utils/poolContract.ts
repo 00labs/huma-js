@@ -4,6 +4,7 @@ import { BigNumber, ethers } from 'ethers'
 import {
   BP_FACTOR,
   CHAIN_POOLS_INFO_V2,
+  POOL_ABI_V2,
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
@@ -55,7 +56,7 @@ export const getPoolContractV2 = async (
   if (!poolInfo) {
     return null
   }
-  return getContract<Pool>(poolInfo.pool, poolInfo.poolAbi, provider)
+  return getContract<Pool>(poolInfo.pool, POOL_ABI_V2.poolAbi, provider)
 }
 
 export const getPoolConfigContractV2 = async (
@@ -69,7 +70,7 @@ export const getPoolConfigContractV2 = async (
   }
   return getContract<PoolConfig>(
     poolInfo.poolConfig,
-    poolInfo.poolConfigAbi,
+    POOL_ABI_V2.poolConfigAbi,
     provider,
   )
 }
@@ -140,7 +141,7 @@ export const getEpochManagerContractV2 = async (
   }
   return getContract<EpochManager>(
     poolInfo.epochManager,
-    poolInfo.epochManagerAbi,
+    POOL_ABI_V2.epochManagerAbi,
     provider,
   )
 }
@@ -157,7 +158,7 @@ export const getFirstLossCoverContractV2 = async (
   }
   return getContract<FirstLossCover>(
     poolInfo.firstLossCovers[firstLossCoverType],
-    poolInfo.firstLossCoverAbi,
+    POOL_ABI_V2.firstLossCoverAbi,
     provider,
   )
 }
@@ -173,7 +174,7 @@ export const getPoolSafeContractV2 = async (
   }
   return getContract<PoolSafe>(
     poolInfo.poolSafe,
-    poolInfo.poolSafeAbi,
+    POOL_ABI_V2.poolSafeAbi,
     provider,
   )
 }
@@ -218,7 +219,11 @@ export const getFirstLossCoverAssetsV2 = async (
   const firstLossCoverContracts = firstLossCovers
     .filter((item) => !!item)
     .map((item) =>
-      getContract<FirstLossCover>(item, poolInfo.firstLossCoverAbi, provider),
+      getContract<FirstLossCover>(
+        item,
+        POOL_ABI_V2.firstLossCoverAbi,
+        provider,
+      ),
     )
     .flatMap((item) => (item ? [item] : []))
 

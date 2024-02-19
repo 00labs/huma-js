@@ -3,6 +3,7 @@
 /* eslint-disable */
 export { Calendar__factory } from './Calendar__factory'
 export { Credit__factory } from './Credit__factory'
+export { CreditLine__factory } from './CreditLine__factory'
 export { CreditManager__factory } from './CreditManager__factory'
 export { EpochManager__factory } from './EpochManager__factory'
 export { FirstLossCover__factory } from './FirstLossCover__factory'

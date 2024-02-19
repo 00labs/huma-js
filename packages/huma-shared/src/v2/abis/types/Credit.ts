@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -26,31 +27,6 @@ import type {
   OnEvent,
   PromiseOrValue,
 } from './common'
-
-export type CreditLossStruct = {
-  principalLoss: PromiseOrValue<BigNumberish>
-  yieldLoss: PromiseOrValue<BigNumberish>
-  feesLoss: PromiseOrValue<BigNumberish>
-  principalRecovered: PromiseOrValue<BigNumberish>
-  yieldRecovered: PromiseOrValue<BigNumberish>
-  feesRecovered: PromiseOrValue<BigNumberish>
-}
-
-export type CreditLossStructOutput = [
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-] & {
-  principalLoss: BigNumber
-  yieldLoss: BigNumber
-  feesLoss: BigNumber
-  principalRecovered: BigNumber
-  yieldRecovered: BigNumber
-  feesRecovered: BigNumber
-}
 
 export type CreditRecordStruct = {
   unbilledPrincipal: PromiseOrValue<BigNumberish>
@@ -113,83 +89,54 @@ export type DueDetailStructOutput = [
 
 export interface CreditInterface extends utils.Interface {
   functions: {
-    'calendar()': FunctionFragment
     'creditManager()': FunctionFragment
-    'drawdown(address,uint256)': FunctionFragment
-    'feeManager()': FunctionFragment
+    'dueManager()': FunctionFragment
     'firstLossCover()': FunctionFragment
-    'getCreditLoss(bytes32)': FunctionFragment
     'getCreditRecord(bytes32)': FunctionFragment
     'getDueDetail(bytes32)': FunctionFragment
-    'getMaturityDate(bytes32)': FunctionFragment
     'humaConfig()': FunctionFragment
     'initialize(address)': FunctionFragment
-    'isLate(bytes32)': FunctionFragment
-    'makePayment(address,uint256)': FunctionFragment
-    'makePrincipalPayment(address,uint256)': FunctionFragment
+    'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolSafe()': FunctionFragment
-    'setCreditLoss(bytes32,(uint96,uint96,uint96,uint96,uint96,uint96))': FunctionFragment
+    'proxiableUUID()': FunctionFragment
     'setCreditRecord(bytes32,(uint96,uint64,uint96,uint96,uint96,uint16,uint16,uint8))': FunctionFragment
-    'setDueDetail(bytes32,(uint64,uint96,uint96,uint96,uint96,uint96,uint96))': FunctionFragment
-    'setMaturityDate(bytes32,uint256)': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
-    'updateDueInfo(bytes32)': FunctionFragment
+    'updateDueInfo(bytes32,(uint96,uint64,uint96,uint96,uint96,uint16,uint16,uint8),(uint64,uint96,uint96,uint96,uint96,uint96,uint96))': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
-    'drawdownWithReceivable(address,uint256,uint256)': FunctionFragment
-    'makePaymentWithReceivable(address,uint256,uint256)': FunctionFragment
-    'makePrincipalPaymentAndDrawdownWithReceivable(address,uint256,uint256,uint256,uint256)': FunctionFragment
-    'getNextBillRefreshDate(address)': FunctionFragment
+    'upgradeTo(address)': FunctionFragment
+    'upgradeToAndCall(address,bytes)': FunctionFragment
   }
 
   getFunction(
     nameOrSignatureOrTopic:
-      | 'calendar'
       | 'creditManager'
-      | 'drawdown'
-      | 'feeManager'
+      | 'dueManager'
       | 'firstLossCover'
-      | 'getCreditLoss'
       | 'getCreditRecord'
       | 'getDueDetail'
-      | 'getMaturityDate'
       | 'humaConfig'
       | 'initialize'
-      | 'isLate'
-      | 'makePayment'
-      | 'makePrincipalPayment'
+      | 'pool'
       | 'poolConfig'
       | 'poolSafe'
-      | 'setCreditLoss'
+      | 'proxiableUUID'
       | 'setCreditRecord'
-      | 'setDueDetail'
-      | 'setMaturityDate'
       | 'setPoolConfig'
       | 'updateDueInfo'
       | 'updatePoolConfigData'
-      | 'drawdownWithReceivable'
-      | 'makePaymentWithReceivable'
-      | 'makePrincipalPaymentAndDrawdownWithReceivable'
-      | 'getNextBillRefreshDate',
+      | 'upgradeTo'
+      | 'upgradeToAndCall',
   ): FunctionFragment
 
-  encodeFunctionData(functionFragment: 'calendar', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'creditManager',
     values?: undefined,
   ): string
-  encodeFunctionData(
-    functionFragment: 'drawdown',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(functionFragment: 'feeManager', values?: undefined): string
+  encodeFunctionData(functionFragment: 'dueManager', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'firstLossCover',
     values?: undefined,
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getCreditLoss',
-    values: [PromiseOrValue<BytesLike>],
   ): string
   encodeFunctionData(
     functionFragment: 'getCreditRecord',
@@ -197,10 +144,6 @@ export interface CreditInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'getDueDetail',
-    values: [PromiseOrValue<BytesLike>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getMaturityDate',
     values: [PromiseOrValue<BytesLike>],
   ): string
   encodeFunctionData(functionFragment: 'humaConfig', values?: undefined): string
@@ -208,35 +151,16 @@ export interface CreditInterface extends utils.Interface {
     functionFragment: 'initialize',
     values: [PromiseOrValue<string>],
   ): string
-  encodeFunctionData(
-    functionFragment: 'isLate',
-    values: [PromiseOrValue<BytesLike>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'makePayment',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'makePrincipalPayment',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
-  ): string
+  encodeFunctionData(functionFragment: 'pool', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolSafe', values?: undefined): string
   encodeFunctionData(
-    functionFragment: 'setCreditLoss',
-    values: [PromiseOrValue<BytesLike>, CreditLossStruct],
+    functionFragment: 'proxiableUUID',
+    values?: undefined,
   ): string
   encodeFunctionData(
     functionFragment: 'setCreditRecord',
     values: [PromiseOrValue<BytesLike>, CreditRecordStruct],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setDueDetail',
-    values: [PromiseOrValue<BytesLike>, DueDetailStruct],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setMaturityDate',
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'setPoolConfig',
@@ -244,56 +168,28 @@ export interface CreditInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'updateDueInfo',
-    values: [PromiseOrValue<BytesLike>],
+    values: [PromiseOrValue<BytesLike>, CreditRecordStruct, DueDetailStruct],
   ): string
   encodeFunctionData(
     functionFragment: 'updatePoolConfigData',
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'drawdownWithReceivable',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-    ],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'makePaymentWithReceivable',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-    ],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'makePrincipalPaymentAndDrawdownWithReceivable',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-    ],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'getNextBillRefreshDate',
+    functionFragment: 'upgradeTo',
     values: [PromiseOrValue<string>],
   ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeToAndCall',
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>],
+  ): string
 
-  decodeFunctionResult(functionFragment: 'calendar', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'creditManager',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(functionFragment: 'drawdown', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'feeManager', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'dueManager', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'firstLossCover',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getCreditLoss',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -304,34 +200,17 @@ export interface CreditInterface extends utils.Interface {
     functionFragment: 'getDueDetail',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(
-    functionFragment: 'getMaturityDate',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'humaConfig', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'isLate', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'makePayment', data: BytesLike): Result
-  decodeFunctionResult(
-    functionFragment: 'makePrincipalPayment',
-    data: BytesLike,
-  ): Result
+  decodeFunctionResult(functionFragment: 'pool', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolSafe', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'setCreditLoss',
+    functionFragment: 'proxiableUUID',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
     functionFragment: 'setCreditRecord',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'setDueDetail',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'setMaturityDate',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -346,100 +225,84 @@ export interface CreditInterface extends utils.Interface {
     functionFragment: 'updatePoolConfigData',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'drawdownWithReceivable',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'makePaymentWithReceivable',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'makePrincipalPaymentAndDrawdownWithReceivable',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'getNextBillRefreshDate',
+    functionFragment: 'upgradeToAndCall',
     data: BytesLike,
   ): Result
 
   events: {
-    'BillRefreshed(bytes32,uint256,uint256)': EventFragment
-    'CreditInitiated(address,uint256,uint256,uint8,uint256,bool)': EventFragment
-    'CreditLineChanged(address,uint256,uint256)': EventFragment
-    'CreditLineClosed(address,address,uint8)': EventFragment
+    'AdminChanged(address,address)': EventFragment
+    'BeaconUpgraded(address)': EventFragment
+    'BillRefreshed(bytes32,uint256,uint256,uint256)': EventFragment
+    'CreditClosedAfterPayOff(bytes32,address)': EventFragment
     'DrawdownMade(address,uint256,uint256)': EventFragment
     'Initialized(uint8)': EventFragment
-    'PaymentMade(address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address)': EventFragment
+    'PaymentMade(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
-    'PrincipalPaymentMade(address,uint256,uint256,uint256,uint256,uint256,uint256,address)': EventFragment
+    'PrincipalPaymentMade(address,address,uint256,uint256,uint256,uint256,uint256,uint256,address)': EventFragment
+    'Upgraded(address)': EventFragment
   }
 
+  getEvent(nameOrSignatureOrTopic: 'AdminChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'BeaconUpgraded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'BillRefreshed'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'CreditInitiated'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'CreditLineChanged'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'CreditLineClosed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'CreditClosedAfterPayOff'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'DrawdownMade'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PaymentMade'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PrincipalPaymentMade'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment
 }
+
+export interface AdminChangedEventObject {
+  previousAdmin: string
+  newAdmin: string
+}
+export type AdminChangedEvent = TypedEvent<
+  [string, string],
+  AdminChangedEventObject
+>
+
+export type AdminChangedEventFilter = TypedEventFilter<AdminChangedEvent>
+
+export interface BeaconUpgradedEventObject {
+  beacon: string
+}
+export type BeaconUpgradedEvent = TypedEvent<
+  [string],
+  BeaconUpgradedEventObject
+>
+
+export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>
 
 export interface BillRefreshedEventObject {
   creditHash: string
   newDueDate: BigNumber
-  amountDue: BigNumber
+  nextDue: BigNumber
+  totalPastDue: BigNumber
 }
 export type BillRefreshedEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
+  [string, BigNumber, BigNumber, BigNumber],
   BillRefreshedEventObject
 >
 
 export type BillRefreshedEventFilter = TypedEventFilter<BillRefreshedEvent>
 
-export interface CreditInitiatedEventObject {
-  borrower: string
-  creditLimit: BigNumber
-  aprInBps: BigNumber
-  periodDuration: number
-  remainingPeriods: BigNumber
-  approved: boolean
-}
-export type CreditInitiatedEvent = TypedEvent<
-  [string, BigNumber, BigNumber, number, BigNumber, boolean],
-  CreditInitiatedEventObject
->
-
-export type CreditInitiatedEventFilter = TypedEventFilter<CreditInitiatedEvent>
-
-export interface CreditLineChangedEventObject {
-  borrower: string
-  oldCreditLimit: BigNumber
-  newCreditLimit: BigNumber
-}
-export type CreditLineChangedEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  CreditLineChangedEventObject
->
-
-export type CreditLineChangedEventFilter =
-  TypedEventFilter<CreditLineChangedEvent>
-
-export interface CreditLineClosedEventObject {
-  borrower: string
+export interface CreditClosedAfterPayOffEventObject {
+  creditHash: string
   by: string
-  reasonCode: number
 }
-export type CreditLineClosedEvent = TypedEvent<
-  [string, string, number],
-  CreditLineClosedEventObject
+export type CreditClosedAfterPayOffEvent = TypedEvent<
+  [string, string],
+  CreditClosedAfterPayOffEventObject
 >
 
-export type CreditLineClosedEventFilter =
-  TypedEventFilter<CreditLineClosedEvent>
+export type CreditClosedAfterPayOffEventFilter =
+  TypedEventFilter<CreditClosedAfterPayOffEvent>
 
 export interface DrawdownMadeEventObject {
   borrower: string
@@ -462,6 +325,7 @@ export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
 export interface PaymentMadeEventObject {
   borrower: string
+  payer: string
   amount: BigNumber
   yieldDuePaid: BigNumber
   principalDuePaid: BigNumber
@@ -473,6 +337,7 @@ export interface PaymentMadeEventObject {
 }
 export type PaymentMadeEvent = TypedEvent<
   [
+    string,
     string,
     BigNumber,
     BigNumber,
@@ -513,6 +378,7 @@ export type PoolConfigChangedEventFilter =
 
 export interface PrincipalPaymentMadeEventObject {
   borrower: string
+  payer: string
   amount: BigNumber
   nextDueDate: BigNumber
   principalDue: BigNumber
@@ -523,6 +389,7 @@ export interface PrincipalPaymentMadeEventObject {
 }
 export type PrincipalPaymentMadeEvent = TypedEvent<
   [
+    string,
     string,
     BigNumber,
     BigNumber,
@@ -537,6 +404,13 @@ export type PrincipalPaymentMadeEvent = TypedEvent<
 
 export type PrincipalPaymentMadeEventFilter =
   TypedEventFilter<PrincipalPaymentMadeEvent>
+
+export interface UpgradedEventObject {
+  implementation: string
+}
+export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>
+
+export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>
 
 export interface Credit extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
@@ -565,24 +439,11 @@ export interface Credit extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
-    calendar(overrides?: CallOverrides): Promise<[string]>
-
     creditManager(overrides?: CallOverrides): Promise<[string]>
 
-    drawdown(
-      borrower: PromiseOrValue<string>,
-      borrowAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    feeManager(overrides?: CallOverrides): Promise<[string]>
+    dueManager(overrides?: CallOverrides): Promise<[string]>
 
     firstLossCover(overrides?: CallOverrides): Promise<[string]>
-
-    getCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<[CreditLossStructOutput]>
 
     getCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -594,44 +455,20 @@ export interface Credit extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[DueDetailStructOutput]>
 
-    getMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { maturitydate: BigNumber }>
-
     humaConfig(overrides?: CallOverrides): Promise<[string]>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    isLate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<[boolean] & { lateFlag: boolean }>
-
-    makePayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    makePrincipalPayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
+    pool(overrides?: CallOverrides): Promise<[string]>
 
     poolConfig(overrides?: CallOverrides): Promise<[string]>
 
     poolSafe(overrides?: CallOverrides): Promise<[string]>
 
-    setCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      cl: CreditLossStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
+    proxiableUUID(overrides?: CallOverrides): Promise<[string]>
 
     setCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -639,25 +476,15 @@ export interface Credit extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    setDueDetail(
-      creditHash: PromiseOrValue<BytesLike>,
-      dd: DueDetailStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    setMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      maturityDate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
     updateDueInfo(
       creditHash: PromiseOrValue<BytesLike>,
+      cr: CreditRecordStruct,
+      dd: DueDetailStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -665,53 +492,23 @@ export interface Credit extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    drawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    makePaymentWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
-
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    getNextBillRefreshDate(
-      borrower: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { refreshDate: BigNumber }>
   }
-
-  calendar(overrides?: CallOverrides): Promise<string>
 
   creditManager(overrides?: CallOverrides): Promise<string>
 
-  drawdown(
-    borrower: PromiseOrValue<string>,
-    borrowAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  feeManager(overrides?: CallOverrides): Promise<string>
+  dueManager(overrides?: CallOverrides): Promise<string>
 
   firstLossCover(overrides?: CallOverrides): Promise<string>
-
-  getCreditLoss(
-    creditHash: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides,
-  ): Promise<CreditLossStructOutput>
 
   getCreditRecord(
     creditHash: PromiseOrValue<BytesLike>,
@@ -723,44 +520,20 @@ export interface Credit extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<DueDetailStructOutput>
 
-  getMaturityDate(
-    creditHash: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>
-
   humaConfig(overrides?: CallOverrides): Promise<string>
 
   initialize(
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  isLate(
-    creditHash: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides,
-  ): Promise<boolean>
-
-  makePayment(
-    borrower: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  makePrincipalPayment(
-    borrower: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
+  pool(overrides?: CallOverrides): Promise<string>
 
   poolConfig(overrides?: CallOverrides): Promise<string>
 
   poolSafe(overrides?: CallOverrides): Promise<string>
 
-  setCreditLoss(
-    creditHash: PromiseOrValue<BytesLike>,
-    cl: CreditLossStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
+  proxiableUUID(overrides?: CallOverrides): Promise<string>
 
   setCreditRecord(
     creditHash: PromiseOrValue<BytesLike>,
@@ -768,25 +541,15 @@ export interface Credit extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  setDueDetail(
-    creditHash: PromiseOrValue<BytesLike>,
-    dd: DueDetailStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  setMaturityDate(
-    creditHash: PromiseOrValue<BytesLike>,
-    maturityDate: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
   setPoolConfig(
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
   updateDueInfo(
     creditHash: PromiseOrValue<BytesLike>,
+    cr: CreditRecordStruct,
+    dd: DueDetailStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -794,53 +557,23 @@ export interface Credit extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  drawdownWithReceivable(
-    borrower: PromiseOrValue<string>,
-    receivableId: PromiseOrValue<BigNumberish>,
-    amount: PromiseOrValue<BigNumberish>,
+  upgradeTo(
+    newImplementation: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  makePaymentWithReceivable(
-    borrower: PromiseOrValue<string>,
-    receivableId: PromiseOrValue<BigNumberish>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  upgradeToAndCall(
+    newImplementation: PromiseOrValue<string>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
-
-  makePrincipalPaymentAndDrawdownWithReceivable(
-    borrower: PromiseOrValue<string>,
-    paymentReceivableId: PromiseOrValue<BigNumberish>,
-    paymentAmount: PromiseOrValue<BigNumberish>,
-    drawdownReceivableId: PromiseOrValue<BigNumberish>,
-    drawdownAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  getNextBillRefreshDate(
-    borrower: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>
 
   callStatic: {
-    calendar(overrides?: CallOverrides): Promise<string>
-
     creditManager(overrides?: CallOverrides): Promise<string>
 
-    drawdown(
-      borrower: PromiseOrValue<string>,
-      borrowAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    feeManager(overrides?: CallOverrides): Promise<string>
+    dueManager(overrides?: CallOverrides): Promise<string>
 
     firstLossCover(overrides?: CallOverrides): Promise<string>
-
-    getCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<CreditLossStructOutput>
 
     getCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -852,48 +585,20 @@ export interface Credit extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<DueDetailStructOutput>
 
-    getMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
     humaConfig(overrides?: CallOverrides): Promise<string>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
-    isLate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<boolean>
-
-    makePayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, boolean] & { amountPaid: BigNumber; paidoff: boolean }
-    >
-
-    makePrincipalPayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, boolean] & { amountPaid: BigNumber; paidoff: boolean }
-    >
+    pool(overrides?: CallOverrides): Promise<string>
 
     poolConfig(overrides?: CallOverrides): Promise<string>
 
     poolSafe(overrides?: CallOverrides): Promise<string>
 
-    setCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      cl: CreditLossStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>
+    proxiableUUID(overrides?: CallOverrides): Promise<string>
 
     setCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -901,122 +606,67 @@ export interface Credit extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    setDueDetail(
-      creditHash: PromiseOrValue<BytesLike>,
-      dd: DueDetailStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    setMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      maturityDate: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
     updateDueInfo(
       creditHash: PromiseOrValue<BytesLike>,
+      cr: CreditRecordStruct,
+      dd: DueDetailStruct,
       overrides?: CallOverrides,
-    ): Promise<
-      [CreditRecordStructOutput, DueDetailStructOutput] & {
-        cr: CreditRecordStructOutput
-        dd: DueDetailStructOutput
-      }
-    >
+    ): Promise<void>
 
     updatePoolConfigData(overrides?: CallOverrides): Promise<void>
 
-    drawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
       overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    ): Promise<void>
 
-    makePaymentWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, boolean] & { amountPaid: BigNumber; paidoff: boolean }
-    >
-
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, BigNumber, boolean] & {
-        amountPaid: BigNumber
-        netAmountToBorrower: BigNumber
-        paidoff: boolean
-      }
-    >
-
-    getNextBillRefreshDate(
-      borrower: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
+    ): Promise<void>
   }
 
   filters: {
-    'BillRefreshed(bytes32,uint256,uint256)'(
+    'AdminChanged(address,address)'(
+      previousAdmin?: null,
+      newAdmin?: null,
+    ): AdminChangedEventFilter
+    AdminChanged(previousAdmin?: null, newAdmin?: null): AdminChangedEventFilter
+
+    'BeaconUpgraded(address)'(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+    BeaconUpgraded(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+
+    'BillRefreshed(bytes32,uint256,uint256,uint256)'(
       creditHash?: PromiseOrValue<BytesLike> | null,
       newDueDate?: null,
-      amountDue?: null,
+      nextDue?: null,
+      totalPastDue?: null,
     ): BillRefreshedEventFilter
     BillRefreshed(
       creditHash?: PromiseOrValue<BytesLike> | null,
       newDueDate?: null,
-      amountDue?: null,
+      nextDue?: null,
+      totalPastDue?: null,
     ): BillRefreshedEventFilter
 
-    'CreditInitiated(address,uint256,uint256,uint8,uint256,bool)'(
-      borrower?: PromiseOrValue<string> | null,
-      creditLimit?: null,
-      aprInBps?: null,
-      periodDuration?: null,
-      remainingPeriods?: null,
-      approved?: null,
-    ): CreditInitiatedEventFilter
-    CreditInitiated(
-      borrower?: PromiseOrValue<string> | null,
-      creditLimit?: null,
-      aprInBps?: null,
-      periodDuration?: null,
-      remainingPeriods?: null,
-      approved?: null,
-    ): CreditInitiatedEventFilter
-
-    'CreditLineChanged(address,uint256,uint256)'(
-      borrower?: PromiseOrValue<string> | null,
-      oldCreditLimit?: null,
-      newCreditLimit?: null,
-    ): CreditLineChangedEventFilter
-    CreditLineChanged(
-      borrower?: PromiseOrValue<string> | null,
-      oldCreditLimit?: null,
-      newCreditLimit?: null,
-    ): CreditLineChangedEventFilter
-
-    'CreditLineClosed(address,address,uint8)'(
-      borrower?: PromiseOrValue<string> | null,
+    'CreditClosedAfterPayOff(bytes32,address)'(
+      creditHash?: PromiseOrValue<BytesLike> | null,
       by?: null,
-      reasonCode?: null,
-    ): CreditLineClosedEventFilter
-    CreditLineClosed(
-      borrower?: PromiseOrValue<string> | null,
+    ): CreditClosedAfterPayOffEventFilter
+    CreditClosedAfterPayOff(
+      creditHash?: PromiseOrValue<BytesLike> | null,
       by?: null,
-      reasonCode?: null,
-    ): CreditLineClosedEventFilter
+    ): CreditClosedAfterPayOffEventFilter
 
     'DrawdownMade(address,uint256,uint256)'(
       borrower?: PromiseOrValue<string> | null,
@@ -1032,8 +682,9 @@ export interface Credit extends BaseContract {
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
-    'PaymentMade(address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address)'(
+    'PaymentMade(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address)'(
       borrower?: PromiseOrValue<string> | null,
+      payer?: PromiseOrValue<string> | null,
       amount?: null,
       yieldDuePaid?: null,
       principalDuePaid?: null,
@@ -1045,6 +696,7 @@ export interface Credit extends BaseContract {
     ): PaymentMadeEventFilter
     PaymentMade(
       borrower?: PromiseOrValue<string> | null,
+      payer?: PromiseOrValue<string> | null,
       amount?: null,
       yieldDuePaid?: null,
       principalDuePaid?: null,
@@ -1071,8 +723,9 @@ export interface Credit extends BaseContract {
       oldPoolConfig?: PromiseOrValue<string> | null,
     ): PoolConfigChangedEventFilter
 
-    'PrincipalPaymentMade(address,uint256,uint256,uint256,uint256,uint256,uint256,address)'(
+    'PrincipalPaymentMade(address,address,uint256,uint256,uint256,uint256,uint256,uint256,address)'(
       borrower?: PromiseOrValue<string> | null,
+      payer?: PromiseOrValue<string> | null,
       amount?: null,
       nextDueDate?: null,
       principalDue?: null,
@@ -1083,6 +736,7 @@ export interface Credit extends BaseContract {
     ): PrincipalPaymentMadeEventFilter
     PrincipalPaymentMade(
       borrower?: PromiseOrValue<string> | null,
+      payer?: PromiseOrValue<string> | null,
       amount?: null,
       nextDueDate?: null,
       principalDue?: null,
@@ -1091,27 +745,21 @@ export interface Credit extends BaseContract {
       unbilledPrincipalPaid?: null,
       by?: null,
     ): PrincipalPaymentMadeEventFilter
+
+    'Upgraded(address)'(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
+    Upgraded(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
   }
 
   estimateGas: {
-    calendar(overrides?: CallOverrides): Promise<BigNumber>
-
     creditManager(overrides?: CallOverrides): Promise<BigNumber>
 
-    drawdown(
-      borrower: PromiseOrValue<string>,
-      borrowAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    feeManager(overrides?: CallOverrides): Promise<BigNumber>
+    dueManager(overrides?: CallOverrides): Promise<BigNumber>
 
     firstLossCover(overrides?: CallOverrides): Promise<BigNumber>
-
-    getCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
 
     getCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -1119,11 +767,6 @@ export interface Credit extends BaseContract {
     ): Promise<BigNumber>
 
     getDueDetail(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    getMaturityDate(
       creditHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
@@ -1131,36 +774,17 @@ export interface Credit extends BaseContract {
     humaConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    isLate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
-    makePayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    makePrincipalPayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
+    pool(overrides?: CallOverrides): Promise<BigNumber>
 
     poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     poolSafe(overrides?: CallOverrides): Promise<BigNumber>
 
-    setCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      cl: CreditLossStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
+    proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>
 
     setCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -1168,25 +792,15 @@ export interface Credit extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    setDueDetail(
-      creditHash: PromiseOrValue<BytesLike>,
-      dd: DueDetailStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    setMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      maturityDate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     updateDueInfo(
       creditHash: PromiseOrValue<BytesLike>,
+      cr: CreditRecordStruct,
+      dd: DueDetailStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1194,54 +808,24 @@ export interface Credit extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    drawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    makePaymentWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    getNextBillRefreshDate(
-      borrower: PromiseOrValue<string>,
-      overrides?: CallOverrides,
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
   }
 
   populateTransaction: {
-    calendar(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
     creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    drawdown(
-      borrower: PromiseOrValue<string>,
-      borrowAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    dueManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     firstLossCover(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    getCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
 
     getCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -1253,44 +837,20 @@ export interface Credit extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    getMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
     humaConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    isLate(
-      creditHash: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
-    makePayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    makePrincipalPayment(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
+    pool(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolSafe(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    setCreditLoss(
-      creditHash: PromiseOrValue<BytesLike>,
-      cl: CreditLossStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
+    proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     setCreditRecord(
       creditHash: PromiseOrValue<BytesLike>,
@@ -1298,25 +858,15 @@ export interface Credit extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    setDueDetail(
-      creditHash: PromiseOrValue<BytesLike>,
-      dd: DueDetailStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    setMaturityDate(
-      creditHash: PromiseOrValue<BytesLike>,
-      maturityDate: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     updateDueInfo(
       creditHash: PromiseOrValue<BytesLike>,
+      cr: CreditRecordStruct,
+      dd: DueDetailStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -1324,32 +874,15 @@ export interface Credit extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    drawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    makePaymentWithReceivable(
-      borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      borrower: PromiseOrValue<string>,
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    getNextBillRefreshDate(
-      borrower: PromiseOrValue<string>,
-      overrides?: CallOverrides,
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
   }
 }

@@ -4,9 +4,14 @@
 
 import { Contract, Signer, utils } from 'ethers'
 import type { Provider } from '@ethersproject/providers'
-import type { Credit, CreditInterface } from '../Credit'
+import type { CreditLine, CreditLineInterface } from '../CreditLine'
 
 const _abi = [
+  {
+    inputs: [],
+    name: 'AttemptedDrawdownOnNonRevolvingLine',
+    type: 'error',
+  },
   {
     inputs: [],
     name: 'AuthorizedContractCallerRequired',
@@ -14,7 +19,62 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'CreditLimitExceeded',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'CreditNotInStateForDrawdown',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'CreditNotInStateForMakingPayment',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'CreditNotInStateForMakingPrincipalPayment',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'DrawdownNotAllowedAfterDueDateWithUnpaidDue',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'DrawdownNotAllowedInFinalPeriodAndBeyond',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'FirstDrawdownTooEarly',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InsufficientFirstLossCover',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InsufficientPoolBalanceForDrawdown',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'SentinelServiceAccountRequired',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'ZeroAddressProvided',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ZeroAmountProvided',
     type: 'error',
   },
   {
@@ -324,6 +384,25 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'borrowAmount',
+        type: 'uint256',
+      },
+    ],
+    name: 'drawdown',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'netAmountToBorrower',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'dueManager',
     outputs: [
@@ -344,6 +423,25 @@ const _abi = [
         internalType: 'contract IFirstLossCover',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'getCreditHash',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: 'creditHash',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',
@@ -467,6 +565,128 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'getDueInfo',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint96',
+            name: 'unbilledPrincipal',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint64',
+            name: 'nextDueDate',
+            type: 'uint64',
+          },
+          {
+            internalType: 'uint96',
+            name: 'nextDue',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'yieldDue',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalPastDue',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint16',
+            name: 'missedPeriods',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'remainingPeriods',
+            type: 'uint16',
+          },
+          {
+            internalType: 'enum CreditState',
+            name: 'state',
+            type: 'uint8',
+          },
+        ],
+        internalType: 'struct CreditRecord',
+        name: 'cr',
+        type: 'tuple',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint64',
+            name: 'lateFeeUpdatedDate',
+            type: 'uint64',
+          },
+          {
+            internalType: 'uint96',
+            name: 'lateFee',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'principalPastDue',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'yieldPastDue',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'committed',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'accrued',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'paid',
+            type: 'uint96',
+          },
+        ],
+        internalType: 'struct DueDetail',
+        name: 'dd',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'getNextBillRefreshDate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'refreshDate',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'humaConfig',
     outputs: [
@@ -489,6 +709,59 @@ const _abi = [
     ],
     name: 'initialize',
     outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'makePayment',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'paidoff',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'makePrincipalPayment',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountPaid',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'paidoff',
+        type: 'bool',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -759,12 +1032,15 @@ const _abi = [
   },
 ] as const
 
-export class Credit__factory {
+export class CreditLine__factory {
   static readonly abi = _abi
-  static createInterface(): CreditInterface {
-    return new utils.Interface(_abi) as CreditInterface
+  static createInterface(): CreditLineInterface {
+    return new utils.Interface(_abi) as CreditLineInterface
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): Credit {
-    return new Contract(address, _abi, signerOrProvider) as Credit
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider,
+  ): CreditLine {
+    return new Contract(address, _abi, signerOrProvider) as CreditLine
   }
 }

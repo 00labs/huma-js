@@ -1,73 +1,45 @@
 [
   {
     "inputs": [],
-    "name": "attemptedDrawdownForNonrevolvingLine",
+    "name": "AuthorizedContractCallerRequired",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "creditLineExceeded",
+    "name": "ZeroAddressProvided",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "creditLineNotInGoodStandingState",
-    "type": "error"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "previousAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "AdminChanged",
+    "type": "event"
   },
   {
-    "inputs": [],
-    "name": "creditLineNotInStateForMakingPayment",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "creditLineNotInStateForMakingPrincipalPayment",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "creditNotInStateForDrawdown",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "drawdownNotAllowedInLatePaymentGracePeriod",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "firstDrawdownTooSoon",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "insufficientBorrowerFirstLossCover",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "notBorrower",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "paymentDetectionServiceAccountRequired",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "todo",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "zeroAddressProvided",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "zeroAmountProvided",
-    "type": "error"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "beacon",
+        "type": "address"
+      }
+    ],
+    "name": "BeaconUpgraded",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -87,7 +59,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amountDue",
+        "name": "nextDue",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalPastDue",
         "type": "uint256"
       }
     ],
@@ -99,92 +77,18 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "creditLimit",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "aprInBps",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum PayPeriodDuration",
-        "name": "periodDuration",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "remainingPeriods",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "approved",
-        "type": "bool"
-      }
-    ],
-    "name": "CreditInitiated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "oldCreditLimit",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newCreditLimit",
-        "type": "uint256"
-      }
-    ],
-    "name": "CreditLineChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "creditHash",
+        "type": "bytes32"
       },
       {
         "indexed": false,
         "internalType": "address",
         "name": "by",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum CreditLineClosureReason",
-        "name": "reasonCode",
-        "type": "uint8"
       }
     ],
-    "name": "CreditLineClosed",
+    "name": "CreditClosedAfterPayOff",
     "type": "event"
   },
   {
@@ -232,6 +136,12 @@
         "indexed": true,
         "internalType": "address",
         "name": "borrower",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "payer",
         "type": "address"
       },
       {
@@ -328,6 +238,12 @@
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "payer",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "amount",
@@ -374,17 +290,17 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "calendar",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
-        "internalType": "contract ICalendar",
-        "name": "",
+        "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "Upgraded",
+    "type": "event"
   },
   {
     "inputs": [],
@@ -400,26 +316,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "borrowAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "drawdown",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
-    "name": "feeManager",
+    "name": "dueManager",
     "outputs": [
       {
         "internalType": "contract ICreditDueManager",
@@ -438,57 +336,6 @@
         "internalType": "contract IFirstLossCover",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "creditHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getCreditLoss",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint96",
-            "name": "principalLoss",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "yieldLoss",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "feesLoss",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "principalRecovered",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "yieldRecovered",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "feesRecovered",
-            "type": "uint96"
-          }
-        ],
-        "internalType": "struct CreditLoss",
-        "name": "",
-        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -612,25 +459,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "creditHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getMaturityDate",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "maturitydate",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "humaConfig",
     "outputs": [
@@ -647,7 +475,7 @@
     "inputs": [
       {
         "internalType": "contract PoolConfig",
-        "name": "_poolConfig",
+        "name": "poolConfig_",
         "type": "address"
       }
     ],
@@ -657,80 +485,16 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "creditHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "isLate",
+    "inputs": [],
+    "name": "pool",
     "outputs": [
       {
-        "internalType": "bool",
-        "name": "lateFlag",
-        "type": "bool"
+        "internalType": "contract IPool",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "makePayment",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountPaid",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "paidoff",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "makePrincipalPayment",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountPaid",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "paidoff",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -760,53 +524,16 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [
       {
         "internalType": "bytes32",
-        "name": "creditHash",
+        "name": "",
         "type": "bytes32"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint96",
-            "name": "principalLoss",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "yieldLoss",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "feesLoss",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "principalRecovered",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "yieldRecovered",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "feesRecovered",
-            "type": "uint96"
-          }
-        ],
-        "internalType": "struct CreditLoss",
-        "name": "cl",
-        "type": "tuple"
       }
     ],
-    "name": "setCreditLoss",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -872,81 +599,8 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "creditHash",
-        "type": "bytes32"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint64",
-            "name": "lateFeeUpdatedDate",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint96",
-            "name": "lateFee",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "principalPastDue",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "yieldPastDue",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "committed",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "accrued",
-            "type": "uint96"
-          },
-          {
-            "internalType": "uint96",
-            "name": "paid",
-            "type": "uint96"
-          }
-        ],
-        "internalType": "struct DueDetail",
-        "name": "dd",
-        "type": "tuple"
-      }
-    ],
-    "name": "setDueDetail",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "creditHash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maturityDate",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMaturityDate",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "contract PoolConfig",
-        "name": "_poolConfig",
+        "name": "poolConfig_",
         "type": "address"
       }
     ],
@@ -961,10 +615,7 @@
         "internalType": "bytes32",
         "name": "creditHash",
         "type": "bytes32"
-      }
-    ],
-    "name": "updateDueInfo",
-    "outputs": [
+      },
       {
         "components": [
           {
@@ -1055,6 +706,8 @@
         "type": "tuple"
       }
     ],
+    "name": "updateDueInfo",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1069,28 +722,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "borrower",
+        "name": "newImplementation",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
       }
     ],
-    "name": "drawdownWithReceivable",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "netAmountToBorrower",
-        "type": "uint256"
-      }
-    ],
+    "name": "upgradeTo",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1098,102 +735,18 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "borrower",
+        "name": "newImplementation",
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
       }
     ],
-    "name": "makePaymentWithReceivable",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountPaid",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "paidoff",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "paymentReceivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "paymentAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "drawdownReceivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "drawdownAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "makePrincipalPaymentAndDrawdownWithReceivable",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountPaid",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "netAmountToBorrower",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "paidoff",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      }
-    ],
-    "name": "getNextBillRefreshDate",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "refreshDate",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   }
 ]

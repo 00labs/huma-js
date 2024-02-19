@@ -13,6 +13,7 @@ import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
 import { FirstLossCoverIndex } from '../types'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
+import POOL_CREDIT_LINE_ABI from '../abis/CreditLine.json'
 import POOL_CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
 import EPOCH_MANAGER_ABI from '../abis/EpochManager.json'
 import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
@@ -28,6 +29,19 @@ export type KYCCopy = {
   title: string
   description: string
   buttonText?: string
+}
+
+export type PoolAbis = {
+  poolAbi: unknown
+  poolCreditAbi: unknown
+  poolCreditLineAbi: unknown
+  poolCreditManagerAbi: unknown
+  poolSafeAbi: unknown
+  poolConfigAbi: unknown
+  trancheVaultAbi: unknown
+  firstLossCoverAbi: unknown
+  epochManagerAbi: unknown
+  calendarAbi: unknown
 }
 
 export type PoolInfoV2 = {
@@ -47,15 +61,6 @@ export type PoolInfoV2 = {
     [FirstLossCoverIndex.borrower]: string
     [FirstLossCoverIndex.admin]: string
   }
-  poolAbi?: unknown
-  poolCreditAbi?: unknown
-  poolCreditManagerAbi?: unknown
-  poolSafeAbi?: unknown
-  poolConfigAbi?: unknown
-  trancheVaultAbi?: unknown
-  firstLossCoverAbi?: unknown
-  epochManagerAbi?: unknown
-  calendarAbi?: unknown
   seniorAPY: string
   juniorAPY: string
   title: string
@@ -91,28 +96,23 @@ export type ChainPoolsInfoV2 = {
   [chainId in ChainEnum]: PoolsInfoV2
 }
 
-const getMetadataWithAbis = (metadata: PoolsInfoV2) => {
-  Object.keys(metadata).forEach((poolName) => {
-    const pool = metadata[poolName as POOL_NAME]
-    if (pool) {
-      pool.poolAbi = POOL_ABI
-      pool.poolCreditAbi = POOL_CREDIT_ABI
-      pool.poolCreditManagerAbi = POOL_CREDIT_MANAGER_ABI
-      pool.poolSafeAbi = POOL_SAFE_ABI
-      pool.poolConfigAbi = POOL_CONFIG_ABI
-      pool.trancheVaultAbi = TRANCHE_VAULT_ABI
-      pool.firstLossCoverAbi = FIRST_LOSS_COVER_ABI
-      pool.epochManagerAbi = EPOCH_MANAGER_ABI
-      pool.calendarAbi = CALENDAR_ABI
-    }
-  })
-  return metadata
+export const POOL_ABI_V2: PoolAbis = {
+  poolAbi: POOL_ABI,
+  poolCreditAbi: POOL_CREDIT_ABI,
+  poolCreditLineAbi: POOL_CREDIT_LINE_ABI,
+  poolCreditManagerAbi: POOL_CREDIT_MANAGER_ABI,
+  poolSafeAbi: POOL_SAFE_ABI,
+  poolConfigAbi: POOL_CONFIG_ABI,
+  trancheVaultAbi: TRANCHE_VAULT_ABI,
+  firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
+  epochManagerAbi: EPOCH_MANAGER_ABI,
+  calendarAbi: CALENDAR_ABI,
 }
 
 export const CHAIN_POOLS_INFO_V2 = {
-  [ChainEnum.Mumbai]: getMetadataWithAbis(MUMBAI_METADATA),
-  [ChainEnum.HumaTestnet]: getMetadataWithAbis(HUMA_TESTNET_METADATA),
-  [ChainEnum.Localhost]: getMetadataWithAbis(LOCALHOST_METADATA),
+  [ChainEnum.Mumbai]: MUMBAI_METADATA,
+  [ChainEnum.HumaTestnet]: HUMA_TESTNET_METADATA,
+  [ChainEnum.Localhost]: LOCALHOST_METADATA,
 } as ChainPoolsInfoV2
 
 export const getChainPoolNamesV2 = (

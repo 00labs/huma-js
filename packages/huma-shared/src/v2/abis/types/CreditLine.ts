@@ -87,10 +87,10 @@ export type DueDetailStructOutput = [
   paid: BigNumber
 }
 
-export interface ReceivableBackedCreditLineInterface extends utils.Interface {
+export interface CreditLineInterface extends utils.Interface {
   functions: {
     'creditManager()': FunctionFragment
-    'drawdownWithReceivable(uint256,uint256)': FunctionFragment
+    'drawdown(uint256)': FunctionFragment
     'dueManager()': FunctionFragment
     'firstLossCover()': FunctionFragment
     'getCreditHash(address)': FunctionFragment
@@ -100,10 +100,8 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
     'getNextBillRefreshDate(address)': FunctionFragment
     'humaConfig()': FunctionFragment
     'initialize(address)': FunctionFragment
-    'makePaymentWithReceivable(address,uint256,uint256)': FunctionFragment
-    'makePrincipalPaymentAndDrawdownWithReceivable(uint256,uint256,uint256,uint256)': FunctionFragment
-    'makePrincipalPaymentWithReceivable(uint256,uint256)': FunctionFragment
-    'onERC721Received(address,address,uint256,bytes)': FunctionFragment
+    'makePayment(address,uint256)': FunctionFragment
+    'makePrincipalPayment(uint256)': FunctionFragment
     'pool()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolSafe()': FunctionFragment
@@ -119,7 +117,7 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | 'creditManager'
-      | 'drawdownWithReceivable'
+      | 'drawdown'
       | 'dueManager'
       | 'firstLossCover'
       | 'getCreditHash'
@@ -129,10 +127,8 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
       | 'getNextBillRefreshDate'
       | 'humaConfig'
       | 'initialize'
-      | 'makePaymentWithReceivable'
-      | 'makePrincipalPaymentAndDrawdownWithReceivable'
-      | 'makePrincipalPaymentWithReceivable'
-      | 'onERC721Received'
+      | 'makePayment'
+      | 'makePrincipalPayment'
       | 'pool'
       | 'poolConfig'
       | 'poolSafe'
@@ -150,8 +146,8 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'drawdownWithReceivable',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+    functionFragment: 'drawdown',
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(functionFragment: 'dueManager', values?: undefined): string
   encodeFunctionData(
@@ -184,34 +180,12 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
     values: [PromiseOrValue<string>],
   ): string
   encodeFunctionData(
-    functionFragment: 'makePaymentWithReceivable',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-    ],
+    functionFragment: 'makePayment',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
-    functionFragment: 'makePrincipalPaymentAndDrawdownWithReceivable',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-    ],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'makePrincipalPaymentWithReceivable',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'onERC721Received',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>,
-    ],
+    functionFragment: 'makePrincipalPayment',
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(functionFragment: 'pool', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
@@ -249,10 +223,7 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
     functionFragment: 'creditManager',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(
-    functionFragment: 'drawdownWithReceivable',
-    data: BytesLike,
-  ): Result
+  decodeFunctionResult(functionFragment: 'drawdown', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'dueManager', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'firstLossCover',
@@ -277,20 +248,9 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(functionFragment: 'humaConfig', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'makePayment', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'makePaymentWithReceivable',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'makePrincipalPaymentAndDrawdownWithReceivable',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'makePrincipalPaymentWithReceivable',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'onERC721Received',
+    functionFragment: 'makePrincipalPayment',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'pool', data: BytesLike): Result
@@ -328,14 +288,11 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
     'BillRefreshed(bytes32,uint256,uint256,uint256)': EventFragment
     'CreditClosedAfterPayOff(bytes32,address)': EventFragment
     'DrawdownMade(address,uint256,uint256)': EventFragment
-    'DrawdownMadeWithReceivable(address,uint256,uint256,address)': EventFragment
     'Initialized(uint8)': EventFragment
     'PaymentMade(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address)': EventFragment
-    'PaymentMadeWithReceivable(address,uint256,uint256,address)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
     'PrincipalPaymentMade(address,address,uint256,uint256,uint256,uint256,uint256,uint256,address)': EventFragment
-    'PrincipalPaymentMadeWithReceivable(address,uint256,uint256,address)': EventFragment
     'Upgraded(address)': EventFragment
   }
 
@@ -344,16 +301,11 @@ export interface ReceivableBackedCreditLineInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'BillRefreshed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'CreditClosedAfterPayOff'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'DrawdownMade'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'DrawdownMadeWithReceivable'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PaymentMade'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PaymentMadeWithReceivable'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PrincipalPaymentMade'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'PrincipalPaymentMadeWithReceivable',
-  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment
 }
 
@@ -415,20 +367,6 @@ export type DrawdownMadeEvent = TypedEvent<
 
 export type DrawdownMadeEventFilter = TypedEventFilter<DrawdownMadeEvent>
 
-export interface DrawdownMadeWithReceivableEventObject {
-  borrower: string
-  receivableId: BigNumber
-  amount: BigNumber
-  by: string
-}
-export type DrawdownMadeWithReceivableEvent = TypedEvent<
-  [string, BigNumber, BigNumber, string],
-  DrawdownMadeWithReceivableEventObject
->
-
-export type DrawdownMadeWithReceivableEventFilter =
-  TypedEventFilter<DrawdownMadeWithReceivableEvent>
-
 export interface InitializedEventObject {
   version: number
 }
@@ -465,20 +403,6 @@ export type PaymentMadeEvent = TypedEvent<
 >
 
 export type PaymentMadeEventFilter = TypedEventFilter<PaymentMadeEvent>
-
-export interface PaymentMadeWithReceivableEventObject {
-  borrower: string
-  receivableId: BigNumber
-  amount: BigNumber
-  by: string
-}
-export type PaymentMadeWithReceivableEvent = TypedEvent<
-  [string, BigNumber, BigNumber, string],
-  PaymentMadeWithReceivableEventObject
->
-
-export type PaymentMadeWithReceivableEventFilter =
-  TypedEventFilter<PaymentMadeWithReceivableEvent>
 
 export interface PoolConfigCacheUpdatedEventObject {
   poolConfig: string
@@ -532,20 +456,6 @@ export type PrincipalPaymentMadeEvent = TypedEvent<
 export type PrincipalPaymentMadeEventFilter =
   TypedEventFilter<PrincipalPaymentMadeEvent>
 
-export interface PrincipalPaymentMadeWithReceivableEventObject {
-  borrower: string
-  receivableId: BigNumber
-  amount: BigNumber
-  by: string
-}
-export type PrincipalPaymentMadeWithReceivableEvent = TypedEvent<
-  [string, BigNumber, BigNumber, string],
-  PrincipalPaymentMadeWithReceivableEventObject
->
-
-export type PrincipalPaymentMadeWithReceivableEventFilter =
-  TypedEventFilter<PrincipalPaymentMadeWithReceivableEvent>
-
 export interface UpgradedEventObject {
   implementation: string
 }
@@ -553,12 +463,12 @@ export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>
 
 export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>
 
-export interface ReceivableBackedCreditLine extends BaseContract {
+export interface CreditLine extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
   attach(addressOrName: string): this
   deployed(): Promise<this>
 
-  interface: ReceivableBackedCreditLineInterface
+  interface: CreditLineInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -582,9 +492,8 @@ export interface ReceivableBackedCreditLine extends BaseContract {
   functions: {
     creditManager(overrides?: CallOverrides): Promise<[string]>
 
-    drawdownWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    drawdown(
+      borrowAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -629,32 +538,14 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    makePaymentWithReceivable(
+    makePayment(
       borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    makePrincipalPaymentWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
+    makePrincipalPayment(
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -702,9 +593,8 @@ export interface ReceivableBackedCreditLine extends BaseContract {
 
   creditManager(overrides?: CallOverrides): Promise<string>
 
-  drawdownWithReceivable(
-    receivableId: PromiseOrValue<BigNumberish>,
-    amount: PromiseOrValue<BigNumberish>,
+  drawdown(
+    borrowAmount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -749,32 +639,14 @@ export interface ReceivableBackedCreditLine extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  makePaymentWithReceivable(
+  makePayment(
     borrower: PromiseOrValue<string>,
-    receivableId: PromiseOrValue<BigNumberish>,
     amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
-  makePrincipalPaymentAndDrawdownWithReceivable(
-    paymentReceivableId: PromiseOrValue<BigNumberish>,
-    paymentAmount: PromiseOrValue<BigNumberish>,
-    drawdownReceivableId: PromiseOrValue<BigNumberish>,
-    drawdownAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  makePrincipalPaymentWithReceivable(
-    receivableId: PromiseOrValue<BigNumberish>,
+  makePrincipalPayment(
     amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  onERC721Received(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    arg2: PromiseOrValue<BigNumberish>,
-    arg3: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -822,9 +694,8 @@ export interface ReceivableBackedCreditLine extends BaseContract {
   callStatic: {
     creditManager(overrides?: CallOverrides): Promise<string>
 
-    drawdownWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    drawdown(
+      borrowAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -869,44 +740,20 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
-    makePaymentWithReceivable(
+    makePayment(
       borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<
       [BigNumber, boolean] & { amountPaid: BigNumber; paidoff: boolean }
     >
 
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<
-      [BigNumber, BigNumber, boolean] & {
-        amountPaid: BigNumber
-        netAmountToBorrower: BigNumber
-        paidoff: boolean
-      }
-    >
-
-    makePrincipalPaymentWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
+    makePrincipalPayment(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<
       [BigNumber, boolean] & { amountPaid: BigNumber; paidoff: boolean }
     >
-
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides,
-    ): Promise<string>
 
     pool(overrides?: CallOverrides): Promise<string>
 
@@ -995,19 +842,6 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       netAmountToBorrower?: null,
     ): DrawdownMadeEventFilter
 
-    'DrawdownMadeWithReceivable(address,uint256,uint256,address)'(
-      borrower?: PromiseOrValue<string> | null,
-      receivableId?: PromiseOrValue<BigNumberish> | null,
-      amount?: null,
-      by?: null,
-    ): DrawdownMadeWithReceivableEventFilter
-    DrawdownMadeWithReceivable(
-      borrower?: PromiseOrValue<string> | null,
-      receivableId?: PromiseOrValue<BigNumberish> | null,
-      amount?: null,
-      by?: null,
-    ): DrawdownMadeWithReceivableEventFilter
-
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
@@ -1035,19 +869,6 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       principalPastDuePaid?: null,
       by?: null,
     ): PaymentMadeEventFilter
-
-    'PaymentMadeWithReceivable(address,uint256,uint256,address)'(
-      borrower?: PromiseOrValue<string> | null,
-      receivableId?: PromiseOrValue<BigNumberish> | null,
-      amount?: null,
-      by?: null,
-    ): PaymentMadeWithReceivableEventFilter
-    PaymentMadeWithReceivable(
-      borrower?: PromiseOrValue<string> | null,
-      receivableId?: PromiseOrValue<BigNumberish> | null,
-      amount?: null,
-      by?: null,
-    ): PaymentMadeWithReceivableEventFilter
 
     'PoolConfigCacheUpdated(address)'(
       poolConfig?: PromiseOrValue<string> | null,
@@ -1088,19 +909,6 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       by?: null,
     ): PrincipalPaymentMadeEventFilter
 
-    'PrincipalPaymentMadeWithReceivable(address,uint256,uint256,address)'(
-      borrower?: PromiseOrValue<string> | null,
-      receivableId?: PromiseOrValue<BigNumberish> | null,
-      amount?: null,
-      by?: null,
-    ): PrincipalPaymentMadeWithReceivableEventFilter
-    PrincipalPaymentMadeWithReceivable(
-      borrower?: PromiseOrValue<string> | null,
-      receivableId?: PromiseOrValue<BigNumberish> | null,
-      amount?: null,
-      by?: null,
-    ): PrincipalPaymentMadeWithReceivableEventFilter
-
     'Upgraded(address)'(
       implementation?: PromiseOrValue<string> | null,
     ): UpgradedEventFilter
@@ -1112,9 +920,8 @@ export interface ReceivableBackedCreditLine extends BaseContract {
   estimateGas: {
     creditManager(overrides?: CallOverrides): Promise<BigNumber>
 
-    drawdownWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    drawdown(
+      borrowAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1154,32 +961,14 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    makePaymentWithReceivable(
+    makePayment(
       borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    makePrincipalPaymentWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
+    makePrincipalPayment(
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1228,9 +1017,8 @@ export interface ReceivableBackedCreditLine extends BaseContract {
   populateTransaction: {
     creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    drawdownWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
-      amount: PromiseOrValue<BigNumberish>,
+    drawdown(
+      borrowAmount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -1270,32 +1058,14 @@ export interface ReceivableBackedCreditLine extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    makePaymentWithReceivable(
+    makePayment(
       borrower: PromiseOrValue<string>,
-      receivableId: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
-    makePrincipalPaymentAndDrawdownWithReceivable(
-      paymentReceivableId: PromiseOrValue<BigNumberish>,
-      paymentAmount: PromiseOrValue<BigNumberish>,
-      drawdownReceivableId: PromiseOrValue<BigNumberish>,
-      drawdownAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    makePrincipalPaymentWithReceivable(
-      receivableId: PromiseOrValue<BigNumberish>,
+    makePrincipalPayment(
       amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 

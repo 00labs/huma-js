@@ -17,7 +17,7 @@ import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
 import RECEIVABLE_V2_ABI from '../abis/Receivable.json'
 import {
   Calendar,
-  Credit,
+  CreditLine,
   FirstLossCover,
   Pool,
   PoolConfig,
@@ -37,6 +37,7 @@ import {
 import { FirstLossCoverIndex } from '../types'
 import {
   CHAIN_POOLS_INFO_V2,
+  POOL_ABI_V2,
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
@@ -74,7 +75,7 @@ export function usePoolContractV2(
 ) {
   const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContract<Pool>(poolInfo?.pool, poolInfo?.poolAbi, provider)
+  return useContract<Pool>(poolInfo?.pool, POOL_ABI_V2.poolAbi, provider)
 }
 
 function usePoolSafeContractV2(
@@ -85,7 +86,7 @@ function usePoolSafeContractV2(
   const poolInfo = usePoolInfoV2(poolName, chainId)
   return useContract<PoolSafe>(
     poolInfo?.poolSafe,
-    poolInfo?.poolSafeAbi,
+    POOL_ABI_V2.poolSafeAbi,
     provider,
   )
 }
@@ -99,7 +100,7 @@ export function usePoolConfigContractV2(
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const poolContract = useContract<Pool>(
     poolInfo?.pool,
-    poolInfo?.poolAbi,
+    POOL_ABI_V2.poolAbi,
     provider,
   )
 
@@ -129,7 +130,7 @@ export function useTrancheVaultContractV2(
   const contractAddr = poolInfo?.[`${trancheType}TrancheVault`]
   return useContract<TrancheVault>(
     contractAddr,
-    poolInfo?.trancheVaultAbi,
+    POOL_ABI_V2.trancheVaultAbi,
     provider,
     account,
   )
@@ -160,9 +161,9 @@ export function useCreditContractV2(
 ) {
   const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
-  return useContract<Credit>(
+  return useContract<CreditLine>(
     poolInfo?.poolCredit,
-    poolInfo?.poolCreditAbi,
+    POOL_ABI_V2.poolCreditAbi,
     provider,
     account,
   )
@@ -177,7 +178,7 @@ export function useCreditManagerContractV2(
   const poolInfo = usePoolInfoV2(poolName, chainId)
   return useContract<CreditManager>(
     poolInfo?.poolCreditManager,
-    poolInfo?.poolCreditManagerAbi,
+    POOL_ABI_V2.poolCreditManagerAbi,
     provider,
     account,
   )
@@ -532,7 +533,7 @@ export const useFirstLossCoverAssetsV2 = (
           .map((item) =>
             getContract<FirstLossCover>(
               item,
-              poolInfo.firstLossCoverAbi,
+              POOL_ABI_V2.firstLossCoverAbi,
               provider,
             ),
           )

@@ -52,7 +52,7 @@ export function Transfer({
     <TxSendModalV2
       contract={trancheVaultContract}
       method='deposit'
-      params={[supplyBigNumber, account]}
+      params={[supplyBigNumber]}
       handleSuccess={handleSuccess}
     />
   )

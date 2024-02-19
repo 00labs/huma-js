@@ -9,6 +9,7 @@ import {
 import { FirstLossCover } from '../abis/types'
 import { FirstLossCoverIndex } from '../types'
 import { getPoolConfigContractV2, getPoolInfoV2 } from './poolContract'
+import { POOL_ABI_V2 } from './pool'
 
 export const getFirstLossCoverTotalAssetsV2 = async (
   poolName: POOL_NAME,
@@ -26,7 +27,11 @@ export const getFirstLossCoverTotalAssetsV2 = async (
   const firstLossCovers = Object.values(poolInfo.firstLossCovers)
   const firstLossCoverContracts = firstLossCovers
     .map((item) =>
-      getContract<FirstLossCover>(item, poolInfo.firstLossCoverAbi, provider),
+      getContract<FirstLossCover>(
+        item,
+        POOL_ABI_V2.firstLossCoverAbi,
+        provider,
+      ),
     )
     .flatMap((item) => (item ? [item] : []))
 

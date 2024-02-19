@@ -61,14 +61,14 @@ export interface TrancheVaultInterface extends utils.Interface {
     'cancellableRedemptionShares(address)': FunctionFragment
     'convertToAssets(uint256)': FunctionFragment
     'convertToShares(uint256)': FunctionFragment
-    'currentRedemptionSummary()': FunctionFragment
     'decimals()': FunctionFragment
     'decreaseAllowance(address,uint256)': FunctionFragment
-    'deposit(uint256,address)': FunctionFragment
+    'deposit(uint256)': FunctionFragment
     'depositRecords(address)': FunctionFragment
     'disburse()': FunctionFragment
     'epochManager()': FunctionFragment
     'epochRedemptionSummaries(uint256)': FunctionFragment
+    'epochRedemptionSummary(uint256)': FunctionFragment
     'executeRedemptionSummary((uint64,uint96,uint96,uint96))': FunctionFragment
     'getNonReinvestingLendersLength()': FunctionFragment
     'getRoleAdmin(bytes32)': FunctionFragment
@@ -103,6 +103,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     'updatePoolConfigData()': FunctionFragment
     'upgradeTo(address)': FunctionFragment
     'upgradeToAndCall(address,bytes)': FunctionFragment
+    'withdrawAfterPoolClosure()': FunctionFragment
     'withdrawableAssets(address)': FunctionFragment
   }
 
@@ -120,7 +121,6 @@ export interface TrancheVaultInterface extends utils.Interface {
       | 'cancellableRedemptionShares'
       | 'convertToAssets'
       | 'convertToShares'
-      | 'currentRedemptionSummary'
       | 'decimals'
       | 'decreaseAllowance'
       | 'deposit'
@@ -128,6 +128,7 @@ export interface TrancheVaultInterface extends utils.Interface {
       | 'disburse'
       | 'epochManager'
       | 'epochRedemptionSummaries'
+      | 'epochRedemptionSummary'
       | 'executeRedemptionSummary'
       | 'getNonReinvestingLendersLength'
       | 'getRoleAdmin'
@@ -162,6 +163,7 @@ export interface TrancheVaultInterface extends utils.Interface {
       | 'updatePoolConfigData'
       | 'upgradeTo'
       | 'upgradeToAndCall'
+      | 'withdrawAfterPoolClosure'
       | 'withdrawableAssets',
   ): FunctionFragment
 
@@ -210,10 +212,6 @@ export interface TrancheVaultInterface extends utils.Interface {
     functionFragment: 'convertToShares',
     values: [PromiseOrValue<BigNumberish>],
   ): string
-  encodeFunctionData(
-    functionFragment: 'currentRedemptionSummary',
-    values?: undefined,
-  ): string
   encodeFunctionData(functionFragment: 'decimals', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'decreaseAllowance',
@@ -221,7 +219,7 @@ export interface TrancheVaultInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'deposit',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'depositRecords',
@@ -234,6 +232,10 @@ export interface TrancheVaultInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'epochRedemptionSummaries',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'epochRedemptionSummary',
     values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
@@ -367,6 +369,10 @@ export interface TrancheVaultInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>],
   ): string
   encodeFunctionData(
+    functionFragment: 'withdrawAfterPoolClosure',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
     functionFragment: 'withdrawableAssets',
     values: [PromiseOrValue<string>],
   ): string
@@ -404,10 +410,6 @@ export interface TrancheVaultInterface extends utils.Interface {
     functionFragment: 'convertToShares',
     data: BytesLike,
   ): Result
-  decodeFunctionResult(
-    functionFragment: 'currentRedemptionSummary',
-    data: BytesLike,
-  ): Result
   decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'decreaseAllowance',
@@ -425,6 +427,10 @@ export interface TrancheVaultInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'epochRedemptionSummaries',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'epochRedemptionSummary',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -528,6 +534,10 @@ export interface TrancheVaultInterface extends utils.Interface {
     data: BytesLike,
   ): Result
   decodeFunctionResult(
+    functionFragment: 'withdrawAfterPoolClosure',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'withdrawableAssets',
     data: BytesLike,
   ): Result
@@ -538,8 +548,11 @@ export interface TrancheVaultInterface extends utils.Interface {
     'BeaconUpgraded(address)': EventFragment
     'EpochProcessed(uint256,uint256,uint256,uint256)': EventFragment
     'Initialized(uint8)': EventFragment
-    'LenderFundDisbursed(address,address,uint256)': EventFragment
-    'LiquidityDeposited(address,address,uint256,uint256)': EventFragment
+    'LenderAdded(address,bool)': EventFragment
+    'LenderFundDisbursed(address,uint256)': EventFragment
+    'LenderFundWithdrawn(address,uint256,uint256)': EventFragment
+    'LenderRemoved(address)': EventFragment
+    'LiquidityDeposited(address,uint256,uint256)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
     'RedemptionRequestAdded(address,uint256,uint256)': EventFragment
@@ -550,7 +563,8 @@ export interface TrancheVaultInterface extends utils.Interface {
     'RoleRevoked(bytes32,address,address)': EventFragment
     'Transfer(address,address,uint256)': EventFragment
     'Upgraded(address)': EventFragment
-    'YieldPaidout(address,uint256,uint256)': EventFragment
+    'YieldPaidOut(address,uint256,uint256)': EventFragment
+    'YieldPayoutFailed(address,uint256,uint256,string)': EventFragment
     'YieldReinvested(address,uint256)': EventFragment
   }
 
@@ -559,7 +573,10 @@ export interface TrancheVaultInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'BeaconUpgraded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'EpochProcessed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'LenderAdded'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LenderFundDisbursed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'LenderFundWithdrawn'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'LenderRemoved'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LiquidityDeposited'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
@@ -571,7 +588,8 @@ export interface TrancheVaultInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'RoleRevoked'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'YieldPaidout'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'YieldPaidOut'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'YieldPayoutFailed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'YieldReinvested'): EventFragment
 }
 
@@ -628,27 +646,56 @@ export type InitializedEvent = TypedEvent<[number], InitializedEventObject>
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>
 
+export interface LenderAddedEventObject {
+  account: string
+  reinvestYield: boolean
+}
+export type LenderAddedEvent = TypedEvent<
+  [string, boolean],
+  LenderAddedEventObject
+>
+
+export type LenderAddedEventFilter = TypedEventFilter<LenderAddedEvent>
+
 export interface LenderFundDisbursedEventObject {
   account: string
-  receiver: string
-  withdrawnAmount: BigNumber
+  amountDisbursed: BigNumber
 }
 export type LenderFundDisbursedEvent = TypedEvent<
-  [string, string, BigNumber],
+  [string, BigNumber],
   LenderFundDisbursedEventObject
 >
 
 export type LenderFundDisbursedEventFilter =
   TypedEventFilter<LenderFundDisbursedEvent>
 
+export interface LenderFundWithdrawnEventObject {
+  account: string
+  numShares: BigNumber
+  assets: BigNumber
+}
+export type LenderFundWithdrawnEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  LenderFundWithdrawnEventObject
+>
+
+export type LenderFundWithdrawnEventFilter =
+  TypedEventFilter<LenderFundWithdrawnEvent>
+
+export interface LenderRemovedEventObject {
+  account: string
+}
+export type LenderRemovedEvent = TypedEvent<[string], LenderRemovedEventObject>
+
+export type LenderRemovedEventFilter = TypedEventFilter<LenderRemovedEvent>
+
 export interface LiquidityDepositedEventObject {
   sender: string
-  receiver: string
-  assetAmount: BigNumber
-  shareAmount: BigNumber
+  assets: BigNumber
+  shares: BigNumber
 }
 export type LiquidityDepositedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber],
+  [string, BigNumber, BigNumber],
   LiquidityDepositedEventObject
 >
 
@@ -680,7 +727,7 @@ export type PoolConfigChangedEventFilter =
 
 export interface RedemptionRequestAddedEventObject {
   account: string
-  shareAmount: BigNumber
+  shares: BigNumber
   epochId: BigNumber
 }
 export type RedemptionRequestAddedEvent = TypedEvent<
@@ -693,7 +740,7 @@ export type RedemptionRequestAddedEventFilter =
 
 export interface RedemptionRequestRemovedEventObject {
   account: string
-  shareAmount: BigNumber
+  shares: BigNumber
   epochId: BigNumber
 }
 export type RedemptionRequestRemovedEvent = TypedEvent<
@@ -773,17 +820,31 @@ export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>
 
 export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>
 
-export interface YieldPaidoutEventObject {
+export interface YieldPaidOutEventObject {
   account: string
   yields: BigNumber
   shares: BigNumber
 }
-export type YieldPaidoutEvent = TypedEvent<
+export type YieldPaidOutEvent = TypedEvent<
   [string, BigNumber, BigNumber],
-  YieldPaidoutEventObject
+  YieldPaidOutEventObject
 >
 
-export type YieldPaidoutEventFilter = TypedEventFilter<YieldPaidoutEvent>
+export type YieldPaidOutEventFilter = TypedEventFilter<YieldPaidOutEvent>
+
+export interface YieldPayoutFailedEventObject {
+  account: string
+  yields: BigNumber
+  shares: BigNumber
+  reason: string
+}
+export type YieldPayoutFailedEvent = TypedEvent<
+  [string, BigNumber, BigNumber, string],
+  YieldPayoutFailedEventObject
+>
+
+export type YieldPayoutFailedEventFilter =
+  TypedEventFilter<YieldPayoutFailedEvent>
 
 export interface YieldReinvestedEventObject {
   account: string
@@ -877,12 +938,6 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[BigNumber] & { shares: BigNumber }>
 
-    currentRedemptionSummary(overrides?: CallOverrides): Promise<
-      [EpochRedemptionSummaryStructOutput] & {
-        redemptionSummary: EpochRedemptionSummaryStructOutput
-      }
-    >
-
     decimals(overrides?: CallOverrides): Promise<[number]>
 
     decreaseAllowance(
@@ -893,7 +948,6 @@ export interface TrancheVault extends BaseContract {
 
     deposit(
       assets: PromiseOrValue<BigNumberish>,
-      receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -923,6 +977,15 @@ export interface TrancheVault extends BaseContract {
         totalSharesRequested: BigNumber
         totalSharesProcessed: BigNumber
         totalAmountProcessed: BigNumber
+      }
+    >
+
+    epochRedemptionSummary(
+      epochId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<
+      [EpochRedemptionSummaryStructOutput] & {
+        redemptionSummary: EpochRedemptionSummaryStructOutput
       }
     >
 
@@ -961,13 +1024,13 @@ export interface TrancheVault extends BaseContract {
     'initialize(string,string,address,uint8)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       seniorTrancheOrJuniorTranche: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
     'initialize(address)'(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1026,7 +1089,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<ContractTransaction>
 
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -1082,6 +1145,10 @@ export interface TrancheVault extends BaseContract {
       newImplementation: PromiseOrValue<string>,
       data: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    withdrawAfterPoolClosure(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
     withdrawableAssets(
@@ -1144,10 +1211,6 @@ export interface TrancheVault extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<BigNumber>
 
-  currentRedemptionSummary(
-    overrides?: CallOverrides,
-  ): Promise<EpochRedemptionSummaryStructOutput>
-
   decimals(overrides?: CallOverrides): Promise<number>
 
   decreaseAllowance(
@@ -1158,7 +1221,6 @@ export interface TrancheVault extends BaseContract {
 
   deposit(
     assets: PromiseOrValue<BigNumberish>,
-    receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -1190,6 +1252,11 @@ export interface TrancheVault extends BaseContract {
       totalAmountProcessed: BigNumber
     }
   >
+
+  epochRedemptionSummary(
+    epochId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<EpochRedemptionSummaryStructOutput>
 
   executeRedemptionSummary(
     summaryProcessed: EpochRedemptionSummaryStruct,
@@ -1224,13 +1291,13 @@ export interface TrancheVault extends BaseContract {
   'initialize(string,string,address,uint8)'(
     name: PromiseOrValue<string>,
     symbol: PromiseOrValue<string>,
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     seniorTrancheOrJuniorTranche: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
   'initialize(address)'(
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -1289,7 +1356,7 @@ export interface TrancheVault extends BaseContract {
   ): Promise<ContractTransaction>
 
   setPoolConfig(
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -1345,6 +1412,10 @@ export interface TrancheVault extends BaseContract {
     newImplementation: PromiseOrValue<string>,
     data: PromiseOrValue<BytesLike>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  withdrawAfterPoolClosure(
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
   withdrawableAssets(
@@ -1407,10 +1478,6 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    currentRedemptionSummary(
-      overrides?: CallOverrides,
-    ): Promise<EpochRedemptionSummaryStructOutput>
-
     decimals(overrides?: CallOverrides): Promise<number>
 
     decreaseAllowance(
@@ -1421,7 +1488,6 @@ export interface TrancheVault extends BaseContract {
 
     deposit(
       assets: PromiseOrValue<BigNumberish>,
-      receiver: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -1451,6 +1517,11 @@ export interface TrancheVault extends BaseContract {
         totalAmountProcessed: BigNumber
       }
     >
+
+    epochRedemptionSummary(
+      epochId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<EpochRedemptionSummaryStructOutput>
 
     executeRedemptionSummary(
       summaryProcessed: EpochRedemptionSummaryStruct,
@@ -1487,13 +1558,13 @@ export interface TrancheVault extends BaseContract {
     'initialize(string,string,address,uint8)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       seniorTrancheOrJuniorTranche: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
 
     'initialize(address)'(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -1550,7 +1621,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<void>
 
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -1606,6 +1677,8 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>
 
+    withdrawAfterPoolClosure(overrides?: CallOverrides): Promise<void>
+
     withdrawableAssets(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides,
@@ -1653,28 +1726,51 @@ export interface TrancheVault extends BaseContract {
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
-    'LenderFundDisbursed(address,address,uint256)'(
+    'LenderAdded(address,bool)'(
       account?: PromiseOrValue<string> | null,
-      receiver?: null,
-      withdrawnAmount?: null,
+      reinvestYield?: null,
+    ): LenderAddedEventFilter
+    LenderAdded(
+      account?: PromiseOrValue<string> | null,
+      reinvestYield?: null,
+    ): LenderAddedEventFilter
+
+    'LenderFundDisbursed(address,uint256)'(
+      account?: PromiseOrValue<string> | null,
+      amountDisbursed?: null,
     ): LenderFundDisbursedEventFilter
     LenderFundDisbursed(
       account?: PromiseOrValue<string> | null,
-      receiver?: null,
-      withdrawnAmount?: null,
+      amountDisbursed?: null,
     ): LenderFundDisbursedEventFilter
 
-    'LiquidityDeposited(address,address,uint256,uint256)'(
+    'LenderFundWithdrawn(address,uint256,uint256)'(
+      account?: PromiseOrValue<string> | null,
+      numShares?: null,
+      assets?: null,
+    ): LenderFundWithdrawnEventFilter
+    LenderFundWithdrawn(
+      account?: PromiseOrValue<string> | null,
+      numShares?: null,
+      assets?: null,
+    ): LenderFundWithdrawnEventFilter
+
+    'LenderRemoved(address)'(
+      account?: PromiseOrValue<string> | null,
+    ): LenderRemovedEventFilter
+    LenderRemoved(
+      account?: PromiseOrValue<string> | null,
+    ): LenderRemovedEventFilter
+
+    'LiquidityDeposited(address,uint256,uint256)'(
       sender?: PromiseOrValue<string> | null,
-      receiver?: PromiseOrValue<string> | null,
-      assetAmount?: null,
-      shareAmount?: null,
+      assets?: null,
+      shares?: null,
     ): LiquidityDepositedEventFilter
     LiquidityDeposited(
       sender?: PromiseOrValue<string> | null,
-      receiver?: PromiseOrValue<string> | null,
-      assetAmount?: null,
-      shareAmount?: null,
+      assets?: null,
+      shares?: null,
     ): LiquidityDepositedEventFilter
 
     'PoolConfigCacheUpdated(address)'(
@@ -1695,23 +1791,23 @@ export interface TrancheVault extends BaseContract {
 
     'RedemptionRequestAdded(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
-      shareAmount?: null,
+      shares?: null,
       epochId?: null,
     ): RedemptionRequestAddedEventFilter
     RedemptionRequestAdded(
       account?: PromiseOrValue<string> | null,
-      shareAmount?: null,
+      shares?: null,
       epochId?: null,
     ): RedemptionRequestAddedEventFilter
 
     'RedemptionRequestRemoved(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
-      shareAmount?: null,
+      shares?: null,
       epochId?: null,
     ): RedemptionRequestRemovedEventFilter
     RedemptionRequestRemoved(
       account?: PromiseOrValue<string> | null,
-      shareAmount?: null,
+      shares?: null,
       epochId?: null,
     ): RedemptionRequestRemovedEventFilter
 
@@ -1777,16 +1873,29 @@ export interface TrancheVault extends BaseContract {
       implementation?: PromiseOrValue<string> | null,
     ): UpgradedEventFilter
 
-    'YieldPaidout(address,uint256,uint256)'(
+    'YieldPaidOut(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
       yields?: null,
       shares?: null,
-    ): YieldPaidoutEventFilter
-    YieldPaidout(
+    ): YieldPaidOutEventFilter
+    YieldPaidOut(
       account?: PromiseOrValue<string> | null,
       yields?: null,
       shares?: null,
-    ): YieldPaidoutEventFilter
+    ): YieldPaidOutEventFilter
+
+    'YieldPayoutFailed(address,uint256,uint256,string)'(
+      account?: PromiseOrValue<string> | null,
+      yields?: null,
+      shares?: null,
+      reason?: null,
+    ): YieldPayoutFailedEventFilter
+    YieldPayoutFailed(
+      account?: PromiseOrValue<string> | null,
+      yields?: null,
+      shares?: null,
+      reason?: null,
+    ): YieldPayoutFailedEventFilter
 
     'YieldReinvested(address,uint256)'(
       account?: PromiseOrValue<string> | null,
@@ -1853,8 +1962,6 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
-    currentRedemptionSummary(overrides?: CallOverrides): Promise<BigNumber>
-
     decimals(overrides?: CallOverrides): Promise<BigNumber>
 
     decreaseAllowance(
@@ -1865,7 +1972,6 @@ export interface TrancheVault extends BaseContract {
 
     deposit(
       assets: PromiseOrValue<BigNumberish>,
-      receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1882,6 +1988,11 @@ export interface TrancheVault extends BaseContract {
 
     epochRedemptionSummaries(
       arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
+
+    epochRedemptionSummary(
+      epochId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
@@ -1920,13 +2031,13 @@ export interface TrancheVault extends BaseContract {
     'initialize(string,string,address,uint8)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       seniorTrancheOrJuniorTranche: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     'initialize(address)'(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -1977,7 +2088,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<BigNumber>
 
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -2033,6 +2144,10 @@ export interface TrancheVault extends BaseContract {
       newImplementation: PromiseOrValue<string>,
       data: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    withdrawAfterPoolClosure(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     withdrawableAssets(
@@ -2096,10 +2211,6 @@ export interface TrancheVault extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
-    currentRedemptionSummary(
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     decreaseAllowance(
@@ -2110,7 +2221,6 @@ export interface TrancheVault extends BaseContract {
 
     deposit(
       assets: PromiseOrValue<BigNumberish>,
-      receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -2127,6 +2237,11 @@ export interface TrancheVault extends BaseContract {
 
     epochRedemptionSummaries(
       arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
+
+    epochRedemptionSummary(
+      epochId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
@@ -2165,13 +2280,13 @@ export interface TrancheVault extends BaseContract {
     'initialize(string,string,address,uint8)'(
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       seniorTrancheOrJuniorTranche: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     'initialize(address)'(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -2222,7 +2337,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<PopulatedTransaction>
 
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -2278,6 +2393,10 @@ export interface TrancheVault extends BaseContract {
       newImplementation: PromiseOrValue<string>,
       data: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    withdrawAfterPoolClosure(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     withdrawableAssets(
