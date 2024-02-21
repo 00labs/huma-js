@@ -163,7 +163,7 @@ export function useCreditContractV2(
   const poolInfo = usePoolInfoV2(poolName, chainId)
   return useContract<CreditLine>(
     poolInfo?.poolCredit,
-    POOL_ABI_V2.poolCreditAbi,
+    POOL_ABI_V2.poolCreditLineAbi,
     provider,
     account,
   )

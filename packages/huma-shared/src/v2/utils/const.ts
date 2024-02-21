@@ -10,7 +10,6 @@ export enum KYC_PROVIDER {
 
 export enum CreditStateV2 {
   Deleted,
-  Paused,
   Approved,
   GoodStanding,
   Delayed,
