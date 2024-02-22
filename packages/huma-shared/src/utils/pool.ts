@@ -111,8 +111,24 @@ export const PoolMap: PoolMapType = {
         'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
       estAPY: '25-27%',
     },
+    [POOL_NAME.JiaUSDC]: {
+      name: 'Jia Pioneer Fund Pool in USDC',
+      borrowDesc:
+        'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
+      lendDesc:
+        'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
+      estAPY: '25-27%',
+    },
     [POOL_NAME.ArfCreditPool1]: {
       name: 'Arf Credit Line Pool',
+      borrowDesc:
+        'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
+      lendDesc:
+        'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
+      estAPY: '13%',
+    },
+    [POOL_NAME.ArfPoolUSDC]: {
+      name: 'Arf Credit Line Pool in USDC',
       borrowDesc:
         'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
       lendDesc:
