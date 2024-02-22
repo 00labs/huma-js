@@ -12,7 +12,9 @@ export enum POOL_NAME {
   HumaCreditLine = 'HumaCreditLine',
   Superfluid = 'Superfluid',
   Jia = 'Jia',
+  JiaUSDC = 'JiaUSDC',
   ArfCreditPool1 = 'ArfCreditPool1',
+  ArfPoolUSDC = 'ArfPoolUSDC',
   ArfUSDCMigrationTest = 'ArfUSDCMigrationTest',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
@@ -583,6 +585,31 @@ export const PoolContractMap: PoolContractMapType = {
           detailsPage: true,
         },
       },
+      [POOL_NAME.ArfPoolUSDC]: {
+        basePoolConfig: '0x3118F75F5fE1E1e35393bA830d75ff117CF68c3d',
+        pool: '0x5a08F38aF4d6e0E727D1DCF8242243D88488Bc47',
+        poolFeeManager: '0xDB626Ca15F4f813e973E734F158fA8867C9ED145',
+        poolUnderlyingToken: {
+          address: '0xcebA9300f2b948710d2653dD7B07f33A8B32118C',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.ArfPoolUSDC,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x2aD929360C4eDFC0cf1eC98FC483AfDa2223250C',
+          abi: HDT_ABI,
+        },
+        extra: {
+          borrower: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
+          rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
+          disableBorrow: true,
+          detailsPage: true,
+        },
+      },
       [POOL_NAME.Jia]: {
         basePoolConfig: '0x75be4c971c730e197cae5e643e0f05ce7b4a58fe',
         pool: '0xa190A0ab76F58b491Cc36205B268e8cF5650c576',
@@ -599,6 +626,30 @@ export const PoolContractMap: PoolContractMapType = {
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
           address: '0x3Ce8221DBd48122de424e49F649D7A57EF722439',
+          abi: HDT_ABI,
+        },
+        extra: {
+          disableBorrow: true,
+          detailsPage: true,
+          borrower: '0xD3CCe1eC5a3981B27bD998f33A7eafdD27Ad2dF4',
+        },
+      },
+      [POOL_NAME.JiaUSDC]: {
+        basePoolConfig: '0xC4531A189b0181a3e16b76Ac9bb4b41476fe5De0',
+        pool: '0xE743d0Dd33040437fc8C9A4dA1e60a9c5cD7597d',
+        poolFeeManager: '0x8aFB2f658602A86e047BBf36A36AC98C69948d7e',
+        poolUnderlyingToken: {
+          address: '0xcebA9300f2b948710d2653dD7B07f33A8B32118C',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'Celo',
+        },
+        poolName: POOL_NAME.JiaUSDC,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x340bD00d3B6ffE1f3D9eE8A297d653C6f774f9c0',
           abi: HDT_ABI,
         },
         extra: {
