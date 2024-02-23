@@ -9,18 +9,64 @@ import type { Pool, PoolInterface } from '../Pool'
 const _abi = [
   {
     inputs: [],
-    name: 'notAuthorizedCaller',
+    name: 'AuthorizedContractCallerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'todo',
+    name: 'ZeroAddressProvided',
     type: 'error',
   },
   {
-    inputs: [],
-    name: 'zeroAddressProvided',
-    type: 'error',
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'previousAdmin',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newAdmin',
+        type: 'address',
+      },
+    ],
+    name: 'AdminChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'beacon',
+        type: 'address',
+      },
+    ],
+    name: 'BeaconUpgraded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'ready',
+        type: 'bool',
+      },
+    ],
+    name: 'FirstLossCoverWithdrawalReadinessChanged',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -113,55 +159,13 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'refreshedTimestamp',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'profit',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'loss',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'lossRecovery',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'seniorTotalAssets',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'juniorTotalAssets',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'seniorTotalLoss',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'juniorTotalLoss',
-        type: 'uint256',
+        indexed: true,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
       },
     ],
-    name: 'PoolAssetsRefreshed',
+    name: 'PoolClosed',
     type: 'event',
   },
   {
@@ -226,25 +230,6 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'ready',
-        type: 'bool',
-      },
-    ],
-    name: 'PoolReadyForFirstLossCoverWithdrawal',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: false,
         internalType: 'uint256',
         name: 'profit',
@@ -265,6 +250,52 @@ const _abi = [
     ],
     name: 'ProfitDistributed',
     type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'implementation',
+        type: 'address',
+      },
+    ],
+    name: 'Upgraded',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'closePool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'credit',
+    outputs: [
+      {
+        internalType: 'contract ICredit',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'creditManager',
+    outputs: [
+      {
+        internalType: 'contract ICreditManager',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
@@ -359,30 +390,6 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'coverAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'poolAssets',
-        type: 'uint256',
-      },
-    ],
-    name: 'getFirstLossCoverAvailableCap',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'availableCap',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'getFirstLossCovers',
     outputs: [
@@ -396,12 +403,18 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'getReservedAssetsForFirstLossCovers',
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    name: 'getTrancheAvailableCap',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'reservedAssets',
+        name: 'availableCap',
         type: 'uint256',
       },
     ],
@@ -412,7 +425,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
     ],
@@ -423,12 +436,38 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'isPoolClosed',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'isClosed',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'isPoolOn',
     outputs: [
       {
         internalType: 'bool',
-        name: 'status',
+        name: 'isOn',
         type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'juniorTranche',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -462,6 +501,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'proxiableUUID',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'readyForFirstLossCoverWithdrawal',
     outputs: [
       {
@@ -474,10 +526,23 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'seniorTranche',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
     ],
@@ -490,18 +555,11 @@ const _abi = [
     inputs: [
       {
         internalType: 'bool',
-        name: 'ready',
+        name: 'isReady',
         type: 'bool',
       },
     ],
     name: 'setReadyForFirstLossCoverWithdrawal',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'syncFirstLossCovers',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -551,11 +609,6 @@ const _abi = [
         internalType: 'uint96',
         name: 'juniorTotalAssets',
         type: 'uint96',
-      },
-      {
-        internalType: 'uint64',
-        name: 'lastProfitDistributedTime',
-        type: 'uint64',
       },
     ],
     stateMutability: 'view',
@@ -610,6 +663,37 @@ const _abi = [
     name: 'updateTranchesAssets',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
 ] as const

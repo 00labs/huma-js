@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -29,6 +30,9 @@ import type {
 
 export interface PoolInterface extends utils.Interface {
   functions: {
+    'closePool()': FunctionFragment
+    'credit()': FunctionFragment
+    'creditManager()': FunctionFragment
     'currentTranchesAssets()': FunctionFragment
     'disablePool()': FunctionFragment
     'distributeLoss(uint256)': FunctionFragment
@@ -37,17 +41,19 @@ export interface PoolInterface extends utils.Interface {
     'enablePool()': FunctionFragment
     'epochManager()': FunctionFragment
     'feeManager()': FunctionFragment
-    'getFirstLossCoverAvailableCap(address,uint256)': FunctionFragment
     'getFirstLossCovers()': FunctionFragment
-    'getReservedAssetsForFirstLossCovers()': FunctionFragment
+    'getTrancheAvailableCap(uint256)': FunctionFragment
     'initialize(address)': FunctionFragment
+    'isPoolClosed()': FunctionFragment
     'isPoolOn()': FunctionFragment
+    'juniorTranche()': FunctionFragment
     'poolConfig()': FunctionFragment
     'poolSafe()': FunctionFragment
+    'proxiableUUID()': FunctionFragment
     'readyForFirstLossCoverWithdrawal()': FunctionFragment
+    'seniorTranche()': FunctionFragment
     'setPoolConfig(address)': FunctionFragment
     'setReadyForFirstLossCoverWithdrawal(bool)': FunctionFragment
-    'syncFirstLossCovers()': FunctionFragment
     'totalAssets()': FunctionFragment
     'trancheTotalAssets(uint256)': FunctionFragment
     'tranchesAssets()': FunctionFragment
@@ -55,10 +61,15 @@ export interface PoolInterface extends utils.Interface {
     'tranchesPolicy()': FunctionFragment
     'updatePoolConfigData()': FunctionFragment
     'updateTranchesAssets(uint96[2])': FunctionFragment
+    'upgradeTo(address)': FunctionFragment
+    'upgradeToAndCall(address,bytes)': FunctionFragment
   }
 
   getFunction(
     nameOrSignatureOrTopic:
+      | 'closePool'
+      | 'credit'
+      | 'creditManager'
       | 'currentTranchesAssets'
       | 'disablePool'
       | 'distributeLoss'
@@ -67,26 +78,36 @@ export interface PoolInterface extends utils.Interface {
       | 'enablePool'
       | 'epochManager'
       | 'feeManager'
-      | 'getFirstLossCoverAvailableCap'
       | 'getFirstLossCovers'
-      | 'getReservedAssetsForFirstLossCovers'
+      | 'getTrancheAvailableCap'
       | 'initialize'
+      | 'isPoolClosed'
       | 'isPoolOn'
+      | 'juniorTranche'
       | 'poolConfig'
       | 'poolSafe'
+      | 'proxiableUUID'
       | 'readyForFirstLossCoverWithdrawal'
+      | 'seniorTranche'
       | 'setPoolConfig'
       | 'setReadyForFirstLossCoverWithdrawal'
-      | 'syncFirstLossCovers'
       | 'totalAssets'
       | 'trancheTotalAssets'
       | 'tranchesAssets'
       | 'tranchesLosses'
       | 'tranchesPolicy'
       | 'updatePoolConfigData'
-      | 'updateTranchesAssets',
+      | 'updateTranchesAssets'
+      | 'upgradeTo'
+      | 'upgradeToAndCall',
   ): FunctionFragment
 
+  encodeFunctionData(functionFragment: 'closePool', values?: undefined): string
+  encodeFunctionData(functionFragment: 'credit', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'creditManager',
+    values?: undefined,
+  ): string
   encodeFunctionData(
     functionFragment: 'currentTranchesAssets',
     values?: undefined,
@@ -114,26 +135,38 @@ export interface PoolInterface extends utils.Interface {
   ): string
   encodeFunctionData(functionFragment: 'feeManager', values?: undefined): string
   encodeFunctionData(
-    functionFragment: 'getFirstLossCoverAvailableCap',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
-  ): string
-  encodeFunctionData(
     functionFragment: 'getFirstLossCovers',
     values?: undefined,
   ): string
   encodeFunctionData(
-    functionFragment: 'getReservedAssetsForFirstLossCovers',
-    values?: undefined,
+    functionFragment: 'getTrancheAvailableCap',
+    values: [PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'initialize',
     values: [PromiseOrValue<string>],
   ): string
+  encodeFunctionData(
+    functionFragment: 'isPoolClosed',
+    values?: undefined,
+  ): string
   encodeFunctionData(functionFragment: 'isPoolOn', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'juniorTranche',
+    values?: undefined,
+  ): string
   encodeFunctionData(functionFragment: 'poolConfig', values?: undefined): string
   encodeFunctionData(functionFragment: 'poolSafe', values?: undefined): string
   encodeFunctionData(
+    functionFragment: 'proxiableUUID',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
     functionFragment: 'readyForFirstLossCoverWithdrawal',
+    values?: undefined,
+  ): string
+  encodeFunctionData(
+    functionFragment: 'seniorTranche',
     values?: undefined,
   ): string
   encodeFunctionData(
@@ -143,10 +176,6 @@ export interface PoolInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'setReadyForFirstLossCoverWithdrawal',
     values: [PromiseOrValue<boolean>],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'syncFirstLossCovers',
-    values?: undefined,
   ): string
   encodeFunctionData(
     functionFragment: 'totalAssets',
@@ -176,7 +205,21 @@ export interface PoolInterface extends utils.Interface {
     functionFragment: 'updateTranchesAssets',
     values: [[PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]],
   ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeTo',
+    values: [PromiseOrValue<string>],
+  ): string
+  encodeFunctionData(
+    functionFragment: 'upgradeToAndCall',
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>],
+  ): string
 
+  decodeFunctionResult(functionFragment: 'closePool', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'credit', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'creditManager',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
     functionFragment: 'currentTranchesAssets',
     data: BytesLike,
@@ -201,23 +244,35 @@ export interface PoolInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(functionFragment: 'feeManager', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'getFirstLossCoverAvailableCap',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
     functionFragment: 'getFirstLossCovers',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
-    functionFragment: 'getReservedAssetsForFirstLossCovers',
+    functionFragment: 'getTrancheAvailableCap',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'isPoolClosed',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'isPoolOn', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'juniorTranche',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(functionFragment: 'poolConfig', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'poolSafe', data: BytesLike): Result
   decodeFunctionResult(
+    functionFragment: 'proxiableUUID',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
     functionFragment: 'readyForFirstLossCoverWithdrawal',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'seniorTranche',
     data: BytesLike,
   ): Result
   decodeFunctionResult(
@@ -226,10 +281,6 @@ export interface PoolInterface extends utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'setReadyForFirstLossCoverWithdrawal',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'syncFirstLossCovers',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'totalAssets', data: BytesLike): Result
@@ -257,33 +308,77 @@ export interface PoolInterface extends utils.Interface {
     functionFragment: 'updateTranchesAssets',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'upgradeToAndCall',
+    data: BytesLike,
+  ): Result
 
   events: {
+    'AdminChanged(address,address)': EventFragment
+    'BeaconUpgraded(address)': EventFragment
+    'FirstLossCoverWithdrawalReadinessChanged(address,bool)': EventFragment
     'Initialized(uint8)': EventFragment
     'LossDistributed(uint256,uint256,uint256,uint256,uint256)': EventFragment
     'LossRecoveryDistributed(uint256,uint256,uint256,uint256,uint256)': EventFragment
-    'PoolAssetsRefreshed(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)': EventFragment
+    'PoolClosed(address)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
     'PoolDisabled(address)': EventFragment
     'PoolEnabled(address)': EventFragment
-    'PoolReadyForFirstLossCoverWithdrawal(address,bool)': EventFragment
     'ProfitDistributed(uint256,uint256,uint256)': EventFragment
+    'Upgraded(address)': EventFragment
   }
 
+  getEvent(nameOrSignatureOrTopic: 'AdminChanged'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'BeaconUpgraded'): EventFragment
+  getEvent(
+    nameOrSignatureOrTopic: 'FirstLossCoverWithdrawalReadinessChanged',
+  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LossDistributed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'LossRecoveryDistributed'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'PoolAssetsRefreshed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PoolClosed'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigCacheUpdated'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolConfigChanged'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolDisabled'): EventFragment
   getEvent(nameOrSignatureOrTopic: 'PoolEnabled'): EventFragment
-  getEvent(
-    nameOrSignatureOrTopic: 'PoolReadyForFirstLossCoverWithdrawal',
-  ): EventFragment
   getEvent(nameOrSignatureOrTopic: 'ProfitDistributed'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment
 }
+
+export interface AdminChangedEventObject {
+  previousAdmin: string
+  newAdmin: string
+}
+export type AdminChangedEvent = TypedEvent<
+  [string, string],
+  AdminChangedEventObject
+>
+
+export type AdminChangedEventFilter = TypedEventFilter<AdminChangedEvent>
+
+export interface BeaconUpgradedEventObject {
+  beacon: string
+}
+export type BeaconUpgradedEvent = TypedEvent<
+  [string],
+  BeaconUpgradedEventObject
+>
+
+export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>
+
+export interface FirstLossCoverWithdrawalReadinessChangedEventObject {
+  by: string
+  ready: boolean
+}
+export type FirstLossCoverWithdrawalReadinessChangedEvent = TypedEvent<
+  [string, boolean],
+  FirstLossCoverWithdrawalReadinessChangedEventObject
+>
+
+export type FirstLossCoverWithdrawalReadinessChangedEventFilter =
+  TypedEventFilter<FirstLossCoverWithdrawalReadinessChangedEvent>
 
 export interface InitializedEventObject {
   version: number
@@ -321,32 +416,12 @@ export type LossRecoveryDistributedEvent = TypedEvent<
 export type LossRecoveryDistributedEventFilter =
   TypedEventFilter<LossRecoveryDistributedEvent>
 
-export interface PoolAssetsRefreshedEventObject {
-  refreshedTimestamp: BigNumber
-  profit: BigNumber
-  loss: BigNumber
-  lossRecovery: BigNumber
-  seniorTotalAssets: BigNumber
-  juniorTotalAssets: BigNumber
-  seniorTotalLoss: BigNumber
-  juniorTotalLoss: BigNumber
+export interface PoolClosedEventObject {
+  by: string
 }
-export type PoolAssetsRefreshedEvent = TypedEvent<
-  [
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-  ],
-  PoolAssetsRefreshedEventObject
->
+export type PoolClosedEvent = TypedEvent<[string], PoolClosedEventObject>
 
-export type PoolAssetsRefreshedEventFilter =
-  TypedEventFilter<PoolAssetsRefreshedEvent>
+export type PoolClosedEventFilter = TypedEventFilter<PoolClosedEvent>
 
 export interface PoolConfigCacheUpdatedEventObject {
   poolConfig: string
@@ -385,18 +460,6 @@ export type PoolEnabledEvent = TypedEvent<[string], PoolEnabledEventObject>
 
 export type PoolEnabledEventFilter = TypedEventFilter<PoolEnabledEvent>
 
-export interface PoolReadyForFirstLossCoverWithdrawalEventObject {
-  by: string
-  ready: boolean
-}
-export type PoolReadyForFirstLossCoverWithdrawalEvent = TypedEvent<
-  [string, boolean],
-  PoolReadyForFirstLossCoverWithdrawalEventObject
->
-
-export type PoolReadyForFirstLossCoverWithdrawalEventFilter =
-  TypedEventFilter<PoolReadyForFirstLossCoverWithdrawalEvent>
-
 export interface ProfitDistributedEventObject {
   profit: BigNumber
   seniorTotalAssets: BigNumber
@@ -409,6 +472,13 @@ export type ProfitDistributedEvent = TypedEvent<
 
 export type ProfitDistributedEventFilter =
   TypedEventFilter<ProfitDistributedEvent>
+
+export interface UpgradedEventObject {
+  implementation: string
+}
+export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>
+
+export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>
 
 export interface Pool extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
@@ -437,6 +507,14 @@ export interface Pool extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
+    closePool(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    credit(overrides?: CallOverrides): Promise<[string]>
+
+    creditManager(overrides?: CallOverrides): Promise<[string]>
+
     currentTranchesAssets(
       overrides?: CallOverrides,
     ): Promise<[[BigNumber, BigNumber]] & { assets: [BigNumber, BigNumber] }>
@@ -468,46 +546,45 @@ export interface Pool extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<[string]>
 
-    getFirstLossCoverAvailableCap(
-      coverAddress: PromiseOrValue<string>,
-      poolAssets: PromiseOrValue<BigNumberish>,
+    getFirstLossCovers(overrides?: CallOverrides): Promise<[string[]]>
+
+    getTrancheAvailableCap(
+      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber] & { availableCap: BigNumber }>
 
-    getFirstLossCovers(overrides?: CallOverrides): Promise<[string[]]>
-
-    getReservedAssetsForFirstLossCovers(
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber] & { reservedAssets: BigNumber }>
-
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
-    isPoolOn(
+    isPoolClosed(
       overrides?: CallOverrides,
-    ): Promise<[boolean] & { status: boolean }>
+    ): Promise<[boolean] & { isClosed: boolean }>
+
+    isPoolOn(overrides?: CallOverrides): Promise<[boolean] & { isOn: boolean }>
+
+    juniorTranche(overrides?: CallOverrides): Promise<[string]>
 
     poolConfig(overrides?: CallOverrides): Promise<[string]>
 
     poolSafe(overrides?: CallOverrides): Promise<[string]>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<[string]>
+
     readyForFirstLossCoverWithdrawal(
       overrides?: CallOverrides,
     ): Promise<[boolean]>
 
+    seniorTranche(overrides?: CallOverrides): Promise<[string]>
+
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
     setReadyForFirstLossCoverWithdrawal(
-      ready: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>
-
-    syncFirstLossCovers(
+      isReady: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
 
@@ -519,10 +596,9 @@ export interface Pool extends BaseContract {
     ): Promise<[BigNumber]>
 
     tranchesAssets(overrides?: CallOverrides): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber] & {
         seniorTotalAssets: BigNumber
         juniorTotalAssets: BigNumber
-        lastProfitDistributedTime: BigNumber
       }
     >
 
@@ -542,7 +618,26 @@ export interface Pool extends BaseContract {
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>
   }
+
+  closePool(
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  credit(overrides?: CallOverrides): Promise<string>
+
+  creditManager(overrides?: CallOverrides): Promise<string>
 
   currentTranchesAssets(
     overrides?: CallOverrides,
@@ -575,42 +670,41 @@ export interface Pool extends BaseContract {
 
   feeManager(overrides?: CallOverrides): Promise<string>
 
-  getFirstLossCoverAvailableCap(
-    coverAddress: PromiseOrValue<string>,
-    poolAssets: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>
-
   getFirstLossCovers(overrides?: CallOverrides): Promise<string[]>
 
-  getReservedAssetsForFirstLossCovers(
+  getTrancheAvailableCap(
+    index: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>
 
   initialize(
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
+  isPoolClosed(overrides?: CallOverrides): Promise<boolean>
+
   isPoolOn(overrides?: CallOverrides): Promise<boolean>
+
+  juniorTranche(overrides?: CallOverrides): Promise<string>
 
   poolConfig(overrides?: CallOverrides): Promise<string>
 
   poolSafe(overrides?: CallOverrides): Promise<string>
 
+  proxiableUUID(overrides?: CallOverrides): Promise<string>
+
   readyForFirstLossCoverWithdrawal(overrides?: CallOverrides): Promise<boolean>
 
+  seniorTranche(overrides?: CallOverrides): Promise<string>
+
   setPoolConfig(
-    _poolConfig: PromiseOrValue<string>,
+    poolConfig_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
   setReadyForFirstLossCoverWithdrawal(
-    ready: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>
-
-  syncFirstLossCovers(
+    isReady: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
@@ -622,10 +716,9 @@ export interface Pool extends BaseContract {
   ): Promise<BigNumber>
 
   tranchesAssets(overrides?: CallOverrides): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, BigNumber] & {
       seniorTotalAssets: BigNumber
       juniorTotalAssets: BigNumber
-      lastProfitDistributedTime: BigNumber
     }
   >
 
@@ -646,7 +739,24 @@ export interface Pool extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
 
+  upgradeTo(
+    newImplementation: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
+  upgradeToAndCall(
+    newImplementation: PromiseOrValue<string>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>
+
   callStatic: {
+    closePool(overrides?: CallOverrides): Promise<void>
+
+    credit(overrides?: CallOverrides): Promise<string>
+
+    creditManager(overrides?: CallOverrides): Promise<string>
+
     currentTranchesAssets(
       overrides?: CallOverrides,
     ): Promise<[BigNumber, BigNumber]>
@@ -674,44 +784,45 @@ export interface Pool extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<string>
 
-    getFirstLossCoverAvailableCap(
-      coverAddress: PromiseOrValue<string>,
-      poolAssets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
     getFirstLossCovers(overrides?: CallOverrides): Promise<string[]>
 
-    getReservedAssetsForFirstLossCovers(
+    getTrancheAvailableCap(
+      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
+    isPoolClosed(overrides?: CallOverrides): Promise<boolean>
+
     isPoolOn(overrides?: CallOverrides): Promise<boolean>
+
+    juniorTranche(overrides?: CallOverrides): Promise<string>
 
     poolConfig(overrides?: CallOverrides): Promise<string>
 
     poolSafe(overrides?: CallOverrides): Promise<string>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<string>
+
     readyForFirstLossCoverWithdrawal(
       overrides?: CallOverrides,
     ): Promise<boolean>
 
+    seniorTranche(overrides?: CallOverrides): Promise<string>
+
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>
 
     setReadyForFirstLossCoverWithdrawal(
-      ready: PromiseOrValue<boolean>,
+      isReady: PromiseOrValue<boolean>,
       overrides?: CallOverrides,
     ): Promise<void>
-
-    syncFirstLossCovers(overrides?: CallOverrides): Promise<void>
 
     totalAssets(overrides?: CallOverrides): Promise<BigNumber>
 
@@ -721,10 +832,9 @@ export interface Pool extends BaseContract {
     ): Promise<BigNumber>
 
     tranchesAssets(overrides?: CallOverrides): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber] & {
         seniorTotalAssets: BigNumber
         juniorTotalAssets: BigNumber
-        lastProfitDistributedTime: BigNumber
       }
     >
 
@@ -742,9 +852,42 @@ export interface Pool extends BaseContract {
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: CallOverrides,
     ): Promise<void>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides,
+    ): Promise<void>
   }
 
   filters: {
+    'AdminChanged(address,address)'(
+      previousAdmin?: null,
+      newAdmin?: null,
+    ): AdminChangedEventFilter
+    AdminChanged(previousAdmin?: null, newAdmin?: null): AdminChangedEventFilter
+
+    'BeaconUpgraded(address)'(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+    BeaconUpgraded(
+      beacon?: PromiseOrValue<string> | null,
+    ): BeaconUpgradedEventFilter
+
+    'FirstLossCoverWithdrawalReadinessChanged(address,bool)'(
+      by?: PromiseOrValue<string> | null,
+      ready?: null,
+    ): FirstLossCoverWithdrawalReadinessChangedEventFilter
+    FirstLossCoverWithdrawalReadinessChanged(
+      by?: PromiseOrValue<string> | null,
+      ready?: null,
+    ): FirstLossCoverWithdrawalReadinessChangedEventFilter
+
     'Initialized(uint8)'(version?: null): InitializedEventFilter
     Initialized(version?: null): InitializedEventFilter
 
@@ -778,26 +921,10 @@ export interface Pool extends BaseContract {
       juniorTotalLoss?: null,
     ): LossRecoveryDistributedEventFilter
 
-    'PoolAssetsRefreshed(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'(
-      refreshedTimestamp?: null,
-      profit?: null,
-      loss?: null,
-      lossRecovery?: null,
-      seniorTotalAssets?: null,
-      juniorTotalAssets?: null,
-      seniorTotalLoss?: null,
-      juniorTotalLoss?: null,
-    ): PoolAssetsRefreshedEventFilter
-    PoolAssetsRefreshed(
-      refreshedTimestamp?: null,
-      profit?: null,
-      loss?: null,
-      lossRecovery?: null,
-      seniorTotalAssets?: null,
-      juniorTotalAssets?: null,
-      seniorTotalLoss?: null,
-      juniorTotalLoss?: null,
-    ): PoolAssetsRefreshedEventFilter
+    'PoolClosed(address)'(
+      by?: PromiseOrValue<string> | null,
+    ): PoolClosedEventFilter
+    PoolClosed(by?: PromiseOrValue<string> | null): PoolClosedEventFilter
 
     'PoolConfigCacheUpdated(address)'(
       poolConfig?: PromiseOrValue<string> | null,
@@ -825,15 +952,6 @@ export interface Pool extends BaseContract {
     ): PoolEnabledEventFilter
     PoolEnabled(by?: PromiseOrValue<string> | null): PoolEnabledEventFilter
 
-    'PoolReadyForFirstLossCoverWithdrawal(address,bool)'(
-      by?: PromiseOrValue<string> | null,
-      ready?: null,
-    ): PoolReadyForFirstLossCoverWithdrawalEventFilter
-    PoolReadyForFirstLossCoverWithdrawal(
-      by?: PromiseOrValue<string> | null,
-      ready?: null,
-    ): PoolReadyForFirstLossCoverWithdrawalEventFilter
-
     'ProfitDistributed(uint256,uint256,uint256)'(
       profit?: null,
       seniorTotalAssets?: null,
@@ -844,9 +962,24 @@ export interface Pool extends BaseContract {
       seniorTotalAssets?: null,
       juniorTotalAssets?: null,
     ): ProfitDistributedEventFilter
+
+    'Upgraded(address)'(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
+    Upgraded(
+      implementation?: PromiseOrValue<string> | null,
+    ): UpgradedEventFilter
   }
 
   estimateGas: {
+    closePool(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    credit(overrides?: CallOverrides): Promise<BigNumber>
+
+    creditManager(overrides?: CallOverrides): Promise<BigNumber>
+
     currentTranchesAssets(overrides?: CallOverrides): Promise<BigNumber>
 
     disablePool(
@@ -876,44 +1009,43 @@ export interface Pool extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<BigNumber>
 
-    getFirstLossCoverAvailableCap(
-      coverAddress: PromiseOrValue<string>,
-      poolAssets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>
-
     getFirstLossCovers(overrides?: CallOverrides): Promise<BigNumber>
 
-    getReservedAssetsForFirstLossCovers(
+    getTrancheAvailableCap(
+      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
+    isPoolClosed(overrides?: CallOverrides): Promise<BigNumber>
+
     isPoolOn(overrides?: CallOverrides): Promise<BigNumber>
+
+    juniorTranche(overrides?: CallOverrides): Promise<BigNumber>
 
     poolConfig(overrides?: CallOverrides): Promise<BigNumber>
 
     poolSafe(overrides?: CallOverrides): Promise<BigNumber>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>
+
     readyForFirstLossCoverWithdrawal(
       overrides?: CallOverrides,
     ): Promise<BigNumber>
 
+    seniorTranche(overrides?: CallOverrides): Promise<BigNumber>
+
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
     setReadyForFirstLossCoverWithdrawal(
-      ready: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>
-
-    syncFirstLossCovers(
+      isReady: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
 
@@ -938,9 +1070,28 @@ export interface Pool extends BaseContract {
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>
   }
 
   populateTransaction: {
+    closePool(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    credit(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
     currentTranchesAssets(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
@@ -972,44 +1123,43 @@ export interface Pool extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getFirstLossCoverAvailableCap(
-      coverAddress: PromiseOrValue<string>,
-      poolAssets: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>
-
     getFirstLossCovers(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getReservedAssetsForFirstLossCovers(
+    getTrancheAvailableCap(
+      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
     initialize(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
+    isPoolClosed(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
     isPoolOn(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    juniorTranche(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     poolSafe(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
+    proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
     readyForFirstLossCoverWithdrawal(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>
 
+    seniorTranche(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
     setPoolConfig(
-      _poolConfig: PromiseOrValue<string>,
+      poolConfig_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
     setReadyForFirstLossCoverWithdrawal(
-      ready: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>
-
-    syncFirstLossCovers(
+      isReady: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
 
@@ -1033,6 +1183,17 @@ export interface Pool extends BaseContract {
     updateTranchesAssets(
       assets: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>
+
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
   }
 }

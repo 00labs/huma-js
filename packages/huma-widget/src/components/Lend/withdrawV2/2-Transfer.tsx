@@ -14,11 +14,13 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 type Props = {
   poolInfo: PoolInfoV2
   tranche: TrancheType
+  poolIsClosed: boolean
 }
 
 export function Transfer({
   poolInfo,
   tranche,
+  poolIsClosed,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
@@ -40,7 +42,7 @@ export function Transfer({
   return (
     <TxSendModalV2
       contract={trancheVaultContract}
-      method='disburse'
+      method={poolIsClosed ? 'withdrawAfterPoolClosure' : 'disburse'}
       params={[]}
       handleSuccess={handleSuccess}
     />
