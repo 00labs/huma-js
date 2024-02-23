@@ -12,92 +12,87 @@ import type {
 const _abi = [
   {
     inputs: [],
-    name: 'attemptedDrawdownForNonrevolvingLine',
+    name: 'AttemptedDrawdownOnNonRevolvingLine',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'creditLineExceeded',
+    name: 'AuthorizedContractCallerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'creditLineNotInGoodStandingState',
+    name: 'CreditLimitExceeded',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'creditLineNotInStateForMakingPayment',
+    name: 'CreditNotInStateForDrawdown',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'creditLineNotInStateForMakingPrincipalPayment',
+    name: 'CreditNotInStateForMakingPayment',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'creditNotInStateForDrawdown',
+    name: 'CreditNotInStateForMakingPrincipalPayment',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'drawdownNotAllowedInLatePaymentGracePeriod',
+    name: 'DrawdownNotAllowedAfterDueDateWithUnpaidDue',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'firstDrawdownTooSoon',
+    name: 'DrawdownNotAllowedInFinalPeriodAndBeyond',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'insufficientBorrowerFirstLossCover',
+    name: 'FirstDrawdownTooEarly',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'insufficientReceivableAmount',
+    name: 'InsufficientFirstLossCover',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notAuthorizedCaller',
+    name: 'InsufficientPoolBalanceForDrawdown',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notBorrower',
+    name: 'InsufficientReceivableAmount',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notReceivableOwner',
+    name: 'ReceivableOwnerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'sentinelServiceAccountRequired',
+    name: 'SentinelServiceAccountRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'todo',
+    name: 'ZeroAddressProvided',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'zeroAddressProvided',
+    name: 'ZeroAmountProvided',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'zeroAmountProvided',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'zeroReceivableIdProvided',
+    name: 'ZeroReceivableIdProvided',
     type: 'error',
   },
   {
@@ -150,7 +145,13 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'amountDue',
+        name: 'nextDue',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'totalPastDue',
         type: 'uint256',
       },
     ],
@@ -174,74 +175,6 @@ const _abi = [
       },
     ],
     name: 'CreditClosedAfterPayOff',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'borrower',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'creditLimit',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'aprInBps',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'enum PayPeriodDuration',
-        name: 'periodDuration',
-        type: 'uint8',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'remainingPeriods',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'approved',
-        type: 'bool',
-      },
-    ],
-    name: 'CreditInitiated',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'borrower',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'oldCreditLimit',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'newCreditLimit',
-        type: 'uint256',
-      },
-    ],
-    name: 'CreditLineChanged',
     type: 'event',
   },
   {
@@ -564,11 +497,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'borrower',
-        type: 'address',
-      },
-      {
         internalType: 'uint256',
         name: 'receivableId',
         type: 'uint256',
@@ -611,6 +539,25 @@ const _abi = [
         internalType: 'contract IFirstLossCover',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'borrower',
+        type: 'address',
+      },
+    ],
+    name: 'getCreditHash',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: 'creditHash',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',
@@ -872,7 +819,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
     ],
@@ -918,11 +865,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'borrower',
-        type: 'address',
-      },
-      {
         internalType: 'uint256',
         name: 'paymentReceivableId',
         type: 'uint256',
@@ -966,11 +908,6 @@ const _abi = [
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'borrower',
-        type: 'address',
-      },
       {
         internalType: 'uint256',
         name: 'receivableId',
@@ -1030,6 +967,19 @@ const _abi = [
       },
     ],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'pool',
+    outputs: [
+      {
+        internalType: 'contract IPool',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -1135,7 +1085,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
     ],

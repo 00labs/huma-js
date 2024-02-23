@@ -9,67 +9,77 @@ import type { TrancheVault, TrancheVaultInterface } from '../TrancheVault'
 const _abi = [
   {
     inputs: [],
-    name: 'alreadyLender',
+    name: 'AlreadyALender',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'insufficientSharesForRequest',
+    name: 'AuthorizedContractCallerRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'invalidTrancheIndex',
+    name: 'DepositAmountTooLow',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'nonReinvestYieldLenderCapacityReached',
+    name: 'InsufficientSharesForRequest',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notAuthorizedCaller',
+    name: 'InvalidTrancheIndex',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'notLender',
+    name: 'LenderRequired',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'permissionDeniedNotLender',
+    name: 'NonReinvestYieldLenderCapacityReached',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'todo',
+    name: 'PoolIsNotClosed',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'trancheLiquidityCapExceeded',
+    name: 'ReinvestYieldOptionAlreadySet',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'unsupportedFunction',
+    name: 'TrancheLiquidityCapExceeded',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'withdrawTooSoon',
+    name: 'UnsupportedFunction',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'zeroAddressProvided',
+    name: 'WithdrawTooEarly',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'zeroAmountProvided',
+    name: 'ZeroAddressProvided',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ZeroAmountProvided',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ZeroSharesMinted',
     type: 'error',
   },
   {
@@ -184,14 +194,27 @@ const _abi = [
       },
       {
         indexed: false,
+        internalType: 'bool',
+        name: 'reinvestYield',
+        type: 'bool',
+      },
+    ],
+    name: 'LenderAdded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: 'address',
-        name: 'receiver',
+        name: 'account',
         type: 'address',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'withdrawnAmount',
+        name: 'amountDisbursed',
         type: 'uint256',
       },
     ],
@@ -204,25 +227,57 @@ const _abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'receiver',
+        name: 'account',
         type: 'address',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'assetAmount',
+        name: 'numShares',
         type: 'uint256',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'shareAmount',
+        name: 'assets',
+        type: 'uint256',
+      },
+    ],
+    name: 'LenderFundWithdrawn',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'LenderRemoved',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assets',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'shares',
         type: 'uint256',
       },
     ],
@@ -273,7 +328,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'shareAmount',
+        name: 'shares',
         type: 'uint256',
       },
       {
@@ -298,7 +353,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'shareAmount',
+        name: 'shares',
         type: 'uint256',
       },
       {
@@ -471,7 +526,38 @@ const _abi = [
         type: 'uint256',
       },
     ],
-    name: 'YieldPaidout',
+    name: 'YieldPaidOut',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'yields',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'shares',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'reason',
+        type: 'string',
+      },
+    ],
+    name: 'YieldPayoutFailed',
     type: 'event',
   },
   {
@@ -702,41 +788,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'currentRedemptionSummary',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'uint64',
-            name: 'epochId',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint96',
-            name: 'totalSharesRequested',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint96',
-            name: 'totalSharesProcessed',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint96',
-            name: 'totalAmountProcessed',
-            type: 'uint96',
-          },
-        ],
-        internalType: 'struct EpochRedemptionSummary',
-        name: 'redemptionSummary',
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
     name: 'decimals',
     outputs: [
       {
@@ -778,11 +829,6 @@ const _abi = [
         internalType: 'uint256',
         name: 'assets',
         type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: 'receiver',
-        type: 'address',
       },
     ],
     name: 'deposit',
@@ -874,6 +920,47 @@ const _abi = [
         internalType: 'uint96',
         name: 'totalAmountProcessed',
         type: 'uint96',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'epochId',
+        type: 'uint256',
+      },
+    ],
+    name: 'epochRedemptionSummary',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint64',
+            name: 'epochId',
+            type: 'uint64',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalSharesRequested',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalSharesProcessed',
+            type: 'uint96',
+          },
+          {
+            internalType: 'uint96',
+            name: 'totalAmountProcessed',
+            type: 'uint96',
+          },
+        ],
+        internalType: 'struct EpochRedemptionSummary',
+        name: 'redemptionSummary',
+        type: 'tuple',
       },
     ],
     stateMutability: 'view',
@@ -1026,7 +1113,7 @@ const _abi = [
       },
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
       {
@@ -1044,7 +1131,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
     ],
@@ -1255,7 +1342,7 @@ const _abi = [
     inputs: [
       {
         internalType: 'contract PoolConfig',
-        name: '_poolConfig',
+        name: 'poolConfig_',
         type: 'address',
       },
     ],
@@ -1474,6 +1561,13 @@ const _abi = [
     name: 'upgradeToAndCall',
     outputs: [],
     stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'withdrawAfterPoolClosure',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {

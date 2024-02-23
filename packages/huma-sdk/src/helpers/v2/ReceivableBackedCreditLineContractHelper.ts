@@ -79,7 +79,6 @@ export async function drawdownWithReceivable(
   await approveTx?.wait(5)
 
   return creditContract.drawdownWithReceivable(
-    await signer.getAddress(),
     receivableId,
     drawdownAmount,
     gasOpts,
@@ -145,7 +144,6 @@ export async function makePaymentWithReceivable(
   let paymentTx
   if (principalOnly) {
     paymentTx = await creditContract.makePrincipalPaymentWithReceivable(
-      await signer.getAddress(),
       receivableId,
       paymentAmount,
       gasOpts,
@@ -229,7 +227,6 @@ export async function makePrincipalPaymentAndDrawdownWithReceivable(
   await approveTx?.wait(5)
 
   return creditContract.makePrincipalPaymentAndDrawdownWithReceivable(
-    await signer.getAddress(),
     paymentReceivableId,
     paymentAmount,
     drawdownReceivableId,

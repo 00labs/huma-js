@@ -43,7 +43,7 @@ export function Transfer({ poolInfo }: Props): React.ReactElement {
       title='Borrow'
       contract={creditContract}
       method='drawdown'
-      params={[account, borrowAmountBN]}
+      params={[borrowAmountBN]}
       handleSuccess={handleSuccess}
     />
   )

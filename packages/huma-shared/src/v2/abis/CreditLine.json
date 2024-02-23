@@ -56,16 +56,6 @@
   },
   {
     "inputs": [],
-    "name": "InsufficientReceivableAmount",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ReceivableOwnerRequired",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "SentinelServiceAccountRequired",
     "type": "error"
   },
@@ -77,11 +67,6 @@
   {
     "inputs": [],
     "name": "ZeroAmountProvided",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ZeroReceivableIdProvided",
     "type": "error"
   },
   {
@@ -195,37 +180,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "by",
-        "type": "address"
-      }
-    ],
-    "name": "DrawdownMadeWithReceivable",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "uint8",
         "name": "version",
@@ -300,37 +254,6 @@
       }
     ],
     "name": "PaymentMade",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "by",
-        "type": "address"
-      }
-    ],
-    "name": "PaymentMadeWithReceivable",
     "type": "event"
   },
   {
@@ -432,37 +355,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "by",
-        "type": "address"
-      }
-    ],
-    "name": "PrincipalPaymentMadeWithReceivable",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "implementation",
         "type": "address"
       }
@@ -487,16 +379,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
+        "name": "borrowAmount",
         "type": "uint256"
       }
     ],
-    "name": "drawdownWithReceivable",
+    "name": "drawdown",
     "outputs": [
       {
         "internalType": "uint256",
@@ -826,16 +713,35 @@
       },
       {
         "internalType": "uint256",
-        "name": "receivableId",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "makePayment",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amountPaid",
         "type": "uint256"
       },
+      {
+        "internalType": "bool",
+        "name": "paidoff",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "makePaymentWithReceivable",
+    "name": "makePrincipalPayment",
     "outputs": [
       {
         "internalType": "uint256",
@@ -846,113 +752,6 @@
         "internalType": "bool",
         "name": "paidoff",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "paymentReceivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "paymentAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "drawdownReceivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "drawdownAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "makePrincipalPaymentAndDrawdownWithReceivable",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountPaid",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "netAmountToBorrower",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "paidoff",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "receivableId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "makePrincipalPaymentWithReceivable",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountPaid",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "paidoff",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "name": "onERC721Received",
-    "outputs": [
-      {
-        "internalType": "bytes4",
-        "name": "",
-        "type": "bytes4"
       }
     ],
     "stateMutability": "nonpayable",

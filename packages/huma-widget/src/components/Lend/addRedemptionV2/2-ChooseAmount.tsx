@@ -53,6 +53,7 @@ export function ChooseAmount({
       handleChangeAmount={handleChangeShares}
       maxAmount={maxSharesFormatted}
       info={`${String(formatNumber(currentAmount))} ${symbol}`}
+      maxAmountTitle={`${formatNumber(maxSharesFormatted)} Shares`}
       suffix='Shares'
       handleAction={handleAction}
       actionText='REQUEST'

@@ -10,9 +10,14 @@ export enum KYC_PROVIDER {
 
 export enum CreditStateV2 {
   Deleted,
-  Paused,
   Approved,
   GoodStanding,
   Delayed,
   Defaulted,
+}
+
+export enum PoolStatusV2 {
+  Off, // The pool is temporarily turned off.
+  On, // The pool is active.
+  Closed, // The pool is permanently closed after maturity.
 }

@@ -14,6 +14,7 @@ type Props = {
   currentAmount: number | string
   maxAmount: number | string
   maxAmountText?: string
+  maxAmountTitle?: string
   info?: string
   handleChangeAmount: (amount: number) => void
   handleAction: () => void
@@ -28,6 +29,7 @@ export function InputAmountModal({
   currentAmount,
   maxAmount,
   maxAmountText = 'MAX',
+  maxAmountTitle,
   info,
   handleChangeAmount,
   handleAction,
@@ -53,23 +55,39 @@ export function InputAmountModal({
         line-height: 133.4%;
       }
     `,
+    maxWrapper: css`
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+    `,
+    maxTitle: css`
+      position: absolute;
+      color: ${theme.palette.text.primary};
+      font-family: 'Uni-Neue-Regular';
+      font-size: 12px;
+      line-height: 166%;
+      letter-spacing: 0.4px;
+      top: ${theme.spacing(-3)};
+      width: 200px;
+      text-align: right;
+    `,
     max: css`
       display: flex;
       min-width: fit-content;
       justify-content: center;
       align-items: center;
       border-radius: 32px;
-      background: var(--Purple-3, #f7f1ff);
+      background: #f7f1ff;
       padding: 4px 10px;
       gap: 8px;
-      color: var(--Purple-1, #b246ff);
+      color: #b246ff;
       font-family: 'Uni-Neue-Bold';
       font-size: 13px;
       line-height: 22px;
       letter-spacing: 0.46px;
     `,
     info: css`
-      color: var(--Black-5, #6b6572);
+      color: ${theme.palette.text.primary};
       font-family: 'Uni-Neue-Bold';
       font-size: 20px;
       line-height: 160%;
@@ -107,7 +125,14 @@ export function InputAmountModal({
             placeholder={`0${suffix}`}
             variant='standard'
             InputProps={{
-              endAdornment: (
+              endAdornment: maxAmountTitle ? (
+                <Box css={styles.maxWrapper}>
+                  <Box css={styles.maxTitle}>{maxAmountTitle}</Box>
+                  <Button css={styles.max} onClick={setMaxAmount}>
+                    {maxAmountText}
+                  </Button>
+                </Box>
+              ) : (
                 <Button css={styles.max} onClick={setMaxAmount}>
                   {maxAmountText}
                 </Button>

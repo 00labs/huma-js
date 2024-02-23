@@ -7,7 +7,7 @@ import {
   POOL_NAME,
 } from '../../utils'
 import { TrancheVault } from '../abis/types'
-import { TrancheType } from './pool'
+import { POOL_ABI_V2, TrancheType } from './pool'
 import { getPoolInfoV2 } from './poolContract'
 
 export const getTrancheVaultContractV2 = async (
@@ -26,7 +26,7 @@ export const getTrancheVaultContractV2 = async (
     | 'juniorTrancheVault'
   return getContract<TrancheVault>(
     poolInfo[trancheVault],
-    poolInfo.trancheVaultAbi,
+    POOL_ABI_V2.trancheVaultAbi,
     provider,
   )
 }

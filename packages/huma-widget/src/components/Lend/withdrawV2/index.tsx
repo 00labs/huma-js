@@ -1,4 +1,5 @@
 import {
+  getPoolContractV2,
   getTrancheRedemptionStatusV2,
   POOL_NAME,
   TrancheRedemptionStatus,
@@ -7,7 +8,7 @@ import {
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useAppSelector } from '../../../hooks/useRedux'
@@ -54,6 +55,9 @@ export function LendWithdrawV2({
   const [redemptionStatus, setRedemptionStatus] = React.useState<
     TrancheRedemptionStatus | undefined
   >()
+  const [poolIsClosed, setPoolIsClosed] = useState<boolean | undefined>(
+    undefined,
+  )
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +75,34 @@ export function LendWithdrawV2({
   }, [account, poolName, provider, trancheType])
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (account && provider) {
+        const result = await getTrancheRedemptionStatusV2(
+          poolName,
+          trancheType,
+          account,
+          provider,
+        )
+        setRedemptionStatus(result)
+      }
+    }
+    fetchData()
+  }, [account, poolName, provider, trancheType])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (account && provider) {
+        const poolContract = await getPoolContractV2(poolName, provider)
+        if (poolContract) {
+          const poolIsClosed = await poolContract.isPoolClosed()
+          setPoolIsClosed(poolIsClosed)
+        }
+      }
+    }
+    fetchData()
+  }, [account, poolName, provider])
+
+  useEffect(() => {
     if (!step) {
       dispatch(setStep(WIDGET_STEP.ConfirmTransfer))
     }
@@ -85,7 +117,12 @@ export function LendWithdrawV2({
     [handleSuccess],
   )
 
-  if (!poolInfo || !poolUnderlyingToken || !redemptionStatus) {
+  if (
+    !poolInfo ||
+    !poolUnderlyingToken ||
+    !redemptionStatus ||
+    poolIsClosed === undefined
+  ) {
     return (
       <WidgetWrapper
         isOpen
@@ -110,10 +147,15 @@ export function LendWithdrawV2({
           tranche={trancheType}
           redemptionStatus={redemptionStatus}
           poolUnderlyingToken={poolUnderlyingToken}
+          poolIsClosed={poolIsClosed}
         />
       )}
       {step === WIDGET_STEP.Transfer && (
-        <Transfer poolInfo={poolInfo} tranche={trancheType} />
+        <Transfer
+          poolInfo={poolInfo}
+          tranche={trancheType}
+          poolIsClosed={poolIsClosed}
+        />
       )}
       {step === WIDGET_STEP.Done && (
         <Done

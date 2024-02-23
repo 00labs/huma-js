@@ -21,6 +21,7 @@ type Props = {
   tranche: TrancheType
   poolUnderlyingToken: UnderlyingTokenInfo
   redemptionStatus: TrancheRedemptionStatus
+  poolIsClosed: boolean
 }
 
 export function ConfirmTransfer({
@@ -28,6 +29,7 @@ export function ConfirmTransfer({
   tranche,
   poolUnderlyingToken,
   redemptionStatus,
+  poolIsClosed,
 }: Props): React.ReactElement {
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -105,10 +107,12 @@ export function ConfirmTransfer({
       subTitle='Withdraw all the available amount'
     >
       <Box css={styles.itemWrapper}>
-        <Box css={styles.item}>
-          <Box>Shares processed</Box>
-          <Box css={styles.itemValue}>{sharesProcessed}</Box>
-        </Box>
+        {!poolIsClosed && (
+          <Box css={styles.item}>
+            <Box>Shares processed</Box>
+            <Box css={styles.itemValue}>{sharesProcessed}</Box>
+          </Box>
+        )}
         <Box css={styles.item}>
           <Box>Price Per Share</Box>
           <Box css={styles.itemValue}>
