@@ -45,14 +45,14 @@ export async function getReceivableBackedCreditLineContractV2(
 }
 
 /**
- * Returns account's next due amount in BigNumber format
+ * Returns account's total due amount in BigNumber format
  * associated with the given pool name on the current chain.
  *
  * @param {JsonRpcProvider | Web3Provider} provider The provider instance to use for the contract.
  * @param {POOL_NAME} poolName - The name of the credit pool to get the contract instance for.
- * @returns {BigNumber | null} The account's next due amount in BigNumber format
+ * @returns {BigNumber | null} The account's total due amount in BigNumber format
  */
-export async function getReceivableBackedCreditLineNextDueV2(
+export async function getTotalDueV2(
   poolName: POOL_NAME,
   account: string,
   provider: JsonRpcProvider | Web3Provider,

@@ -3,7 +3,7 @@
 import { ChainEnum, getCreditRecordV2, POOL_NAME } from '@huma-finance/shared'
 import { BigNumber, ethers } from 'ethers'
 
-import { getReceivableBackedCreditLineNextDueV2 } from '../../../src/helpers/v2/ReceivableBackedCreditLineContractHelper'
+import { getTotalDueV2 } from '../../../src/helpers/v2/ReceivableBackedCreditLineContractHelper'
 
 const provider = new ethers.providers.JsonRpcProvider(
   `https://polygon-mainnet.g.alchemy.com/v2/asdfasdfasdfasdf`,
@@ -26,7 +26,7 @@ describe('getReceivableBackedCreditLineNextDueV2', () => {
   it('should return null if creditRecord is not found', async () => {
     ;(getCreditRecordV2 as jest.Mock).mockReturnValue(null)
 
-    const nextDue = await getReceivableBackedCreditLineNextDueV2(
+    const nextDue = await getTotalDueV2(
       POOL_NAME.ArfCreditPool1,
       'account',
       provider,
@@ -41,7 +41,7 @@ describe('getReceivableBackedCreditLineNextDueV2', () => {
       totalPastDue: BigNumber.from('200'),
     })
 
-    const nextDue = await getReceivableBackedCreditLineNextDueV2(
+    const nextDue = await getTotalDueV2(
       POOL_NAME.ArfCreditPool1,
       'account',
       provider,

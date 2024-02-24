@@ -43,8 +43,8 @@ associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#getReceivableBackedCreditLineContractV2">getReceivableBackedCreditLineContractV2(signerOrProvider, poolName)</a> ⇒ <code>ReceivableBackedCreditLine</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p></dd>
-<dt><a href="#getReceivableBackedCreditLineNextDueV2">getReceivableBackedCreditLineNextDueV2(provider, poolName)</a> ⇒ <code>BigNumber</code> | <code>null</code></dt>
-<dd><p>Returns account's next due amount in BigNumber format
+<dt><a href="#getTotalDueV2">getTotalDueV2(provider, poolName)</a> ⇒ <code>BigNumber</code> | <code>null</code></dt>
+<dd><p>Returns account's total due amount in BigNumber format
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#drawdownWithReceivable">drawdownWithReceivable(signer, poolName, receivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
 <dd><p>Draws down from a pool using a receivable.</p></dd>
@@ -776,14 +776,14 @@ associated with the given pool name on the current chain.</p>
 | signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
 
-<a name="getReceivableBackedCreditLineNextDueV2"></a>
+<a name="getTotalDueV2"></a>
 
-## getReceivableBackedCreditLineNextDueV2(provider, poolName) ⇒ <code>BigNumber</code> \| <code>null</code>
-<p>Returns account's next due amount in BigNumber format
+## getTotalDueV2(provider, poolName) ⇒ <code>BigNumber</code> \| <code>null</code>
+<p>Returns account's total due amount in BigNumber format
 associated with the given pool name on the current chain.</p>
 
 **Kind**: global function  
-**Returns**: <code>BigNumber</code> \| <code>null</code> - <p>The account's next due amount in BigNumber format</p>  
+**Returns**: <code>BigNumber</code> \| <code>null</code> - <p>The account's total due amount in BigNumber format</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |
