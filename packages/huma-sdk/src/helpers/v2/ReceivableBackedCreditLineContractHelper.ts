@@ -5,6 +5,7 @@ import {
 } from '@ethersproject/providers'
 import {
   getChainIdFromSignerOrProvider,
+  getCreditRecordV2,
   getPoolInfoV2,
   getPoolSafeContractV2,
   getPoolUnderlyingTokenContractV2,
@@ -13,7 +14,7 @@ import {
   RECEIVABLE_BACKED_CREDIT_LINE_V2_ABI,
 } from '@huma-finance/shared'
 import { ReceivableBackedCreditLine } from '@huma-finance/shared/src/v2/abis/types'
-import { BigNumberish, ethers, Overrides } from 'ethers'
+import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { getContract } from '../../utils'
 import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'
 import { approveReceivableTransferIfNeeded } from './ReceivableContractHelper'
@@ -41,6 +42,27 @@ export async function getReceivableBackedCreditLineContractV2(
     RECEIVABLE_BACKED_CREDIT_LINE_V2_ABI,
     signerOrProvider,
   )
+}
+
+/**
+ * Returns account's total due amount in BigNumber format
+ * associated with the given pool name on the current chain.
+ *
+ * @param {JsonRpcProvider | Web3Provider} provider The provider instance to use for the contract.
+ * @param {POOL_NAME} poolName - The name of the credit pool to get the contract instance for.
+ * @returns {BigNumber | null} The account's total due amount in BigNumber format
+ */
+export async function getTotalDueV2(
+  poolName: POOL_NAME,
+  account: string,
+  provider: JsonRpcProvider | Web3Provider,
+): Promise<BigNumber | null> {
+  const creditRecord = await getCreditRecordV2(poolName, account, provider)
+  if (!creditRecord) {
+    return null
+  }
+
+  return creditRecord.nextDue.add(creditRecord.totalPastDue)
 }
 
 /**
