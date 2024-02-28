@@ -85,6 +85,7 @@ export type PoolInfoType = {
     lenderApprovalProvider?: LenderApprovalProvider
     detailsPage?: boolean
   }
+  isClosed?: boolean
 }
 
 export type PoolInfo = {

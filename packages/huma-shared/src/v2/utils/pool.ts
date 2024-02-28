@@ -86,6 +86,7 @@ export type PoolInfoV2 = {
     decimals: number
     icon: string
   }
+  isClosed?: boolean
 }
 
 export type PoolsInfoV2 = {
