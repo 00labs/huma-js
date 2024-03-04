@@ -140,6 +140,27 @@ export const isV2Pool = (chainId: number, pool: string): boolean => {
   )
 }
 
+export function getPoolInfoForPoolAddressV2(
+  chainId: ChainEnum,
+  poolAddress: string,
+): PoolInfoV2 | null {
+  const poolsInfo = CHAIN_POOLS_INFO_V2[chainId]
+  if (!poolsInfo) {
+    return null
+  }
+
+  let foundPoolInfo = null
+
+  for (const poolInfo of Object.values(poolsInfo)) {
+    if (poolInfo.pool.toLowerCase() === poolAddress.toLowerCase()) {
+      foundPoolInfo = poolInfo
+      break
+    }
+  }
+
+  return foundPoolInfo
+}
+
 export type UnderlyingTokenInfo = {
   address: string
   symbol: string

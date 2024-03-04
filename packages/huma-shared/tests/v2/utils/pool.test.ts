@@ -1,5 +1,9 @@
-import { ChainEnum } from '../../../src/utils'
-import { getChainPoolNamesV2, CHAIN_POOLS_INFO_V2 } from '../../../src/v2/utils'
+import { ChainEnum, POOL_NAME } from '../../../src/utils'
+import {
+  getChainPoolNamesV2,
+  CHAIN_POOLS_INFO_V2,
+  getPoolInfoForPoolAddressV2,
+} from '../../../src/v2/utils'
 
 jest.mock('../../../src/v2/metadata/Localhost', () => ({
   LOCALHOST_METADATA: {
@@ -79,5 +83,30 @@ describe('getChainPoolNamesV2', () => {
     const result = getChainPoolNamesV2(ChainEnum.Mumbai)
 
     expect(result).toEqual(['JiaV2'])
+  })
+})
+
+describe('getPoolInfoForPoolAddressV2', () => {
+  it('should return null if chainId not found', () => {
+    const chainId = -1
+    const poolAddress = '0xa890Ac3c9F8E38Be9c05BFfc0E4ECa21Bbc2FfA9'
+
+    expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)).toBe(null)
+  })
+
+  it('should return null if poolAddress not found', () => {
+    const chainId = ChainEnum.Mumbai
+    const poolAddress = 'wrong pool address'
+
+    expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)).toBe(null)
+  })
+
+  it('should return poolInfo', () => {
+    const chainId = ChainEnum.Mumbai
+    const poolAddress = '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9'
+
+    expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)?.poolName).toBe(
+      POOL_NAME.JiaV2,
+    )
   })
 })
