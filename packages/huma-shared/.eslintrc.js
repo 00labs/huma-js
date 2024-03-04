@@ -54,5 +54,6 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'off',
     'import/no-extraneous-dependencies': 'off',
     'react/require-default-props': 'off',
+    'no-restricted-syntax': ['off', 'ForOfStatement'],
   },
 }
