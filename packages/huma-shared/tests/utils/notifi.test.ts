@@ -3,22 +3,7 @@ import { ChainEnum } from '../../src/utils/chain'
 import {
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
-  getNotifiDappId,
 } from '../../src/utils/notifi'
-
-describe('getNotifiDappId', () => {
-  it('returns the correct dappId for development', () => {
-    const result = getNotifiDappId(true)
-
-    expect(result).toBe('humadapp')
-  })
-
-  it('returns the correct dappId for production', () => {
-    const result = getNotifiDappId(false)
-
-    expect(result).toBe('humafinanceprod')
-  })
-})
 
 describe('getBlockchainConfigFromChain', () => {
   it('returns POLYGON for Polygon and Mumbai chains', () => {
