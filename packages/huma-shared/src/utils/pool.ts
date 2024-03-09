@@ -202,7 +202,7 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   },
   [ChainEnum.BaseSepolia]: {
     subgraph:
-      'https://api.thegraph.com/subgraphs/name/shan-57blocks/huma-base-sepalia',
+      'https://api.studio.thegraph.com/query/38092/huma-base-sepolia/version/latest',
   },
 }
 
