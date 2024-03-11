@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { ChainEnum } from '@huma-finance/shared'
-import { BigNumber, Overrides } from 'ethers'
+import { BigNumber, Overrides, ethers } from 'ethers'
 import { ARWeaveService } from '../ARWeaveService'
 import { ReceivableService } from '../ReceivableService'
 import { getDefaultGasOptions } from '../../utils'
@@ -150,6 +150,23 @@ export class HumaReceivableFactory {
     )
 
     return ARWeaveService.getURIFromARWeaveId(response.id)
+  }
+
+  async getTotalCountOfReceivables(owner: string): Promise<number> {
+    if (!ethers.utils.isAddress(owner)) {
+      throw new Error('Invalid owner address')
+    }
+
+    const contract = await getReceivableContractV2(
+      this.#humaContext.poolName,
+      this.#humaContext.signer,
+    )
+    if (!contract) {
+      throw new Error('Could not find Receivable contract')
+    }
+
+    const balance = await contract.balanceOf(owner)
+    return balance.toNumber()
   }
 
   private async throwIfReferenceIdExists(referenceId: string): Promise<void> {
