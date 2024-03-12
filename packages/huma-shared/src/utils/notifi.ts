@@ -1,9 +1,5 @@
 import { ChainEnum } from './chain'
 
-export function getNotifiDappId(isDev: boolean): string {
-  return isDev ? 'humadapp' : 'humafinanceprod'
-}
-
 export function getBlockchainConfigFromChain(
   chainEnum: ChainEnum,
 ): 'POLYGON' | 'ETHEREUM' {

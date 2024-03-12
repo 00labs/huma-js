@@ -1,8 +1,4 @@
-import {
-  checkIsDev,
-  getBlockchainConfigFromChain,
-  txAtom,
-} from '@huma-finance/shared'
+import { getBlockchainConfigFromChain, txAtom } from '@huma-finance/shared'
 import { Box, css, TextField, Typography, useTheme } from '@mui/material'
 import {
   BroadcastEventTypeItem,
@@ -95,7 +91,7 @@ export function NotifiSubscriptionModal({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
-  const { notifiClient } = useNotifiClient(account, chainId, checkIsDev())
+  const { notifiClient } = useNotifiClient(account, chainId)
 
   const signMessage: Uint8SignMessageFunction = async (
     message: Uint8Array,
