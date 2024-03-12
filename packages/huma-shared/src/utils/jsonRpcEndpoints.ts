@@ -14,6 +14,7 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<ChainEnum, string[]> = {
   [ChainEnum.Localhost]: ['http://localhost:8545'],
   [ChainEnum.HumaTestnet]: ['https://integration.v2.huma.finance'],
   [ChainEnum.Goerli]: ['https://rpc.ankr.com/eth_goerli'],
+  [ChainEnum.BaseSepolia]: ['https://sepolia.base.org'],
   [ChainEnum.Mumbai]: ['https://rpc.ankr.com/polygon_mumbai'],
   [ChainEnum.Polygon]: ['https://polygon-rpc.com/'],
   [ChainEnum.Alfajores]: ['https://alfajores-forno.celo-testnet.org'],

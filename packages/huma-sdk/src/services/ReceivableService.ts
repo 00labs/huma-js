@@ -435,8 +435,12 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
     pagination,
   )
 
-  const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) =>
-    ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
+  const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) => {
+    if (!rwrInfoBase.tokenURI) {
+      return null
+    }
+    return ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
+  }
   const metadatas = await Promise.all(rwReceivablesBase.map(fetchMetadata))
 
   return rwReceivablesBase.map(

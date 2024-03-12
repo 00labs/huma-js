@@ -200,6 +200,10 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph:
       'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
   },
+  [ChainEnum.BaseSepolia]: {
+    subgraph:
+      'https://api.studio.thegraph.com/query/38092/huma-base-sepolia/version/latest',
+  },
 }
 
 export const PoolContractMap: PoolContractMapType = {
@@ -335,66 +339,6 @@ export const PoolContractMap: PoolContractMapType = {
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
           address: '0xf5F9297c74e464933e42F4a989e81D931fb20f83',
-          abi: HDT_ABI,
-        },
-        extra: {
-          hidden: true,
-        },
-      },
-    },
-  },
-  [ChainEnum.Goerli]: {
-    [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.HumaCreditLine]: {
-        chainId: ChainEnum.Goerli,
-        poolVersion: 'v1',
-        basePoolConfig: '0x0d7bae0e14aF194e52Ea2472737b24044fe6e929',
-        pool: '0xA22D20FB0c9980fb96A9B0B5679C061aeAf5dDE4',
-        poolFeeManager: '0x673b3C1094AE941bb4b2eF9377DaFE3bcCc4b003',
-        poolUnderlyingToken: {
-          address: '0xf17FF940864351631b1be3ac03702dEA085ba51c',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.HumaCreditLine,
-        poolType: POOL_TYPE.CreditLine,
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x61341186E8C3B7cC0De66ae86C65943797C8Fb99',
-          abi: HDT_ABI,
-        },
-        extra: {
-          lenderApprovalProvider: {
-            type: 'KYC',
-            provider: 'Securitize',
-          },
-          detailsPage: true,
-        },
-      },
-    },
-    [POOL_TYPE.Invoice]: {
-      [POOL_NAME.RequestNetwork]: {
-        chainId: ChainEnum.Goerli,
-        poolVersion: 'v1',
-        basePoolConfig: '0xBa779F41ae414dEc63265D79a02DED47fbe007a5',
-        pool: '0x11672c0bBFF498c72BC2200f42461c0414855042',
-        poolFeeManager: '0x7BA6B8eBC9b09c228582814D44D4a0F2B6B0B9E4',
-        poolUnderlyingToken: {
-          address: '0xf17FF940864351631b1be3ac03702dEA085ba51c',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        assetAddress: '0xC2AC172a293d68f548ea343414584aA37eb29Dcd',
-        poolName: POOL_NAME.RequestNetwork,
-        poolType: POOL_TYPE.Invoice,
-        industry: 'Invoice Factoring',
-        poolAbi: RECEIVABLE_FACTORING_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x27Fa332a5cA06492C2007FF4b143C921Cf779C3b',
           abi: HDT_ABI,
         },
         extra: {
@@ -661,16 +605,6 @@ export const SupplementaryContractsMap: {
   [ChainEnum.Polygon]: {
     [SupplementaryContracts.RealWorldReceivable]:
       '0xCf67CcEaC38b5E1880d62b5DB531Ab1E77614E3D',
-  },
-  [ChainEnum.Goerli]: {
-    [SupplementaryContracts.MultiSend]:
-      '0x11ED387Fa673852Ba47F96Aa9BEdE37F12De2998',
-    [SupplementaryContracts.RealWorldReceivable]:
-      '0xA1EB18643dd6b75e97D55583BFFfF2311124076f',
-    [SupplementaryContracts.ERC20TransferableReceivable]:
-      '0xC2AC172a293d68f548ea343414584aA37eb29Dcd',
-    [SupplementaryContracts.TestUSDC]:
-      '0xf17FF940864351631b1be3ac03702dEA085ba51c',
   },
   [ChainEnum.Mumbai]: {
     [SupplementaryContracts.MultiSend]:
