@@ -392,6 +392,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         extra: {
           hidden: true,
+          borrower: '0xda8241ee675d9f7d40fefcfc29e749d970c44c17',
         },
       },
     },
