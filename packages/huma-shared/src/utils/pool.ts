@@ -623,7 +623,6 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           disableBorrow: true,
-          hidden: true,
         },
       },
       [POOL_NAME.Jia]: {
@@ -672,6 +671,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
           borrower: '0xD3CCe1eC5a3981B27bD998f33A7eafdD27Ad2dF4',
+          hidden: true,
         },
       },
       [POOL_NAME.Quipu]: {
