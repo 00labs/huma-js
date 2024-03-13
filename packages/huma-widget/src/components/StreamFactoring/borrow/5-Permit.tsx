@@ -1,12 +1,9 @@
 import {
-  CHAINS,
-  Erc2612,
   PoolInfoType,
   SuperfluidPoolProcessor,
+  SuperfluidPoolProcessor_ABI,
   useERC2612Permit,
   useMount,
-  ERC2612_ABI,
-  SuperfluidPoolProcessor_ABI,
 } from '@huma-finance/shared'
 import { BigNumber, Contract, ethers } from 'ethers'
 import React from 'react'
@@ -25,7 +22,6 @@ import { LoadingModal } from '../../LoadingModal'
 type Props = {
   poolInfo: PoolInfoType
   payerAddress: string
-  chainId: number
   borrower: string
   superToken: string
 }
@@ -33,35 +29,14 @@ type Props = {
 export function Permit({
   poolInfo,
   payerAddress,
-  chainId,
   borrower,
   superToken,
 }: Props): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { address: tokenAddress } = poolInfo.poolUnderlyingToken
   const { borrowAmountBN: borrowAmountBNJson, stream } =
     useAppSelector(selectWidgetState)
-  const { getERC2612PermitMessage, getTradableStreamPermitMessage } =
-    useERC2612Permit()
+  const { getTradableStreamPermitMessage } = useERC2612Permit()
   const borrowAmountBN = BigNumber.from(borrowAmountBNJson)
-
-  const getApproveAllowanceCallData = async () => {
-    const erc2612PermitResult = await getERC2612PermitMessage(
-      tokenAddress,
-      poolInfo.poolProcessor!,
-      borrowAmountBN.toString()!,
-    )
-    const tokenContract = new Contract(tokenAddress, ERC2612_ABI) as Erc2612
-    return tokenContract.interface.encodeFunctionData('permit', [
-      poolInfo.poolProcessor!,
-      borrowAmountBN.toString()!,
-      erc2612PermitResult.nonce,
-      erc2612PermitResult.deadline,
-      erc2612PermitResult.v,
-      erc2612PermitResult.r,
-      erc2612PermitResult.s,
-    ])
-  }
 
   const getDrawdownCallData = async () => {
     const NFTPermitResult = await getTradableStreamPermitMessage(
@@ -113,14 +88,6 @@ export function Permit({
     try {
       const callData = []
       const addresses: string[] = []
-
-      // The token in Goerli hasn't integrated ERC-2612
-      if (!CHAINS[chainId].isTestnet) {
-        const approveAllowanceCallData = await getApproveAllowanceCallData()
-        addresses.push(tokenAddress)
-        callData.push(approveAllowanceCallData)
-      }
-
       const drawdownCalldata = await getDrawdownCallData()
       addresses.push(poolInfo.poolProcessor!)
       callData.push(drawdownCalldata)

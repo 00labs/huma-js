@@ -77,13 +77,15 @@ export const downScale = <T = string>(
 }
 
 export const upScale = <T = string>(
-  num: string | number,
+  num: string | number | BigNumber,
   decimals?: number,
 ): T => {
   if (isEmpty(num) || isEmpty(decimals)) {
     return num as T
   }
-  const result = Number(num) * 10 ** decimals!
+  const result = BigNumber.isBigNumber(num)
+    ? num.mul(BigNumber.from(10).pow(decimals!))
+    : Number(num) * 10 ** decimals!
   if (typeof num === 'string') {
     return String(result) as T
   }

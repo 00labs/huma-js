@@ -9,18 +9,24 @@ import { ChooseAmountModal } from '../../ChooseAmountModal'
 
 type Props = {
   lenderPosition: BigNumber
+  poolBalance: BigNumber
   poolInfo: PoolInfoType
 }
 
 export function ChooseAmount({
   lenderPosition,
+  poolBalance,
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { poolUnderlyingToken } = poolInfo
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState(0)
-  const withdrawableAmount = downScale<number>(lenderPosition, decimals)
+  // Take the minimum of the pool balance or the lender position
+  const withdrawableAmountBN = lenderPosition.lt(poolBalance)
+    ? lenderPosition
+    : poolBalance
+  const withdrawableAmount = downScale<number>(withdrawableAmountBN, decimals)
 
   const handleChangeAmount = useCallback(
     (newAmount: number) => {

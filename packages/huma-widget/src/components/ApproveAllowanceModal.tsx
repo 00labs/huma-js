@@ -87,6 +87,12 @@ export function ApproveAllowanceModal({
     const amountToIncrease = BigNumber.from(targetAllowanceAmount).sub(
       currentAllowance ?? 0,
     )
+
+    if (amountToIncrease.lte(0)) {
+      handleSuccess()
+      return
+    }
+
     send({
       contract: poolUnderlyingTokenContract!,
       method: 'increaseAllowance',
@@ -96,6 +102,7 @@ export function ApproveAllowanceModal({
   }, [
     account,
     allowanceAmount,
+    handleSuccess,
     poolInfo.pool,
     poolUnderlyingTokenContract,
     provider,

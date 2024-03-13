@@ -71,11 +71,10 @@ export function StreamFactoringBorrow({
       {step === WIDGET_STEP.ApproveAllowance && (
         <ApproveAllowance poolInfo={poolInfo} />
       )}
-      {step === WIDGET_STEP.Permit && account && chainId && (
+      {step === WIDGET_STEP.Permit && account && (
         <Permit
           poolInfo={poolInfo}
           payerAddress={payerAddress}
-          chainId={chainId}
           borrower={account}
           superToken={superToken}
         />
