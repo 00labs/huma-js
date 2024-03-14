@@ -3,6 +3,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   useLenderPosition,
+  usePoolBalance,
   usePoolInfo,
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect } from 'react'
@@ -53,21 +54,28 @@ export function LendWithdraw({
     account,
     provider,
   )
+  const [poolBalance, refreshPoolBalance] = usePoolBalance(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
 
   useEffect(() => {
-    if (!step && lenderPosition) {
+    if (!step && lenderPosition && poolBalance) {
       dispatch(setStep(WIDGET_STEP.CheckWithdrawable))
     }
-  }, [dispatch, lenderPosition, step])
+  }, [dispatch, lenderPosition, poolBalance, step])
 
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
       refreshLenderPosition()
+      refreshPoolBalance()
       if (handleSuccess) {
         handleSuccess(blockNumber)
       }
     },
-    [handleSuccess, refreshLenderPosition],
+    [handleSuccess, refreshLenderPosition, refreshPoolBalance],
   )
 
   if (!poolInfo) {
@@ -84,7 +92,11 @@ export function LendWithdraw({
         <CheckWithdrawable poolInfo={poolInfo} handleClose={handleClose} />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
-        <ChooseAmount poolInfo={poolInfo} lenderPosition={lenderPosition!} />
+        <ChooseAmount
+          poolInfo={poolInfo}
+          lenderPosition={lenderPosition!}
+          poolBalance={poolBalance!}
+        />
       )}
       {step === WIDGET_STEP.Transfer && <Transfer poolInfo={poolInfo} />}
       {step === WIDGET_STEP.Done && (

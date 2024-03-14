@@ -35,20 +35,24 @@ export function ChooseAmount({
   const [chargedFees, setChargedFees] = useState(0)
   const [currentAmount, setCurrentAmount] = useState(0)
   const borrowPeriodInSeconds = approval!.terms.intervalInDays * 24 * 60 * 60
+  const superTokenDecimals = poolInfo.extra?.superToken?.decimals!
+  const underlyingTokenDecimals = poolInfo.poolUnderlyingToken.decimals!
+  // To ensure not to borrow all the available flowrate due to contract limitation
+  const borrowMaxAmount = Number(approval!.terms.creditLimitFormatted) - 0.01
 
   const getBorrowFlowrateAndAmount = useCallback(
     (borrowAmount: number) => {
       const currentFlowRateBN = toBigNumber(currentFlowRate)
-      const borrowAmountBN = toBigNumber(
-        upScale(borrowAmount, approval!.token.decimal),
+      const borrowAmountSuperTokenBN = toBigNumber(
+        upScale(borrowAmount, superTokenDecimals),
       )
 
-      const totalAmountInBorrowPeriod = currentFlowRateBN.mul(
+      const totalAmountSuperTokenInBorrowPeriod = currentFlowRateBN.mul(
         borrowPeriodInSeconds,
       )
-      let borrowFlowrate = borrowAmountBN
+      let borrowFlowrate = borrowAmountSuperTokenBN
         .mul(currentFlowRateBN)
-        .div(totalAmountInBorrowPeriod)
+        .div(totalAmountSuperTokenInBorrowPeriod)
         // To ensure enough flowRate due to round down when convert to string
         .add(1)
 
@@ -56,26 +60,28 @@ export function ChooseAmount({
       if (borrowFlowrate.gte(currentFlowRateBN)) {
         borrowFlowrate = currentFlowRateBN.sub(1)
       }
-      if (borrowAmountBN.gte(approval!.terms.creditLimit)) {
-        borrowFlowrate = borrowFlowrate.sub(1)
-      }
 
       // As borrowFlowrate adds 1, need to calculate the new accurate borrow amount
       const newBorrowAmountBN = borrowFlowrate
-        .mul(totalAmountInBorrowPeriod)
+        .mul(totalAmountSuperTokenInBorrowPeriod)
         .div(currentFlowRateBN)
-      const newBorrowAmount = downScale(
-        newBorrowAmountBN,
-        approval!.token.decimal,
+      const newBorrowAmount = downScale(newBorrowAmountBN, superTokenDecimals)
+      const newBorrowAmountUnderlyingTokenBN = toBigNumber(
+        upScale(newBorrowAmount, underlyingTokenDecimals),
       )
 
       return {
         borrowFlowrate: borrowFlowrate.toString(),
         borrowAmount: Number(newBorrowAmount),
-        borrowAmountBN: newBorrowAmountBN,
+        borrowAmountBN: newBorrowAmountUnderlyingTokenBN,
       }
     },
-    [approval, borrowPeriodInSeconds, currentFlowRate],
+    [
+      borrowPeriodInSeconds,
+      currentFlowRate,
+      superTokenDecimals,
+      underlyingTokenDecimals,
+    ],
   )
 
   const handleChangeAmount = useCallback(
@@ -121,7 +127,7 @@ export function ChooseAmount({
     <ChooseAmountModal
       title='Choose Amount'
       description1='Access up to 100% of your stream flowrate'
-      sliderMax={Number(approval.terms.creditLimitFormatted)}
+      sliderMax={borrowMaxAmount}
       currentAmount={currentAmount}
       tokenSymbol={approval.token.symbol}
       topLeft='Fees'
