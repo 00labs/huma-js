@@ -2,7 +2,9 @@ import { BigNumber, BigNumberish, ethers } from 'ethers'
 import { isEmpty } from './common'
 import { scientificToDecimal } from './scientificToDecimal'
 
-const numberFormatter = new Intl.NumberFormat('en-US')
+const numberFormatter = new Intl.NumberFormat('en-US', {
+  maximumFractionDigits: 2,
+})
 
 export const formatMoney = (
   num: number | string | undefined,
