@@ -145,6 +145,7 @@ export function AddRedemptionV2({
       )}
       {step === WIDGET_STEP.ChooseAmount && trancheInfo && (
         <ChooseAmount
+          poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           trancheInfo={trancheInfo}
         />
