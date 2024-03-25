@@ -84,11 +84,11 @@ export function LendWithdraw({
       {(!step || step === WIDGET_STEP.CheckWithdrawable) && (
         <CheckWithdrawable poolInfo={poolInfo} handleClose={handleClose} />
       )}
-      {step === WIDGET_STEP.ChooseAmount && (
+      {step === WIDGET_STEP.ChooseAmount && lenderPosition && poolBalance && (
         <ChooseAmount
           poolInfo={poolInfo}
-          lenderPosition={lenderPosition!}
-          poolBalance={poolBalance!}
+          lenderPosition={lenderPosition}
+          poolBalance={poolBalance}
         />
       )}
       {step === WIDGET_STEP.Transfer && <Transfer poolInfo={poolInfo} />}
