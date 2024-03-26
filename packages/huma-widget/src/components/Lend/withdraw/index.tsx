@@ -55,8 +55,10 @@ export function LendWithdraw({
   const [poolBalance, refreshPoolBalance] = usePoolBalance(poolName, poolType)
 
   useEffect(() => {
-    if (!step && lenderPosition && poolBalance) {
+    if (!step && lenderPosition?.gt(0) && poolBalance?.gt(0)) {
       dispatch(setStep(WIDGET_STEP.CheckWithdrawable))
+    } else if (!step && (lenderPosition?.eq(0) || poolBalance?.eq(0))) {
+      dispatch(setStep(WIDGET_STEP.Error))
     }
   }, [dispatch, lenderPosition, poolBalance, step])
 
@@ -81,7 +83,7 @@ export function LendWithdraw({
       handleClose={handleClose}
       handleSuccess={handleWithdrawSuccess}
     >
-      {(!step || step === WIDGET_STEP.CheckWithdrawable) && (
+      {step === WIDGET_STEP.CheckWithdrawable && (
         <CheckWithdrawable poolInfo={poolInfo} handleClose={handleClose} />
       )}
       {step === WIDGET_STEP.ChooseAmount && lenderPosition && poolBalance && (
