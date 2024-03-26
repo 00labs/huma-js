@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers'
 
+import { ALFAJORES_METADATA } from 'v2/metadata/alfajores'
 import {
   ChainEnum,
   isChainEnum,
@@ -112,6 +113,7 @@ export const POOL_ABI_V2: PoolAbis = {
 }
 
 export const CHAIN_POOLS_INFO_V2 = {
+  [ChainEnum.Alfajores]: ALFAJORES_METADATA,
   [ChainEnum.Mumbai]: MUMBAI_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
   [ChainEnum.HumaTestnet]: HUMA_TESTNET_METADATA,
