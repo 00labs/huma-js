@@ -333,6 +333,46 @@ export function useTrancheVaultAssetsV2(
   return [value, refresh]
 }
 
+export function useLenderApprovedAnyTrancheV2(
+  poolName: POOL_NAME,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [Boolean | undefined, () => void] {
+  const [approved, setApproved] = useState<boolean>()
+  const [refreshCount, refresh] = useForceRefresh()
+  const juniorVaultContract = useTrancheVaultContractV2(
+    poolName,
+    'junior',
+    provider,
+  )
+  const seniorVaultContract = useTrancheVaultContractV2(
+    poolName,
+    'senior',
+    provider,
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (juniorVaultContract && seniorVaultContract && account) {
+        const [juniorApproved, seniorApproved] = await Promise.all([
+          juniorVaultContract.hasRole(
+            juniorVaultContract.LENDER_ROLE(),
+            account,
+          ),
+          seniorVaultContract.hasRole(
+            seniorVaultContract.LENDER_ROLE(),
+            account,
+          ),
+        ])
+        setApproved(juniorApproved || seniorApproved)
+      }
+    }
+    fetchData()
+  }, [account, juniorVaultContract, refreshCount, seniorVaultContract])
+
+  return [approved, refresh]
+}
+
 export function useLenderApprovedV2(
   poolName: POOL_NAME,
   trancheType: TrancheType,
