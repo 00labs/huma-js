@@ -6,6 +6,7 @@ import {
   useCLPoolAllowance,
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
+import { BigNumber } from 'ethers'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setPaymentAmount, setStep } from '../../../store/widgets.reducers'
@@ -48,8 +49,8 @@ export function ChooseAmount({
   )
 
   const handleAction = useCallback(() => {
-    const payAmount = upScale(currentAmount, decimals)
-    const step = toBigNumber(payAmount).gt(allowance)
+    const payAmount = upScale<BigNumber>(toBigNumber(currentAmount), decimals)
+    const step = payAmount.gt(allowance)
       ? WIDGET_STEP.ApproveAllowance
       : WIDGET_STEP.Transfer
     dispatch(setStep(step))
