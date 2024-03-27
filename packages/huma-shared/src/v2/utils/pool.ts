@@ -1,6 +1,5 @@
 import { BigNumber } from 'ethers'
 
-import { ALFAJORES_METADATA } from 'v2/metadata/alfajores'
 import {
   ChainEnum,
   isChainEnum,
@@ -9,6 +8,7 @@ import {
   POOL_TYPE,
   PoolVersion,
 } from '../../utils'
+import { ALFAJORES_METADATA } from '../metadata/alfajores'
 import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
 import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
