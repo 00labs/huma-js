@@ -90,6 +90,9 @@ export type PoolInfoV2 = {
     icon: string
   }
   isClosed?: boolean
+  extra?: {
+    hidden?: boolean
+  }
 }
 
 export type PoolsInfoV2 = {
