@@ -9,6 +9,7 @@ import {
   PoolVersion,
 } from '../../utils'
 import { ALFAJORES_METADATA } from '../metadata/alfajores'
+import { CELO_METADATA } from '../metadata/celo'
 import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
 import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { MUMBAI_METADATA } from '../metadata/mumbai'
@@ -114,6 +115,7 @@ export const POOL_ABI_V2: PoolAbis = {
 
 export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Alfajores]: ALFAJORES_METADATA,
+  [ChainEnum.Celo]: CELO_METADATA,
   [ChainEnum.Mumbai]: MUMBAI_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
   [ChainEnum.HumaTestnet]: HUMA_TESTNET_METADATA,
