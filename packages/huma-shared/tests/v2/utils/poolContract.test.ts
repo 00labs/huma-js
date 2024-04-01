@@ -293,9 +293,9 @@ describe.only('getLenderPositionV2', () => {
   })
 
   it.only('should return undefined if contract is invalid', async () => {
-    jest.mock('../../../src/v2/utils/trancheVaultContract', () => ({
-      getTrancheVaultContractV2: jest.fn().mockReturnValue(null),
-    }))
+    // jest.mock('../../../src/v2/utils/trancheVaultContract', () => ({
+    //   getTrancheVaultContractV2: jest.fn().mockReturnValue(null),
+    // }))
 
     const invalidChainId = -1
     const result = await getLenderPositionV2(
