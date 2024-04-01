@@ -56,14 +56,14 @@ describe('useCreditRecordDetails', () => {
 
     const mockUserAddress = '0x123'
     const mockSignerOrProvider = new ethers.providers.JsonRpcProvider()
-    const mockChainId = 1
+    const mockChainId = 137
 
     const { result } = renderHook(() =>
       useCreditRecordDetails(
         mockUserAddress,
         mockSignerOrProvider,
         mockChainId,
-        POOL_NAME.HumaCreditLine,
+        POOL_NAME.ArfCreditPool1,
         POOL_TYPE.CreditLine,
       ),
     )
