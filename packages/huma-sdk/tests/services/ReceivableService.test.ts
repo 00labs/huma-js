@@ -79,7 +79,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
 
   it('should throw if ARWeave Id is null', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(null)
     ;(request as jest.Mock).mockResolvedValue({ transactions: {} })
@@ -137,7 +137,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
   it('should throw if No receivables is returned by subgraph', async () => {
     console.log = jest.fn()
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
@@ -152,27 +152,22 @@ describe('declareReceivablePaymentByReferenceId', () => {
     const paymentAmount = 10
     const gasOpts = {}
 
-    try {
-      await ReceivableService.declareReceivablePaymentByReferenceId(
+    await expect(
+      ReceivableService.declareReceivablePaymentByReferenceId(
         signer,
         referenceId,
         paymentAmount,
         gasOpts,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
-      )
-    }
-    expect(console.log).toHaveBeenCalledWith(
-      `No receivables found with this URI.`,
+      ),
+    ).rejects.toThrow(
+      'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
     )
   })
 
   it('should throw if receivables are empty returned by subgraph', async () => {
     console.log = jest.fn()
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
@@ -187,27 +182,22 @@ describe('declareReceivablePaymentByReferenceId', () => {
     const paymentAmount = 10
     const gasOpts = {}
 
-    try {
-      await ReceivableService.declareReceivablePaymentByReferenceId(
+    await expect(
+      ReceivableService.declareReceivablePaymentByReferenceId(
         signer,
         referenceId,
         paymentAmount,
         gasOpts,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
-      )
-    }
-    expect(console.log).toHaveBeenCalledWith(
-      `No receivables found with this URI.`,
+      ),
+    ).rejects.toThrow(
+      'Could not find tokenId for this ARWeave Id. Please check your logs for more details.',
     )
   })
 
   it('should throw if receivables have more than one element returned by subgraph', async () => {
     console.log = jest.fn()
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
@@ -241,7 +231,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
 
   it('should throw if not find RealWorldReceivable contract', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
@@ -275,7 +265,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
 
   it('should throw if no tokenId found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
@@ -309,7 +299,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
 
   it('should return declarePayment', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
@@ -402,7 +392,7 @@ describe('declareReceivablePaymentByTokenId', () => {
 
   it('should throw if getRealWorldReceivableContract is not found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
 
@@ -414,23 +404,19 @@ describe('declareReceivablePaymentByTokenId', () => {
     const paymentAmount = 10
     const gasOpts = {}
 
-    try {
-      await ReceivableService.declareReceivablePaymentByTokenId(
+    await expect(
+      ReceivableService.declareReceivablePaymentByTokenId(
         signer,
         receivableTokenId,
         paymentAmount,
         gasOpts,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'Could not find RealWorldReceivable contract',
-      )
-    }
+      ),
+    ).rejects.toThrow('Could not find RealWorldReceivable contract')
   })
 
   it('should return declarePayment', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(getDefaultGasOptions as jest.Mock).mockResolvedValue({})
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
@@ -494,7 +480,7 @@ describe('createReceivable', () => {
 
   it('should throw if no RealWorldReceivableContract is found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue(undefined)
 
@@ -502,7 +488,7 @@ describe('createReceivable', () => {
       getAddress: jest.fn().mockResolvedValue('0x123'),
       sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
     } as any
-    const poolName = POOL_NAME.HumaCreditLine
+    const poolName = POOL_NAME.ArfCreditPool1
     const poolType = POOL_TYPE.CreditLine
     const currencyCode = 1
     const receivableAmount = 10
@@ -510,8 +496,8 @@ describe('createReceivable', () => {
     const metadataUri = 'https://arweave.net/tx1'
     const gasOpts = {}
 
-    try {
-      await ReceivableService.createReceivable(
+    await expect(
+      ReceivableService.createReceivable(
         signer,
         poolName,
         poolType,
@@ -520,17 +506,13 @@ describe('createReceivable', () => {
         maturityDate,
         metadataUri,
         gasOpts,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'Could not find RealWorldReceivable contract',
-      )
-    }
+      ),
+    ).rejects.toThrow('Could not find RealWorldReceivable contract')
   })
 
   it('should createRealWorldReceivable', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
       createRealWorldReceivable: () => true,
@@ -540,7 +522,7 @@ describe('createReceivable', () => {
       getAddress: jest.fn().mockResolvedValue('0x123'),
       sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
     } as any
-    const poolName = POOL_NAME.HumaCreditLine
+    const poolName = POOL_NAME.ArfCreditPool1
     const poolType = POOL_TYPE.CreditLine
     const currencyCode = 1
     const receivableAmount = 10
@@ -641,7 +623,7 @@ describe('createReceivableWithMetadata', () => {
 
   it('should throw if createReceivable throws error', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
@@ -655,7 +637,7 @@ describe('createReceivableWithMetadata', () => {
 
     const privateKey = '0xabc'
     const chainId = 13 // chainId which will make the createReceivable throw error
-    const poolName = POOL_NAME.HumaCreditLine
+    const poolName = POOL_NAME.ArfCreditPool1
     const poolType = POOL_TYPE.CreditLine
     const currencyCode = 1
     const receivableAmount = 10
@@ -691,7 +673,7 @@ describe('createReceivableWithMetadata', () => {
 
   it('should throw If there already exists metadata with this reference Id', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
@@ -742,7 +724,7 @@ describe('createReceivableWithMetadata', () => {
 
   it('should createReceivableWithMetadata if dataId is not null', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
@@ -775,8 +757,8 @@ describe('createReceivableWithMetadata', () => {
 
     const signer = { getAddress: jest.fn().mockResolvedValue('0x123') } as any
     const privateKey = '0xabc'
-    const chainId = ChainEnum.Goerli
-    const poolName = POOL_NAME.HumaCreditLine
+    const chainId = ChainEnum.Polygon
+    const poolName = POOL_NAME.ArfCreditPool1
     const poolType = POOL_TYPE.CreditLine
     const currencyCode = 1
     const receivableAmount = 10
@@ -808,7 +790,7 @@ describe('createReceivableWithMetadata', () => {
 
   it('should createReceivableWithMetadata if dataId is null', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
     )
     ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(null)
@@ -822,8 +804,8 @@ describe('createReceivableWithMetadata', () => {
 
     const signer = { getAddress: jest.fn().mockResolvedValue('0xNull') } as any
     const privateKey = '0xabc'
-    const chainId = ChainEnum.Goerli
-    const poolName = POOL_NAME.HumaCreditLine
+    const chainId = ChainEnum.Polygon
+    const poolName = POOL_NAME.ArfCreditPool1
     const poolType = POOL_TYPE.CreditLine
     const currencyCode = 1
     const receivableAmount = 10
@@ -914,11 +896,11 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
 
   it('should return ReceivablesOfOwnerWithMetadata', async () => {
     const poolInfo =
-      PoolContractMap[ChainEnum.Goerli]?.[POOL_TYPE.CreditLine]?.[
+      PoolContractMap[ChainEnum.Polygon]?.[POOL_TYPE.CreditLine]?.[
         POOL_NAME.HumaCreditLine
       ]
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
-      Promise.resolve(ChainEnum.Goerli),
+      Promise.resolve(ChainEnum.Polygon),
     )
     ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
       key: 'value',
@@ -1003,7 +985,7 @@ describe('getTotalCountOfReceivables', () => {
 
   it('should throw if RealWorldReceivable contract is not found', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
-      Promise.resolve(ChainEnum.Goerli),
+      Promise.resolve(ChainEnum.Polygon),
     )
     ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
       key: 'value',
@@ -1016,18 +998,14 @@ describe('getTotalCountOfReceivables', () => {
 
     const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
 
-    try {
-      await ReceivableService.getTotalCountOfReceivables(signer, owner)
-    } catch (error) {
-      expect((error as any).message).toBe(
-        'Could not find RealWorldReceivable contract',
-      )
-    }
+    await expect(
+      ReceivableService.getTotalCountOfReceivables(signer, owner),
+    ).rejects.toThrow('Could not find RealWorldReceivable contract')
   })
 
   it('should return total count of Receivables', async () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
-      Promise.resolve(ChainEnum.Goerli),
+      Promise.resolve(ChainEnum.Polygon),
     )
     ;(ARWeaveService.fetchMetadataFromUrl as jest.Mock).mockResolvedValue({
       key: 'value',

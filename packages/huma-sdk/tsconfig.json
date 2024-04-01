@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*", "src/**/*.json"],
+  "include": ["src/**/*", "src/**/*.json", "tests"],
   "compilerOptions": {
     "composite": true,
     "target": "ES2017",
@@ -24,7 +24,8 @@
     "baseUrl": "./",
     "paths": {
       "@": ["./"],
-      "*": ["src/*", "node_modules/*"]
+      "*": ["src/*", "node_modules/*"],
+      "@huma-finance/shared": ["../huma-shared/src"]
     },
     "jsx": "react",
     "esModuleInterop": true,

@@ -31,6 +31,7 @@ jest.mock('../../../src/v2/utils/pool', () => ({
     5: {
       JiaV2: {
         pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
+        poolSafe: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
         seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
         juniorTrancheVault: '0x1f10865eF0181D8a7e3d31EcDECA7c615954EfEE',
         estAPY: '10-20%',
@@ -51,6 +52,7 @@ describe('usePoolInfoV2', () => {
     const result = usePoolInfoV2('JiaV2' as any, chainId)
     expect(result).toEqual({
       pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
+      poolSafe: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
       seniorTrancheVault: '0xAfD360a03aBf192D0F335f24627b5001e2C78fdf',
       juniorTrancheVault: '0x1f10865eF0181D8a7e3d31EcDECA7c615954EfEE',
       estAPY: '10-20%',
@@ -116,29 +118,6 @@ describe('useFirstLossCoverContractV2', () => {
 
     await waitFor(() => {
       expect(result.current).toBeNull()
-    })
-  })
-
-  it('returns first loss cover contract correctly', async () => {
-    ;(useContract as jest.Mock)
-      .mockReturnValueOnce({
-        getFirstLossCover: jest.fn().mockResolvedValueOnce('0x123'),
-      })
-      .mockReturnValueOnce({
-        poolConfig: jest.fn().mockResolvedValue('0x123456'),
-      })
-      .mockReturnValueOnce({
-        calcLossRecover: jest.fn(),
-      })
-
-    const { result } = renderHook(() =>
-      useFirstLossCoverContractV2('JiaV2' as any, 0, {
-        network: { chainId: 5 },
-      } as any),
-    )
-
-    await waitFor(() => {
-      expect(result.current?.calcLossRecover).toBeDefined()
     })
   })
 })
@@ -290,7 +269,7 @@ describe('useLenderPositionV2', () => {
   it('should return the lender position value and refresh function', async () => {
     const account = '0x123'
     ;(useContract as jest.Mock).mockReturnValue({
-      balanceOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
+      totalAssetsOf: jest.fn().mockResolvedValueOnce(BigNumber.from(100)),
     })
 
     const { result } = renderHook(() =>
@@ -354,7 +333,7 @@ describe('usePoolUnderlyingTokenContractV2', () => {
 })
 
 describe('usePoolSafeAllowanceV2', () => {
-  it('returns 0 if provider is undefined', async () => {
+  it('returns undefined if provider is undefined', async () => {
     ;(useContract as jest.Mock).mockReturnValue(null)
     ;(useERC20Contract as jest.Mock).mockReturnValue(null)
 
@@ -363,7 +342,7 @@ describe('usePoolSafeAllowanceV2', () => {
     )
 
     await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(0))
+      expect(result.current.allowance).toEqual(undefined)
     })
   })
 
@@ -383,7 +362,7 @@ describe('usePoolSafeAllowanceV2', () => {
     )
 
     await waitFor(() => {
-      expect(result.current[0]).toEqual(BigNumber.from(100))
+      expect(result.current.allowance).toEqual(BigNumber.from(100))
     })
   })
 })

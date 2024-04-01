@@ -35,7 +35,6 @@ jest.mock('../../src/hooks/useContract', () => ({
 
 jest.mock('../../src/utils/pool', () => ({
   POOL_NAME: {
-    RequestNetwork: 'RequestNetwork',
     HumaCreditLine: 'HumaCreditLine',
   },
   POOL_TYPE: {
@@ -44,8 +43,8 @@ jest.mock('../../src/utils/pool', () => ({
   },
   PoolContractMap: {
     1: {
-      Invoice: {
-        RequestNetwork: {
+      CreditLine: {
+        HumaCreditLine: {
           pool: '0x0',
         },
       },
@@ -372,8 +371,8 @@ describe('usePoolBalance', () => {
 
     const { result } = renderHook(() =>
       usePoolBalance(
-        POOL_NAME.RequestNetwork,
-        POOL_TYPE.Invoice,
+        POOL_NAME.HumaCreditLine,
+        POOL_TYPE.CreditLine,
         1,
         new JsonRpcProvider(),
       ),
