@@ -35,11 +35,11 @@ describe('getPoolInfo', () => {
 
   it('returns the pool info if chainId, poolType, and poolName are valid', () => {
     const poolInfo = getPoolInfo(
-      ChainEnum.Goerli,
-      POOL_NAME.HumaCreditLine,
+      ChainEnum.Polygon,
+      POOL_NAME.Jia,
       POOL_TYPE.CreditLine,
     )
-    expect(poolInfo?.pool).toBe('0xA22D20FB0c9980fb96A9B0B5679C061aeAf5dDE4')
+    expect(poolInfo?.pool).toBe('0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5')
   })
 })
 
@@ -63,14 +63,14 @@ describe('usePools', () => {
 
 test('getPoolInfoForPoolAddress', () => {
   let poolInfo = getPoolInfoForPoolAddress(
-    ChainEnum.Goerli,
-    '0x11672c0bBFF498c72BC2200f42461c0414855042',
+    ChainEnum.Polygon,
+    '0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5',
   )
 
-  expect(poolInfo?.poolName).toBe(POOL_NAME.RequestNetwork)
+  expect(poolInfo?.poolName).toBe(POOL_NAME.Jia)
 
   poolInfo = getPoolInfoForPoolAddress(
-    ChainEnum.Goerli,
+    ChainEnum.Polygon,
     '0x0000000000000000000000000000000000000000',
   )
 

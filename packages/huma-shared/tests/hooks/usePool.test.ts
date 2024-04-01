@@ -13,16 +13,17 @@ jest.mock('../../src/hooks/useParamsSearch', () => ({
 
 jest.mock('../../src/utils/pool', () => ({
   POOL_NAME: {
-    RequestNetwork: 'RequestNetwork',
+    Jia: 'Jia',
     HumaCreditLine: 'HumaCreditLine',
   },
   POOL_TYPE: {
     Invoice: 'Invoice',
+    CreditLine: 'CreditLine',
   },
   PoolContractMap: {
     1: {
-      Invoice: {
-        RequestNetwork: {
+      CreditLine: {
+        HumaCreditLine: {
           assetAddress: '0x0',
         },
       },
@@ -33,7 +34,7 @@ jest.mock('../../src/utils/pool', () => ({
 describe('usePoolInfo', () => {
   it('returns undefined if chainId is not provided', () => {
     const { result } = renderHook(() =>
-      usePoolInfo(POOL_NAME.RequestNetwork, POOL_TYPE.Invoice, undefined),
+      usePoolInfo(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine, undefined),
     )
 
     expect(result.current).toBeUndefined()
@@ -41,7 +42,7 @@ describe('usePoolInfo', () => {
 
   it('returns undefined if poolType is not matched', () => {
     const { result } = renderHook(() =>
-      usePoolInfo(POOL_NAME.RequestNetwork, POOL_TYPE.CreditLine, 1),
+      usePoolInfo(POOL_NAME.HumaCreditLine, POOL_TYPE.Invoice, 1),
     )
 
     expect(result.current).toBeUndefined()
@@ -49,7 +50,7 @@ describe('usePoolInfo', () => {
 
   it('returns undefined if poolName is not matched', () => {
     const { result } = renderHook(() =>
-      usePoolInfo(POOL_NAME.HumaCreditLine, POOL_TYPE.Invoice, 1),
+      usePoolInfo(POOL_NAME.Jia, POOL_TYPE.CreditLine, 1),
     )
 
     expect(result.current).toBeUndefined()
@@ -57,7 +58,7 @@ describe('usePoolInfo', () => {
 
   it('returns the pool info if info is provided', () => {
     const { result } = renderHook(() =>
-      usePoolInfo(POOL_NAME.RequestNetwork, POOL_TYPE.Invoice, 1),
+      usePoolInfo(POOL_NAME.HumaCreditLine, POOL_TYPE.CreditLine, 1),
     )
 
     expect(result.current).toEqual({

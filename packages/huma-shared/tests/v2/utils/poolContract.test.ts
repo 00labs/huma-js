@@ -32,6 +32,7 @@ jest.mock('../../../src/utils/chain', () => ({
 }))
 
 jest.mock('../../../src/v2/utils/pool', () => ({
+  ...jest.requireActual('../../../src/v2/utils/pool'),
   CHAIN_POOLS_INFO_V2: {
     5: {
       JiaV2: {
