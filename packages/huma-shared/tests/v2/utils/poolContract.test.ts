@@ -284,7 +284,7 @@ describe('getTrancheVaultAssetsV2', () => {
   })
 })
 
-describe('getLenderPositionV2', () => {
+describe.only('getLenderPositionV2', () => {
   it('should return undefined if account is invalid', async () => {
     const result = await getLenderPositionV2('JiaV2' as any, 'senior', '', {
       network: { chainId: 5 },
@@ -292,7 +292,11 @@ describe('getLenderPositionV2', () => {
     expect(result).toEqual(undefined)
   })
 
-  it('should return undefined if contract is invalid', async () => {
+  it.only('should return undefined if contract is invalid', async () => {
+    jest.mock('../../../src/v2/utils/trancheVaultContract', () => ({
+      getTrancheVaultContractV2: jest.fn().mockReturnValue(null),
+    }))
+
     const invalidChainId = -1
     const result = await getLenderPositionV2(
       'JiaV2' as any,

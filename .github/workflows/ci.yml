@@ -2,7 +2,7 @@ name: Huma Monorepo CI
 on:
   pull_request:
     types: [opened, synchronize]
-    branches: ["develop", "master"]
+    branches: ["develop", "master", "v2"]
 
 jobs:
   ci:
