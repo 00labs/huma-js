@@ -5,7 +5,7 @@ import {
   getPoolInfoForPoolAddressV2,
 } from '../../../src/v2/utils'
 
-jest.mock('../../../src/v2/metadata/Localhost', () => ({
+jest.mock('../../../src/v2/metadata/localhost', () => ({
   LOCALHOST_METADATA: {
     JiaV2: {
       poolName: 'JiaV2',
@@ -21,7 +21,7 @@ jest.mock('../../../src/v2/metadata/Localhost', () => ({
   },
 }))
 
-jest.mock('../../../src/v2/metadata/Mumbai', () => ({
+jest.mock('../../../src/v2/metadata/mumbai', () => ({
   MUMBAI_METADATA: {
     JiaV2: {
       poolName: 'JiaV2',
