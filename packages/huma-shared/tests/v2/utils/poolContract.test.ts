@@ -212,7 +212,7 @@ describe('getPoolUnderlyingTokenInfoV2', () => {
 
 describe('getFirstLossCoverAssetsV2', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
   })
   it('should return undefined if cannot find pool info', async () => {
     const result = await getFirstLossCoverAssetsV2(
