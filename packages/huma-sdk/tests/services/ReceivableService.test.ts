@@ -48,7 +48,7 @@ jest.mock('graphql-request', () => ({
 
 describe('declareReceivablePaymentByReferenceId', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
   })
 
   it('should throw if no chain id is found', async () => {
@@ -335,7 +335,7 @@ describe('declareReceivablePaymentByReferenceId', () => {
 
 describe('declareReceivablePaymentByTokenId', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
   })
 
   it('should throw if no chain id is found', async () => {
@@ -444,7 +444,7 @@ describe('declareReceivablePaymentByTokenId', () => {
 
 describe('createReceivable', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
   })
 
   it('should throw if no chain id is found', async () => {
@@ -546,7 +546,7 @@ describe('createReceivable', () => {
 
 describe('createReceivableWithMetadata', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
   })
 
   it('should throw if metadata is not object', async () => {
@@ -1030,7 +1030,7 @@ describe('getTotalCountOfReceivables', () => {
 
 describe('uploadOrFetchMetadataURI', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockReset()
     ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({
       /* mock config object here */

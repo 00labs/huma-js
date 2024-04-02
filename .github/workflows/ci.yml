@@ -2,7 +2,7 @@ name: Huma Monorepo CI
 on:
   pull_request:
     types: [opened, synchronize]
-    branches: ["develop", "master"]
+    branches: ["develop", "master", "v2"]
 
 jobs:
   ci:
@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Lint all
         run: yarn lint:all
