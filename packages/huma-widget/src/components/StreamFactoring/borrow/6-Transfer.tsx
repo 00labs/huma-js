@@ -1,6 +1,7 @@
 import { PoolInfoType, useMultiSendContract } from '@huma-finance/shared'
 import React, { useCallback } from 'react'
 
+import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -13,8 +14,9 @@ type Props = {
 
 export function Transfer({ poolInfo }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const multiSendContract = useMultiSendContract()
+  const { chainId, provider } = useWeb3React()
   const { multisend } = useAppSelector(selectWidgetState)
+  const multiSendContract = useMultiSendContract(chainId, provider)
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))

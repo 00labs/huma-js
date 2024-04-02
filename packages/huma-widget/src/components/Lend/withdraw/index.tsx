@@ -42,17 +42,24 @@ export function LendWithdraw({
   handleSuccess,
 }: LendWithdrawProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [lenderPosition, refreshLenderPosition] = useLenderPosition(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
-  const [poolBalance, refreshPoolBalance] = usePoolBalance(poolName, poolType)
+  const [poolBalance, refreshPoolBalance] = usePoolBalance(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
 
   useEffect(() => {
     if (!step && lenderPosition?.gt(0) && poolBalance?.gt(0)) {

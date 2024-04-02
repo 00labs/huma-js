@@ -38,12 +38,14 @@ export function ApproveAllowanceModal({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
-  const { provider, account } = useWeb3React()
+  const { provider, account, chainId } = useWeb3React()
   const { poolUnderlyingToken } = poolInfo
   const { symbol } = poolUnderlyingToken
   const poolUnderlyingTokenContract = usePoolUnderlyingTokenContract(
     poolInfo.poolName,
     poolInfo.poolType,
+    chainId,
+    provider,
   )
   const reset = useResetAtom(txAtom)
   const [{ state, txHash }, send] = useAtom(sendTxAtom)

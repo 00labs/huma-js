@@ -1,8 +1,8 @@
 import {
   POOL_NAME,
   POOL_TYPE,
-  PoolContractMap,
   PoolInfoType,
+  getPoolInfo as getPoolInfoInternal,
 } from '@huma-finance/shared'
 
 /**
@@ -15,4 +15,4 @@ export const getPoolInfo = (
   chainId: number,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-): PoolInfoType | undefined => PoolContractMap[chainId]?.[poolType]?.[poolName]
+): PoolInfoType | undefined => getPoolInfoInternal(chainId, poolName, poolType)

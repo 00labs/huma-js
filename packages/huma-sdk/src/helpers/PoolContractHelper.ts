@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BigNumberish, Contract, Overrides, ethers } from 'ethers'
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { BigNumberish, Overrides, ethers } from 'ethers'
+import { BaseCreditPool, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
 import { TransactionResponse } from '@ethersproject/providers'
 
 import {
@@ -9,6 +9,7 @@ import {
   getDefaultGasOptions,
   getERC20Contract,
 } from '../utils'
+import { approveERC20AllowanceIfInsufficient } from './ERC20ContractHelper'
 
 /**
  * Returns an ethers contract instance for a Huma pool contract
@@ -24,12 +25,16 @@ export function getPoolContract(
   chainId: number,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
-): Contract | null {
+): BaseCreditPool | null {
   const poolInfo = getPoolInfo(chainId, poolName, poolType)
 
   if (!poolInfo) return null
 
-  return getContract(poolInfo.pool, poolInfo.poolAbi, signerOrProvider)
+  return getContract<BaseCreditPool>(
+    poolInfo.pool,
+    poolInfo.poolAbi,
+    signerOrProvider,
+  )
 }
 
 /**
@@ -161,7 +166,6 @@ export async function drawdownFromPool(
 
   gasOpts = await getDefaultGasOptions(gasOpts, chainId)
 
-  // TODO: Generate typechain for pool contract
   return poolContract.drawdown(drawdownAmount, gasOpts)
 }
 
@@ -191,10 +195,6 @@ export async function makePaymentToPool(
   if (!poolInfo?.poolUnderlyingToken.address) {
     throw new Error('Could not find pool underlying token address')
   }
-  const poolTokenContract = getERC20Contract(
-    poolInfo?.poolUnderlyingToken.address,
-    signer,
-  )
   const poolContract = getPoolContract(signer, chainId, poolName, poolType)
 
   if (!poolContract) {
@@ -202,21 +202,19 @@ export async function makePaymentToPool(
   }
 
   gasOpts = await getDefaultGasOptions(gasOpts, chainId)
-  const allowance = await poolTokenContract.allowance(
-    await signer.getAddress(),
+  const approvalTx = await approveERC20AllowanceIfInsufficient(
+    signer,
+    poolInfo?.poolUnderlyingToken.address,
     poolContract.address,
+    paymentAmount,
+    gasOpts,
   )
-  if (allowance.lt(paymentAmount)) {
-    const approvalTx = await poolTokenContract.approve(
-      poolContract.address,
-      paymentAmount,
-      gasOpts,
-    )
+
+  if (approvalTx) {
     // Wait for 5 block confirmations since this is required for makePayment
     await approvalTx.wait(5)
   }
 
-  // TODO: Generate typechain for pool contract
   return poolContract.makePayment(
     await signer.getAddress(),
     paymentAmount,

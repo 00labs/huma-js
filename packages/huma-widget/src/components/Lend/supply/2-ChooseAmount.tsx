@@ -48,6 +48,7 @@ export function ChooseAmount({
       : WIDGET_STEP.Transfer
     dispatch(setStep(step))
   }, [dispatch, needApprove])
+
   return (
     <ChooseAmountModal
       title={`Supply ${symbol}`}

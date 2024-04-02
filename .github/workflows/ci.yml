@@ -2,7 +2,7 @@ name: Huma Monorepo CI
 on:
   pull_request:
     types: [opened, synchronize]
-    branches: ["develop", "master"]
+    branches: ["develop", "master", "v2"]
 
 jobs:
   ci:
@@ -11,12 +11,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-          cache: 'yarn'
+          node-version: 18.13.0
+          cache: "yarn"
 
       - name: Cache Yarn dependencies
         uses: actions/cache@v3
@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Lint all
         run: yarn lint:all
@@ -40,7 +40,7 @@ jobs:
 
       - name: Generate docs
         run: yarn docs:all
-        
+
       - name: Check for uncommitted changes
         run: |
           # Check for changes after build/docs

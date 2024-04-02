@@ -1,8 +1,10 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, BigNumberish, ethers } from 'ethers'
 import { isEmpty } from './common'
 import { scientificToDecimal } from './scientificToDecimal'
 
-const numberFormatter = new Intl.NumberFormat('en-US')
+const numberFormatter = new Intl.NumberFormat('en-US', {
+  maximumFractionDigits: 2,
+})
 
 export const formatMoney = (
   num: number | string | undefined,
@@ -28,6 +30,13 @@ export const formatMoney = (
   return moneyFormatter.format(numCast)
 }
 
+export const formatAssets = (
+  assets: BigNumberish | undefined,
+  decimals: number | undefined,
+  notation?: Intl.NumberFormatOptions['notation'],
+) =>
+  formatMoney(ethers.utils.formatUnits(assets ?? 0, decimals), notation) ?? '--'
+
 export const formatNumber = (num: number | string | undefined) => {
   if (isEmpty(num) || Number.isNaN(num)) {
     return num
@@ -39,6 +48,16 @@ export const formatNumber = (num: number | string | undefined) => {
     numCast = Math.round(numCast)
   }
   return numberFormatter.format(numCast)
+}
+
+export const formatAmount = (
+  assets: BigNumberish | undefined,
+  decimals: number | undefined,
+) => {
+  if (!assets || !decimals) {
+    return '--'
+  }
+  return formatNumber(ethers.utils.formatUnits(assets, decimals))
 }
 
 export const downScale = <T = string>(
@@ -84,4 +103,16 @@ export const toBigNumber = (num: string | number) => {
   } catch (e) {
     return BigNumber.from(Number(numStr).toFixed(0))
   }
+}
+
+export const formatBNFixed = (
+  amountBN: BigNumber | undefined,
+  decimals: number,
+  toFixed: number = 0,
+) => {
+  if (!amountBN) {
+    return '--'
+  }
+  const amount = ethers.utils.formatUnits(amountBN, decimals)
+  return Number(amount).toFixed(toFixed)
 }

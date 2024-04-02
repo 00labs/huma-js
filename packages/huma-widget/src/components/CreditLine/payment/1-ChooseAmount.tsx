@@ -25,10 +25,15 @@ export function ChooseAmount({
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const { symbol, decimals } = poolInfo.poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState(0)
-  const { allowance } = useCLPoolAllowance(poolInfo.poolName, account)
+  const { allowance } = useCLPoolAllowance(
+    poolInfo.poolName,
+    chainId,
+    account,
+    provider,
+  )
 
   useEffect(() => {
     setCurrentAmount(totalDueAmount)

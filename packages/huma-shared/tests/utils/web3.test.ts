@@ -36,15 +36,13 @@ describe('getContract', () => {
     expect(result).toBeInstanceOf(Contract)
   })
 
-  it('throws an error when the address is invalid', () => {
-    expect(() => {
-      getContract(invalidAddress, ABI, provider)
-    }).toThrowError(`Invalid 'address' parameter '${invalidAddress}'.`)
+  it('returns null when the address is invalid', () => {
+    const result = getContract(invalidAddress, ABI, provider)
+    expect(result).toBeNull()
   })
 
-  it('throws an error when the address is AddressZero', () => {
-    expect(() => {
-      getContract(AddressZero, ABI, provider)
-    }).toThrowError(`Invalid 'address' parameter '${AddressZero}'.`)
+  it('returns null when the address is AddressZero', () => {
+    const result = getContract(AddressZero, ABI, provider)
+    expect(result).toBeNull()
   })
 })

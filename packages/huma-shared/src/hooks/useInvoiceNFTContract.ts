@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -7,22 +7,28 @@ import { ERC20TransferableReceivable } from '../abis/types/ERC20TransferableRece
 import { POOL_NAME, POOL_TYPE, PoolContractMap } from '../utils/pool'
 import { useContract } from './useContract'
 
-export function useInvoiceNFTContract(poolName: POOL_NAME) {
-  const { chainId } = useWeb3React()
+export function useInvoiceNFTContract(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
   const InvoiceNFTAddress = chainId
     ? PoolContractMap[chainId]?.[POOL_TYPE.Invoice]?.[poolName]?.assetAddress
     : undefined
   return useContract<ERC20TransferableReceivable>(
     InvoiceNFTAddress,
     ERC20_TRANSFERRABLE_ABI,
+    provider,
   )
 }
 
 export function useNFTIds(
   poolName: POOL_NAME,
-  account?: string,
+  chainId: number | undefined,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
 ): [BigNumber[] | undefined, () => void] {
-  const invoiceNFTContract = useInvoiceNFTContract(poolName)
+  const invoiceNFTContract = useInvoiceNFTContract(poolName, chainId, provider)
   const [NFTTokenIds, setNFTTokenIds] = useState<BigNumber[]>()
   const [refreshCount, setRefreshCount] = useState(0)
 
@@ -43,8 +49,12 @@ export function useNFTIds(
   return [NFTTokenIds, refresh]
 }
 
-export function useInvoiceNFTMetadata(poolName: POOL_NAME) {
-  const invoiceNFTContract = useInvoiceNFTContract(poolName)
+export function useInvoiceNFTMetadata(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const invoiceNFTContract = useInvoiceNFTContract(poolName, chainId, provider)
 
   const getTokenMetadatas = useCallback(
     async (tokenIds: string[]) => {
@@ -72,8 +82,12 @@ export function useInvoiceNFTMetadata(poolName: POOL_NAME) {
   return { getTokenMetadatas }
 }
 
-export function useInvoiceNFTApproved(poolName: POOL_NAME) {
-  const invoiceNFTContract = useInvoiceNFTContract(poolName)
+export function useInvoiceNFTApproved(
+  poolName: POOL_NAME,
+  chainId: number | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+) {
+  const invoiceNFTContract = useInvoiceNFTContract(poolName, chainId, provider)
 
   const getApprovedBy = useCallback(
     async (tokenId: string) => {

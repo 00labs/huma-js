@@ -23,10 +23,14 @@ type Props = {
 
 export function ApproveNFT({ poolInfo, tokenId }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
-  const { provider } = useWeb3React()
+  const { chainId, provider } = useWeb3React()
   const [{ state, txHash }, send] = useAtom(sendTxAtom)
   const reset = useResetAtom(txAtom)
-  const invoiceNFTContract = useInvoiceNFTContract(poolInfo.poolName)
+  const invoiceNFTContract = useInvoiceNFTContract(
+    poolInfo.poolName,
+    chainId,
+    provider,
+  )
 
   useEffect(() => {
     if (state === TxStateType.Success) {

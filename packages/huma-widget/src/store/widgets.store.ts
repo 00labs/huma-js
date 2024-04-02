@@ -7,7 +7,10 @@ export enum WIDGET_TYPE {
 
 export enum WIDGET_STEP {
   SignIn = 'SignIn',
+  ChooseTranche = 'ChooseTranche',
+  ChoosePaymentType = 'ChoosePaymentType',
   Evaluation = 'Evaluation',
+  FirstLossCover = 'FirstLossCover',
   ChooseAmount = 'ChooseAmount',
   Permit = 'Permit',
   ApproveAllowance = 'ApproveAllowance',
@@ -46,6 +49,9 @@ export type WidgetState = {
   remainDueAmount?: number
   supplyAmount?: number
   withdrawAmount?: number
+  withdrawShares?: number
+  redeemAmount?: number
+  redeemShares?: number
   errorMessage?: string
   errorReason?: string
   tokenId?: string

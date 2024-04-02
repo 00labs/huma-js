@@ -1,4 +1,5 @@
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
+import { getChainIdFromSignerOrProvider as getChainIdFromSignerOrProviderInternal } from '@huma-finance/shared'
 import { ethers } from 'ethers'
 
 export function isPolygonNetwork(network: number): boolean {
@@ -26,12 +27,5 @@ export function getChainIdFromJsonSignerOrProvider(
 export async function getChainIdFromSignerOrProvider(
   signerOrProvider: ethers.providers.Provider | ethers.Signer,
 ): Promise<number | undefined> {
-  let network
-  if (signerOrProvider instanceof ethers.providers.Provider) {
-    network = await signerOrProvider.getNetwork()
-  } else {
-    network = await signerOrProvider?.provider?.getNetwork()
-  }
-
-  return network?.chainId
+  return getChainIdFromSignerOrProviderInternal(signerOrProvider)
 }

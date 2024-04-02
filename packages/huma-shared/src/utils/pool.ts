@@ -1,24 +1,22 @@
 import BASE_CREDIT_POOL_ABI from '../abis/BaseCreditPool.json'
 import BASE_POOL_CONFIG_ABI from '../abis/BasePoolConfig.json'
 import HDT_ABI from '../abis/HDT.json'
-import RECEIVABLE_FACTORING_POOL_ABI from '../abis/ReceivableFactoringPool.json'
 import STEAM_FACTORING_POOL_ABI from '../abis/StreamFactoringPool.json'
 import TRADABLE_STREAM_ABI from '../abis/TradableStream.json'
 import { ChainEnum } from './chain'
 import { configUtil } from './config'
 
 export enum POOL_NAME {
-  RequestNetwork = 'RequestNetwork',
   HumaCreditLine = 'HumaCreditLine',
   Superfluid = 'Superfluid',
   Jia = 'Jia',
+  JiaV2 = 'JiaV2',
   JiaUSDC = 'JiaUSDC',
   ArfCreditPool1 = 'ArfCreditPool1',
+  ArfCreditPoolV2 = 'ArfCreditPoolV2',
   ArfPoolUSDC = 'ArfPoolUSDC',
-  ArfUSDCMigrationTest = 'ArfUSDCMigrationTest',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
-  Symplifi = 'Symplifi',
   Raincards = 'Raincards',
   Quipu = 'Quipu',
 }
@@ -27,6 +25,7 @@ export enum POOL_TYPE {
   Invoice = 'Invoice',
   CreditLine = 'CreditLine',
   Stream = 'Stream',
+  ReceivableBackedCreditLine = 'ReceivableBackedCreditLine',
 }
 
 export type PoolMapType = {
@@ -45,7 +44,11 @@ export type LenderApprovalProvider = {
   provider?: 'Securitize'
 }
 
+export type PoolVersion = 'v1' | 'v2'
+
 export type PoolInfoType = {
+  chainId: ChainEnum
+  poolVersion: PoolVersion
   basePoolConfig: string
   pool: string
   poolProcessor?: string
@@ -59,6 +62,11 @@ export type PoolInfoType = {
   assetAddress?: string
   poolName: POOL_NAME
   poolType: POOL_TYPE
+  industry?:
+    | 'Supply Chain Financing'
+    | 'Remittance Financing'
+    | 'Green Financing'
+    | 'Invoice Factoring'
   poolAbi: unknown
   basePoolConfigAbi: unknown
   poolAssetAbi?: unknown
@@ -77,12 +85,16 @@ export type PoolInfoType = {
     lenderApprovalProvider?: LenderApprovalProvider
     detailsPage?: boolean
   }
+  isClosed?: boolean
 }
+
+export type PoolInfo = {
+  chainId: ChainEnum
+} & PoolInfoType
 
 export type PoolSubgraphMapType = {
   [chainId: number]: {
     subgraph: string
-    receivablesSubgraph?: string
   }
 }
 
@@ -151,14 +163,6 @@ export const PoolMap: PoolMapType = {
         'impactMarket is empowering entrepreneurs in developing countries to thrive by providing microcredit on-chain.',
       estAPY: '20%',
     },
-    [POOL_NAME.Symplifi]: {
-      name: 'Symplifi Pool',
-      borrowDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      lendDesc:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      estAPY: '20%',
-    },
     [POOL_NAME.Raincards]: {
       name: 'Rain Receivables Pool',
       borrowDesc:
@@ -174,15 +178,7 @@ export const PoolMap: PoolMapType = {
       estAPY: 'N/A%',
     },
   },
-  [POOL_TYPE.Invoice]: {
-    [POOL_NAME.RequestNetwork]: {
-      name: 'Request Network',
-      borrowDesc:
-        'Invoice factoring for your crypto invoices, up to 80% of their value. Only available to select invoicing platforms.',
-      lendDesc:
-        'Earn active yield by participating in this crypto invoice factoring market where loans are backed by collateralized invoice NFTs and paid back automatically when the invoice is paid.',
-    },
-  },
+  [POOL_TYPE.Invoice]: {},
   [POOL_TYPE.Stream]: {
     [POOL_NAME.Superfluid]: {
       name: 'Superfluid',
@@ -192,60 +188,44 @@ export const PoolMap: PoolMapType = {
         'Earn active yield by participating in this crypto stream factoring market where loans are backed by collateralized streaming assets and paid back automatically every moment.',
     },
   },
+  [POOL_TYPE.ReceivableBackedCreditLine]: {},
 }
 
 export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.Polygon]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-polygon',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-polygon',
   },
   [ChainEnum.Goerli]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-goerli',
   },
   [ChainEnum.Mumbai]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-mumbai',
   },
   [ChainEnum.Celo]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-celo',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-celo',
   },
   [ChainEnum.Alfajores]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores',
-    receivablesSubgraph:
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-receivables-alfajores',
+  },
+  [ChainEnum.Localhost]: {
+    subgraph: 'http://localhost:8000/subgraphs/name/huma-localhost',
+  },
+  [ChainEnum.HumaTestnet]: {
+    subgraph:
+      'https://integration.v2.huma.finance:8000/subgraphs/name/huma-localhost',
+  },
+  [ChainEnum.BaseSepolia]: {
+    subgraph:
+      'https://api.studio.thegraph.com/query/38092/huma-base-sepolia/version/latest',
   },
 }
 
 export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Polygon]: {
     [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.HumaCreditLine]: {
-        basePoolConfig: '0x39f7D6040EC30B62c508723e2EDb822413837527',
-        pool: '0xAb3dc5221F373Dd879BEc070058c775A0f6Af759',
-        poolFeeManager: '0x65C5535735581039c5711A9d7c223cff9384334F',
-        poolUnderlyingToken: {
-          address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.HumaCreditLine,
-        poolType: POOL_TYPE.CreditLine,
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x73c16Db24951135BC8A628185BdbfA79115793E5',
-          abi: HDT_ABI,
-        },
-        extra: { hidden: true },
-      },
       [POOL_NAME.Jia]: {
+        chainId: ChainEnum.Polygon,
+        poolVersion: 'v1',
         basePoolConfig: '0x901427A8328139E59EA2401cBD6bB5b1F5e72E37',
         pool: '0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5',
         poolFeeManager: '0x7Ed46Ea23CD1559a77a80F651C2115CDEe55FCD1',
@@ -257,6 +237,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.Jia,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Supply Chain Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -275,6 +256,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Polygon,
+        poolVersion: 'v1',
         basePoolConfig: '0x4AC443e87211B940C9e7c4c6801d24C34bD9f227',
         pool: '0x3EBc1f0644A69c565957EF7cEb5AEafE94Eb6FcE',
         poolFeeManager: '0x989F1194d637A928628a2d8204990E35d198b6D0',
@@ -286,6 +269,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -299,6 +283,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.BSOS]: {
+        chainId: ChainEnum.Polygon,
+        poolVersion: 'v1',
         basePoolConfig: '0x9f536Dc6A2BCf042661C03b4Cc7B21693a499C35',
         pool: '0x95533e56f397152B0013A39586bC97309e9A00a7',
         poolFeeManager: '0xC3bB8745Cc183d97e8c9Ca68587eCD6941Fb4eA6',
@@ -310,6 +296,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.BSOS,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Green Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -323,6 +310,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.Raincards]: {
+        chainId: ChainEnum.Polygon,
+        poolVersion: 'v1',
         basePoolConfig: '0xBD239B764731b15664F62c32b7E0a6cd78a4E34B',
         pool: '0x82a76045dc4543fa4776df1bcad11f2aa6ea51d2',
         poolFeeManager: '0x4384560Eb9d4108fcb90981e7a0f03C21bf782d8',
@@ -346,57 +335,11 @@ export const PoolContractMap: PoolContractMapType = {
           detailsPage: true,
         },
       },
-      [POOL_NAME.Quipu]: {
-        basePoolConfig: '0x26446BF777dA4e1F4A85396bb6Ddc453b868Ae90',
-        pool: '0x1a820fd242ba87dd396519caf4c8a762b19dfdb5',
-        poolFeeManager: '0x09Ddc0aD35d2663a3F5446D373EB5CF01601A599',
-        poolUnderlyingToken: {
-          address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.Quipu,
-        poolType: POOL_TYPE.CreditLine,
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0xF3133bd55E6783292c6e56d17D8D0f0E696d69bB',
-          abi: HDT_ABI,
-        },
-        extra: {
-          hidden: true,
-          borrower: '0xC00Ac1b17B62bb953e991807a047E7268e554910',
-        },
-      },
-    },
-    [POOL_TYPE.Invoice]: {
-      [POOL_NAME.RequestNetwork]: {
-        basePoolConfig: '0x98f41d57C06b302AFf999f3F58f4ae7a3F884590',
-        pool: '0x58AAF1f9cB10F335111A2129273056bbED251B61',
-        poolFeeManager: '0x5B7841b94a3C7246662ef514745b034A6ceaAB15',
-        poolUnderlyingToken: {
-          address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        assetAddress: '0xA9930c8e4638D9a96a3B73e7ABe73a636F986323',
-        poolName: POOL_NAME.RequestNetwork,
-        poolType: POOL_TYPE.Invoice,
-        poolAbi: RECEIVABLE_FACTORING_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0xf5F9297c74e464933e42F4a989e81D931fb20f83',
-          abi: HDT_ABI,
-        },
-        extra: {
-          hidden: true,
-        },
-      },
     },
     [POOL_TYPE.Stream]: {
       [POOL_NAME.Superfluid]: {
+        chainId: ChainEnum.Polygon,
+        poolVersion: 'v1',
         basePoolConfig: '0x22C024496036A8e97F93E14efa0d8379192bb22c',
         pool: '0xF713B5203Cb6f3223830De218c2ed89Ee654b94B',
         poolProcessor: '0x6E2f33b6d3F1E2048d078984f7FFF847C0Ed3bEd',
@@ -429,64 +372,11 @@ export const PoolContractMap: PoolContractMapType = {
       },
     },
   },
-  [ChainEnum.Goerli]: {
-    [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.HumaCreditLine]: {
-        basePoolConfig: '0x0d7bae0e14aF194e52Ea2472737b24044fe6e929',
-        pool: '0xA22D20FB0c9980fb96A9B0B5679C061aeAf5dDE4',
-        poolFeeManager: '0x673b3C1094AE941bb4b2eF9377DaFE3bcCc4b003',
-        poolUnderlyingToken: {
-          address: '0xf17FF940864351631b1be3ac03702dEA085ba51c',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.HumaCreditLine,
-        poolType: POOL_TYPE.CreditLine,
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x61341186E8C3B7cC0De66ae86C65943797C8Fb99',
-          abi: HDT_ABI,
-        },
-        extra: {
-          lenderApprovalProvider: {
-            type: 'KYC',
-            provider: 'Securitize',
-          },
-          detailsPage: true,
-        },
-      },
-    },
-    [POOL_TYPE.Invoice]: {
-      [POOL_NAME.RequestNetwork]: {
-        basePoolConfig: '0xBa779F41ae414dEc63265D79a02DED47fbe007a5',
-        pool: '0x11672c0bBFF498c72BC2200f42461c0414855042',
-        poolFeeManager: '0x7BA6B8eBC9b09c228582814D44D4a0F2B6B0B9E4',
-        poolUnderlyingToken: {
-          address: '0xf17FF940864351631b1be3ac03702dEA085ba51c',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        assetAddress: '0xC2AC172a293d68f548ea343414584aA37eb29Dcd',
-        poolName: POOL_NAME.RequestNetwork,
-        poolType: POOL_TYPE.Invoice,
-        poolAbi: RECEIVABLE_FACTORING_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x27Fa332a5cA06492C2007FF4b143C921Cf779C3b',
-          abi: HDT_ABI,
-        },
-        extra: {
-          hidden: true,
-        },
-      },
-    },
-  },
   [ChainEnum.Alfajores]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Alfajores,
+        poolVersion: 'v1',
         basePoolConfig: '0xae72d424f746ca5c5a4457d7dca15abf2ffd40bb',
         pool: '0x8408faD2cdb181c21AD7Fa5eF6e7B8d5e6b4Eb82',
         poolFeeManager: '0x8605305fd932a82DD8FEA7662D3990a52C8FC8Fc',
@@ -498,6 +388,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -506,6 +397,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ImpactMarket]: {
+        chainId: ChainEnum.Alfajores,
+        poolVersion: 'v1',
         basePoolConfig: '0x9e62ad0d0354047a469135724683ba71c154122e',
         pool: '0x490d2c453c6bbb30cc93445e1eb0d334023e30ae',
         poolFeeManager: '0xbF8B9F511533C8cc4bcAf1B27E9f8CF2b1e1cdD5',
@@ -517,6 +410,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ImpactMarket,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Invoice Factoring',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -529,6 +423,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.HumaCreditLine]: {
+        chainId: ChainEnum.Alfajores,
+        poolVersion: 'v1',
         basePoolConfig: '0x0bb39a0136643d60244070619e2e8ecbddf038ae',
         pool: '0xB6958E6852E1dA4C2468d8c0286884C68519282a',
         poolFeeManager: '0xd6fB372Da1c157Ca769dd1bD33D3e59D1B8376d0',
@@ -552,6 +448,8 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Celo]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.ImpactMarket]: {
+        chainId: ChainEnum.Celo,
+        poolVersion: 'v1',
         basePoolConfig: '0x822ed8a0c1083154ceab6f012f978d12375b8738',
         pool: '0x0aa111db73274c7b1b155dbb9522e927b7747ade',
         poolFeeManager: '0x7Ec6d7219D61d1B7FFD35938C9a84F4d7D33d966',
@@ -563,6 +461,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ImpactMarket,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Invoice Factoring',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -577,6 +476,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Celo,
+        poolVersion: 'v1',
         basePoolConfig: '0x388525cE9fC784A657c73Fb5d70FBc1fa5a53d31',
         pool: '0xc88BD9aa20d6353B43e7d159b67546eD5b7A1808',
         poolFeeManager: '0x5D762498a60a302FBD85A9c1FF2e65B67baBabc6',
@@ -588,6 +489,7 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
@@ -602,6 +504,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ArfPoolUSDC]: {
+        chainId: ChainEnum.Celo,
+        poolVersion: 'v1',
         basePoolConfig: '0x3118F75F5fE1E1e35393bA830d75ff117CF68c3d',
         pool: '0x5a08F38aF4d6e0E727D1DCF8242243D88488Bc47',
         poolFeeManager: '0xDB626Ca15F4f813e973E734F158fA8867C9ED145',
@@ -626,6 +530,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.Jia]: {
+        chainId: ChainEnum.Celo,
+        poolVersion: 'v1',
         basePoolConfig: '0x75be4c971c730e197cae5e643e0f05ce7b4a58fe',
         pool: '0xa190A0ab76F58b491Cc36205B268e8cF5650c576',
         poolFeeManager: '0x0c092Bb9d5bc8DEA9d98FFda84E943816AD6E710',
@@ -650,6 +556,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.JiaUSDC]: {
+        chainId: ChainEnum.Celo,
+        poolVersion: 'v1',
         basePoolConfig: '0xC4531A189b0181a3e16b76Ac9bb4b41476fe5De0',
         pool: '0xE743d0Dd33040437fc8C9A4dA1e60a9c5cD7597d',
         poolFeeManager: '0x8aFB2f658602A86e047BBf36A36AC98C69948d7e',
@@ -675,6 +583,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.Quipu]: {
+        chainId: ChainEnum.Celo,
+        poolVersion: 'v1',
         basePoolConfig: '0x8b0a09032cd485321f640dc1e9cbdeb2b16d41ab',
         pool: '0xaf2e8cfabf419be03a3bfe732f7f29037b0d1fa5',
         poolFeeManager: '0x58806a6F90764eb31fc002A68947fA4825FF9f2D',
@@ -702,6 +612,8 @@ export const PoolContractMap: PoolContractMapType = {
   [ChainEnum.Mumbai]: {
     [POOL_TYPE.Stream]: {
       [POOL_NAME.Superfluid]: {
+        chainId: ChainEnum.Mumbai,
+        poolVersion: 'v1',
         basePoolConfig: '0xf80AD89c7820d2f933c35370cccfA7B6Cc2c93aa',
         pool: '0xC08AC7Ba5E8633ac6398C317dF1CEBED3A313c8A',
         poolProcessor: '0xb78C28a48eE7E7BdBc93E9Fea2862DB595Bd10a3',
@@ -715,6 +627,7 @@ export const PoolContractMap: PoolContractMapType = {
         assetAddress: '0xAEA5908A082F5667aEA425AEACE8dF6aEDb03694',
         poolName: POOL_NAME.Superfluid,
         poolType: POOL_TYPE.Stream,
+        industry: 'Invoice Factoring',
         poolAbi: STEAM_FACTORING_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         poolAssetAbi: TRADABLE_STREAM_ABI,
@@ -735,6 +648,8 @@ export const PoolContractMap: PoolContractMapType = {
     },
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.Raincards]: {
+        chainId: ChainEnum.Mumbai,
+        poolVersion: 'v1',
         basePoolConfig: '0x10b7CBe54178eB6C81b2D84Ac073747BcA744F6C',
         pool: '0xf8065dA82cC990325059c436939c6a90C322E9Dd',
         poolFeeManager: '0x87534B96FD15EbD6Aa0456F45045B541e5E8889a',
@@ -754,6 +669,8 @@ export const PoolContractMap: PoolContractMapType = {
         },
       },
       [POOL_NAME.ArfCreditPool1]: {
+        chainId: ChainEnum.Mumbai,
+        poolVersion: 'v1',
         basePoolConfig: '0xc7E7d40F2D2B8E93E53727ECBec0Bf5683AFb7C4',
         pool: '0x51d996A8B0956F532663eB4fEe5fEC5a6eE81c63',
         poolFeeManager: '0xDe39F0a6Fb305e4B2D4a7621d7e55e783121870B',
@@ -765,33 +682,12 @@ export const PoolContractMap: PoolContractMapType = {
         },
         poolName: POOL_NAME.ArfCreditPool1,
         poolType: POOL_TYPE.CreditLine,
+        industry: 'Remittance Financing',
         poolAbi: BASE_CREDIT_POOL_ABI,
         basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
         HDT: {
           address: '0xd5DC108eDC7dFE5f2811Da5ffAed914C99aCBAe8',
           abi: HDT_ABI,
-        },
-      },
-      [POOL_NAME.Symplifi]: {
-        basePoolConfig: '0x60de6e6727be2cfd0733d790528d7e4ce4049277',
-        pool: '0xCCa17BB13C94E19bAd67a59687D22A68aEe9d7e7',
-        poolFeeManager: '0x4CD872604DA256c752C52541B190E3E482Fd0819',
-        poolUnderlyingToken: {
-          address: '0xb961c37ABDDA55929327fa9d20eBDE6BB8B1348E',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.Symplifi,
-        poolType: POOL_TYPE.CreditLine,
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x58174E6989AfB9e265b3bB1C981B18096C13D83D',
-          abi: HDT_ABI,
-        },
-        extra: {
-          borrower: '0x71a4E7F3A2c67BDBa6Ec9F864A830c255A4bF123',
         },
       },
     },
@@ -816,16 +712,6 @@ export const SupplementaryContractsMap: {
     [SupplementaryContracts.RealWorldReceivable]:
       '0xCf67CcEaC38b5E1880d62b5DB531Ab1E77614E3D',
   },
-  [ChainEnum.Goerli]: {
-    [SupplementaryContracts.MultiSend]:
-      '0x11ED387Fa673852Ba47F96Aa9BEdE37F12De2998',
-    [SupplementaryContracts.RealWorldReceivable]:
-      '0xA1EB18643dd6b75e97D55583BFFfF2311124076f',
-    [SupplementaryContracts.ERC20TransferableReceivable]:
-      '0xC2AC172a293d68f548ea343414584aA37eb29Dcd',
-    [SupplementaryContracts.TestUSDC]:
-      '0xf17FF940864351631b1be3ac03702dEA085ba51c',
-  },
   [ChainEnum.Mumbai]: {
     [SupplementaryContracts.MultiSend]:
       '0x7DeabC1F7E47eD5Cf23Fa4390C48D6ab8543eE82',
@@ -848,14 +734,13 @@ export const SupplementaryContractsMap: {
 
 export function getPoolInfo(
   chainId: number | undefined,
-  poolType: POOL_TYPE,
   poolName: POOL_NAME,
-): PoolInfoType | null {
-  if (chainId === undefined) {
-    chainId = configUtil.DEFAULT_CHAIN_ID
+  poolType: POOL_TYPE,
+): PoolInfoType | undefined {
+  if (!chainId) {
+    return undefined
   }
-
-  return PoolContractMap[chainId]?.[poolType]?.[poolName] ?? null
+  return PoolContractMap[chainId]?.[poolType]?.[poolName]
 }
 
 export function usePools(
@@ -925,4 +810,10 @@ export function getPoolInfoForPoolAddress(
   })
 
   return foundPoolInfo
+}
+
+export function isPoolName(
+  poolName: string | undefined,
+): poolName is POOL_NAME {
+  return Object.keys(POOL_NAME).includes(String(poolName))
 }

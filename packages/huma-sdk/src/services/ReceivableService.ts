@@ -71,7 +71,6 @@ async function getTokenIdByURI(
   )
 
   if (!receivablesData?.rwreceivables?.length) {
-    console.log('No receivables found with this URI.')
     return null
   }
   if (receivablesData?.rwreceivables?.length > 1) {
@@ -436,8 +435,12 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
     pagination,
   )
 
-  const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) =>
-    ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
+  const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) => {
+    if (!rwrInfoBase.tokenURI) {
+      return null
+    }
+    return ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
+  }
   const metadatas = await Promise.all(rwReceivablesBase.map(fetchMetadata))
 
   return rwReceivablesBase.map(
