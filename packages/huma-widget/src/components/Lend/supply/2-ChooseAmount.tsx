@@ -1,10 +1,5 @@
 import { BigNumber } from 'ethers'
-import {
-  PoolInfoType,
-  timeUtil,
-  toBigNumber,
-  upScale,
-} from '@huma-finance/shared'
+import { PoolInfoType, timeUtil, upScale } from '@huma-finance/shared'
 import React, { useCallback, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
