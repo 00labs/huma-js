@@ -268,6 +268,7 @@ export const getLenderPositionV2 = async (
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<LenderPosition | undefined> => {
   if (!account) {
+    console.log('getLenderPositionV2: account is undefined')
     return undefined
   }
   const vaultContract = await getTrancheVaultContractV2(
@@ -276,6 +277,7 @@ export const getLenderPositionV2 = async (
     provider,
   )
   if (!vaultContract) {
+    console.log('getLenderPositionV2: vaultContract is undefined')
     return undefined
   }
   const [shares, assets] = await Promise.all([

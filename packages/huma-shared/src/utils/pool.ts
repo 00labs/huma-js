@@ -14,7 +14,6 @@ export enum POOL_NAME {
   JiaUSDC = 'JiaUSDC',
   ArfCreditPool1 = 'ArfCreditPool1',
   ArfCreditPoolV2 = 'ArfCreditPoolV2',
-  ArfCreditLinePoolV2 = 'ArfCreditLinePoolV2',
   ArfPoolUSDC = 'ArfPoolUSDC',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',

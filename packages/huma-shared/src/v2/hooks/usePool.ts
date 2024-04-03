@@ -337,7 +337,7 @@ export function useLenderApprovedAnyTrancheV2(
   poolName: POOL_NAME,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [boolean | undefined, () => void] {
+): [Boolean | undefined, () => void] {
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
   const juniorVaultContract = useTrancheVaultContractV2(
@@ -378,7 +378,7 @@ export function useLenderApprovedV2(
   trancheType: TrancheType,
   account: string | undefined,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): [boolean | undefined, () => void] {
+): [Boolean | undefined, () => void] {
   const [approved, setApproved] = useState<boolean>()
   const [refreshCount, refresh] = useForceRefresh()
   const vaultContract = useTrancheVaultContractV2(
