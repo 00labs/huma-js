@@ -71,7 +71,7 @@ export const downScale = <T = string>(
     // eslint-disable-next-line prefer-destructuring
     num = num.split('.')[0]
   }
-  const result = ethers.utils.formatUnits(num, decimals)
+  const result = ethers.utils.formatUnits(num, decimals).split('.')[0]
   if (typeof num === 'number') {
     return Number(result) as T
   }

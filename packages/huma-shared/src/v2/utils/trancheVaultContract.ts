@@ -16,10 +16,8 @@ export const getTrancheVaultContractV2 = async (
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): Promise<TrancheVault | null> => {
   const chainId = await getChainIdFromSignerOrProvider(provider)
-  console.log('getTrancheVaultContract: chainId', chainId)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
-    console.log('getTrancheVaultContract: poolInfo not found')
     return null
   }
 

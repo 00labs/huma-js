@@ -280,6 +280,7 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0xEA57a8A51377752fFddaa3db4d13CE8F97677F2D',
           disableBorrow: true,
           detailsPage: true,
+          hidden: true,
         },
       },
       [POOL_NAME.BSOS]: {
@@ -368,6 +369,7 @@ export const PoolContractMap: PoolContractMapType = {
             symbol: 'USDCx',
             decimals: 18,
           },
+          hidden: true,
         },
       },
     },
@@ -501,6 +503,7 @@ export const PoolContractMap: PoolContractMapType = {
           rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           disableBorrow: true,
           detailsPage: true,
+          hidden: true,
         },
       },
       [POOL_NAME.ArfPoolUSDC]: {
@@ -527,6 +530,7 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           rwrUploader: '0xea57a8a51377752ffddaa3db4d13ce8f97677f2d',
           disableBorrow: true,
+          hidden: true,
         },
       },
       [POOL_NAME.Jia]: {
