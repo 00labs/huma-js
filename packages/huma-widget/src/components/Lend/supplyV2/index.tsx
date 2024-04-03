@@ -92,10 +92,12 @@ export function LendSupplyV2({
 
       if (poolInfo.supplyLink) {
         openInNewTab(poolInfo.supplyLink)
+        handleClose()
       }
     }
   }, [
     dispatch,
+    handleClose,
     lenderApproveStatusFetched,
     lenderApprovedJunior,
     lenderApprovedSenior,
