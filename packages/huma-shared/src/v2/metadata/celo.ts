@@ -4,10 +4,10 @@ import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
 export const CELO_METADATA: PoolsInfoV2 = {
-  ArfCreditLinePoolV2: {
+  ArfCreditPoolV2: {
     chainId: ChainEnum.Celo,
     poolVersion: 'v2',
-    poolName: POOL_NAME.ArfCreditLinePoolV2,
+    poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x23be37d5AAb59101B9BB31A96D1bF5D7112250f7',
     poolConfig: '0xfd00E8709cC02B020A63a980729567E808671c21',
@@ -24,7 +24,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf Credit Line Pool V2',
+    title: 'Arf V2 Pool',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
   },
