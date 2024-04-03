@@ -537,10 +537,10 @@ describe('useAccountStats', () => {
         creditRecordStatic: mockCreditRecordStatic,
         receivableInfo: mockReceivableInfo,
         isApproved: true,
-        payoffAmount: '305.0',
-        principalAmount: '280.0',
-        creditAvailableAmount: '220.0',
-        totalDueAmount: '200.0',
+        payoffAmount: '305',
+        principalAmount: '280',
+        creditAvailableAmount: '220',
+        totalDueAmount: '200',
       })
     })
 
@@ -554,10 +554,10 @@ describe('useAccountStats', () => {
         creditRecordStatic: mockCreditRecordStatic,
         receivableInfo: mockReceivableInfo,
         isApproved: false,
-        payoffAmount: '305.0',
-        principalAmount: '280.0',
-        creditAvailableAmount: '220.0',
-        totalDueAmount: '200.0',
+        payoffAmount: '305',
+        principalAmount: '280',
+        creditAvailableAmount: '220',
+        totalDueAmount: '200',
       })
     })
   })

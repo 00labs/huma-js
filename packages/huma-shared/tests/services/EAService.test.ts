@@ -80,10 +80,10 @@ describe('approve', () => {
 
     expect(result).toEqual({
       token: { symbol: 'USDC', name: 'USDC', decimal: 6 },
-      receivable: { amount: '1000000000', amountFormatted: '1000.0' },
+      receivable: { amount: '1000000000', amountFormatted: '1000' },
       terms: {
         creditLimit: '1000000000',
-        creditLimitFormatted: '1000.0',
+        creditLimitFormatted: '1000',
         amount: 1000000000,
         intervalInDays: 30,
         remainingPeriods: 12,
