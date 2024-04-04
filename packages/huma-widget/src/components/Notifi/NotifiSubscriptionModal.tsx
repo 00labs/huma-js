@@ -1,38 +1,26 @@
-import React, { useCallback, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { getBlockchainConfigFromChain, txAtom } from '@huma-finance/shared'
+import { Box, css, TextField, Typography, useTheme } from '@mui/material'
 import {
-  NotifiFrontendClient,
-  Uint8SignMessageFunction,
-  SignMessageParams,
+  BroadcastEventTypeItem,
   CardConfigItemV1,
   DirectPushEventTypeItem,
   EventTypeItem,
-  BroadcastEventTypeItem,
+  NotifiFrontendClient,
+  SignMessageParams,
+  Uint8SignMessageFunction,
 } from '@notifi-network/notifi-frontend-client'
-import {
-  checkIsDev,
-  getBlockchainConfigFromChain,
-  txAtom,
-} from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import {
-  Box,
-  Input,
-  InputAdornment,
-  Typography,
-  css,
-  useTheme,
-} from '@mui/material'
-import Email from '@mui/icons-material/Email'
 import { useResetAtom } from 'jotai/utils'
+import React, { useCallback, useState } from 'react'
 
-import { WrapperModal } from '../WrapperModal'
-import { BottomButton } from '../BottomButton'
-import { LoadingModal } from '../LoadingModal'
-import { CheckIcon } from '../icons'
-import { resetState } from '../../store/widgets.reducers'
-import { useAppDispatch } from '../../hooks/useRedux'
 import { useNotifiClient } from '../../hooks/useNotifi'
+import { useAppDispatch } from '../../hooks/useRedux'
+import { resetState } from '../../store/widgets.reducers'
+import { BottomButton } from '../BottomButton'
+import { CheckIcon } from '../icons'
+import { LoadingModal } from '../LoadingModal'
+import { WrapperModal } from '../WrapperModal'
 
 type Props = {
   handleSuccess: () => void
@@ -103,7 +91,7 @@ export function NotifiSubscriptionModal({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
-  const { notifiClient } = useNotifiClient(account, chainId, checkIsDev())
+  const { notifiClient } = useNotifiClient(account, chainId)
 
   const signMessage: Uint8SignMessageFunction = async (
     message: Uint8Array,
@@ -176,7 +164,7 @@ export function NotifiSubscriptionModal({
       margin-top: ${theme.spacing(6)};
     `,
     inputField: css`
-      width: 90%;
+      width: 100%;
       font-size: 16px;
     `,
     inputWrapper: css`
@@ -215,33 +203,33 @@ export function NotifiSubscriptionModal({
 
   return (
     <WrapperModal title='Connect Your Email'>
-      <Typography variant='body2' margin={theme.spacing(1, 0)}>
-        Connect your wallet to receive important emails about your account
+      <Typography
+        variant='body2'
+        textAlign='justify'
+        margin={theme.spacing(6, 0, 4, 0)}
+      >
+        Connect your emails to receive important update about your account.
       </Typography>
       <Box css={styles.inputWrapper}>
-        <Input
+        <TextField
           css={styles.inputField}
+          label='Your Email'
           type='email'
           value={emailAddress}
           onChange={handleEmailAddressChange}
-          placeholder='youremail@example.com'
-          startAdornment={
-            <InputAdornment position='start'>
-              <Email />
-            </InputAdornment>
-          }
+          variant='standard'
         />
       </Box>
       <Box css={styles.disclaimer}>
         You can adjust these settings at any time by clicking the alert icon in
-        the header
+        the header.
       </Box>
       <BottomButton
         variant='contained'
         onClick={logInAndSubscribe}
         disabled={!emailValid || isLoading}
       >
-        CONNECT WALLET
+        CONNECT EMAIL
       </BottomButton>
     </WrapperModal>
   )

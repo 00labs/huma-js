@@ -1,4 +1,5 @@
 import type { AddEthereumChainParameter } from '@web3-react/types'
+import { ethers } from 'ethers'
 
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Ether',
@@ -35,25 +36,19 @@ interface ExtendedChainInformation extends BasicChainInformation {
 }
 
 export enum ChainEnum {
-  // Mainnet = 1,
   Polygon = 137,
   Goerli = 5,
   Mumbai = 80001,
   Celo = 42220,
   Alfajores = 44787,
+  Localhost = 31338,
+  HumaTestnet = 31337,
+  BaseSepolia = 84532,
 }
 
 export const CHAINS: {
   [chainId: number]: BasicChainInformation | ExtendedChainInformation
 } = {
-  // [ChainEnum.Mainnet]: {
-  //   urls: [],
-  //   name: 'Mainnet',
-  //   nativeCurrency: ETH,
-  //   icon: EthereumIcon,
-  //   explorer: 'https://etherscan.io',
-  //   wait: 6,
-  // },
   [ChainEnum.Polygon]: {
     id: ChainEnum.Polygon,
     urls: ['https://polygon-rpc.com/'],
@@ -72,6 +67,26 @@ export const CHAINS: {
     explorer: 'https://goerli.etherscan.io',
     wait: 1,
     requestAPIUrl: 'https://dev.goerli.rnreader.huma.finance',
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+  [ChainEnum.Localhost]: {
+    id: ChainEnum.Localhost,
+    urls: ['http://localhost:8545'],
+    name: 'Localhost',
+    nativeCurrency: ETH,
+    explorer: '',
+    wait: 1,
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+  [ChainEnum.HumaTestnet]: {
+    id: ChainEnum.HumaTestnet,
+    urls: ['https://integration.v2.huma.finance'],
+    name: 'HumaTestnet',
+    nativeCurrency: ETH,
+    explorer: '',
+    wait: 1,
     isTestnet: true,
     icon: 'Ethereum',
   },
@@ -105,6 +120,22 @@ export const CHAINS: {
     isTestnet: true,
     icon: 'Celo',
   },
+  [ChainEnum.BaseSepolia]: {
+    id: ChainEnum.BaseSepolia,
+    urls: ['https://sepolia.base.org'],
+    name: 'BaseSepolia',
+    nativeCurrency: ETH,
+    explorer: 'https://sepolia.basescan.org',
+    wait: 1,
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+}
+
+export function isChainEnum(
+  chainId: number | string | undefined,
+): chainId is keyof typeof ChainEnum {
+  return Object.keys(ChainEnum).includes(String(chainId))
 }
 
 function isExtendedChainInformation(
@@ -183,4 +214,22 @@ export function getExplorerUrl(
   }
 
   return `${chain.explorer}/${type}/${hash}`
+}
+
+/**
+ * Get the chain ID from a signer or provider object.
+ * @param {ethers.provider.Provider | ethers.Signer | undefined} signerOrProvider - The signer or provider object to get the chain ID from.
+ * @returns {number} - The chain ID.
+ */
+export async function getChainIdFromSignerOrProvider(
+  signerOrProvider: ethers.providers.Provider | ethers.Signer | undefined,
+): Promise<number | undefined> {
+  let network
+  if (signerOrProvider instanceof ethers.providers.Provider) {
+    network = await signerOrProvider.getNetwork()
+  } else {
+    network = await signerOrProvider?.provider?.getNetwork()
+  }
+
+  return network?.chainId
 }

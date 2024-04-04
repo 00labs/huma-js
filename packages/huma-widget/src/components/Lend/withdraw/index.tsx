@@ -42,21 +42,30 @@ export function LendWithdraw({
   handleSuccess,
 }: LendWithdrawProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const poolName = POOL_NAME[poolNameStr]
   const poolType = POOL_TYPE[poolTypeStr]
-  const poolInfo = usePoolInfo(poolName, poolType)
+  const poolInfo = usePoolInfo(poolName, poolType, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [lenderPosition, refreshLenderPosition] = useLenderPosition(
     poolName,
     poolType,
+    chainId,
     account,
+    provider,
   )
-  const [poolBalance, refreshPoolBalance] = usePoolBalance(poolName, poolType)
+  const [poolBalance, refreshPoolBalance] = usePoolBalance(
+    poolName,
+    poolType,
+    chainId,
+    provider,
+  )
 
   useEffect(() => {
-    if (!step && lenderPosition && poolBalance) {
+    if (!step && lenderPosition?.gt(0) && poolBalance?.gt(0)) {
       dispatch(setStep(WIDGET_STEP.CheckWithdrawable))
+    } else if (!step && (lenderPosition?.eq(0) || poolBalance?.eq(0))) {
+      dispatch(setStep(WIDGET_STEP.Error))
     }
   }, [dispatch, lenderPosition, poolBalance, step])
 
@@ -81,14 +90,14 @@ export function LendWithdraw({
       handleClose={handleClose}
       handleSuccess={handleWithdrawSuccess}
     >
-      {(!step || step === WIDGET_STEP.CheckWithdrawable) && (
+      {step === WIDGET_STEP.CheckWithdrawable && (
         <CheckWithdrawable poolInfo={poolInfo} handleClose={handleClose} />
       )}
-      {step === WIDGET_STEP.ChooseAmount && (
+      {step === WIDGET_STEP.ChooseAmount && lenderPosition && poolBalance && (
         <ChooseAmount
           poolInfo={poolInfo}
-          lenderPosition={lenderPosition!}
-          poolBalance={poolBalance!}
+          lenderPosition={lenderPosition}
+          poolBalance={poolBalance}
         />
       )}
       {step === WIDGET_STEP.Transfer && <Transfer poolInfo={poolInfo} />}

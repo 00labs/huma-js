@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { PoolInfoType, toBigNumber, upScale } from '@huma-finance/shared'
 import React, { useCallback } from 'react'
+import { BigNumber } from 'ethers'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -17,7 +18,10 @@ export function Transfer({ poolInfo }: Props): React.ReactElement {
   const { account } = useWeb3React()
   const { paymentAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.poolUnderlyingToken
-  const paymentBigNumber = toBigNumber(upScale(paymentAmount!, decimals))
+  const paymentBigNumber = upScale<BigNumber>(
+    toBigNumber(paymentAmount!),
+    decimals,
+  )
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))

@@ -3,7 +3,6 @@ import {
   checkIsDev,
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
-  getNotifiDappId,
 } from '@huma-finance/shared'
 import {
   NotifiFrontendClient,
@@ -34,7 +33,6 @@ export const useDoesChainSupportNotifi = (
 export const useNotifiClient = (
   account: string | undefined,
   chainId: number | undefined,
-  isDev: boolean,
 ) => {
   const [notifiClient, setNotifiClient] = useState<NotifiFrontendClient | null>(
     null,
@@ -46,8 +44,8 @@ export const useNotifiClient = (
       if (account != null && chainId != null && notifiChainSupported) {
         const client = newFrontendClient({
           account: { publicKey: account },
-          tenantId: getNotifiDappId(isDev),
-          env: isDev ? 'Development' : 'Production',
+          tenantId: 'humafinanceprod',
+          env: 'Production',
           walletBlockchain: getBlockchainConfigFromChain(chainId),
         })
         await client.initialize()
@@ -56,7 +54,7 @@ export const useNotifiClient = (
     }
 
     createNotifiClient()
-  }, [account, chainId, isDev, notifiChainSupported])
+  }, [account, chainId, notifiChainSupported])
 
   return { notifiClient }
 }
@@ -66,7 +64,7 @@ export const useIsFirstTimeNotifiUser = (
   chainId: number | undefined,
 ) => {
   const [isFirstTimeNotifiUser, setIsFirstTimeNotifiUser] = useState(false)
-  const { notifiClient } = useNotifiClient(account, chainId, checkIsDev())
+  const { notifiClient } = useNotifiClient(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
 
   useEffect(() => {

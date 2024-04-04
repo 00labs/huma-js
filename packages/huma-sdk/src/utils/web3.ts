@@ -2,7 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from '@ethersproject/address'
 import { ethers } from 'ethers'
-import { ERC20_ABI } from '@huma-finance/shared'
+import { ERC20_ABI, Erc20 } from '@huma-finance/shared'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,22 +16,22 @@ export function isAddress(value: any): string | false {
   }
 }
 
-export function getContract(
+export function getContract<T = Contract>(
   address: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ABI: any,
   signerOrProvider: ethers.providers.Provider | ethers.Signer,
-): Contract {
+): T {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new Contract(address, ABI, signerOrProvider)
+  return new Contract(address, ABI, signerOrProvider) as T
 }
 
 export function getERC20Contract(
   address: string,
   signerOrProvider: ethers.providers.Provider | ethers.Signer,
-): Contract {
-  return getContract(address, ERC20_ABI, signerOrProvider)
+): Erc20 {
+  return getContract<Erc20>(address, ERC20_ABI, signerOrProvider)
 }

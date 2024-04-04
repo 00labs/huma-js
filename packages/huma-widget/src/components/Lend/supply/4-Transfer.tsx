@@ -1,6 +1,7 @@
-import { PoolInfoType, toBigNumber, upScale } from '@huma-finance/shared'
+import { PoolInfoType, upScale } from '@huma-finance/shared'
 import React, { useCallback } from 'react'
 
+import { BigNumber } from 'ethers'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -15,7 +16,10 @@ export function Transfer({ poolInfo }: Props): React.ReactElement {
   const dispatch = useAppDispatch()
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.poolUnderlyingToken
-  const supplyBigNumber = toBigNumber(upScale(supplyAmount!, decimals))
+  const supplyBigNumber = upScale<BigNumber>(
+    BigNumber.from(supplyAmount!),
+    decimals,
+  )
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))

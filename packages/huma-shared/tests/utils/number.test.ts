@@ -48,7 +48,7 @@ describe('downScale', () => {
   })
 
   it('returns the down-scaled number if the input is a valid number', () => {
-    expect(downScale('123000000.456', 6)).toBe('123.0')
+    expect(downScale('123000000.456', 6)).toBe('123')
     expect(downScale(123000000, 6)).toBe(123)
   })
 })

@@ -5,43 +5,41 @@ import {
   POOL_TYPE,
   getPoolInfo,
   getPoolInfoForPoolAddress,
+  isPoolName,
   usePools,
 } from '../../src/utils/pool'
 
 describe('getPoolInfo', () => {
-  it('returns default if chainId is undefined', () => {
-    const poolInfo = getPoolInfo(
-      undefined,
-      POOL_TYPE.Stream,
-      POOL_NAME.Superfluid,
-    )
-    expect(poolInfo?.pool).toBe('0xF713B5203Cb6f3223830De218c2ed89Ee654b94B')
+  it('returns undefined if chainId is undefined', () => {
+    expect(
+      getPoolInfo(undefined, POOL_NAME.Superfluid, POOL_TYPE.Stream),
+    ).toBeUndefined()
   })
 
-  it('returns null if poolType or poolName is not found', () => {
+  it('returns undefined if poolType or poolName is not found', () => {
     expect(
       getPoolInfo(
         ChainEnum.Polygon,
-        'InvalidPoolType' as any,
         POOL_NAME.Superfluid,
+        'InvalidPoolType' as any,
       ),
-    ).toBeNull()
+    ).toBeUndefined()
     expect(
       getPoolInfo(
         ChainEnum.Polygon,
-        POOL_TYPE.Stream,
         'InvalidPoolName' as any,
+        POOL_TYPE.Stream,
       ),
-    ).toBeNull()
+    ).toBeUndefined()
   })
 
   it('returns the pool info if chainId, poolType, and poolName are valid', () => {
     const poolInfo = getPoolInfo(
-      ChainEnum.Goerli,
+      ChainEnum.Polygon,
+      POOL_NAME.Jia,
       POOL_TYPE.CreditLine,
-      POOL_NAME.HumaCreditLine,
     )
-    expect(poolInfo?.pool).toBe('0xA22D20FB0c9980fb96A9B0B5679C061aeAf5dDE4')
+    expect(poolInfo?.pool).toBe('0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5')
   })
 })
 
@@ -65,16 +63,28 @@ describe('usePools', () => {
 
 test('getPoolInfoForPoolAddress', () => {
   let poolInfo = getPoolInfoForPoolAddress(
-    ChainEnum.Goerli,
-    '0x11672c0bBFF498c72BC2200f42461c0414855042',
+    ChainEnum.Polygon,
+    '0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5',
   )
 
-  expect(poolInfo?.poolName).toBe(POOL_NAME.RequestNetwork)
+  expect(poolInfo?.poolName).toBe(POOL_NAME.Jia)
 
   poolInfo = getPoolInfoForPoolAddress(
-    ChainEnum.Goerli,
+    ChainEnum.Polygon,
     '0x0000000000000000000000000000000000000000',
   )
 
   expect(poolInfo).toBeNull()
+})
+
+describe('isPoolName', () => {
+  it('should return true for valid poolName', () => {
+    expect(isPoolName('ImpactMarket')).toBe(true)
+    expect(isPoolName('Superfluid')).toBe(true)
+  })
+
+  it('should return false for invalid poolName', () => {
+    expect(isPoolName('InvalidPool')).toBe(false)
+    expect(isPoolName(undefined)).toBe(false)
+  })
 })

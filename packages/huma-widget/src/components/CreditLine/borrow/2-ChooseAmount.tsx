@@ -23,15 +23,24 @@ export function ChooseAmount({
   accountStats,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const { poolUnderlyingToken } = poolInfo
   const { symbol, decimals } = poolUnderlyingToken
-  const { getFeesCharged } = useCLFeeManager(poolInfo.poolName)
+  const { getFeesCharged } = useCLFeeManager(
+    poolInfo.poolName,
+    chainId,
+    provider,
+  )
   const [chargedFees, setChargedFees] = useState(0)
   const [currentAmount, setCurrentAmount] = useState(0)
   const { creditRecordStatic, creditAvailableAmount } = accountStats
 
-  const { approved } = useCLPoolAllowance(poolInfo.poolName, account)
+  const { approved } = useCLPoolAllowance(
+    poolInfo.poolName,
+    chainId,
+    account,
+    provider,
+  )
   const handleChangeAmount = useCallback(
     (newAmount: number) => {
       setCurrentAmount(newAmount)

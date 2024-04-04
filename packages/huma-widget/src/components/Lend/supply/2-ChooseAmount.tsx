@@ -1,10 +1,5 @@
 import { BigNumber } from 'ethers'
-import {
-  PoolInfoType,
-  timeUtil,
-  toBigNumber,
-  upScale,
-} from '@huma-finance/shared'
+import { PoolInfoType, timeUtil, upScale } from '@huma-finance/shared'
 import React, { useCallback, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -30,8 +25,11 @@ export function ChooseAmount({
   const { poolUnderlyingToken } = poolInfo
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState(0)
-  const depositAmount = upScale<number>(currentAmount, decimals)
-  const needApprove = toBigNumber(depositAmount).gt(allowance)
+  const depositAmount = upScale<BigNumber>(
+    BigNumber.from(currentAmount),
+    decimals,
+  )
+  const needApprove = depositAmount.gt(allowance)
   const withdrawlLockoutDays = timeUtil.secondsToDays(withdrawlLockoutSeconds)
 
   const handleChangeAmount = useCallback(
@@ -48,6 +46,7 @@ export function ChooseAmount({
       : WIDGET_STEP.Transfer
     dispatch(setStep(step))
   }, [dispatch, needApprove])
+
   return (
     <ChooseAmountModal
       title={`Supply ${symbol}`}

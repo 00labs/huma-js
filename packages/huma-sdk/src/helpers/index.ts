@@ -1,3 +1,5 @@
 export * from './RealWorldReceivableContractHelper'
 export * from './ERC20TransferableReceivableContractHelper'
 export * from './PoolContractHelper'
+export * from './v2/ReceivableContractHelper'
+export * from './v2/ReceivableBackedCreditLineContractHelper'

@@ -18,6 +18,9 @@
 <dl>
 <dt><a href="#defaultWrapper">defaultWrapper()</a></dt>
 <dd><p>All built-in and custom scalars, mapped to their actual values</p></dd>
+<dt><a href="#approveERC20AllowanceIfInsufficient">approveERC20AllowanceIfInsufficient(signer, tokenAddress, spenderAddress, allowanceAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;(TransactionResponse|null)&gt;</code></dt>
+<dd><p>Approves an ERC20 allowance for a spender address, if the current allowance is insufficient.
+Allowance is required to do certain actions on the Huma protocol (e.g. makePayment)</p></dd>
 <dt><a href="#getERC20TransferableReceivableContract">getERC20TransferableReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the ERC20TransferableReceivable contract
 associated with the given pool name on the current chain.</p></dd>
@@ -36,6 +39,21 @@ attempt to first increase the allowance of the pool.</p></dd>
 <dd><p>Approves an allowance for a Huma pool contract, which is required to do certain actions (e.g. makePayment)</p></dd>
 <dt><a href="#getRealWorldReceivableContract">getRealWorldReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the RealWorldReceivable contract
+associated with the given pool name on the current chain.</p></dd>
+<dt><a href="#getReceivableBackedCreditLineContractV2">getReceivableBackedCreditLineContractV2(signerOrProvider, poolName)</a> ⇒ <code>ReceivableBackedCreditLine</code> | <code>null</code></dt>
+<dd><p>Returns an ethers contract instance for the V2 Receivable contract
+associated with the given pool name on the current chain.</p></dd>
+<dt><a href="#getTotalDueV2">getTotalDueV2(provider, poolName)</a> ⇒ <code>BigNumber</code> | <code>null</code></dt>
+<dd><p>Returns account's total due amount in BigNumber format
+associated with the given pool name on the current chain.</p></dd>
+<dt><a href="#drawdownWithReceivable">drawdownWithReceivable(signer, poolName, receivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
+<dd><p>Draws down from a pool using a receivable.</p></dd>
+<dt><a href="#makePaymentWithReceivable">makePaymentWithReceivable(signer, poolName, receivableId, paymentAmount, principalOnly, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
+<dd><p>Makes a payment with a receivable.</p></dd>
+<dt><a href="#makePrincipalPaymentAndDrawdownWithReceivable">makePrincipalPaymentAndDrawdownWithReceivable(signer, poolName, paymentReceivableId, paymentAmount, drawdownReceivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
+<dd><p>Makes a principal payment and drawdown with receivables.</p></dd>
+<dt><a href="#getReceivableContractV2">getReceivableContractV2(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
+<dd><p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#useContract">useContract(address, ABI, signerOrProvider)</a> ⇒ <code>T</code> | <code>null</code></dt>
 <dd><p>Custom hook for creating an ethers instance of a smart contract.</p></dd>
@@ -475,6 +493,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.getLastFactorizedAmountFromPool(userAddress, chainId, poolName, poolType)](#SubgraphService.getLastFactorizedAmountFromPool) ⇒ <code>Promise.&lt;number&gt;</code>
     * [.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getRWReceivableInfo) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
     * [.getPoolStats(chainId, pool)](#SubgraphService.getPoolStats) ⇒ <code>Promise.&lt;{PoolStats}&gt;</code>
+    * [.checkBorrowAndLendHistory(chainId, pool, userAddress)](#SubgraphService.checkBorrowAndLendHistory) ⇒ <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code>
 
 <a name="SubgraphService.getSubgraphUrlForChainId"></a>
 
@@ -548,12 +567,45 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | chainId | <code>number</code> | <p>The ID of the chain.</p> |
 | pool | <code>string</code> | <p>The address of the pool.</p> |
 
+<a name="SubgraphService.checkBorrowAndLendHistory"></a>
+
+### SubgraphService.checkBorrowAndLendHistory(chainId, pool, userAddress) ⇒ <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code>
+<p>Returns if user has borrow or lend history.</p>
+
+**Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
+**Returns**: <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code> - <p>If user has borrow or lend history.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chainId | <code>number</code> | <p>The ID of the chain.</p> |
+| pool | <code>string</code> | <p>The address of the pool.</p> |
+| userAddress | <code>string</code> | <p>The address of the user.</p> |
+
 <a name="defaultWrapper"></a>
 
 ## defaultWrapper()
 <p>All built-in and custom scalars, mapped to their actual values</p>
 
 **Kind**: global function  
+<a name="approveERC20AllowanceIfInsufficient"></a>
+
+## approveERC20AllowanceIfInsufficient(signer, tokenAddress, spenderAddress, allowanceAmount, [gasOpts]) ⇒ <code>Promise.&lt;(TransactionResponse\|null)&gt;</code>
+<p>Approves an ERC20 allowance for a spender address, if the current allowance is insufficient.
+Allowance is required to do certain actions on the Huma protocol (e.g. makePayment)</p>
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;(TransactionResponse\|null)&gt;</code> - <ul>
+<li>A Promise of the transaction response, or null if the allowance was already sufficient.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signer | <code>ethers.Signer</code> | <p>The signer used to send the transaction.</p> |
+| tokenAddress | <code>string</code> | <p>The address of the ERC20 token to approve.</p> |
+| spenderAddress | <code>string</code> | <p>The address of the spender to approve an allowance for.</p> |
+| allowanceAmount | <code>BigNumber</code> | <p>The amount of tokens to approve, if applicable. Denominated in the ERC20 tokens.</p> |
+| [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
+
 <a name="getERC20TransferableReceivableContract"></a>
 
 ## getERC20TransferableReceivableContract(signerOrProvider, chainId) ⇒ <code>Contract</code> \| <code>null</code>
@@ -704,6 +756,105 @@ associated with the given pool name on the current chain.</p>
 
 **Kind**: global function  
 **Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the RealWorldReceivable contract or null if it could not be found.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
+| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
+
+<a name="getReceivableBackedCreditLineContractV2"></a>
+
+## getReceivableBackedCreditLineContractV2(signerOrProvider, poolName) ⇒ <code>ReceivableBackedCreditLine</code> \| <code>null</code>
+<p>Returns an ethers contract instance for the V2 Receivable contract
+associated with the given pool name on the current chain.</p>
+
+**Kind**: global function  
+**Returns**: <code>ReceivableBackedCreditLine</code> \| <code>null</code> - <p>A contract instance for the ReceivableBackedCreditLine contract or null if it could not be found.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
+
+<a name="getTotalDueV2"></a>
+
+## getTotalDueV2(provider, poolName) ⇒ <code>BigNumber</code> \| <code>null</code>
+<p>Returns account's total due amount in BigNumber format
+associated with the given pool name on the current chain.</p>
+
+**Kind**: global function  
+**Returns**: <code>BigNumber</code> \| <code>null</code> - <p>The account's total due amount in BigNumber format</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| provider | <code>JsonRpcProvider</code> \| <code>Web3Provider</code> | <p>The provider instance to use for the contract.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
+
+<a name="drawdownWithReceivable"></a>
+
+## drawdownWithReceivable(signer, poolName, receivableId, drawdownAmount, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+<p>Draws down from a pool using a receivable.</p>
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;TransactionResponse&gt;</code> - <ul>
+<li>A Promise of the transaction response.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signer | <code>ethers.Signer</code> | <p>The signer used to send the transaction.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to drawdown from.</p> |
+| receivableId | <code>BigNumberish</code> | <p>The ID of the receivable.</p> |
+| drawdownAmount | <code>BigNumberish</code> | <p>The amount to drawdown.</p> |
+| [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
+
+<a name="makePaymentWithReceivable"></a>
+
+## makePaymentWithReceivable(signer, poolName, receivableId, paymentAmount, principalOnly, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+<p>Makes a payment with a receivable.</p>
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;TransactionResponse&gt;</code> - <ul>
+<li>A Promise of the transaction response.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signer | <code>ethers.Signer</code> | <p>The signer used to send the transaction.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool to interact with.</p> |
+| receivableId | <code>BigNumberish</code> | <p>The ID of the receivable.</p> |
+| paymentAmount | <code>BigNumberish</code> | <p>The amount to payback.</p> |
+| principalOnly | <code>boolean</code> | <p>Whether this payment should ONLY apply to the principal</p> |
+| [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
+
+<a name="makePrincipalPaymentAndDrawdownWithReceivable"></a>
+
+## makePrincipalPaymentAndDrawdownWithReceivable(signer, poolName, paymentReceivableId, paymentAmount, drawdownReceivableId, drawdownAmount, [gasOpts]) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
+<p>Makes a principal payment and drawdown with receivables.</p>
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;TransactionResponse&gt;</code> - <ul>
+<li>A Promise of the transaction response.</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signer | <code>ethers.Signer</code> | <p>The signer used to send the transaction.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool to interact with.</p> |
+| paymentReceivableId | <code>BigNumberish</code> | <p>The ID of the receivable for payment.</p> |
+| paymentAmount | <code>BigNumberish</code> | <p>The amount to payback.</p> |
+| drawdownReceivableId | <code>BigNumberish</code> | <p>The ID of the drawdown receivable.</p> |
+| drawdownAmount | <code>BigNumberish</code> | <p>The amount to drawdown.</p> |
+| [gasOpts] | <code>Overrides</code> | <p>The gas options to use for the transaction.</p> |
+
+<a name="getReceivableContractV2"></a>
+
+## getReceivableContractV2(signerOrProvider, chainId) ⇒ <code>Contract</code> \| <code>null</code>
+<p>Returns an ethers contract instance for the V2 Receivable contract
+associated with the given pool name on the current chain.</p>
+
+**Kind**: global function  
+**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the Receivable contract or null if it could not be found.</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |

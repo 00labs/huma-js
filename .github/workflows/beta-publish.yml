@@ -3,7 +3,8 @@ name: Beta NPM Packages Publishing
 on:
   pull_request:
     types: [closed]
-    branches: ["develop"]
+    branches: ["develop", "v2"]
+  workflow_dispatch:
 
 jobs:
   deploy-beta:
@@ -17,12 +18,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Use Node.js 16.x
+      - name: Use Node.js 18.13.0
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
+          node-version: 18.13.0
+          registry-url: "https://registry.npmjs.org"
+          cache: "yarn"
 
       - name: Cache Yarn dependencies
         uses: actions/cache@v3
@@ -31,7 +32,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-        
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 

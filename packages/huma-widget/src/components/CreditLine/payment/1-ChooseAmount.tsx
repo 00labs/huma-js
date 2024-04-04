@@ -6,6 +6,7 @@ import {
   useCLPoolAllowance,
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
+import { BigNumber } from 'ethers'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setPaymentAmount, setStep } from '../../../store/widgets.reducers'
@@ -24,10 +25,15 @@ export function ChooseAmount({
   poolInfo,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const { symbol, decimals } = poolInfo.poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState(0)
-  const { allowance } = useCLPoolAllowance(poolInfo.poolName, account)
+  const { allowance } = useCLPoolAllowance(
+    poolInfo.poolName,
+    chainId,
+    account,
+    provider,
+  )
 
   useEffect(() => {
     setCurrentAmount(totalDueAmount)
@@ -43,8 +49,8 @@ export function ChooseAmount({
   )
 
   const handleAction = useCallback(() => {
-    const payAmount = upScale(currentAmount, decimals)
-    const step = toBigNumber(payAmount).gt(allowance)
+    const payAmount = upScale<BigNumber>(toBigNumber(currentAmount), decimals)
+    const step = payAmount.gt(allowance)
       ? WIDGET_STEP.ApproveAllowance
       : WIDGET_STEP.Transfer
     dispatch(setStep(step))

@@ -23,15 +23,19 @@ export function CheckWithdrawable({
   handleClose,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const withdrawlLockoutSeconds = useWithdrawlLockoutInSeconds(
     poolInfo.poolName,
     poolInfo.poolType,
+    chainId,
+    provider,
   )
   const lastDepositTime = useLastDepositTime(
     poolInfo.poolName,
     poolInfo.poolType,
+    chainId,
     account,
+    provider,
   )
 
   const { symbol } = poolInfo.poolUnderlyingToken
