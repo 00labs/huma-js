@@ -647,6 +647,7 @@ export const PoolContractMap: PoolContractMapType = {
             symbol: 'fUSDCx',
             decimals: 18,
           },
+          hidden: true,
         },
       },
     },
