@@ -1,4 +1,4 @@
-import { UnderlyingTokenInfo } from '@huma-finance/shared'
+import { formatNumber, UnderlyingTokenInfo } from '@huma-finance/shared'
 import { ethers } from 'ethers'
 import React from 'react'
 
@@ -22,7 +22,9 @@ export function Done({
   )
 
   const content = [
-    `You successfully canceled ${shares} shares redemption request.`,
+    `Your request to cancel the redemption of ${formatNumber(
+      shares,
+    )} shares has been successfully processed.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />
