@@ -7,6 +7,7 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
   JiaV2: {
     chainId: ChainEnum.Localhost,
     poolVersion: 'v2',
+    industry: 'Supply Chain Financing',
     poolName: POOL_NAME.JiaV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0xc6e7DF5E7b4f2A278906862b61205850344D4e7d',
@@ -59,6 +60,7 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
     chainId: ChainEnum.Localhost,
     poolVersion: 'v2',
+    industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B',

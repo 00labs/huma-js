@@ -7,6 +7,7 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
     chainId: ChainEnum.Alfajores,
     poolVersion: 'v2',
+    industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0xc324e091bbdf681b28d07f2e98774c3465c03bCb',

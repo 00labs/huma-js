@@ -28,6 +28,13 @@ import CALENDAR_ABI from '../abis/Calendar.json'
 
 export type TrancheType = 'senior' | 'junior'
 
+export type IndustryType =
+  | 'Supply Chain Financing'
+  | 'Remittance Financing'
+  | 'Green Financing'
+  | 'Invoice Factoring'
+  | 'None'
+
 export type KYCCopy = {
   title: string
   description: string
@@ -69,11 +76,7 @@ export type PoolInfoV2 = {
   title: string
   desc: string
   lenderApprovalProvider?: LenderApprovalProvider
-  industry?:
-    | 'Supply Chain Financing'
-    | 'Remittance Financing'
-    | 'Green Financing'
-    | 'Invoice Factoring'
+  industry: IndustryType
   KYC?: {
     provider: 'Securitize'
     signInRequired: KYCCopy

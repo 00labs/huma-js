@@ -1,3 +1,4 @@
+import { IndustryType } from '../v2'
 import BASE_CREDIT_POOL_ABI from '../abis/BaseCreditPool.json'
 import BASE_POOL_CONFIG_ABI from '../abis/BasePoolConfig.json'
 import HDT_ABI from '../abis/HDT.json'
@@ -62,11 +63,7 @@ export type PoolInfoType = {
   assetAddress?: string
   poolName: POOL_NAME
   poolType: POOL_TYPE
-  industry?:
-    | 'Supply Chain Financing'
-    | 'Remittance Financing'
-    | 'Green Financing'
-    | 'Invoice Factoring'
+  industry: IndustryType
   poolAbi: unknown
   basePoolConfigAbi: unknown
   poolAssetAbi?: unknown
@@ -313,6 +310,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.Raincards]: {
         chainId: ChainEnum.Polygon,
         poolVersion: 'v1',
+        industry: 'None',
         basePoolConfig: '0xBD239B764731b15664F62c32b7E0a6cd78a4E34B',
         pool: '0x82a76045dc4543fa4776df1bcad11f2aa6ea51d2',
         poolFeeManager: '0x4384560Eb9d4108fcb90981e7a0f03C21bf782d8',
@@ -341,6 +339,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.Superfluid]: {
         chainId: ChainEnum.Polygon,
         poolVersion: 'v1',
+        industry: 'None',
         basePoolConfig: '0x22C024496036A8e97F93E14efa0d8379192bb22c',
         pool: '0xF713B5203Cb6f3223830De218c2ed89Ee654b94B',
         poolProcessor: '0x6E2f33b6d3F1E2048d078984f7FFF847C0Ed3bEd',
@@ -427,6 +426,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.HumaCreditLine]: {
         chainId: ChainEnum.Alfajores,
         poolVersion: 'v1',
+        industry: 'None',
         basePoolConfig: '0x0bb39a0136643d60244070619e2e8ecbddf038ae',
         pool: '0xB6958E6852E1dA4C2468d8c0286884C68519282a',
         poolFeeManager: '0xd6fB372Da1c157Ca769dd1bD33D3e59D1B8376d0',
@@ -509,6 +509,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.ArfPoolUSDC]: {
         chainId: ChainEnum.Celo,
         poolVersion: 'v1',
+        industry: 'Remittance Financing',
         basePoolConfig: '0x3118F75F5fE1E1e35393bA830d75ff117CF68c3d',
         pool: '0x5a08F38aF4d6e0E727D1DCF8242243D88488Bc47',
         poolFeeManager: '0xDB626Ca15F4f813e973E734F158fA8867C9ED145',
@@ -536,6 +537,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.Jia]: {
         chainId: ChainEnum.Celo,
         poolVersion: 'v1',
+        industry: 'Supply Chain Financing',
         basePoolConfig: '0x75be4c971c730e197cae5e643e0f05ce7b4a58fe',
         pool: '0xa190A0ab76F58b491Cc36205B268e8cF5650c576',
         poolFeeManager: '0x0c092Bb9d5bc8DEA9d98FFda84E943816AD6E710',
@@ -562,6 +564,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.JiaUSDC]: {
         chainId: ChainEnum.Celo,
         poolVersion: 'v1',
+        industry: 'Supply Chain Financing',
         basePoolConfig: '0xC4531A189b0181a3e16b76Ac9bb4b41476fe5De0',
         pool: '0xE743d0Dd33040437fc8C9A4dA1e60a9c5cD7597d',
         poolFeeManager: '0x8aFB2f658602A86e047BBf36A36AC98C69948d7e',
@@ -589,6 +592,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.Quipu]: {
         chainId: ChainEnum.Celo,
         poolVersion: 'v1',
+        industry: 'None',
         basePoolConfig: '0x8b0a09032cd485321f640dc1e9cbdeb2b16d41ab',
         pool: '0xaf2e8cfabf419be03a3bfe732f7f29037b0d1fa5',
         poolFeeManager: '0x58806a6F90764eb31fc002A68947fA4825FF9f2D',
@@ -654,6 +658,7 @@ export const PoolContractMap: PoolContractMapType = {
       [POOL_NAME.Raincards]: {
         chainId: ChainEnum.Mumbai,
         poolVersion: 'v1',
+        industry: 'None',
         basePoolConfig: '0x10b7CBe54178eB6C81b2D84Ac073747BcA744F6C',
         pool: '0xf8065dA82cC990325059c436939c6a90C322E9Dd',
         poolFeeManager: '0x87534B96FD15EbD6Aa0456F45045B541e5E8889a',
