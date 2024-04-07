@@ -29,5 +29,8 @@ export const CELO_METADATA: PoolsInfoV2 = {
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
     redirect: REDIRECTS.Arf,
+    extra: {
+      rwrUploader: '0x39eacecfae2a174dacd10d10bbd09a6dd2541c18',
+    },
   },
 }
