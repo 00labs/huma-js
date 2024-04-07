@@ -7,6 +7,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolVersion,
+  REDIRECTS,
 } from '../../utils'
 import { ALFAJORES_METADATA } from '../metadata/alfajores'
 import { CELO_METADATA } from '../metadata/celo'
@@ -96,6 +97,7 @@ export type PoolInfoV2 = {
   extra?: {
     hidden?: boolean
   }
+  redirect?: REDIRECTS
 }
 
 export type PoolsInfoV2 = {
