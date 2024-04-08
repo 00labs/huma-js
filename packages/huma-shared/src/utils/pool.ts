@@ -29,6 +29,14 @@ export enum POOL_TYPE {
   ReceivableBackedCreditLine = 'ReceivableBackedCreditLine',
 }
 
+export enum REDIRECTS {
+  Jia = '/Jia',
+  Arf = '/Arf',
+  BSOS = '/BSOS',
+  ImpactMarket = '/impactMarket',
+  Rain = '/Rain',
+}
+
 export type PoolMapType = {
   [poolType in POOL_TYPE]: {
     [poolName in POOL_NAME]?: {
@@ -83,6 +91,7 @@ export type PoolInfoType = {
     detailsPage?: boolean
   }
   isClosed?: boolean
+  redirect?: REDIRECTS
 }
 
 export type PoolInfo = {
@@ -251,6 +260,7 @@ export const PoolContractMap: PoolContractMapType = {
           },
           detailsPage: true,
         },
+        redirect: REDIRECTS.Jia,
       },
       [POOL_NAME.ArfCreditPool1]: {
         chainId: ChainEnum.Polygon,
@@ -306,6 +316,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
         },
+        redirect: REDIRECTS.BSOS,
       },
       [POOL_NAME.Raincards]: {
         chainId: ChainEnum.Polygon,
@@ -333,6 +344,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
         },
+        redirect: REDIRECTS.Rain,
       },
     },
     [POOL_TYPE.Stream]: {
@@ -476,6 +488,7 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0x10FB65dc26a7aCC7CFB4eA3b6E007c8C77591486',
           rwrUploader: '0x4c6388346f2a3af2d64461339a5cdd3a3d63ccf5',
         },
+        redirect: REDIRECTS.ImpactMarket,
       },
       [POOL_NAME.ArfCreditPool1]: {
         chainId: ChainEnum.Celo,

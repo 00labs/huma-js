@@ -1,5 +1,5 @@
 import { ChainEnum } from '../../utils/chain'
-import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
+import { POOL_NAME, POOL_TYPE, REDIRECTS } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
@@ -28,5 +28,6 @@ export const CELO_METADATA: PoolsInfoV2 = {
     title: 'Arf Credit Pool V2',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    redirect: REDIRECTS.Arf,
   },
 }
