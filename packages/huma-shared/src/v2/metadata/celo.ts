@@ -25,7 +25,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf Credit Pool V2',
+    title: 'Arf Credit Pool v2',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
     redirect: REDIRECTS.Arf,

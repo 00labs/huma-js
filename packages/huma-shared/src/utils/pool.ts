@@ -287,7 +287,6 @@ export const PoolContractMap: PoolContractMapType = {
           borrower: '0xEA57a8A51377752fFddaa3db4d13CE8F97677F2D',
           disableBorrow: true,
           detailsPage: true,
-          hidden: true,
         },
       },
       [POOL_NAME.BSOS]: {
