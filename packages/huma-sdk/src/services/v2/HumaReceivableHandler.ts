@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { BigNumber, Overrides } from 'ethers'
+import { BigNumber, BigNumberish, Overrides } from 'ethers'
 import { HumaContext } from './HumaContext'
 import { getDefaultGasOptions } from '../../utils'
 import {
@@ -46,5 +46,22 @@ export class HumaReceivableHandler {
     }
 
     return contract.declarePayment(tokenId, paymentAmount, gasOpts)
+  }
+
+  async burnReceivable(
+    tokenId: BigNumberish,
+    gasOpts: Overrides = {},
+  ): Promise<TransactionResponse> {
+    const contract = await getReceivableContractV2(
+      this.#humaContext.poolName,
+      this.#humaContext.signer,
+    )
+    if (!contract) {
+      throw new Error('Could not find Receivable contract')
+    }
+
+    gasOpts = await getDefaultGasOptions(gasOpts, this.#humaContext.chainId)
+
+    return contract.burn(tokenId, gasOpts)
   }
 }
