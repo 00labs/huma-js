@@ -40,6 +40,12 @@ attempt to first increase the allowance of the pool.</p></dd>
 <dt><a href="#getRealWorldReceivableContract">getRealWorldReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the RealWorldReceivable contract
 associated with the given pool name on the current chain.</p></dd>
+<dt><a href="#getAvailableBalanceForPool">getAvailableBalanceForPool(poolName, provider)</a></dt>
+<dd><p>Returns the current pool balance available for borrowing</p></dd>
+<dt><a href="#getAvailableCreditForPool">getAvailableCreditForPool(borrower, poolName, provider)</a></dt>
+<dd><p>Returns the borrower's remaining credit they can use for borrowing. Note that this might not be
+currently available for borrowing as the credit limit might exceed the available pool balance. Use
+getPoolBalance() to get the current available pool balance.</p></dd>
 <dt><a href="#getReceivableBackedCreditLineContractV2">getReceivableBackedCreditLineContractV2(signerOrProvider, poolName)</a> ⇒ <code>ReceivableBackedCreditLine</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p></dd>
@@ -761,6 +767,33 @@ associated with the given pool name on the current chain.</p>
 | --- | --- | --- |
 | signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
 | chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
+
+<a name="getAvailableBalanceForPool"></a>
+
+## getAvailableBalanceForPool(poolName, provider)
+<p>Returns the current pool balance available for borrowing</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
+| provider | <code>JsonRpcProvider</code> \| <code>Web3Provider</code> | <p>The provider instance to use for reading from the contract.</p> |
+
+<a name="getAvailableCreditForPool"></a>
+
+## getAvailableCreditForPool(borrower, poolName, provider)
+<p>Returns the borrower's remaining credit they can use for borrowing. Note that this might not be
+currently available for borrowing as the credit limit might exceed the available pool balance. Use
+getPoolBalance() to get the current available pool balance.</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| borrower | <code>string</code> | <p>The address of the borrower to check the available credit for.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
+| provider | <code>JsonRpcProvider</code> \| <code>Web3Provider</code> | <p>The provider instance to use for reading from the contract.</p> |
 
 <a name="getReceivableBackedCreditLineContractV2"></a>
 
