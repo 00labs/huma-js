@@ -1,5 +1,5 @@
 import { ChainEnum } from '../../utils/chain'
-import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
+import { POOL_NAME, POOL_TYPE, REDIRECTS } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
 import { PoolsInfoV2 } from '../utils'
 
@@ -7,6 +7,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
     chainId: ChainEnum.Celo,
     poolVersion: 'v2',
+    industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x23be37d5AAb59101B9BB31A96D1bF5D7112250f7',
@@ -24,8 +25,12 @@ export const CELO_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf Credit Pool V2',
+    title: 'Arf Credit Pool v2',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    redirect: REDIRECTS.Arf,
+    extra: {
+      rwrUploader: '0x39eacecfae2a174dacd10d10bbd09a6dd2541c18',
+    },
   },
 }

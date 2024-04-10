@@ -7,6 +7,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolVersion,
+  REDIRECTS,
 } from '../../utils'
 import { ALFAJORES_METADATA } from '../metadata/alfajores'
 import { CELO_METADATA } from '../metadata/celo'
@@ -27,6 +28,13 @@ import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
 import CALENDAR_ABI from '../abis/Calendar.json'
 
 export type TrancheType = 'senior' | 'junior'
+
+export type IndustryType =
+  | 'Supply Chain Financing'
+  | 'Remittance Financing'
+  | 'Green Financing'
+  | 'Invoice Factoring'
+  | 'None'
 
 export type KYCCopy = {
   title: string
@@ -69,11 +77,7 @@ export type PoolInfoV2 = {
   title: string
   desc: string
   lenderApprovalProvider?: LenderApprovalProvider
-  industry?:
-    | 'Supply Chain Financing'
-    | 'Remittance Financing'
-    | 'Green Financing'
-    | 'Invoice Factoring'
+  industry: IndustryType
   KYC?: {
     provider: 'Securitize'
     signInRequired: KYCCopy
@@ -92,7 +96,10 @@ export type PoolInfoV2 = {
   isClosed?: boolean
   extra?: {
     hidden?: boolean
+    borrower?: string // For single borrower pools
+    rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
   }
+  redirect?: REDIRECTS
 }
 
 export type PoolsInfoV2 = {

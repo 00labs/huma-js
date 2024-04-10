@@ -7,6 +7,7 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
   JiaV2: {
     chainId: ChainEnum.BaseSepolia,
     poolVersion: 'v2',
+    industry: 'Supply Chain Financing',
     poolName: POOL_NAME.JiaV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0x3e7Cb3f245bdC1BeEe925a2E11c20492553DBE15',
@@ -59,6 +60,7 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
     chainId: ChainEnum.BaseSepolia,
     poolVersion: 'v2',
+    industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x3611037825B538e0EE0b48D48BAaAEc7d24486Ac',

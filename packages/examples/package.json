@@ -18,6 +18,8 @@
     "startSubgraphTest": "ts-node src/subgraphService.ts",
     "startPrefundBundlr": "ts-node src/prefundBundlr.ts",
     "startLoadRWR": "ts-node src/loadReceivablesOfOwnerWithMetadata.ts",
+    "startGetPoolBalanceCreditV2": "ts-node src/getPoolBalanceAndCreditV2.ts",
+    "startBurnReceivableV2": "ts-node src/burnReceivableV2.ts",
     "lint-staged": "lint-staged"
   },
   "dependencies": {

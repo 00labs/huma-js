@@ -7,6 +7,7 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
   JiaV2: {
     chainId: ChainEnum.HumaTestnet,
     poolVersion: 'v2',
+    industry: 'Supply Chain Financing',
     poolName: POOL_NAME.JiaV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0x3d38068977323BD88F5e8F853536f19a096EB29F',
@@ -59,6 +60,7 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
     chainId: ChainEnum.HumaTestnet,
     poolVersion: 'v2',
+    industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0xa3275668ebDad74bC1eCEd227410BF3d62414Ccc',

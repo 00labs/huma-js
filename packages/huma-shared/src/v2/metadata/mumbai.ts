@@ -7,6 +7,7 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
   JiaV2: {
     chainId: ChainEnum.Mumbai,
     poolVersion: 'v2',
+    industry: 'Supply Chain Financing',
     poolName: POOL_NAME.JiaV2,
     poolType: POOL_TYPE.CreditLine,
     pool: '0xa890Ac3c9F8E38Be9c05BFfc0E4ECa21Bbc2FfA9',
@@ -59,6 +60,7 @@ export const MUMBAI_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
     chainId: ChainEnum.Mumbai,
     poolVersion: 'v2',
+    industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x210Fd4D4Da77b473E1A75605Bd17Bc5F09a3cd7d',
