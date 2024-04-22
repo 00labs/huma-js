@@ -41,8 +41,8 @@ export enum ChainEnum {
   Mumbai = 80001,
   Celo = 42220,
   Alfajores = 44787,
-  Localhost = 31338,
-  HumaTestnet = 31337,
+  Localhost = 31337,
+  HumaTestnet = 31338,
   BaseSepolia = 84532,
 }
 

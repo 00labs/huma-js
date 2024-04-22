@@ -9,6 +9,7 @@ import { configUtil } from './config'
 
 export enum POOL_NAME {
   HumaCreditLine = 'HumaCreditLine',
+  ReceivableBackedCreditLine = 'ReceivableBackedCreditLine',
   Superfluid = 'Superfluid',
   Jia = 'Jia',
   JiaV2 = 'JiaV2',
@@ -118,6 +119,12 @@ export const PoolMap: PoolMapType = {
       name: 'Huma Credit Line',
       borrowDesc:
         'Credit lines backed by your future crypto income. Only available to the members of partner DAOs during beta.',
+      lendDesc:
+        'Earn active yield by participating in credit lines backed by on-chain income. Only available to the members of partner DAOs during beta.',
+    },
+    [POOL_NAME.ReceivableBackedCreditLine]: {
+      name: 'Receivable Backed Credit Line',
+      borrowDesc: 'Test Receivable Backed Credit Line',
       lendDesc:
         'Earn active yield by participating in credit lines backed by on-chain income. Only available to the members of partner DAOs during beta.',
     },
