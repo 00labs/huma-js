@@ -40,11 +40,18 @@ export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
         providerUrl:
           'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
       }
+    // @dev #TODO: remove mumbai
     case 80001: // Mumbai
       return {
         nodeUrl: 'https://devnet.bundlr.network',
         currency: 'matic',
         providerUrl: 'https://rpc.ankr.com/polygon_mumbai',
+      }
+    case 80002: // Amoy
+      return {
+        nodeUrl: 'https://devnet.bundlr.network',
+        currency: 'matic',
+        providerUrl: 'https://rpc.ankr.com/polygon_amoy',
       }
     case 137: // Matic
       return {
