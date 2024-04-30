@@ -46,6 +46,7 @@ function toJsonRpcMap<T>(
     [ChainEnum.BaseSepolia]: getChainConnections(ChainEnum.BaseSepolia),
     [ChainEnum.Polygon]: getChainConnections(ChainEnum.Polygon),
     [ChainEnum.Mumbai]: getChainConnections(ChainEnum.Mumbai),
+    [ChainEnum.Amoy]: getChainConnections(ChainEnum.Amoy),
     [ChainEnum.Alfajores]: getChainConnections(ChainEnum.Alfajores),
     [ChainEnum.Celo]: getChainConnections(ChainEnum.Celo),
   }
