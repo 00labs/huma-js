@@ -3,7 +3,7 @@ import { getChainIdFromSignerOrProvider as getChainIdFromSignerOrProviderInterna
 import { ethers } from 'ethers'
 
 export function isPolygonNetwork(network: number): boolean {
-  return network === 137 || network === 80001
+  return network === 137 || network === 80001 || network === 80002
 }
 
 /**

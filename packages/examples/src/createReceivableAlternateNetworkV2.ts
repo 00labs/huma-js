@@ -23,7 +23,7 @@ async function main() {
   })
   const receivableFactory = new HumaReceivableFactory({
     humaContext,
-    arWeavePaymentChainId: ChainEnum.Mumbai, // Use a Bundlr-supported network to pay for metadata uploading
+    arWeavePaymentChainId: ChainEnum.Amoy, // Use a Bundlr-supported network to pay for metadata uploading
   })
 
   // Mint a receivable with metadata uploaded to ARWeave.

@@ -16,6 +16,7 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<ChainEnum, string[]> = {
   [ChainEnum.Goerli]: ['https://rpc.ankr.com/eth_goerli'],
   [ChainEnum.BaseSepolia]: ['https://sepolia.base.org'],
   [ChainEnum.Mumbai]: ['https://rpc.ankr.com/polygon_mumbai'],
+  [ChainEnum.Amoy]: ['https://rpc.ankr.com/polygon_amoy'],
   [ChainEnum.Polygon]: ['https://polygon-rpc.com/'],
   [ChainEnum.Alfajores]: ['https://alfajores-forno.celo-testnet.org'],
   [ChainEnum.Celo]: ['https://rpc.ankr.com/celo'],
