@@ -31,6 +31,7 @@ export async function getAvailableBalanceForPool(
  * Returns the credit record of the borrower
  *
  * @param {POOL_NAME} poolName - The name of the credit pool to get the contract instance for.
+ * @param {string} borrower - The address of the borrower to check the credit record for
  * @param {JsonRpcProvider | Web3Provider} provider The provider instance to use for reading from the contract.
  */
 export async function getCreditRecordForPool(
