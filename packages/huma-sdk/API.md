@@ -42,6 +42,8 @@ attempt to first increase the allowance of the pool.</p></dd>
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#getAvailableBalanceForPool">getAvailableBalanceForPool(poolName, provider)</a></dt>
 <dd><p>Returns the current pool balance available for borrowing</p></dd>
+<dt><a href="#getCreditRecordForPool">getCreditRecordForPool(poolName, borrower, provider)</a></dt>
+<dd><p>Returns the credit record of the borrower</p></dd>
 <dt><a href="#getAvailableCreditForPool">getAvailableCreditForPool(borrower, poolName, provider)</a></dt>
 <dd><p>Returns the borrower's remaining credit they can use for borrowing. Note that this might not be
 currently available for borrowing as the credit limit might exceed the available pool balance. Use
@@ -778,6 +780,19 @@ associated with the given pool name on the current chain.</p>
 | Param | Type | Description |
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
+| provider | <code>JsonRpcProvider</code> \| <code>Web3Provider</code> | <p>The provider instance to use for reading from the contract.</p> |
+
+<a name="getCreditRecordForPool"></a>
+
+## getCreditRecordForPool(poolName, borrower, provider)
+<p>Returns the credit record of the borrower</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the credit pool to get the contract instance for.</p> |
+| borrower | <code>string</code> | <p>The address of the borrower to check the credit record for</p> |
 | provider | <code>JsonRpcProvider</code> \| <code>Web3Provider</code> | <p>The provider instance to use for reading from the contract.</p> |
 
 <a name="getAvailableCreditForPool"></a>
