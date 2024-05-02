@@ -3,6 +3,7 @@ import {
   getCreditConfigV2,
   getCreditRecordV2,
   getPoolSafeContractV2,
+  CreditRecordStructOutput,
   POOL_NAME,
 } from '@huma-finance/shared'
 import { ethers } from 'ethers'
@@ -24,6 +25,27 @@ export async function getAvailableBalanceForPool(
   }
 
   return safeContract.getAvailableBalanceForPool()
+}
+
+/**
+ * Returns the credit record of the borrower
+ *
+ * @param {POOL_NAME} poolName - The name of the credit pool to get the contract instance for.
+ * @param {string} borrower - The address of the borrower to check the credit record for
+ * @param {JsonRpcProvider | Web3Provider} provider The provider instance to use for reading from the contract.
+ */
+export async function getCreditRecordForPool(
+  poolName: POOL_NAME,
+  borrower: string,
+  provider: JsonRpcProvider | Web3Provider,
+): Promise<CreditRecordStructOutput> {
+  const creditRecord = await getCreditRecordV2(poolName, borrower, provider)
+
+  if (!creditRecord) {
+    throw new Error('Could not find credit record for pool')
+  }
+
+  return creditRecord
 }
 
 /**

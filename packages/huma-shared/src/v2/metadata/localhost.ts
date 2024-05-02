@@ -1,14 +1,14 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
-import { KYC_PROVIDER, PoolsInfoV2 } from '../utils'
+import { PoolsInfoV2 } from '../utils'
 
 export const LOCALHOST_METADATA: PoolsInfoV2 = {
-  JiaV2: {
+  HumaCreditLine: {
     chainId: ChainEnum.Localhost,
     poolVersion: 'v2',
     industry: 'Supply Chain Financing',
-    poolName: POOL_NAME.JiaV2,
+    poolName: POOL_NAME.HumaCreditLine,
     poolType: POOL_TYPE.CreditLine,
     pool: '0xc6e7DF5E7b4f2A278906862b61205850344D4e7d',
     poolConfig: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
@@ -25,43 +25,14 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Jia V2 Testing Pool',
-    desc: 'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
-    KYC: {
-      provider: KYC_PROVIDER.Securitize,
-      signInRequired: {
-        title: 'Sign In',
-        description:
-          'Please sign in to verify that you are the owner of the wallet.',
-      },
-      verifyIdentity: {
-        title: 'Verify Identity',
-        description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
-        buttonText: 'VERIFY MY IDENTITY',
-      },
-      emailSignatureLink: {
-        title: 'Pool Documents',
-        description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
-        buttonText: 'EMAIL DOCUSIGN LINK',
-      },
-      resendSignatureLink: {
-        title: 'Resend Documents',
-        description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
-        buttonText: 'RESEND DOCUSIGN LINK',
-      },
-      docUnderReview: {
-        title: 'Under Review',
-        description:
-          'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
-        buttonText: 'THANK YOU',
-      },
-    },
+    title: 'V2 Credit Line Testing Pool',
+    desc: 'V2 Credit Line Testing Pool',
   },
-  ArfCreditPoolV2: {
+  ReceivableBackedCreditLine: {
     chainId: ChainEnum.Localhost,
     poolVersion: 'v2',
     industry: 'Remittance Financing',
-    poolName: POOL_NAME.ArfCreditPoolV2,
+    poolName: POOL_NAME.ReceivableBackedCreditLine,
     poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B',
     poolConfig: '0x4C4a2f8c81640e47606d3fd77B353E87Ba015584',
@@ -78,8 +49,7 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf V2 Testing Pool',
-    desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
-    supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    title: 'V2 Receivable Backed Credit Line Testing Pool',
+    desc: 'V2 Receivable Backed Credit Line Testing Pool',
   },
 }

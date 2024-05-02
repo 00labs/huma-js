@@ -60,6 +60,17 @@ export const formatAmount = (
   return formatNumber(ethers.utils.formatUnits(assets, decimals))
 }
 
+export const formatAmountWithSymbol = (
+  assets: BigNumberish | undefined,
+  decimals: number | undefined,
+  symbol: string | undefined,
+) => {
+  if (!symbol) {
+    return '--'
+  }
+  return `${formatAmount(assets, decimals)} ${symbol}`
+}
+
 export const downScale = <T = string>(
   num: string | number | BigNumber,
   decimals?: number,

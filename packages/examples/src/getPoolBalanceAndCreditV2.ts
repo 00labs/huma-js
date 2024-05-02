@@ -3,28 +3,37 @@ import { ChainEnum, POOL_NAME } from '@huma-finance/shared'
 import {
   getAvailableBalanceForPool,
   getAvailableCreditForPool,
+  getCreditRecordForPool,
 } from '@huma-finance/sdk'
 require('dotenv').config()
 
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+    `http://127.0.0.1:8545`,
     {
-      name: 'Mumbai',
-      chainId: ChainEnum.Mumbai,
+      name: 'Localhost',
+      chainId: ChainEnum.Localhost,
     },
   )
-  const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
 
-  const balance = await getAvailableBalanceForPool(POOL_NAME.JiaV2, provider)
+  const balance = await getAvailableBalanceForPool(
+    POOL_NAME.HumaCreditLine,
+    provider,
+  )
   const availableCredit = await getAvailableCreditForPool(
-    '0x89cC431c50953bdF3a632B804782d610094A4937', // Borrower account to lookup
-    POOL_NAME.JiaV2,
+    '0x71bE63f3384f5fb98995898A86B02Fb2426c5788', // Borrower account to lookup
+    POOL_NAME.HumaCreditLine,
+    provider,
+  )
+  const creditRecord = await getCreditRecordForPool(
+    POOL_NAME.HumaCreditLine,
+    '0x71bE63f3384f5fb98995898A86B02Fb2426c5788',
     provider,
   )
 
   console.log(`Pool balance: ${balance.toString()}`)
   console.log(`Available credit: ${availableCredit.toString()}`)
+  console.log(`Credit Record: ${JSON.stringify(creditRecord)}`)
 }
 main()
