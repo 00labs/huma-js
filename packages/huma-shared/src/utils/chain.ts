@@ -235,11 +235,18 @@ export function getExplorerUrl(
 export async function getChainIdFromSignerOrProvider(
   signerOrProvider: ethers.providers.Provider | ethers.Signer | undefined,
 ): Promise<number | undefined> {
+  if (!signerOrProvider) {
+    return undefined
+  }
+
   let network
-  if (signerOrProvider instanceof ethers.providers.Provider) {
+  if (
+    'getNetwork' in signerOrProvider &&
+    typeof signerOrProvider.getNetwork === 'function'
+  ) {
     network = await signerOrProvider.getNetwork()
-  } else {
-    network = await signerOrProvider?.provider?.getNetwork()
+  } else if ('provider' in signerOrProvider) {
+    network = await signerOrProvider.provider?.getNetwork()
   }
 
   return network?.chainId

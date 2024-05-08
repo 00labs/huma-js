@@ -10,26 +10,30 @@ import {
 } from '@huma-finance/sdk'
 require('dotenv').config()
 
-function getUnixTimestampOneDayInFuture() {
-  return new Date(new Date().getTime() + 24 * 60 * 60 * 1000).getTime()
+function getFutureUnixTimestamp() {
+  return new Date(new Date().getTime() + 32 * 24 * 60 * 60 * 1000).getTime()
 }
 
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+    `http://localhost:8545`,
     {
-      name: 'Mumbai',
-      chainId: ChainEnum.Mumbai,
+      name: 'Localhost',
+      chainId: ChainEnum.Localhost,
     },
   )
   const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
 
+  const borrowAmount = BigNumber.from(1000).mul(
+    BigNumber.from(10).pow(BigNumber.from(6)),
+  )
+
   const humaContext = new HumaContext({
     signer: wallet,
     provider,
-    chainId: ChainEnum.Mumbai,
-    poolName: POOL_NAME.ArfCreditPoolV2,
+    chainId: ChainEnum.Localhost,
+    poolName: POOL_NAME.ReceivableBackedCreditLine,
     poolType: POOL_TYPE.CreditLine,
   })
   const receivableFactory = new HumaReceivableFactory({
@@ -38,11 +42,11 @@ async function main() {
 
   // Mint a receivable with metadata uploaded to ARWeave
   // To make it easy to look up receivables, we'll use the maturity date as the reference ID
-  const referenceId1 = getUnixTimestampOneDayInFuture()
+  const referenceId1 = getFutureUnixTimestamp()
   const mintTx = await receivableFactory.createReceivable(
     840, // currencyCode for USD
-    BigNumber.from(1000), // receivableAmount
-    Math.floor(getUnixTimestampOneDayInFuture() / 1000), // maturityDate
+    borrowAmount, // receivableAmount
+    Math.floor(getFutureUnixTimestamp() / 1000), // maturityDate
     '', // metadataURI
     referenceId1.toString(),
   )
@@ -51,15 +55,15 @@ async function main() {
   const receivableTokenId1 = await getReceivableTokenIdFromReferenceId(
     referenceId1.toString(),
     wallet.address,
-    POOL_NAME.ArfCreditPoolV2,
-    provider,
+    POOL_NAME.ReceivableBackedCreditLine,
+    wallet,
   )
 
   const drawdownTx = await drawdownWithReceivable(
     wallet,
-    POOL_NAME.ArfCreditPoolV2,
+    POOL_NAME.ReceivableBackedCreditLine,
     receivableTokenId1,
-    BigNumber.from(10), // drawdown amount
+    borrowAmount, // drawdown amount
   )
   const drawdownTxResponse = await drawdownTx.wait()
   console.log(
@@ -71,7 +75,7 @@ async function main() {
     humaContext,
   })
   const declarePaymentTx = await receivableHandler.declarePayment(
-    BigNumber.from(10),
+    borrowAmount,
     referenceId1.toString(),
   )
   const declarePaymentTxResponse = await declarePaymentTx.wait()
@@ -80,11 +84,11 @@ async function main() {
   )
 
   // Mint a new receivable to drawdown with
-  const referenceId2 = getUnixTimestampOneDayInFuture()
+  const referenceId2 = getFutureUnixTimestamp()
   const mint2Tx = await receivableFactory.createReceivable(
     840, // currencyCode for USD
-    BigNumber.from(1000), // receivableAmount
-    Math.floor(getUnixTimestampOneDayInFuture() / 1000), // maturityDate
+    borrowAmount, // receivableAmount
+    Math.floor(getFutureUnixTimestamp() / 1000), // maturityDate
     '', // metadataURI
     referenceId2.toString() + '2', // In case the reference ID is already taken
   )
@@ -95,18 +99,18 @@ async function main() {
   const receivableTokenId2 = await getReceivableTokenIdFromReferenceId(
     referenceId2.toString() + '2',
     wallet.address,
-    POOL_NAME.ArfCreditPoolV2,
-    provider,
+    POOL_NAME.ReceivableBackedCreditLine,
+    wallet,
   )
 
   const makePrincipalPaymentAndDrawdownTx =
     await makePrincipalPaymentAndDrawdownWithReceivable(
       wallet,
-      POOL_NAME.ArfCreditPoolV2,
+      POOL_NAME.ReceivableBackedCreditLine,
       receivableTokenId1, // payment receivable
-      BigNumber.from(10), // payment amount
+      borrowAmount, // payment amount
       receivableTokenId2, // drawdown receivable
-      BigNumber.from(10), // drawdown amount
+      borrowAmount, // drawdown amount
     )
   const paymentAndDrawdownTxResponse =
     await makePrincipalPaymentAndDrawdownTx.wait()
