@@ -38,7 +38,7 @@ export class HumaReceivableHandler {
       referenceId,
       signerAddress,
       this.#humaContext.poolName,
-      this.#humaContext.provider,
+      this.#humaContext.signer,
     )
 
     if (!tokenId) {

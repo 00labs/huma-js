@@ -18,22 +18,18 @@ import { getContract } from '../../utils'
  * Returns an ethers contract instance for the V2 Receivable contract
  * associated with the given pool name on the current chain.
  *
- * @param {ethers.providers.Provider | ethers.Signer} signerOrProvider The provider or signer instance to use for the contract.
- * @param {number} chainId The chain id where the contract instance exists
+ * @param {POOL_NAME} poolName The name of the pool.
+ * @param {ethers.Signer} signer The signer instance to use for the contract.
  * @returns {Contract | null} A contract instance for the Receivable contract or null if it could not be found.
  */
 export async function getReceivableContractV2(
   poolName: POOL_NAME,
-  signerOrProvider: JsonRpcProvider | Web3Provider | ethers.Signer,
+  signer: ethers.Signer,
 ): Promise<v2Contracts.Receivable | null> {
-  let provider
-  if (signerOrProvider instanceof ethers.Signer) {
-    provider = signerOrProvider.provider as JsonRpcProvider | Web3Provider
-  } else {
-    provider = signerOrProvider
-  }
-
-  const poolConfigContract = await getPoolConfigContractV2(poolName, provider)
+  const poolConfigContract = await getPoolConfigContractV2(
+    poolName,
+    signer.provider as JsonRpcProvider | Web3Provider,
+  )
 
   if (!poolConfigContract) {
     throw new Error('Could not find PoolConfig contract')
@@ -43,17 +39,26 @@ export async function getReceivableContractV2(
   return getContract<v2Contracts.Receivable>(
     receivableAsset,
     RECEIVABLE_V2_ABI,
-    signerOrProvider,
+    signer,
   )
 }
 
+/**
+ * Retrieves the receivable token ID associated with a given reference ID.
+ *
+ * @param referenceId - The reference ID of the receivable.
+ * @param creator - The creator of the receivable.
+ * @param poolName - The name of the pool.
+ * @param signer - The signer used for the contract interaction.
+ * @returns A promise that resolves to the receivable token ID.
+ */
 export async function getReceivableTokenIdFromReferenceId(
   referenceId: string,
   creator: string,
   poolName: POOL_NAME,
-  provider: JsonRpcProvider | Web3Provider,
+  signer: ethers.Signer,
 ): Promise<BigNumber> {
-  const contract = await getReceivableContractV2(poolName, provider)
+  const contract = await getReceivableContractV2(poolName, signer)
   if (!contract) {
     throw new Error('Could not find Receivable contract')
   }
@@ -70,13 +75,13 @@ export async function getReceivableReferenceAlreadyExists(
   referenceId: string,
   signerAddress: string,
   poolName: POOL_NAME,
-  provider: JsonRpcProvider | Web3Provider,
+  signer: ethers.Signer,
 ): Promise<boolean> {
   const tokenId = await getReceivableTokenIdFromReferenceId(
     referenceId,
     signerAddress,
     poolName,
-    provider,
+    signer,
   )
 
   return !tokenId.isZero()

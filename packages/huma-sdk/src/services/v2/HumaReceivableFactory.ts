@@ -170,13 +170,17 @@ export class HumaReceivableFactory {
   }
 
   private async throwIfReferenceIdExists(referenceId: string): Promise<void> {
+    if (referenceId === '') {
+      return
+    }
+
     // Check whether a token already exists with this reference ID
     const signerAddress = await this.#humaContext.signer.getAddress()
     const receivableAlreadyExists = await getReceivableReferenceAlreadyExists(
       referenceId,
       signerAddress,
       this.#humaContext.poolName,
-      this.#humaContext.provider,
+      this.#humaContext.signer,
     )
     if (receivableAlreadyExists) {
       throw new Error('A token already exists with this reference ID')
