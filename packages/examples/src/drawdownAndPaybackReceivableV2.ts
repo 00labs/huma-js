@@ -25,9 +25,7 @@ async function main() {
   )
   const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
 
-  const borrowAmount = BigNumber.from(1000).mul(
-    BigNumber.from(10).pow(BigNumber.from(6)),
-  )
+  const borrowAmount = ethers.utils.parseUnits('1000', 6)
 
   const humaContext = new HumaContext({
     signer: wallet,
