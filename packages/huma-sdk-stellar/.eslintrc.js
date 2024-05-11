@@ -70,5 +70,15 @@ module.exports = {
         'import/no-extraneous-dependencies': 'off',
       },
     },
+    {
+      files: ['src/packages/**/*.ts'],
+      rules: {
+        'import/extensions': 'off',
+        'import/export': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'import/newline-after-import': 'off',
+        'spaced-comment': 'off',
+      },
+    },
   ],
 }
