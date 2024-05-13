@@ -60,6 +60,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-shadow': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'import/extensions': 'off',
   },
   overrides: [
     {
@@ -73,11 +74,12 @@ module.exports = {
     {
       files: ['src/packages/**/*.ts'],
       rules: {
-        'import/extensions': 'off',
         'import/export': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         'import/newline-after-import': 'off',
         'spaced-comment': 'off',
+        'lines-between-class-members': 'off',
+        '@typescript-eslint/lines-between-class-members': 'off',
       },
     },
   ],
