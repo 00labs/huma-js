@@ -1,6 +1,13 @@
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
-import { getChainIdFromSignerOrProvider as getChainIdFromSignerOrProviderInternal } from '@huma-finance/shared'
+import {
+  ChainEnum,
+  getChainIdFromSignerOrProvider as getChainIdFromSignerOrProviderInternal,
+} from '@huma-finance/shared'
 import { ethers } from 'ethers'
+
+export function getChainConfirmations(chainId: number): number {
+  return chainId === ChainEnum.Localhost ? 1 : 5
+}
 
 export function isPolygonNetwork(network: number): boolean {
   return network === 137 || network === 80001 || network === 80002
@@ -14,9 +21,11 @@ export function isPolygonNetwork(network: number): boolean {
 export function getChainIdFromJsonSignerOrProvider(
   signerOrProvider: JsonRpcProvider | JsonRpcSigner,
 ): number {
-  return signerOrProvider instanceof JsonRpcProvider
-    ? signerOrProvider.network.chainId
-    : signerOrProvider.provider.network.chainId
+  if ('network' in signerOrProvider) {
+    return signerOrProvider.network.chainId
+  }
+
+  return signerOrProvider.provider.network.chainId
 }
 
 /**

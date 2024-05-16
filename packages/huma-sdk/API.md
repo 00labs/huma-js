@@ -60,9 +60,11 @@ associated with the given pool name on the current chain.</p></dd>
 <dd><p>Makes a payment with a receivable.</p></dd>
 <dt><a href="#makePrincipalPaymentAndDrawdownWithReceivable">makePrincipalPaymentAndDrawdownWithReceivable(signer, poolName, paymentReceivableId, paymentAmount, drawdownReceivableId, drawdownAmount, [gasOpts])</a> ⇒ <code>Promise.&lt;TransactionResponse&gt;</code></dt>
 <dd><p>Makes a principal payment and drawdown with receivables.</p></dd>
-<dt><a href="#getReceivableContractV2">getReceivableContractV2(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
+<dt><a href="#getReceivableContractV2">getReceivableContractV2(poolName, signer)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
 <dd><p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p></dd>
+<dt><a href="#getReceivableTokenIdFromReferenceId">getReceivableTokenIdFromReferenceId(referenceId, creator, poolName, signer)</a> ⇒</dt>
+<dd><p>Retrieves the receivable token ID associated with a given reference ID.</p></dd>
 <dt><a href="#useContract">useContract(address, ABI, signerOrProvider)</a> ⇒ <code>T</code> | <code>null</code></dt>
 <dd><p>Custom hook for creating an ethers instance of a smart contract.</p></dd>
 <dt><a href="#useERC20TransferableReceivableContract">useERC20TransferableReceivableContract(signerOrProvider, chainId, poolName)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
@@ -897,7 +899,7 @@ associated with the given pool name on the current chain.</p>
 
 <a name="getReceivableContractV2"></a>
 
-## getReceivableContractV2(signerOrProvider, chainId) ⇒ <code>Contract</code> \| <code>null</code>
+## getReceivableContractV2(poolName, signer) ⇒ <code>Contract</code> \| <code>null</code>
 <p>Returns an ethers contract instance for the V2 Receivable contract
 associated with the given pool name on the current chain.</p>
 
@@ -906,8 +908,23 @@ associated with the given pool name on the current chain.</p>
 
 | Param | Type | Description |
 | --- | --- | --- |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| signer | <code>ethers.Signer</code> | <p>The signer instance to use for the contract.</p> |
+
+<a name="getReceivableTokenIdFromReferenceId"></a>
+
+## getReceivableTokenIdFromReferenceId(referenceId, creator, poolName, signer) ⇒
+<p>Retrieves the receivable token ID associated with a given reference ID.</p>
+
+**Kind**: global function  
+**Returns**: <p>A promise that resolves to the receivable token ID.</p>  
+
+| Param | Description |
+| --- | --- |
+| referenceId | <p>The reference ID of the receivable.</p> |
+| creator | <p>The creator of the receivable.</p> |
+| poolName | <p>The name of the pool.</p> |
+| signer | <p>The signer used for the contract interaction.</p> |
 
 <a name="useContract"></a>
 
