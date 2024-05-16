@@ -6,10 +6,10 @@ require('dotenv').config()
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+    `https://rpc-amoy.polygon.technology`,
     {
-      name: 'Mumbai',
-      chainId: ChainEnum.Mumbai,
+      name: 'Amoy',
+      chainId: ChainEnum.Amoy,
     },
   )
   const wallet = new Wallet(TEST_PRIVATE_KEY, provider)
@@ -17,9 +17,9 @@ async function main() {
   const humaContext = new HumaContext({
     signer: wallet,
     provider,
-    chainId: ChainEnum.Mumbai,
-    poolName: POOL_NAME.JiaV2,
-    poolType: POOL_TYPE.CreditLine,
+    chainId: ChainEnum.Amoy,
+    poolName: POOL_NAME.ArfCreditPoolV2,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
   })
   const receivableFactory = new HumaReceivableFactory({
     humaContext,
