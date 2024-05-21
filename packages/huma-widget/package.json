@@ -37,7 +37,7 @@
     "@mui/styles": "^5.0.2",
     "@mui/system": "^5.0.6",
     "@mui/x-date-pickers": "^5.0.7",
-    "@notifi-network/notifi-frontend-client": "^0.75.1",
+    "@notifi-network/notifi-frontend-client": "^0.91.1",
     "@reduxjs/toolkit": "^1.8.6",
     "@types/utf8": "^3.0.1",
     "@walletconnect/ethereum-provider": "1.8.0",

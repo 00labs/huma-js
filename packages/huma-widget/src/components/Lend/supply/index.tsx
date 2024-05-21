@@ -66,7 +66,7 @@ export function LendSupply({
     provider,
   )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
   const [lenderApproved, refreshLenderApproved] = useLenderApproved(
     poolName,
     poolType,
