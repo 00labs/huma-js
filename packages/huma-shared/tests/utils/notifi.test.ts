@@ -33,8 +33,6 @@ describe('doesChainSupportNotifi', () => {
   })
 
   it('returns false for Mumbai and Goerli chains in production', () => {
-    const account = '0x0000000000000000000000000000000000000000'
-
     expect(doesChainSupportNotifi(ChainEnum.Mumbai, false)).toBe(false)
     expect(doesChainSupportNotifi(ChainEnum.Goerli, false)).toBe(false)
   })
