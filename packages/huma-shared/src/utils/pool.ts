@@ -788,6 +788,10 @@ export const SupplementaryContractsMap: {
     [SupplementaryContracts.RealWorldReceivable]:
       '0xfc256098C6c63836ac71F7057c68b74165fF9cbb',
   },
+  [ChainEnum.Amoy]: {
+    [SupplementaryContracts.RealWorldReceivable]:
+      '0x82c43924ab54CA8bCa466Ad6c929A3af31bd9044',
+  },
 }
 
 export function getPoolInfo(
