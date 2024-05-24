@@ -724,6 +724,32 @@ export const PoolContractMap: PoolContractMapType = {
       },
     },
   },
+  [ChainEnum.Amoy]: {
+    [POOL_TYPE.CreditLine]: {
+      [POOL_NAME.ArfPoolUSDC]: {
+        chainId: ChainEnum.Amoy,
+        poolVersion: 'v1',
+        industry: 'Remittance Financing',
+        basePoolConfig: '0x0bb39a0136643D60244070619E2E8ECbdDF038ae',
+        pool: '0xB6958E6852E1dA4C2468d8c0286884C68519282a',
+        poolFeeManager: '0xd6fB372Da1c157Ca769dd1bD33D3e59D1B8376d0',
+        poolUnderlyingToken: {
+          address: '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582',
+          symbol: 'USDC',
+          decimals: 6,
+          icon: 'USDC',
+        },
+        poolName: POOL_NAME.ArfPoolUSDC,
+        poolType: POOL_TYPE.CreditLine,
+        poolAbi: BASE_CREDIT_POOL_ABI,
+        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
+        HDT: {
+          address: '0x25BB64Ee818fFb2ee04c18D829a3754bDbfb4802',
+          abi: HDT_ABI,
+        },
+      },
+    },
+  },
 }
 
 export enum SupplementaryContracts {
@@ -761,6 +787,10 @@ export const SupplementaryContractsMap: {
   [ChainEnum.Celo]: {
     [SupplementaryContracts.RealWorldReceivable]:
       '0xfc256098C6c63836ac71F7057c68b74165fF9cbb',
+  },
+  [ChainEnum.Amoy]: {
+    [SupplementaryContracts.RealWorldReceivable]:
+      '0x82c43924ab54CA8bCa466Ad6c929A3af31bd9044',
   },
 }
 
