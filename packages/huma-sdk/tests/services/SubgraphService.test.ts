@@ -17,18 +17,12 @@ jest.mock('@huma-finance/shared', () => ({
 
 describe('getSubgraphUrlForChainId', () => {
   it('should return the correct subgraph URL for a given chain ID', () => {
-    expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Goerli)).toEqual(
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
-    )
     expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon)).toEqual(
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-polygon',
+      'https://api.studio.thegraph.com/query/38092/huma-polygon/version/latest',
     )
-    expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Mumbai)).toEqual(
-      'https://api.thegraph.com/subgraphs/name/00labs/huma-mumbai',
+    expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Celo)).toEqual(
+      'https://api.studio.thegraph.com/query/38092/huma-celo/version/latest',
     )
-    expect(
-      SubgraphService.getSubgraphUrlForChainId(ChainEnum.Alfajores),
-    ).toEqual('https://api.thegraph.com/subgraphs/name/00labs/huma-alfajores')
     expect(SubgraphService.getSubgraphUrlForChainId(12)).toEqual('')
   })
 })
