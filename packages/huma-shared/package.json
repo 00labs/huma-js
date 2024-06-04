@@ -7,6 +7,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "start": "tsc -w --project ./tsconfig.build.json",
     "postbuild": "copyfiles -u 1 ./src/components/icons/*.svg dist",
