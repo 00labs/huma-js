@@ -358,6 +358,7 @@ export const PoolContractMap: PoolContractMapType = {
           detailsPage: true,
         },
         redirect: REDIRECTS.Rain,
+        isClosed: true,
       },
     },
     [POOL_TYPE.Stream]: {
@@ -502,6 +503,7 @@ export const PoolContractMap: PoolContractMapType = {
           rwrUploader: '0x4c6388346f2a3af2d64461339a5cdd3a3d63ccf5',
         },
         redirect: REDIRECTS.ImpactMarket,
+        isClosed: true,
       },
       [POOL_NAME.ArfCreditPool1]: {
         chainId: ChainEnum.Celo,
