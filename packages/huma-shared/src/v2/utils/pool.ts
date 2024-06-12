@@ -14,7 +14,6 @@ import { CELO_METADATA } from '../metadata/celo'
 import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
 import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { AMOY_METADATA } from '../metadata/amoy'
-import { MUMBAI_METADATA } from '../metadata/mumbai'
 import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
 import { FirstLossCoverIndex } from '../types'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
@@ -88,7 +87,7 @@ export type PoolInfoV2 = {
     docUnderReview: KYCCopy
   }
   supplyLink?: string
-  poolUnderlyingToken?: {
+  poolUnderlyingToken: {
     address: string
     symbol: string
     decimals: number
@@ -129,7 +128,6 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Alfajores]: ALFAJORES_METADATA,
   [ChainEnum.Celo]: CELO_METADATA,
   [ChainEnum.Amoy]: AMOY_METADATA,
-  [ChainEnum.Mumbai]: MUMBAI_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
   [ChainEnum.HumaTestnet]: HUMA_TESTNET_METADATA,
   [ChainEnum.Localhost]: LOCALHOST_METADATA,
