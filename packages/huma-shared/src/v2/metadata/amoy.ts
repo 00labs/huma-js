@@ -18,6 +18,7 @@ export const AMOY_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x9D89D7b88FcC18f0B188978eC46Bbac6b275F69b',
     juniorTrancheVault: '0x460b59d033421931Ad61bd7B29EA135D40edc158',
     epochManager: '0xdead56d2e3f64BB340aCc6245007F624639d1306',
+    receivable: '0xA457970f2d9f0EDaaf027cD581336235c9E5A669',
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xC272E1bf77B7e9E78F90e02D45Ec3673eAEe78FF',

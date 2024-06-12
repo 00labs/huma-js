@@ -18,6 +18,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0xc21a5485021C904Ed00b22BF774435a5B33c69bc',
     juniorTrancheVault: '0xaB5Ee8465c8C8d51e2cCc7d52AC53c19AF201Fa4',
     epochManager: '0x7E02636471A1eAa43664335F4002c878aaf8Ec81',
+    receivable: '0xE28E77Dc46DfBb8e75CBBC80B2ad79380276722E',
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xC7Fe090371590e8438dCEfA1F2A142e9fEBDeb5b',

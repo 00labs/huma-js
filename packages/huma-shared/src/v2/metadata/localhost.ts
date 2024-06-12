@@ -42,6 +42,7 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E',
     juniorTrancheVault: '0x1c85638e118b37167e9298c2268758e058DdfDA0',
     epochManager: '0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5',
+    receivable: '0xAA292E8611aDF267e563f334Ee42320aC96D0463',
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7',

@@ -18,6 +18,7 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x9a534eb31c7858fbf90361939f648d16c6576f55',
     juniorTrancheVault: '0x70f977516ed2d4a96e155b6c9f9546932298b241',
     epochManager: '0xdfba71d2d20dac522d38a9b513056e7cdcc877f0',
+    receivable: '0x5D1F2f000ef0C42bDa974E30d32145bcCaAec77c',
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xb45E27781cbA4E61332adb5d32AB6f64fA316759',

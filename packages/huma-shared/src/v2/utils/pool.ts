@@ -94,6 +94,7 @@ export type PoolInfoV2 = {
     decimals: number
     icon: string
   }
+  receivable?: string
   isClosed?: boolean
   extra?: {
     hidden?: boolean

@@ -71,6 +71,7 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x21eFCabdB6bbaFFcF21ab98CC1ea6FafB866647f',
     juniorTrancheVault: '0xf5783e47534D4a988C46FDdD4b6952A97157aE5C',
     epochManager: '0xCaef6534A26785730d544Bc3B066e1528Fb70484',
+    receivable: '0x8F463C6e3FFDEb75581625Fcfdc26D5650Afc9ed',
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xB295459175ADb5e9C855F1aea4e7048d742Dc3f8',
