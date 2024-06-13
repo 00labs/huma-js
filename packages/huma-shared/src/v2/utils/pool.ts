@@ -86,12 +86,13 @@ export type PoolInfoV2 = {
     docUnderReview: KYCCopy
   }
   supplyLink?: string
-  poolUnderlyingToken?: {
+  poolUnderlyingToken: {
     address: string
     symbol: string
     decimals: number
     icon: string
   }
+  receivable?: string
   isClosed?: boolean
   extra?: {
     hidden?: boolean
