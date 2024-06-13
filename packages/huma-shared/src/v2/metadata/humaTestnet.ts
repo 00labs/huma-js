@@ -18,6 +18,12 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x64B2a42C1f69F35bCB4abAbadfAC8b681D15Cd70',
     juniorTrancheVault: '0x848C97580F8C5f9E194CBf5E70463417c5c70CcF',
     epochManager: '0x3Abf059E221d82c290aCa12B6DE3fdF4d64b5f5E',
+    poolUnderlyingToken: {
+      address: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x64e605642C1343f5d9D7151fC7a54dED81145741',
@@ -71,6 +77,12 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0xBBd6abFb659974300BEe318C3c2C69c268d3788b',
     juniorTrancheVault: '0xa53Fd5659Fb9Ef172CAd7301459656b0eadb8ff7',
     epochManager: '0x3c2e19A2AdEc4344dD91425cc91288336F0DD961',
+    poolUnderlyingToken: {
+      address: '0x04C89607413713Ec9775E14b954286519d836FEf',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x3011866c9feC8476622c7aeDb55a0fEB60955356',

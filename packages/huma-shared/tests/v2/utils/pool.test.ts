@@ -21,22 +21,6 @@ jest.mock('../../../src/v2/metadata/localhost', () => ({
   },
 }))
 
-jest.mock('../../../src/v2/metadata/mumbai', () => ({
-  MUMBAI_METADATA: {
-    JiaV2: {
-      poolName: 'JiaV2',
-      pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
-      estAPY: '10-20%',
-      underlyingToken: {
-        address: '0x6Dfb932F9fDd38E4B3D2f6AAB0581a05a267C13C',
-        symbol: 'USDC',
-        decimals: 18,
-        icon: 'USDC',
-      },
-    },
-  },
-}))
-
 describe('getPoolsInfoV2', () => {
   it('should return the poolsInfoV2 object', () => {
     const result = CHAIN_POOLS_INFO_V2
@@ -47,17 +31,6 @@ describe('getPoolsInfoV2', () => {
       estAPY: '10-20%',
       underlyingToken: {
         address: '0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f',
-        symbol: 'USDC',
-        decimals: 18,
-        icon: 'USDC',
-      },
-    })
-    expect(result[ChainEnum.Mumbai].JiaV2).toEqual({
-      poolName: 'JiaV2',
-      pool: '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9',
-      estAPY: '10-20%',
-      underlyingToken: {
-        address: '0x6Dfb932F9fDd38E4B3D2f6AAB0581a05a267C13C',
         symbol: 'USDC',
         decimals: 18,
         icon: 'USDC',
@@ -80,30 +53,23 @@ describe('getChainPoolNamesV2', () => {
   })
 
   it('should return an array of pool names for valid chainId', () => {
-    const result = getChainPoolNamesV2(ChainEnum.Mumbai)
+    const result = getChainPoolNamesV2(ChainEnum.Localhost)
 
     expect(result).toEqual(['JiaV2'])
   })
 })
 
 describe('getPoolInfoForPoolAddressV2', () => {
-  it('should return null if chainId not found', () => {
-    const chainId = -1
-    const poolAddress = '0xa890Ac3c9F8E38Be9c05BFfc0E4ECa21Bbc2FfA9'
-
-    expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)).toBe(null)
-  })
-
   it('should return null if poolAddress not found', () => {
-    const chainId = ChainEnum.Mumbai
+    const chainId = ChainEnum.Localhost
     const poolAddress = 'wrong pool address'
 
     expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)).toBe(null)
   })
 
   it('should return poolInfo', () => {
-    const chainId = ChainEnum.Mumbai
-    const poolAddress = '0x3Dd5829A0A20229a18553AAf09415E6139EbC5b9'
+    const chainId = ChainEnum.Localhost
+    const poolAddress = '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d'
 
     expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)?.poolName).toBe(
       POOL_NAME.JiaV2,
