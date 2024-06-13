@@ -10,6 +10,7 @@ import {
   REDIRECTS,
 } from '../../utils'
 import { ALFAJORES_METADATA } from '../metadata/alfajores'
+import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { CELO_METADATA } from '../metadata/celo'
 import { AMOY_METADATA } from '../metadata/amoy'
 import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
@@ -126,6 +127,7 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Celo]: CELO_METADATA,
   [ChainEnum.Amoy]: AMOY_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
+  [ChainEnum.Localhost]: LOCALHOST_METADATA,
 } as ChainPoolsInfoV2
 
 export const getChainPoolNamesV2 = (
