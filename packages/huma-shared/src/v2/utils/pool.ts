@@ -10,9 +10,8 @@ import {
   REDIRECTS,
 } from '../../utils'
 import { ALFAJORES_METADATA } from '../metadata/alfajores'
-import { CELO_METADATA } from '../metadata/celo'
-import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
 import { LOCALHOST_METADATA } from '../metadata/localhost'
+import { CELO_METADATA } from '../metadata/celo'
 import { AMOY_METADATA } from '../metadata/amoy'
 import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
 import { FirstLossCoverIndex } from '../types'
@@ -129,7 +128,6 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Celo]: CELO_METADATA,
   [ChainEnum.Amoy]: AMOY_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
-  [ChainEnum.HumaTestnet]: HUMA_TESTNET_METADATA,
   [ChainEnum.Localhost]: LOCALHOST_METADATA,
 } as ChainPoolsInfoV2
 

@@ -60,6 +60,13 @@ describe('getChainPoolNamesV2', () => {
 })
 
 describe('getPoolInfoForPoolAddressV2', () => {
+  it('should return null if chainId not found', () => {
+    const chainId = -1 as ChainEnum
+    const poolAddress = '0xa890Ac3c9F8E38Be9c05BFfc0E4ECa21Bbc2FfA9'
+
+    expect(getPoolInfoForPoolAddressV2(chainId, poolAddress)).toBe(null)
+  })
+
   it('should return null if poolAddress not found', () => {
     const chainId = ChainEnum.Localhost
     const poolAddress = 'wrong pool address'
