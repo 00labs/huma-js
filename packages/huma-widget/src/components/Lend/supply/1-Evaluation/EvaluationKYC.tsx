@@ -281,7 +281,7 @@ export function EvaluationKYC({
         : '5557baf5-d3c2-4c80-b522-c05a11c6e586'
       const baseUrl = configUtil.getKYCProviderBaseUrl(KYCProvider, chainId!)
       const originUrl = window.location.href.split('?')[0]
-      const redirectUrl = `${originUrl}?poolName=${poolInfo.poolName}&kycProvider=${KYCProvider}&kycPool=${poolInfo.pool}`
+      const redirectUrl = `${originUrl}?poolName=${poolInfo.poolName}&chainId=${poolInfo.chainId}&poolType=${poolInfo.poolType}&kycProvider=${KYCProvider}&kycPool=${poolInfo.pool}`
       const providerAuthorizeUrl = `${baseUrl}/#/authorize?issuerId=${issuerId}&scope=details&details=verification&redirectUrl=${redirectUrl}`
       window.location.href = isNotOnboarded ? providerAuthorizeUrl : baseUrl
     } else {
