@@ -148,6 +148,7 @@ export function EvaluationKYC({
   }, [envelopeLastQueryTimeKey])
 
   useEffect(() => {
+    setKYCCopy(JiaPoolCopies.verifyIdentity)
     const docuSignStatus = localStorage.getItem(envelopeDocuSignStatusKey)
     setDocSignatureStatus(docuSignStatus as DocSignatureStatus['status'])
     if (docuSignStatus === 'completed') {
