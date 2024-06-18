@@ -324,7 +324,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.createReceivable(signer, poolName, poolType, currencyCode, receivableAmount, maturityDate, uri, [gasOpts])](#ReceivableService.createReceivable) ⇒ <code>Promise.&lt;(TransactionResponse\|null)&gt;</code>
     * [.uploadOrFetchMetadataURI(signer, privateKey, chainId, poolName, poolType, metadata, referenceId, extraTags, [lazyFund])](#ReceivableService.uploadOrFetchMetadataURI) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.createReceivableWithMetadata(signer, privateKey, chainId, poolName, poolType, currencyCode, receivableAmount, maturityDate, metadata, referenceId, extraTags, [lazyFund], [gasOpts])](#ReceivableService.createReceivableWithMetadata) ⇒ <code>Promise.&lt;TransactionResponse&gt;</code>
-    * [.loadReceivablesOfOwnerWithMetadata(provider, owner, poolName, poolType, pagination)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+    * [.loadReceivablesOfOwnerWithMetadata(chainID, owner, poolName, poolType, pagination)](#ReceivableService.loadReceivablesOfOwnerWithMetadata) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
     * [.getTotalCountOfReceivables(provider, owner)](#ReceivableService.getTotalCountOfReceivables) ⇒ <code>Promise.&lt;number&gt;</code>
 
 <a name="ReceivableService.getTokenIdByURI"></a>
@@ -459,7 +459,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 <a name="ReceivableService.loadReceivablesOfOwnerWithMetadata"></a>
 
-### ReceivableService.loadReceivablesOfOwnerWithMetadata(provider, owner, poolName, poolType, pagination) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
+### ReceivableService.loadReceivablesOfOwnerWithMetadata(chainID, owner, poolName, poolType, pagination) ⇒ <code>Promise.&lt;Array.&lt;RealWorldReceivableInfo&gt;&gt;</code>
 <p>Loads all RWRs belonging to the specified owner, including the RWR metadata</p>
 
 **Kind**: static method of [<code>ReceivableService</code>](#ReceivableService)  
@@ -469,7 +469,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
 
 | Param | Type | Description |
 | --- | --- | --- |
-| provider | <code>ethers.providers.Provider</code> | <p>The provider used to query the chain.</p> |
+| chainID | <code>number</code> | <p>The chain to query for receivables</p> |
 | owner | <code>string</code> | <p>The receivable token owner to query from.</p> |
 | poolName | <code>POOL\_NAME</code> | <p>The pool name. Used to lookup the pool address to pay to.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The pool type. Used to lookup the pool address to pay to.</p> |
