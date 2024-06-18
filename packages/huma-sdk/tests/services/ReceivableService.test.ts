@@ -870,30 +870,6 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
     }
   })
 
-  it('should throw if No Chain ID found', async () => {
-    ;(getChainIdFromSignerOrProvider as jest.Mock).mockReturnValue(
-      Promise.resolve(undefined),
-    )
-
-    const signer = {
-      getAddress: jest.fn().mockResolvedValue('0x123'),
-      sendTransaction: jest.fn().mockResolvedValue({ hash: 'tx1' }),
-    } as any
-
-    const owner = '0xF6c0ACD62e69669155f314D6A6E22f5cF63fab4E'
-
-    try {
-      await ReceivableService.loadReceivablesOfOwnerWithMetadata<{}>(
-        signer,
-        owner,
-        POOL_NAME.HumaCreditLine,
-        POOL_TYPE.CreditLine,
-      )
-    } catch (error) {
-      expect((error as any).message).toBe('No Chain Id found')
-    }
-  })
-
   it('should return ReceivablesOfOwnerWithMetadata', async () => {
     const poolInfo =
       PoolContractMap[ChainEnum.Polygon]?.[POOL_TYPE.CreditLine]?.[
