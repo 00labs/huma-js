@@ -470,6 +470,36 @@ export const getPoolFeeStructureV2 = async (
   }
 }
 
+export const calcUtilizationRateV2 = (
+  seniorTrancheAssets: BigNumber | undefined,
+  juniorTrancheAssets: BigNumber | undefined,
+  seniorTrancheUnprocessedProfit: BigNumber | undefined,
+  juniorTrancheUnprocessedProfit: BigNumber | undefined,
+  availableBalance: BigNumber | undefined,
+): number | undefined => {
+  if (
+    !seniorTrancheAssets ||
+    !juniorTrancheAssets ||
+    !seniorTrancheUnprocessedProfit ||
+    !juniorTrancheUnprocessedProfit ||
+    !availableBalance
+  ) {
+    return undefined
+  }
+
+  const trancheTotalAssets = seniorTrancheAssets.add(juniorTrancheAssets)
+  const trancheUnprocessedProfit = seniorTrancheUnprocessedProfit.add(
+    juniorTrancheUnprocessedProfit,
+  )
+  const totalSupply = trancheTotalAssets.sub(trancheUnprocessedProfit)
+  const borrowedBalance = totalSupply.sub(availableBalance)
+
+  if (borrowedBalance.gt(0) && totalSupply.gt(0)) {
+    return borrowedBalance.mul(100).div(totalSupply).toNumber() / 100
+  }
+  return 0
+}
+
 export const getUtilizationRateV2 = async (
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
@@ -497,15 +527,12 @@ export const getUtilizationRateV2 = async (
     poolSafeContract.unprocessedTrancheProfit(poolInfo.juniorTrancheVault),
     poolSafeContract.getAvailableBalanceForPool(),
   ])
-  const trancheTotalAssets = seniorTrancheAssets!.add(juniorTrancheAssets!)
-  const trancheUnprocessedProfit = seniorTrancheUnprocessedProfit!.add(
-    juniorTrancheUnprocessedProfit!,
-  )
-  const totalSupply = trancheTotalAssets.sub(trancheUnprocessedProfit)
-  const borrowedBalance = totalSupply.sub(availableBalance)
 
-  if (borrowedBalance.gt(0) && totalSupply.gt(0)) {
-    return borrowedBalance.toNumber() / totalSupply.toNumber()
-  }
-  return 0
+  return calcUtilizationRateV2(
+    seniorTrancheAssets,
+    juniorTrancheAssets,
+    seniorTrancheUnprocessedProfit,
+    juniorTrancheUnprocessedProfit,
+    availableBalance,
+  )
 }

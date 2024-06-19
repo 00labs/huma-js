@@ -10,6 +10,7 @@ import {
   isV2Pool,
   requestPost,
 } from '@huma-finance/shared'
+import { gql } from 'graphql-request'
 
 /**
  * Represents the payload of a credit event.
@@ -229,6 +230,9 @@ function getPoolStats(
 
   const PoolStatsQuery = `
     query {
+      pool(id:"${pool?.toLowerCase()}") {
+        apr
+      }
       poolStat(id:"${pool?.toLowerCase()}") {
         id
         amountCreditOriginated
@@ -240,7 +244,7 @@ function getPoolStats(
 
   return requestPost<{
     errors?: unknown
-    data: { poolStat: PoolStats }
+    data: { pool: { apr: string }; poolStat: PoolStats }
   }>(url, JSON.stringify({ query: PoolStatsQuery }), {
     withCredentials: false,
   }).then((res) => {
@@ -347,6 +351,90 @@ function checkBorrowAndLendHistory(
   })
 }
 
+export type V2PoolData = {
+  pools: {
+    address: string
+    version: number
+    availableBalanceForPool: string
+    apr: number
+    yieldInBps: number
+    currentEpochEndTime: string
+    rewardRateInBpsForPoolOwner: number
+    rewardRateInBpsForEA: number
+    liquidityCap: string
+    maxSeniorJuniorRatio: number
+    fixedSeniorYieldInBps: number
+    tranchesRiskAdjustmentInBps: number
+    withdrawalLockoutInDays: number
+  }[]
+  tranches: {
+    pool: string
+    type: number
+    totalAssets: string
+    unprocessedTrancheProfit: string
+    minLiquidity: string
+    maxLiquidity: string
+    riskYieldMultiplierInBps: number
+    flcIndex: number
+  }[]
+  protocolStats: {
+    protocolFeeInBps: number
+  }
+}
+
+function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  // Query for all pools
+  const QUERY = gql`
+    query {
+      pools {
+        address
+        version
+        availableBalanceForPool
+        apr
+        yieldInBps
+        currentEpochEndTime
+        rewardRateInBpsForPoolOwner
+        rewardRateInBpsForEA
+        liquidityCap
+        maxSeniorJuniorRatio
+        fixedSeniorYieldInBps
+        tranchesRiskAdjustmentInBps
+        withdrawalLockoutInDays
+      }
+      tranches {
+        type
+        pool
+        totalAssets
+        unprocessedTrancheProfit
+        minLiquidity
+        maxLiquidity
+        riskYieldMultiplierInBps
+        flcIndex
+      }
+      protocolStats(id:"protocol-stats") {
+        protocolFeeInBps
+      }      
+    `
+
+  return requestPost<{
+    errors?: unknown
+    data: V2PoolData
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  }).then((res) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return undefined
+    }
+    return res.data
+  })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -358,4 +446,5 @@ export const SubgraphService = {
   getRWReceivableInfo,
   getPoolStats,
   checkBorrowAndLendHistory,
+  fetchAllPoolsData,
 }
