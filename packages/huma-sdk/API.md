@@ -502,7 +502,6 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.getCreditEventsForUser(userAddress, chainId, poolName, poolType, event)](#SubgraphService.getCreditEventsForUser) ⇒ <code>Promise.&lt;Array.&lt;CreditEventPayload&gt;&gt;</code>
     * [.getLastFactorizedAmountFromPool(userAddress, chainId, poolName, poolType)](#SubgraphService.getLastFactorizedAmountFromPool) ⇒ <code>Promise.&lt;number&gt;</code>
     * [.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getRWReceivableInfo) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
-    * [.getPoolStats(chainId, pool)](#SubgraphService.getPoolStats) ⇒ <code>Promise.&lt;{PoolStats}&gt;</code>
     * [.checkBorrowAndLendHistory(chainId, pool, userAddress)](#SubgraphService.checkBorrowAndLendHistory) ⇒ <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code>
 
 <a name="SubgraphService.getSubgraphUrlForChainId"></a>
@@ -563,19 +562,6 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
 | pagination | [<code>Pagination</code>](#Pagination) | <p>The pagination option.</p> |
-
-<a name="SubgraphService.getPoolStats"></a>
-
-### SubgraphService.getPoolStats(chainId, pool) ⇒ <code>Promise.&lt;{PoolStats}&gt;</code>
-<p>Returns the pool's stats.</p>
-
-**Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
-**Returns**: <code>Promise.&lt;{PoolStats}&gt;</code> - <p>The pool's stats info.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| chainId | <code>number</code> | <p>The ID of the chain.</p> |
-| pool | <code>string</code> | <p>The address of the pool.</p> |
 
 <a name="SubgraphService.checkBorrowAndLendHistory"></a>
 

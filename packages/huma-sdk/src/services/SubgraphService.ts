@@ -10,6 +10,7 @@ import {
   isV2Pool,
   requestPost,
 } from '@huma-finance/shared'
+import { gql } from 'graphql-request'
 
 /**
  * Represents the payload of a credit event.
@@ -202,56 +203,6 @@ function getRWReceivableInfo(
   })
 }
 
-type PoolStats = {
-  id: string
-  totalPoolAssets: number
-  amountCreditOriginated: number
-  amountCreditRepaid: number
-  amountCreditDefaulted: number
-}
-
-/**
- * Returns the pool's stats.
- *
- * @memberof SubgraphService
- * @param {number} chainId - The ID of the chain.
- * @param {string} pool - The address of the pool.
- * @returns {Promise<{PoolStats}>} The pool's stats info.
- */
-function getPoolStats(
-  chainId: number,
-  pool: string,
-): Promise<PoolStats | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
-  if (!url) {
-    return Promise.resolve(undefined)
-  }
-
-  const PoolStatsQuery = `
-    query {
-      poolStat(id:"${pool?.toLowerCase()}") {
-        id
-        amountCreditOriginated
-        amountCreditRepaid
-        amountCreditDefaulted
-        totalPoolAssets
-      }
-    }`
-
-  return requestPost<{
-    errors?: unknown
-    data: { poolStat: PoolStats }
-  }>(url, JSON.stringify({ query: PoolStatsQuery }), {
-    withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    return res.data.poolStat
-  })
-}
-
 /**
  * Returns if user has borrow or lend history.
  *
@@ -347,6 +298,107 @@ function checkBorrowAndLendHistory(
   })
 }
 
+export type V2PoolData = {
+  pools: {
+    address: string
+    version: number
+    availableBalanceForPool: string
+    apr: number
+    yieldInBps: number
+    currentEpochEndTime: string
+    rewardRateInBpsForPoolOwner: number
+    rewardRateInBpsForEA: number
+    liquidityCap: string
+    maxSeniorJuniorRatio: number
+    fixedSeniorYieldInBps: number
+    tranchesRiskAdjustmentInBps: number
+    withdrawalLockoutInDays: number
+  }[]
+  tranches: {
+    pool: {
+      id: string
+    }
+    type: number
+    totalAssets: string
+    unprocessedTrancheProfit: string
+    minLiquidity: string
+    maxLiquidity: string
+    riskYieldMultiplierInBps: number
+    flcIndex: number
+  }[]
+  protocolStats: {
+    protocolFeeInBps: number
+  }
+  poolStats: {
+    id: string
+    amountCreditOriginated: number
+    amountCreditRepaid: number
+    amountCreditDefaulted: number
+  }[]
+}
+
+function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  // Query for all pools
+  const QUERY = gql`
+    query {
+      pools {
+        address
+        version
+        availableBalanceForPool
+        apr
+        yieldInBps
+        currentEpochEndTime
+        rewardRateInBpsForPoolOwner
+        rewardRateInBpsForEA
+        liquidityCap
+        maxSeniorJuniorRatio
+        fixedSeniorYieldInBps
+        tranchesRiskAdjustmentInBps
+        withdrawalLockoutInDays
+      }
+      tranches {
+        type
+        pool {
+          id
+        }
+        totalAssets
+        unprocessedTrancheProfit
+        minLiquidity
+        maxLiquidity
+        riskYieldMultiplierInBps
+        flcIndex
+      }
+      poolStats {
+        id
+        amountCreditOriginated
+        amountCreditRepaid
+        amountCreditDefaulted
+      }
+      protocolStats(id: "protocol-stats") {
+        protocolFeeInBps
+      }
+    }
+  `
+
+  return requestPost<{
+    errors?: unknown
+    data: V2PoolData
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  }).then((res) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return undefined
+    }
+    return res.data
+  })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -356,6 +408,6 @@ export const SubgraphService = {
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
-  getPoolStats,
   checkBorrowAndLendHistory,
+  fetchAllPoolsData,
 }
