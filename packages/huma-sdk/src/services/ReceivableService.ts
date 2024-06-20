@@ -4,7 +4,6 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
-  PoolSubgraphMap,
   RealWorldReceivableInfo,
   RealWorldReceivableInfoBase,
   SupplementaryContracts,
