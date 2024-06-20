@@ -1,6 +1,6 @@
 {
   "name": "@huma-finance/widgets",
-  "version": "0.0.55",
+  "version": "0.0.58",
   "publishConfig": {
     "access": "public"
   },
@@ -30,8 +30,8 @@
     "@ethersproject/experimental": "^5.7.0",
     "@ethersproject/providers": "^5.6.0",
     "@ethersproject/units": "^5.6.0",
-    "@huma-finance/sdk": "^0.0.55",
-    "@huma-finance/shared": "^0.0.55",
+    "@huma-finance/sdk": "^0.0.58",
+    "@huma-finance/shared": "^0.0.58",
     "@mui/icons-material": "^5.3.0",
     "@mui/material": "^5.0.6",
     "@mui/styles": "^5.0.2",
@@ -168,7 +168,6 @@
     "jsdoc-babel": "^0.5.0",
     "jsdoc-to-markdown": "^8.0.0",
     "lint-staged": "^10.5.4",
-    "node-sass": "^8.0.0",
     "path-browserify": "^1.0.1",
     "prettier": "^2.7.1",
     "react-cosmos": "^5.7.2",
@@ -178,6 +177,7 @@
     "rollup-plugin-polyfill-node": "^0.12.0",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-scss": "^4.0.0",
+    "sass": "^1.77.6",
     "stream-browserify": "^3.0.0",
     "typechain": "^8.1.0",
     "url-loader": "^4.1.1",

@@ -112,6 +112,7 @@ export function Evaluation({
   }, [envelopeLastQueryTimeKey])
 
   useEffect(() => {
+    setKYCCopy(KYCCopies.verifyIdentity)
     const docuSignStatus = localStorage.getItem(envelopeDocuSignStatusKey)
     setDocSignatureStatus(docuSignStatus as DocSignatureStatus['status'])
     if (docuSignStatus === 'completed') {

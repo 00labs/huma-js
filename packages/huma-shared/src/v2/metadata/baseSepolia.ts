@@ -18,6 +18,12 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x06ee659DEdE8E56beaa1d2fAF5562F2BF690998C',
     juniorTrancheVault: '0x2074aD5c2FAC45C30d1BD1819232762921653065',
     epochManager: '0x0714d912C0437B6F9AaCB59E60433d8935473613',
+    poolUnderlyingToken: {
+      address: '0x8ca2b9b00420d51D697b59E84720c9B1A0b11d27',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x7E1D981Ee07f4e65a6249bdD8A1681F102af1894',
@@ -71,6 +77,13 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x21eFCabdB6bbaFFcF21ab98CC1ea6FafB866647f',
     juniorTrancheVault: '0xf5783e47534D4a988C46FDdD4b6952A97157aE5C',
     epochManager: '0xCaef6534A26785730d544Bc3B066e1528Fb70484',
+    receivable: '0x8F463C6e3FFDEb75581625Fcfdc26D5650Afc9ed',
+    poolUnderlyingToken: {
+      address: '0x8ca2b9b00420d51D697b59E84720c9B1A0b11d27',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xB295459175ADb5e9C855F1aea4e7048d742Dc3f8',
