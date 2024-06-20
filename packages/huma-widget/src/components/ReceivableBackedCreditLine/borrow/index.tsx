@@ -59,7 +59,7 @@ export function ReceivableBackedCreditLineBorrowV2({
     provider,
   )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
   const { creditRecord } = accountStats
   const accountState = creditRecord?.state
 

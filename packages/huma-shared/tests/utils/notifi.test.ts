@@ -24,29 +24,20 @@ describe('getBlockchainConfigFromChain', () => {
 
 describe('doesChainSupportNotifi', () => {
   it('returns true for Polygon chain', () => {
-    expect(doesChainSupportNotifi(ChainEnum.Polygon, false, '')).toBe(true)
+    expect(doesChainSupportNotifi(ChainEnum.Polygon, false)).toBe(true)
   })
 
   it('returns true for Mumbai and Goerli chains in development', () => {
-    expect(doesChainSupportNotifi(ChainEnum.Mumbai, true, '')).toBe(true)
-    expect(doesChainSupportNotifi(ChainEnum.Goerli, true, '')).toBe(true)
+    expect(doesChainSupportNotifi(ChainEnum.Mumbai, true)).toBe(true)
+    expect(doesChainSupportNotifi(ChainEnum.Goerli, true)).toBe(true)
   })
 
-  it('returns true for Mumbai and Goerli chains in production if the account is in the list', () => {
-    const account = '0x1fA2bE830cCb0f6930b9095559C25f64DD6A2146'
-
-    expect(doesChainSupportNotifi(ChainEnum.Mumbai, false, account)).toBe(true)
-    expect(doesChainSupportNotifi(ChainEnum.Goerli, false, account)).toBe(true)
-  })
-
-  it('returns false for Mumbai and Goerli chains in production if the account is not in the list', () => {
-    const account = '0x0000000000000000000000000000000000000000'
-
-    expect(doesChainSupportNotifi(ChainEnum.Mumbai, false, account)).toBe(false)
-    expect(doesChainSupportNotifi(ChainEnum.Goerli, false, account)).toBe(false)
+  it('returns false for Mumbai and Goerli chains in production', () => {
+    expect(doesChainSupportNotifi(ChainEnum.Mumbai, false)).toBe(false)
+    expect(doesChainSupportNotifi(ChainEnum.Goerli, false)).toBe(false)
   })
 
   it('returns false for an invalid chain', () => {
-    expect(doesChainSupportNotifi(-1 as any, false, '')).toBe(false)
+    expect(doesChainSupportNotifi(-1 as any, false)).toBe(false)
   })
 })

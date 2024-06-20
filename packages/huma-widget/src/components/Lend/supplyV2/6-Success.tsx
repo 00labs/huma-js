@@ -37,7 +37,7 @@ export function Success({
   const { symbol, decimals, address } = poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
   const hasNextStep = isFirstTimeNotifiUser
 
   useEffect(() => {

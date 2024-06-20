@@ -9,23 +9,18 @@ import {
   newFrontendClient,
 } from '@notifi-network/notifi-frontend-client'
 
-export const useDoesChainSupportNotifi = (
-  account: string | undefined,
-  chainId: number | undefined,
-) => {
+export const useDoesChainSupportNotifi = (chainId: number | undefined) => {
   const [notifiChainSupported, setNotifiChainSupported] = useState(false)
 
   useEffect(() => {
     const checkNotifiChainSupported = async () => {
-      if (account != null && chainId != null) {
-        setNotifiChainSupported(
-          doesChainSupportNotifi(chainId, checkIsDev(), account),
-        )
+      if (chainId != null) {
+        setNotifiChainSupported(doesChainSupportNotifi(chainId, checkIsDev()))
       }
     }
 
     checkNotifiChainSupported()
-  }, [account, chainId])
+  }, [chainId])
 
   return { notifiChainSupported }
 }
@@ -37,7 +32,7 @@ export const useNotifiClient = (
   const [notifiClient, setNotifiClient] = useState<NotifiFrontendClient | null>(
     null,
   )
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
 
   useEffect(() => {
     const createNotifiClient = async () => {
@@ -65,7 +60,7 @@ export const useIsFirstTimeNotifiUser = (
 ) => {
   const [isFirstTimeNotifiUser, setIsFirstTimeNotifiUser] = useState(false)
   const { notifiClient } = useNotifiClient(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
 
   useEffect(() => {
     const checkIsFirstTimeNotifiUser = async () => {
