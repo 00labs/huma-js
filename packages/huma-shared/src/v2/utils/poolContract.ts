@@ -494,8 +494,12 @@ export const calcUtilizationRateV2 = (
   const totalSupply = trancheTotalAssets.sub(trancheUnprocessedProfit)
   const borrowedBalance = totalSupply.sub(availableBalance)
 
+  const BP_FACTOR_NUMBER = BP_FACTOR.toNumber()
   if (borrowedBalance.gt(0) && totalSupply.gt(0)) {
-    return borrowedBalance.mul(100).div(totalSupply).toNumber() / 100
+    return (
+      borrowedBalance.mul(BP_FACTOR_NUMBER).div(totalSupply).toNumber() /
+      BP_FACTOR_NUMBER
+    )
   }
   return 0
 }

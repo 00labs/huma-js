@@ -1,18 +1,7 @@
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
 
-import {
-  getChainIdFromSignerOrProvider,
-  getContract,
-  POOL_NAME,
-} from '../../utils'
-import HUMA_CONFIG_ABI from '../abis/HumaConfig.json'
-import { HumaConfig, PoolConfig } from '../abis/types'
-import { FirstLossCoverConfigStructOutput } from '../abis/types/PoolConfig'
 import { FirstLossCoverIndex } from '../types'
 import { BP_FACTOR } from './const'
-import { PoolInfoV2 } from './pool'
-import { getPoolConfigContractV2, getPoolInfoV2 } from './poolContract'
 
 const getFlcTotalAssetsAfterRisk = (
   flcConfigs: {
@@ -67,25 +56,39 @@ export const getPoolOverviewV2 = (
   const juniorAssets = liquidityCap.div(maxSeniorJuniorRatio + 1)
   const seniorAssets = liquidityCap.sub(juniorAssets)
 
-  const totalProfit = liquidityCap.mul(APY)
+  const totalProfit = liquidityCap
+    .mul(Math.round(APY * BP_FACTOR_NUMBER))
+    .div(BP_FACTOR_NUMBER)
   const postPoolProfitRatio =
     (1 - protocolFeeInBps / BP_FACTOR_NUMBER) *
     (1 -
       rewardRateInBpsForPoolOwner / BP_FACTOR_NUMBER -
       rewardRateInBpsForEA / BP_FACTOR_NUMBER)
-  const poolPostProfit = totalProfit.mul(postPoolProfitRatio)
-  const blendedApy = poolPostProfit.mul(100).div(liquidityCap).toNumber() / 100
+  const poolPostProfit = totalProfit
+    .mul(Math.round(postPoolProfitRatio * BP_FACTOR_NUMBER))
+    .div(BP_FACTOR_NUMBER)
+  const blendedApy =
+    poolPostProfit.mul(BP_FACTOR_NUMBER).div(liquidityCap).toNumber() /
+    BP_FACTOR_NUMBER
 
   let seniorTrancheApy = 0
   let seniorPostProfit = BigNumber.from(0)
   if (fixedSeniorYieldInBps > 0) {
     seniorTrancheApy = fixedSeniorYieldInBps / BP_FACTOR_NUMBER
-    seniorPostProfit = poolPostProfit.sub(seniorAssets.mul(seniorTrancheApy))
+    seniorPostProfit = poolPostProfit.sub(
+      seniorAssets
+        .mul(Math.round(seniorTrancheApy * BP_FACTOR_NUMBER))
+        .div(BP_FACTOR_NUMBER),
+    )
   } else {
     const riskAdjustment = tranchesRiskAdjustmentInBps / BP_FACTOR_NUMBER
-    const seniorProfit = seniorAssets.mul(
-      postPoolProfitRatio * (1 - riskAdjustment) * APY,
-    )
+    const seniorProfit = seniorAssets
+      .mul(
+        Math.round(
+          postPoolProfitRatio * (1 - riskAdjustment) * APY * BP_FACTOR_NUMBER,
+        ),
+      )
+      .div(BP_FACTOR_NUMBER)
     seniorTrancheApy = postPoolProfitRatio * (1 - riskAdjustment) * APY
     seniorPostProfit = poolPostProfit.sub(seniorProfit)
   }
@@ -95,7 +98,8 @@ export const getPoolOverviewV2 = (
 
   const juniorProfit = juniorAssets.mul(seniorPostProfit).div(weight)
   const juniorTrancheApy =
-    juniorProfit.mul(100).div(juniorAssets).toNumber() / 100
+    juniorProfit.mul(BP_FACTOR_NUMBER).div(juniorAssets).toNumber() /
+    BP_FACTOR_NUMBER
   const flcTotalProfit = flcTotalAssetsAfterRisk
     .mul(seniorPostProfit)
     .div(weight)
@@ -109,7 +113,9 @@ export const getPoolOverviewV2 = (
       const flcProfit = flcAssetsAfterRisk
         .mul(flcTotalProfit)
         .div(flcTotalAssetsAfterRisk)
-      apy = flcProfit.mul(100).div(flcConfig.minLiquidity).toNumber() / 100
+      apy =
+        flcProfit.mul(BP_FACTOR_NUMBER).div(flcConfig.minLiquidity).toNumber() /
+        BP_FACTOR_NUMBER
     }
 
     return {

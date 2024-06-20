@@ -203,59 +203,6 @@ function getRWReceivableInfo(
   })
 }
 
-type PoolStats = {
-  id: string
-  totalPoolAssets: number
-  amountCreditOriginated: number
-  amountCreditRepaid: number
-  amountCreditDefaulted: number
-}
-
-/**
- * Returns the pool's stats.
- *
- * @memberof SubgraphService
- * @param {number} chainId - The ID of the chain.
- * @param {string} pool - The address of the pool.
- * @returns {Promise<{PoolStats}>} The pool's stats info.
- */
-function getPoolStats(
-  chainId: number,
-  pool: string,
-): Promise<PoolStats | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
-  if (!url) {
-    return Promise.resolve(undefined)
-  }
-
-  const PoolStatsQuery = `
-    query {
-      pool(id:"${pool?.toLowerCase()}") {
-        apr
-      }
-      poolStat(id:"${pool?.toLowerCase()}") {
-        id
-        amountCreditOriginated
-        amountCreditRepaid
-        amountCreditDefaulted
-        totalPoolAssets
-      }
-    }`
-
-  return requestPost<{
-    errors?: unknown
-    data: { pool: { apr: string }; poolStat: PoolStats }
-  }>(url, JSON.stringify({ query: PoolStatsQuery }), {
-    withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    return res.data.poolStat
-  })
-}
-
 /**
  * Returns if user has borrow or lend history.
  *
@@ -368,7 +315,9 @@ export type V2PoolData = {
     withdrawalLockoutInDays: number
   }[]
   tranches: {
-    pool: string
+    pool: {
+      id: string
+    }
     type: number
     totalAssets: string
     unprocessedTrancheProfit: string
@@ -380,6 +329,12 @@ export type V2PoolData = {
   protocolStats: {
     protocolFeeInBps: number
   }
+  poolStats: {
+    id: string
+    amountCreditOriginated: number
+    amountCreditRepaid: number
+    amountCreditDefaulted: number
+  }[]
 }
 
 function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
@@ -408,7 +363,9 @@ function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
       }
       tranches {
         type
-        pool
+        pool {
+          id
+        }
         totalAssets
         unprocessedTrancheProfit
         minLiquidity
@@ -416,10 +373,17 @@ function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
         riskYieldMultiplierInBps
         flcIndex
       }
-      protocolStats(id:"protocol-stats") {
+      poolStats {
+        id
+        amountCreditOriginated
+        amountCreditRepaid
+        amountCreditDefaulted
+      }
+      protocolStats(id: "protocol-stats") {
         protocolFeeInBps
-      }      
-    `
+      }
+    }
+  `
 
   return requestPost<{
     errors?: unknown
@@ -444,7 +408,6 @@ export const SubgraphService = {
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
-  getPoolStats,
   checkBorrowAndLendHistory,
   fetchAllPoolsData,
 }
