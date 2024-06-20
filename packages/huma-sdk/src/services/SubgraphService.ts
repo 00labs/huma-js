@@ -399,6 +399,115 @@ function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
   })
 }
 
+export type AccountData = {
+  creditlines: {
+    correction: number
+    dueDate: number
+    creditLineType: number
+    billRefreshDate: number
+    feesAndInterestDue: number
+    missedPeriods: number
+    owner: string
+    pool: string
+    poolEntity: {
+      id: string
+      version: number
+    }
+    remainingPeriods: number
+    state: number
+    totalDue: number
+    totalPastDue: number
+    unbilledPrincipal: number
+    settlementState: number
+    committedAmount: number
+    receivableAddress: string
+    receivableParam: string
+  }[]
+  lenders: {
+    owner: string
+    pool: string
+    poolEntity: {
+      id: string
+      version: number
+    }
+    withdrawableFunds: number
+    tranche: {
+      type: number
+    }
+    amount: number
+    shares: number
+    reinvestYield: boolean
+    state: number
+  }[]
+}
+
+function fetchAllAccountData(
+  chainId: number,
+  account: string,
+): Promise<AccountData | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  const QUERY = gql`
+    query {
+      creditlines(where: { owner: "${account}" }){
+        correction
+        dueDate
+        creditLineType
+        billRefreshDate
+        feesAndInterestDue
+        missedPeriods
+        owner
+        pool
+        poolEntity {
+          id
+          version
+        }
+        remainingPeriods
+        state
+        totalDue
+        totalPastDue
+        unbilledPrincipal
+        settlementState
+        committedAmount
+        receivableAddress
+        receivableParam
+      }
+      lenders(where: { owner: "${account}" }){
+        owner
+        pool
+        poolEntity {
+          id
+          version
+        }
+        withdrawableFunds
+        tranche {
+          type
+        }
+        amount
+        shares
+        reinvestYield
+        state
+      }
+    }
+  `
+
+  return requestPost<{
+    errors?: unknown
+    data: AccountData
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  }).then((res) => {
+    if (res.errors) {
+      console.error(res.errors)
+      return undefined
+    }
+    return res.data
+  })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -410,4 +519,5 @@ export const SubgraphService = {
   getRWReceivableInfo,
   checkBorrowAndLendHistory,
   fetchAllPoolsData,
+  fetchAllAccountData,
 }
