@@ -28,6 +28,7 @@ export interface BasicChainInformation {
   requestAPIUrl?: string | undefined
   isTestnet: boolean
   icon: string
+  disabled?: boolean
 }
 
 interface ExtendedChainInformation extends BasicChainInformation {
@@ -70,6 +71,7 @@ export const CHAINS: {
     requestAPIUrl: 'https://dev.goerli.rnreader.huma.finance',
     isTestnet: true,
     icon: 'Ethereum',
+    disabled: true,
   },
   [ChainEnum.Localhost]: {
     id: ChainEnum.Localhost,
@@ -80,6 +82,7 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Ethereum',
+    disabled: true,
   },
   [ChainEnum.HumaTestnet]: {
     id: ChainEnum.HumaTestnet,
@@ -90,6 +93,7 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Ethereum',
+    disabled: true,
   },
   [ChainEnum.Mumbai]: {
     id: ChainEnum.Mumbai,
@@ -100,6 +104,7 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Polygon',
+    disabled: true,
   },
   [ChainEnum.Amoy]: {
     id: ChainEnum.Amoy,
