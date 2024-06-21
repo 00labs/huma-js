@@ -452,7 +452,7 @@ function fetchAllAccountData(
 
   const QUERY = gql`
     query {
-      creditlines(where: { owner: "${account}" }){
+      creditLines(where: { owner: "${account}" }){
         correction
         dueDate
         creditLineType
