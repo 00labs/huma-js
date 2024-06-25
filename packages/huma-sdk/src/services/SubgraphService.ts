@@ -91,14 +91,21 @@ function getCreditEventsForUser(
     }
   `
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return requestPost(url, JSON.stringify({ query })).then((res: any) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return []
-    }
-    return res.data.creditEvents
-  })
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return []
+        }
+        return res.data.creditEvents
+      })
+      .catch((err) => {
+        console.error(err)
+        return []
+      })
+  )
 }
 
 /**
@@ -190,17 +197,22 @@ function getRWReceivableInfo(
     }
   }>(url, JSON.stringify({ query: RWReceivablesQuery }), {
     withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return []
-    }
-    return res.data.rwreceivables.map((item) => {
-      item.poolAddress = item.pool
-      item.tokenURI = item.tokenUri
-      return item
-    })
   })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return []
+      }
+      return res.data.rwreceivables.map((item) => {
+        item.poolAddress = item.pool
+        item.tokenURI = item.tokenUri
+        return item
+      })
+    })
+    .catch((err) => {
+      console.error(err)
+      return []
+    })
 }
 
 /**
@@ -273,29 +285,34 @@ function checkBorrowAndLendHistory(
     }
   }>(url, JSON.stringify({ query: borrowAndLendHistoryQuery }), {
     withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    const { creditEvents = [], lenders = [] } = res.data
-    const hasBorrowHistory = creditEvents.some((creditEvent) =>
-      [
-        CreditEvent.DrawdownMade,
-        CreditEvent.DrawdownMadeWithReceivable,
-      ].includes(creditEvent.event),
-    )
-    let hasLendHistory = creditEvents.some(
-      (creditEvent) => creditEvent.event === CreditEvent.LiquidityDeposited,
-    )
-    if (!hasLendHistory) {
-      const firstLossCoverTrancheType = 2
-      hasLendHistory = lenders.some(
-        (lender) => lender.tranche.type !== firstLossCoverTrancheType,
-      )
-    }
-    return { hasBorrowHistory, hasLendHistory }
   })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      const { creditEvents = [], lenders = [] } = res.data
+      const hasBorrowHistory = creditEvents.some((creditEvent) =>
+        [
+          CreditEvent.DrawdownMade,
+          CreditEvent.DrawdownMadeWithReceivable,
+        ].includes(creditEvent.event),
+      )
+      let hasLendHistory = creditEvents.some(
+        (creditEvent) => creditEvent.event === CreditEvent.LiquidityDeposited,
+      )
+      if (!hasLendHistory) {
+        const firstLossCoverTrancheType = 2
+        hasLendHistory = lenders.some(
+          (lender) => lender.tranche.type !== firstLossCoverTrancheType,
+        )
+      }
+      return { hasBorrowHistory, hasLendHistory }
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 export type V2PoolData = {
@@ -390,13 +407,18 @@ function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
     data: V2PoolData
   }>(url, JSON.stringify({ query: QUERY }), {
     withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    return res.data
   })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 export type AccountData = {
@@ -499,13 +521,18 @@ function fetchAllAccountData(
     data: AccountData
   }>(url, JSON.stringify({ query: QUERY }), {
     withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    return res.data
   })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 /**
