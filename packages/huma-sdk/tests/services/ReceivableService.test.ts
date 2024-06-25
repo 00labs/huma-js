@@ -37,6 +37,7 @@ jest.mock('../../src/utils/maticGasStation', () => ({
 }))
 jest.mock('../../src/services/SubgraphService', () => ({
   SubgraphService: {
+    getSubgraphUrlForChainId: jest.fn(),
     getRWReceivableInfo: jest.fn(),
     getRWReceivableInfoTotalCount: jest.fn(),
   },
@@ -49,6 +50,9 @@ jest.mock('graphql-request', () => ({
 describe('declareReceivablePaymentByReferenceId', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    ;(SubgraphService.getSubgraphUrlForChainId as jest.Mock).mockReturnValue(
+      'testUrl',
+    )
   })
 
   it('should throw if no chain id is found', async () => {
@@ -110,6 +114,9 @@ describe('declareReceivablePaymentByReferenceId', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(1)
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
+    )
+    ;(SubgraphService.getSubgraphUrlForChainId as jest.Mock).mockReturnValue(
+      undefined,
     )
 
     const signer = {
@@ -336,6 +343,9 @@ describe('declareReceivablePaymentByReferenceId', () => {
 describe('declareReceivablePaymentByTokenId', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    ;(SubgraphService.getSubgraphUrlForChainId as jest.Mock).mockReturnValue(
+      'testUrl',
+    )
   })
 
   it('should throw if no chain id is found', async () => {
@@ -445,6 +455,9 @@ describe('declareReceivablePaymentByTokenId', () => {
 describe('createReceivable', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    ;(SubgraphService.getSubgraphUrlForChainId as jest.Mock).mockReturnValue(
+      'testUrl',
+    )
   })
 
   it('should throw if no chain id is found', async () => {
@@ -547,6 +560,9 @@ describe('createReceivable', () => {
 describe('createReceivableWithMetadata', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    ;(SubgraphService.getSubgraphUrlForChainId as jest.Mock).mockReturnValue(
+      'testUrl',
+    )
   })
 
   it('should throw if metadata is not object', async () => {
@@ -1016,6 +1032,9 @@ describe('uploadOrFetchMetadataURI', () => {
     })
     ;(ARWeaveService.getURIFromARWeaveId as jest.Mock).mockReturnValue(
       'arweave_uri_here',
+    )
+    ;(SubgraphService.getSubgraphUrlForChainId as jest.Mock).mockReturnValue(
+      'testUrl',
     )
   })
 

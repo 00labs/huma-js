@@ -4,7 +4,6 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
-  PoolSubgraphMap,
   RealWorldReceivableInfo,
   RealWorldReceivableInfoBase,
   SupplementaryContracts,
@@ -56,7 +55,7 @@ async function getTokenIdByURI(
     }
   `
 
-  const receivableSubgraph = PoolSubgraphMap[chainId]?.subgraph
+  const receivableSubgraph = SubgraphService.getSubgraphUrlForChainId(chainId)
   if (!receivableSubgraph) {
     throw new Error('No receivable subgraph exists for this chain')
   }

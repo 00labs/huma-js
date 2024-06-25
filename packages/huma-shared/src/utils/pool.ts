@@ -102,6 +102,7 @@ export type PoolInfo = {
 export type PoolSubgraphMapType = {
   [chainId: number]: {
     subgraph: string
+    productionSubgraph?: string
   }
 }
 
@@ -208,6 +209,8 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.Polygon]: {
     subgraph:
       'https://api.studio.thegraph.com/query/38092/huma-polygon/version/latest',
+    productionSubgraph:
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/3Cb7Uy2BqxvU8hCRNxMUDVaPdpDS9Kd52mWuQVdTpz8',
   },
   [ChainEnum.Goerli]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
@@ -222,6 +225,8 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.Celo]: {
     subgraph:
       'https://api.studio.thegraph.com/query/38092/huma-celo/version/latest',
+    productionSubgraph:
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/3Cb7Uy2BqxvU8hCRNxMUDVaPdpDS9Kd52mWuQVdTpz8',
   },
   [ChainEnum.Alfajores]: {
     subgraph:
