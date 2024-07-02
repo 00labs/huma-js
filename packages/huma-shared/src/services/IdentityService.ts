@@ -5,7 +5,7 @@ import { requestGet, requestPost, requestPut } from '../utils/request'
  * Enum representing the identity status.
  * @typedef {Enum} IdentityStatus
  */
-enum IdentityVerificationStatus {
+export enum IdentityVerificationStatus {
   ACCREDITED = 'ACCREDITED',
   ACCREDITATION_NOT_APPLICABLE = 'ACCREDITATION_NOT_APPLICABLE',
   NOT_ACCREDITED = 'NOT_ACCREDITED',
