@@ -6,6 +6,8 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { useAsyncError } from './useAsyncError'
 import { AuthService } from '../services'
 
+type ErrorType = 'NotSignIn' | 'UserRejected' | 'Other' | undefined
+
 const createSiweMessage = (
   address: string,
   chainId: number,
@@ -44,6 +46,7 @@ const verifyOwnership = async (
 export type AuthState = {
   isWalletOwnershipVerificationRequired: boolean
   isWalletOwnershipVerified: boolean
+  errorType: ErrorType
   error: unknown
   setError: React.Dispatch<React.SetStateAction<unknown>>
 }
@@ -58,6 +61,7 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
   const handleVerificationCompletion = () => {
     setIsVerified(true)
   }
+  const [errorType, setErrorType] = useState<ErrorType>()
 
   useEffect(() => {
     if (!account || !chainId || !error || !provider) {
@@ -72,6 +76,7 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         'WalletMismatchException',
       ].includes(error.response?.data?.detail?.type)
     ) {
+      setErrorType('NotSignIn')
       setIsVerificationRequired(true)
       verifyOwnership(
         account,
@@ -80,12 +85,18 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         provider,
         handleVerificationCompletion,
       ).catch((e) => setError(e))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
+      setErrorType('UserRejected')
+    } else {
+      setErrorType('Other')
     }
   }, [chainId, isDev, error, throwError, account, provider])
 
   return {
     isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
+    errorType,
     error,
     setError,
   }

@@ -34,32 +34,33 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
     title: 'Jia V2 Testing Pool',
     desc: 'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
     KYC: {
-      provider: KYC_PROVIDER.Securitize,
-      signInRequired: {
-        title: 'Sign In',
-        description:
-          'Please sign in to verify that you are the owner of the wallet.',
-      },
-      verifyIdentity: {
-        title: 'Verify Identity',
-        description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
-        buttonText: 'VERIFY MY IDENTITY',
-      },
-      emailSignatureLink: {
-        title: 'Pool Documents',
-        description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
-        buttonText: 'EMAIL DOCUSIGN LINK',
-      },
-      resendSignatureLink: {
-        title: 'Resend Documents',
-        description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
-        buttonText: 'RESEND DOCUSIGN LINK',
-      },
-      docUnderReview: {
-        title: 'Under Review',
-        description:
-          'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
-        buttonText: 'THANK YOU',
+      Securitize: {
+        signInRequired: {
+          title: 'Sign In',
+          description:
+            'Please sign in to verify that you are the owner of the wallet.',
+        },
+        verifyIdentity: {
+          title: 'Verify Identity',
+          description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
+          buttonText: 'VERIFY MY IDENTITY',
+        },
+        emailSignatureLink: {
+          title: 'Pool Documents',
+          description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
+          buttonText: 'EMAIL DOCUSIGN LINK',
+        },
+        resendSignatureLink: {
+          title: 'Resend Documents',
+          description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
+          buttonText: 'RESEND DOCUSIGN LINK',
+        },
+        docUnderReview: {
+          title: 'Under Review',
+          description:
+            'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
+          buttonText: 'THANK YOU',
+        },
       },
     },
   },

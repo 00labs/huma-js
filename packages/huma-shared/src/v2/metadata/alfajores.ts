@@ -34,6 +34,20 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
     juniorAPY: '10-20%',
     title: 'Arf V2 Testing Pool',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
-    supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    // supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    KYC: {
+      Persona: {
+        signInRequired: {
+          title: 'Sign In',
+          description:
+            'Please sign in to verify that you are the owner of the wallet.',
+        },
+        verifyIdentity: {
+          title: 'Start KYC',
+          description: `You’ll be rewarded with Huma points after completing KYC and your first investment.`,
+          buttonText: 'START KYC',
+        },
+      },
+    },
   },
 }
