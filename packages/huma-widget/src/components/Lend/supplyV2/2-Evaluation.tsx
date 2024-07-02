@@ -4,6 +4,7 @@ import {
   configUtil,
   DocSignatureStatus,
   IdentityService,
+  IdentityVerificationStatus,
   KYCCopy,
   PoolInfoV2,
   timeUtil,
@@ -14,6 +15,7 @@ import {
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import Persona, { Client } from 'persona'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError } from '../../../store/widgets.reducers'
@@ -121,37 +123,43 @@ export function Evaluation({
     }
 
     const fetchData = async () => {
-      try {
-        if (kycProvider && kycPool && account && chainId) {
-          setLoadingType('verificationStatus')
-          await IdentityService.onboard(
-            account,
-            code as string,
-            kycPool as string,
-            chainId,
-            isDev,
-          )
-        }
-      } catch (e) {
-        try {
-          setAuthError(e)
-          setKYCCopy(KYCCopies.signInRequired)
-        } catch (e) {
-          // The repeated call will throw an error of 401, so we can ignore it.
-          console.log(e)
-        }
-      }
+      // try {
+      //   if (kycProvider && kycPool && account && chainId) {
+      //     setLoadingType('verificationStatus')
+      //     await IdentityService.onboard(
+      //       account,
+      //       code as string,
+      //       kycPool as string,
+      //       chainId,
+      //       isDev,
+      //     )
+      //   }
+      // } catch (e) {
+      //   try {
+      //     setAuthError(e)
+      //     setKYCCopy(KYCCopies.signInRequired)
+      //   } catch (e) {
+      //     // The repeated call will throw an error of 401, so we can ignore it.
+      //     console.log(e)
+      //   }
+      // }
 
       try {
         if (account && chainId) {
           setLoadingType('verificationStatus')
-          const verificationStatus =
-            await IdentityService.getVerificationStatus(
-              account,
-              poolInfo.pool,
-              chainId,
-              isDev,
-            )
+          // const verificationStatus =
+          //   await IdentityService.getVerificationStatus(
+          //     account,
+          //     poolInfo.pool,
+          //     chainId,
+          //     isDev,
+          //   )
+          const verificationStatus = {
+            walletAddress: account,
+            verificationStatus: IdentityVerificationStatus.USER_NOT_ONBOARDED,
+            isVerified: false,
+            isNotOnboarded: true,
+          }
           setKYCVerifyStatus(verificationStatus)
           if (verificationStatus.isVerified) {
             const envelopeId = localStorage.getItem(envelopeKey)
@@ -248,19 +256,43 @@ export function Evaluation({
     const { isNotOnboarded, isVerified } = KYCVerifyStatus || {}
 
     if (!isVerified) {
-      const issuerId = CHAINS[chainId!].isTestnet
-        ? '53a66b32-583e-40e7-ba90-baf516d2cadd'
-        : '5557baf5-d3c2-4c80-b522-c05a11c6e586'
-      const baseUrl = configUtil.getKYCProviderBaseUrl(
-        poolInfo.KYC!.provider,
-        chainId!,
-      )
-      const originUrl = window.location.href.split('?')[0]
-      const redirectUrl = `${originUrl}?poolName=${
-        poolInfo.poolName
-      }&kycProvider=${poolInfo.KYC!.provider}&kycPool=${poolInfo.pool}`
-      const providerAuthorizeUrl = `${baseUrl}/#/authorize?issuerId=${issuerId}&scope=details&details=verification&redirectUrl=${redirectUrl}`
-      window.location.href = isNotOnboarded ? providerAuthorizeUrl : baseUrl
+      // const issuerId = CHAINS[chainId!].isTestnet
+      //   ? '53a66b32-583e-40e7-ba90-baf516d2cadd'
+      //   : '5557baf5-d3c2-4c80-b522-c05a11c6e586'
+      // const baseUrl = configUtil.getKYCProviderBaseUrl(
+      //   poolInfo.KYC!.provider,
+      //   chainId!,
+      // )
+      // const originUrl = window.location.href.split('?')[0]
+      // const redirectUrl = `${originUrl}?poolName=${
+      //   poolInfo.poolName
+      // }&kycProvider=${poolInfo.KYC!.provider}&kycPool=${poolInfo.pool}`
+      // const providerAuthorizeUrl = `${baseUrl}/#/authorize?issuerId=${issuerId}&scope=details&details=verification&redirectUrl=${redirectUrl}`
+      // window.location.href = isNotOnboarded ? providerAuthorizeUrl : baseUrl
+
+      const client: Client = new Persona.Client({
+        templateId: 'itmpl_8vesaKV8ZTLo9UYhTeCeqjGdrggR',
+        environmentId: 'env_DtTmNi65FwmJttCYyHEWwuqqAY7v',
+        onReady: () => client.open(),
+        onComplete: ({ inquiryId, status, fields }) => {
+          if (status === 'completed' || status === 'approved') {
+            setKYCVerifyStatus({
+              walletAddress: account!,
+              verificationStatus: IdentityVerificationStatus.ACCREDITED,
+              isVerified: true,
+              isNotOnboarded: false,
+            })
+          } else {
+            setKYCVerifyStatus({
+              walletAddress: account!,
+              verificationStatus:
+                IdentityVerificationStatus.IDENTITY_VERIFICATION_FAILED,
+              isVerified: false,
+              isNotOnboarded: false,
+            })
+          }
+        },
+      })
     } else {
       const envelopeId = localStorage.getItem(envelopeKey)
       try {
