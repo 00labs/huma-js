@@ -48,6 +48,7 @@ export function HumaModal({
 
   return (
     <Dialog
+      id='huma-modal'
       disableScrollLock
       maxWidth={false}
       fullScreen={isXsSize}

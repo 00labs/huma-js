@@ -5,7 +5,7 @@ import { requestGet, requestPost, requestPut } from '../utils/request'
  * Enum representing the identity status.
  * @typedef {Enum} IdentityStatus
  */
-export enum IdentityVerificationStatus {
+enum IdentityVerificationStatus {
   ACCREDITED = 'ACCREDITED',
   ACCREDITATION_NOT_APPLICABLE = 'ACCREDITATION_NOT_APPLICABLE',
   NOT_ACCREDITED = 'NOT_ACCREDITED',
@@ -81,33 +81,6 @@ const getVerificationStatus = async (
   )
   result.isNotOnboarded =
     result.verificationStatus === IdentityVerificationStatus.USER_NOT_ONBOARDED
-
-  return result
-}
-
-/**
- * Start wallet's verification process.
- *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId chain ID.
- * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<VerificationStatusResult>} Promise that returns the verification status result.
- */
-const startVerification = async (
-  walletAddress: string,
-  chainId: number,
-  isDev = false,
-): Promise<VerificationStatusResult> => {
-  const result = await requestPost<VerificationStatusResult>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
-      isDev,
-    )}/wallets/${walletAddress}/start-verification`,
-    {
-      wallet_address: walletAddress,
-      chainId,
-    },
-  )
 
   return result
 }
@@ -200,7 +173,6 @@ const resendDocSignatureLink = async (
 
 export const IdentityService = {
   getVerificationStatus,
-  startVerification,
   onboard,
   getDocSignatureStatus,
   requestDocSignature,

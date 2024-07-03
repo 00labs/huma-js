@@ -52,7 +52,6 @@ export function SecuritizeEvaluation({
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
   const {
-    isWalletOwnershipVerificationRequired,
     isWalletOwnershipVerified,
     setError: setAuthError,
     error: authError,
@@ -68,11 +67,6 @@ export function SecuritizeEvaluation({
     useState<DocSignatureStatus['status']>()
   const docSignatureCompleted = docSignatureStatus === 'completed'
   const [openSnackBar, setOpenSnackBar] = useState<boolean>(false)
-
-  console.log(
-    'isWalletOwnershipVerificationRequired',
-    isWalletOwnershipVerificationRequired,
-  )
 
   const { envelopeKey, envelopeLastQueryTimeKey, envelopeDocuSignStatusKey } =
     useMemo(() => {

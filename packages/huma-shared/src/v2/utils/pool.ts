@@ -88,6 +88,8 @@ export type PoolInfoV2 = {
     Persona?: {
       signInRequired: KYCCopy
       verifyIdentity: KYCCopy
+      verificationDeclined: KYCCopy
+      verificationNeedsReview: KYCCopy
     }
   }
   supplyLink?: string

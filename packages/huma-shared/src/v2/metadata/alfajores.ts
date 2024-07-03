@@ -47,6 +47,16 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
           description: `You’ll be rewarded with Huma points after completing KYC and your first investment.`,
           buttonText: 'START KYC',
         },
+        verificationDeclined: {
+          title: 'Verification Declined',
+          description:
+            'Your verification request has been declined. Please contact support for more information.',
+        },
+        verificationNeedsReview: {
+          title: 'Verification Needs Review',
+          description:
+            'Your verification request is under review. Please check back later.',
+        },
       },
     },
   },

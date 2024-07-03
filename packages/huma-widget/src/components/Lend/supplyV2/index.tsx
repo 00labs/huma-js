@@ -2,6 +2,7 @@ import {
   POOL_NAME,
   TrancheType,
   openInNewTab,
+  useLPConfigV2,
   useLenderApprovedV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
@@ -28,17 +29,20 @@ import { Notifications } from './7-Notifications'
  * Lend pool supply props
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
+ * @property {boolean} shouldApproveAll To check if should approve both tranches.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
+  shouldApproveAll?: boolean
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function LendSupplyV2({
   poolName: poolNameStr,
+  shouldApproveAll,
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
@@ -49,7 +53,8 @@ export function LendSupplyV2({
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-
+  const lpConfig = useLPConfigV2(poolName, provider)
+  const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
     poolName,
     'senior',
@@ -67,7 +72,21 @@ export function LendSupplyV2({
     lenderApprovedSenior !== undefined && lenderApprovedJunior !== undefined
 
   useEffect(() => {
-    if (!step && poolInfo && lenderApproveStatusFetched) {
+    if (!step && poolInfo && lenderApproveStatusFetched && lpConfig) {
+      if (
+        shouldApproveAll &&
+        !isUniTranche &&
+        (!lenderApprovedJunior || !lenderApprovedSenior)
+      ) {
+        if (poolInfo.KYC) {
+          dispatch(setStep(WIDGET_STEP.Evaluation))
+        } else if (poolInfo.supplyLink) {
+          openInNewTab(poolInfo.supplyLink)
+          handleClose()
+        }
+        return
+      }
+
       if (lenderApprovedJunior && !lenderApprovedSenior) {
         setSelectedTranche('junior')
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
@@ -98,14 +117,22 @@ export function LendSupplyV2({
   }, [
     dispatch,
     handleClose,
+    isUniTranche,
     lenderApproveStatusFetched,
     lenderApprovedJunior,
     lenderApprovedSenior,
+    lpConfig,
     poolInfo,
+    shouldApproveAll,
     step,
   ])
 
-  if (!poolInfo || !poolUnderlyingToken || !lenderApproveStatusFetched) {
+  if (
+    !poolInfo ||
+    !poolUnderlyingToken ||
+    !lenderApproveStatusFetched ||
+    !lpConfig
+  ) {
     return (
       <WidgetWrapper
         isOpen
@@ -132,13 +159,19 @@ export function LendSupplyV2({
         />
       )}
       {step === WIDGET_STEP.Evaluation && (
-        <Evaluation poolInfo={poolInfo} handleClose={handleClose} />
+        <Evaluation
+          poolInfo={poolInfo}
+          handleClose={handleClose}
+          isUniTranche={isUniTranche}
+          changeTranche={setSelectedTranche}
+        />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
+          isUniTranche={isUniTranche}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (
