@@ -6,7 +6,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { useAsyncError } from './useAsyncError'
 import { AuthService } from '../services'
 
-type ErrorType = 'NotSignIn' | 'UserRejected' | 'Other' | undefined
+type ErrorType = 'NotSignedIn' | 'UserRejected' | 'Other'
 
 const createSiweMessage = (
   address: string,
@@ -46,7 +46,7 @@ const verifyOwnership = async (
 export type AuthState = {
   isWalletOwnershipVerificationRequired: boolean
   isWalletOwnershipVerified: boolean
-  errorType: ErrorType
+  errorType?: ErrorType
   error: unknown
   setError: React.Dispatch<React.SetStateAction<unknown>>
 }
@@ -61,7 +61,7 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
   const handleVerificationCompletion = () => {
     setIsVerified(true)
   }
-  const [errorType, setErrorType] = useState<ErrorType>()
+  const [errorType, setErrorType] = useState<ErrorType | undefined>()
 
   useEffect(() => {
     if (!account || !chainId || !error || !provider) {
@@ -76,7 +76,7 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         'WalletMismatchException',
       ].includes(error.response?.data?.detail?.type)
     ) {
-      setErrorType('NotSignIn')
+      setErrorType('NotSignedIn')
       setIsVerificationRequired(true)
       verifyOwnership(
         account,

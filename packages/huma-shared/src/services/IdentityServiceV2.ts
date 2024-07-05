@@ -21,13 +21,11 @@ export enum IdentityVerificationStatusV2 {
  * @property {string} walletAddress the wallet address to get the verification status.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  * @property {string} personaInquiryId The persona inquiry id.
- * @property {boolean} isNotStarted Is the verification not started.
  */
 export type VerificationStatusResultV2 = {
   walletAddress: string
   status: IdentityVerificationStatusV2
   personaInquiryId: string
-  isNotStarted: boolean
 }
 
 /**
@@ -35,7 +33,7 @@ export type VerificationStatusResultV2 = {
  *
  * @param {string} walletAddress The wallet address.
  * @param {string} pool The pool address.
- * @param {number} chainId chain ID.
+ * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResultV2>} Promise that returns the verification status result.
  */
@@ -43,18 +41,13 @@ const getVerificationStatusV2 = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<VerificationStatusResultV2> => {
-  const result = await requestGet<VerificationStatusResultV2>(
+): Promise<VerificationStatusResultV2> =>
+  requestGet<VerificationStatusResultV2>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
     )}/wallets/${walletAddress}/verification-status?&chainId=${chainId}`,
   )
-
-  result.isNotStarted =
-    result.status === IdentityVerificationStatusV2.NOT_STARTED
-  return result
-}
 
 /**
  * Object representing the response to the identity verification status request.
@@ -73,7 +66,7 @@ export type StartVerificationResultV2 = {
  * Start wallet's verification process.
  *
  * @param {string} walletAddress The wallet address.
- * @param {number} chainId chain ID.
+ * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResultV2>} Promise that returns the start verification result.
  */
@@ -81,23 +74,18 @@ const startVerification = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<VerificationStatusResultV2> => {
-  const result = await requestPost<VerificationStatusResultV2>(
+): Promise<VerificationStatusResultV2> =>
+  requestPost<VerificationStatusResultV2>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
     )}/wallets/${walletAddress}/start-verification?chainId=${chainId}`,
   )
 
-  result.isNotStarted =
-    result.status === IdentityVerificationStatusV2.NOT_STARTED
-  return result
-}
-
 /**
  * Object representing the response to the identity verification resume request.
  * @typedef {Object} StartVerificationResultV2
- * @property {string} walletAddress the wallet address to resume the verification.
+ * @property {string} walletAddress The wallet address to resume the verification.
  * @property {string} sessionToken The session token.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  */
@@ -111,7 +99,7 @@ export type ResumeVerificationResultV2 = {
  * Resume wallet's verification process.
  *
  * @param {string} walletAddress The wallet address.
- * @param {number} chainId chain ID.
+ * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<ResumeVerificationResultV2>} Promise that returns the start verification result.
  */
@@ -119,22 +107,19 @@ const resumeVerification = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<ResumeVerificationResultV2> => {
-  const result = await requestPost<ResumeVerificationResultV2>(
+): Promise<ResumeVerificationResultV2> =>
+  requestPost<ResumeVerificationResultV2>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
     )}/wallets/${walletAddress}/resume-verification?chainId=${chainId}`,
   )
 
-  return result
-}
-
 /**
  * Approve wallet as lender.
  *
  * @param {string} walletAddress The wallet address.
- * @param {number} chainId chain ID.
+ * @param {number} chainId Chain ID.
  * @param {string} contractAddress The tranche vault contract address.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<void>} Promise that returns void.
@@ -144,16 +129,13 @@ const approveLender = async (
   chainId: number,
   contractAddress: string,
   isDev = false,
-): Promise<void> => {
-  const result = await requestPost<void>(
+): Promise<void> =>
+  requestPost<void>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
     )}/wallets/${walletAddress}/approve-lender?chainId=${chainId}&contractAddress=${contractAddress}`,
   )
-
-  return result
-}
 
 export const IdentityServiceV2 = {
   getVerificationStatusV2,

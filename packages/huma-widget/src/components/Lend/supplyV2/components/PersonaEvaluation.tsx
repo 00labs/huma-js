@@ -21,8 +21,6 @@ import { LoadingModal } from '../../../LoadingModal'
 import { WrapperModal } from '../../../WrapperModal'
 import { WIDGET_STEP } from '../../../../store/widgets.store'
 
-const INQUIRY_ID = 'INQUIRY_ID'
-
 const LoadingCopiesByType: {
   [key: string]: {
     description: string
@@ -64,23 +62,21 @@ export function PersonaEvaluation({
   } = useAuthErrorHandling(isDev)
   const KYCCopies = poolInfo.KYC!.Persona!
   const [loadingType, setLoadingType] = useState<
-    'verificationStatus' | 'startKYC' | 'approveLender'
+    'verificationStatus' | 'startKYC' | 'approveLender' | undefined
   >()
   const [kycCopy, setKYCCopy] = useState<KYCCopy>(KYCCopies.verifyIdentity)
-  const [inquiryId, setInquiryId] = useState<string | undefined>(
-    localStorage.getItem(INQUIRY_ID) ?? undefined,
-  )
+  const [inquiryId, setInquiryId] = useState<string | undefined>()
   const [sessionToken, setSessionToken] = useState<string | undefined>()
   const [verificationStatus, setVerificationStatus] = useState<
     VerificationStatusResultV2 | undefined
   >()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
   const isKYCCompletedRef = useRef<boolean>(false)
-  const isActionOnGoingRef = useRef<boolean>(false)
+  const isActionOngoingRef = useRef<boolean>(false)
 
   const approveLender = useCallback(async () => {
     try {
-      isActionOnGoingRef.current = true
+      isActionOngoingRef.current = true
       setLoadingType('approveLender')
       await IdentityServiceV2.approveLender(
         account!,
@@ -103,7 +99,7 @@ export function PersonaEvaluation({
         dispatch(setStep(WIDGET_STEP.ChooseTranche))
       }
     } finally {
-      isActionOnGoingRef.current = false
+      isActionOngoingRef.current = false
       setLoadingType(undefined)
     }
   }, [
@@ -118,12 +114,12 @@ export function PersonaEvaluation({
   ])
 
   const checkVerificationStatus = useCallback(async () => {
-    if (isActionOnGoingRef.current === true) {
+    if (isActionOngoingRef.current) {
       return
     }
     try {
       if (account && chainId) {
-        isActionOnGoingRef.current = true
+        isActionOngoingRef.current = true
         setLoadingType('verificationStatus')
         const verificationStatus =
           await IdentityServiceV2.getVerificationStatusV2(
@@ -138,10 +134,6 @@ export function PersonaEvaluation({
           case IdentityVerificationStatusV2.NOT_STARTED: {
             const startVerificationResult =
               await IdentityServiceV2.startVerification(account, chainId, isDev)
-            localStorage.setItem(
-              INQUIRY_ID,
-              startVerificationResult.personaInquiryId,
-            )
             setInquiryId(startVerificationResult.personaInquiryId)
             setKYCCopy(KYCCopies.verifyIdentity)
             setLoadingType(undefined)
@@ -165,6 +157,8 @@ export function PersonaEvaluation({
               verificationStatus.status = resumeVerificationResult.status
               setVerificationStatus(verificationStatus)
               setSessionToken(resumeVerificationResult.sessionToken)
+            } else {
+              setLoadingType('verificationStatus')
             }
             setKYCCopy(KYCCopies.verifyIdentity)
             break
@@ -209,7 +203,7 @@ export function PersonaEvaluation({
     } catch (e: unknown) {
       setAuthError(e)
     } finally {
-      isActionOnGoingRef.current = false
+      isActionOngoingRef.current = false
     }
   }, [KYCCopies, account, approveLender, chainId, isDev, setAuthError])
 
@@ -244,7 +238,7 @@ export function PersonaEvaluation({
   }, [checkVerificationStatus, verificationStatus?.status])
 
   useEffect(() => {
-    if (errorType === 'NotSignIn') {
+    if (errorType === 'NotSignedIn') {
       setKYCCopy(KYCCopies.signInRequired)
     } else if (errorType === 'UserRejected') {
       dispatch(
@@ -255,7 +249,7 @@ export function PersonaEvaluation({
     } else if (errorType === 'Other') {
       dispatch(
         setError({
-          errorMessage: 'Something went wrong, please try again later.',
+          errorMessage: 'Something went wrong. Please try again later.',
         }),
       )
     }
@@ -269,7 +263,7 @@ export function PersonaEvaluation({
   }, [showPersonaClient])
 
   const startKYC = async () => {
-    isActionOnGoingRef.current = true
+    isActionOngoingRef.current = true
     setLoadingType('startKYC')
     const client: Client = new Persona.Client({
       inquiryId,
@@ -280,16 +274,16 @@ export function PersonaEvaluation({
       },
       onComplete: () => {
         isKYCCompletedRef.current = true
-        isActionOnGoingRef.current = false
+        isActionOngoingRef.current = false
         setShowPersonaClient(false)
         checkVerificationStatus()
       },
       onCancel: () => {
-        isActionOnGoingRef.current = false
+        isActionOngoingRef.current = false
         setShowPersonaClient(false)
       },
       onError: () => {
-        isActionOnGoingRef.current = false
+        isActionOngoingRef.current = false
         setShowPersonaClient(false)
       },
     })
