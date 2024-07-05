@@ -1,5 +1,6 @@
 import {
   checkIsDev,
+  formatNumber,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
@@ -21,6 +22,8 @@ import { LoadingModal } from '../../../LoadingModal'
 import { WrapperModal } from '../../../WrapperModal'
 import { WIDGET_STEP } from '../../../../store/widgets.store'
 
+type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
+
 const LoadingCopiesByType: {
   [key: string]: {
     description: string
@@ -40,6 +43,7 @@ const LoadingCopiesByType: {
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
+  isCampaign?: boolean
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -47,6 +51,7 @@ type Props = {
 export function PersonaEvaluation({
   poolInfo,
   isUniTranche,
+  isCampaign,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -61,19 +66,24 @@ export function PersonaEvaluation({
     isWalletOwnershipVerificationRequired,
   } = useAuthErrorHandling(isDev)
   const KYCCopies = poolInfo.KYC!.Persona!
-  const [loadingType, setLoadingType] = useState<
-    'verificationStatus' | 'startKYC' | 'approveLender' | undefined
-  >()
+  const [loadingType, setLoadingType] = useState<LoadingType>()
   const [kycCopy, setKYCCopy] = useState<KYCCopy>(KYCCopies.verifyIdentity)
-  const [inquiryId, setInquiryId] = useState<string | undefined>()
-  const [sessionToken, setSessionToken] = useState<string | undefined>()
-  const [verificationStatus, setVerificationStatus] = useState<
-    VerificationStatusResultV2 | undefined
-  >()
+  const isVerifyIdentity = kycCopy === KYCCopies.verifyIdentity
+  const [inquiryId, setInquiryId] = useState<string>()
+  const [sessionToken, setSessionToken] = useState<string>()
+  const [verificationStatus, setVerificationStatus] =
+    useState<VerificationStatusResultV2>()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
+  const [campaignBasePoints, setCampaignBasePoints] = useState<number>(0)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
+
+  useEffect(() => {
+    if (isCampaign) {
+      setCampaignBasePoints(100000)
+    }
+  }, [isCampaign])
 
   const approveLender = useCallback(async () => {
     try {
@@ -342,7 +352,16 @@ export function PersonaEvaluation({
         <Box css={styles.iconWrapper}>
           <img src={ApproveLenderImg} alt='approve-lender' />
         </Box>
-        <Box css={styles.description}>{kycCopy.description}</Box>
+        {isCampaign && isVerifyIdentity ? (
+          <Box css={styles.description}>
+            You’ll be rewarded with a minimum of{' '}
+            <span>{formatNumber(campaignBasePoints)}</span> Huma points after
+            completing KYC and your first investment.
+          </Box>
+        ) : (
+          <Box css={styles.description}>{kycCopy.description}</Box>
+        )}
+
         {Boolean(kycCopy.buttonText) && (
           <BottomButton variant='contained' onClick={handleAction}>
             {kycCopy.buttonText}

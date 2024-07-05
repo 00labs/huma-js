@@ -7,6 +7,7 @@ import { SecuritizeEvaluation } from './components/SecuritizeEvaluation'
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
+  isCampaign?: boolean
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -14,6 +15,7 @@ type Props = {
 export function Evaluation({
   poolInfo,
   isUniTranche,
+  isCampaign,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -28,6 +30,7 @@ export function Evaluation({
         poolInfo={poolInfo}
         handleClose={handleClose}
         isUniTranche={isUniTranche}
+        isCampaign={isCampaign}
         changeTranche={changeTranche}
       />
     )

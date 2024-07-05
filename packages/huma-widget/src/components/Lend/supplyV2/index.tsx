@@ -29,20 +29,20 @@ import { Notifications } from './7-Notifications'
  * Lend pool supply props
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {boolean} shouldApproveAll To check if should approve both tranches.
+ * @property {boolean} isCampaign To check if pool is in campaign.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
-  shouldApproveAll?: boolean
+  isCampaign?: boolean
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function LendSupplyV2({
   poolName: poolNameStr,
-  shouldApproveAll,
+  isCampaign,
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
@@ -74,7 +74,7 @@ export function LendSupplyV2({
   useEffect(() => {
     if (!step && poolInfo && lenderApproveStatusFetched && lpConfig) {
       if (
-        shouldApproveAll &&
+        isCampaign &&
         !isUniTranche &&
         (!lenderApprovedJunior || !lenderApprovedSenior)
       ) {
@@ -123,7 +123,7 @@ export function LendSupplyV2({
     lenderApprovedSenior,
     lpConfig,
     poolInfo,
-    shouldApproveAll,
+    isCampaign,
     step,
   ])
 
@@ -164,6 +164,7 @@ export function LendSupplyV2({
           handleClose={handleClose}
           isUniTranche={isUniTranche}
           changeTranche={setSelectedTranche}
+          isCampaign={isCampaign}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (

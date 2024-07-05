@@ -103,7 +103,7 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
         },
         verifyIdentity: {
           title: 'Start KYC',
-          description: `You’ll be rewarded with Huma points after completing KYC and your first investment.`,
+          description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
           buttonText: 'START KYC',
         },
         verificationDeclined: {
