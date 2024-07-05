@@ -73,6 +73,7 @@ export function PersonaEvaluation({
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
+  const isKYCResumedRef = useRef<boolean>(false)
 
   const approveLender = useCallback(async () => {
     try {
@@ -114,7 +115,7 @@ export function PersonaEvaluation({
   ])
 
   const checkVerificationStatus = useCallback(async () => {
-    if (isActionOngoingRef.current) {
+    if (isActionOngoingRef.current || isKYCResumedRef.current) {
       return
     }
     try {
@@ -157,6 +158,8 @@ export function PersonaEvaluation({
               verificationStatus.status = resumeVerificationResult.status
               setVerificationStatus(verificationStatus)
               setSessionToken(resumeVerificationResult.sessionToken)
+              setLoadingType(undefined)
+              isKYCResumedRef.current = true
             } else {
               setLoadingType('verificationStatus')
             }
@@ -176,6 +179,7 @@ export function PersonaEvaluation({
             setSessionToken(resumeVerificationResult.sessionToken)
             setKYCCopy(KYCCopies.verifyIdentity)
             setLoadingType(undefined)
+            isKYCResumedRef.current = true
             break
           }
 
@@ -222,7 +226,7 @@ export function PersonaEvaluation({
   ])
 
   useEffect(() => {
-    const interval = setTimeout(() => {
+    const interval = setInterval(() => {
       if (
         verificationStatus?.status &&
         [
@@ -234,11 +238,12 @@ export function PersonaEvaluation({
       }
     }, 10 * 1000)
     // eslint-disable-next-line consistent-return
-    return () => clearTimeout(interval)
+    return () => clearInterval(interval)
   }, [checkVerificationStatus, verificationStatus?.status])
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
+      setLoadingType(undefined)
       setKYCCopy(KYCCopies.signInRequired)
     } else if (errorType === 'UserRejected') {
       dispatch(
@@ -281,10 +286,12 @@ export function PersonaEvaluation({
       onCancel: () => {
         isActionOngoingRef.current = false
         setShowPersonaClient(false)
+        setLoadingType(undefined)
       },
       onError: () => {
         isActionOngoingRef.current = false
         setShowPersonaClient(false)
+        setLoadingType(undefined)
       },
     })
   }
