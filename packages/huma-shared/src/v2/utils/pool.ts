@@ -78,12 +78,19 @@ export type PoolInfoV2 = {
   lenderApprovalProvider?: LenderApprovalProvider
   industry: IndustryType
   KYC?: {
-    provider: 'Securitize'
-    signInRequired: KYCCopy
-    verifyIdentity: KYCCopy
-    emailSignatureLink: KYCCopy
-    resendSignatureLink: KYCCopy
-    docUnderReview: KYCCopy
+    Securitize?: {
+      signInRequired: KYCCopy
+      verifyIdentity: KYCCopy
+      emailSignatureLink: KYCCopy
+      resendSignatureLink: KYCCopy
+      docUnderReview: KYCCopy
+    }
+    Persona?: {
+      signInRequired: KYCCopy
+      verifyIdentity: KYCCopy
+      verificationDeclined: KYCCopy
+      verificationNeedsReview: KYCCopy
+    }
   }
   supplyLink?: string
   poolUnderlyingToken: {

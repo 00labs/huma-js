@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+axios.defaults.withCredentials = true
+
 export const requestGet = async <T>(
   url: string,
   customConfig: AxiosRequestConfig = {},

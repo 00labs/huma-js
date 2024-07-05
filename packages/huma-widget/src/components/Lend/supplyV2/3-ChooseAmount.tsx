@@ -1,9 +1,8 @@
 import {
+  formatNumber,
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
-  formatNumber,
-  useLPConfigV2,
   usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
 } from '@huma-finance/shared'
@@ -15,18 +14,19 @@ import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { InputAmountModal } from '../../InputAmountModal'
-import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
+  isUniTranche: boolean
 }
 
 export function ChooseAmount({
   poolInfo,
   poolUnderlyingToken,
   selectedTranche,
+  isUniTranche,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
@@ -46,8 +46,6 @@ export function ChooseAmount({
     balance,
     poolUnderlyingToken.decimals,
   )
-  const lpConfig = useLPConfigV2(poolInfo.poolName, provider)
-  const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
 
   const handleChangeAmount = (newAmount: number) => {
     setCurrentAmount(newAmount)
@@ -63,10 +61,6 @@ export function ChooseAmount({
       ? WIDGET_STEP.ApproveAllowance
       : WIDGET_STEP.Transfer
     dispatch(setStep(step))
-  }
-
-  if (!lpConfig) {
-    return <LoadingModal title='Supply' />
   }
 
   return (
