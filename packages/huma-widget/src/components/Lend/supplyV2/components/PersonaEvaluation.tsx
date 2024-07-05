@@ -269,6 +269,7 @@ export function PersonaEvaluation({
 
   const startKYC = async () => {
     isActionOngoingRef.current = true
+    isKYCResumedRef.current = false
     setLoadingType('startKYC')
     const client: Client = new Persona.Client({
       inquiryId,
