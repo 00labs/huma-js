@@ -337,12 +337,16 @@ export function PersonaEvaluation({
       }
     `,
     description: css`
-      ${theme.cssMixins.rowCentered};
+      text-align: justify;
       margin-top: ${theme.spacing(10)};
       padding: ${theme.spacing(0, 2)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
+    `,
+    points: css`
+      color: #b246ff;
+      font-family: 'Uni-Neue-Bold';
     `,
   }
 
@@ -354,9 +358,12 @@ export function PersonaEvaluation({
         </Box>
         {isCampaign && isVerifyIdentity ? (
           <Box css={styles.description}>
-            You’ll be rewarded with a minimum of{' '}
-            <span>{formatNumber(campaignBasePoints)}</span> Huma points after
-            completing KYC and your first investment.
+            <span>You’ll be rewarded with a minimum of</span>
+            <span css={styles.points}>
+              {' '}
+              {formatNumber(campaignBasePoints)} Huma points{' '}
+            </span>
+            <span>after completing KYC and your first investment.</span>
           </Box>
         ) : (
           <Box css={styles.description}>{kycCopy.description}</Box>
