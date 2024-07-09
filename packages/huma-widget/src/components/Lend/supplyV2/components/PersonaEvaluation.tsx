@@ -1,4 +1,5 @@
 import {
+  CampaignService,
   checkIsDev,
   formatNumber,
   IdentityServiceV2,
@@ -11,16 +12,18 @@ import {
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber, ethers } from 'ethers'
+import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import Persona, { Client } from 'persona'
+import { Campaign } from '..'
 import { useAppDispatch } from '../../../../hooks/useRedux'
 import { setError, setStep } from '../../../../store/widgets.reducers'
+import { WIDGET_STEP } from '../../../../store/widgets.store'
 import { BottomButton } from '../../../BottomButton'
 import { ApproveLenderImg } from '../../../images'
 import { LoadingModal } from '../../../LoadingModal'
 import { WrapperModal } from '../../../WrapperModal'
-import { WIDGET_STEP } from '../../../../store/widgets.store'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
@@ -43,7 +46,8 @@ const LoadingCopiesByType: {
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
-  isCampaign?: boolean
+  minDepositAmount: BigNumber
+  campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -51,7 +55,8 @@ type Props = {
 export function PersonaEvaluation({
   poolInfo,
   isUniTranche,
-  isCampaign,
+  minDepositAmount: minDepositAmountBN,
+  campaign,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -80,10 +85,40 @@ export function PersonaEvaluation({
   const isKYCResumedRef = useRef<boolean>(false)
 
   useEffect(() => {
-    if (isCampaign) {
-      setCampaignBasePoints(100000)
+    const getBasePoints = async () => {
+      if (campaign) {
+        const minDepositAmount = ethers.utils.formatUnits(
+          minDepositAmountBN,
+          poolInfo.poolUnderlyingToken.decimals,
+        )
+        const estimatedPoints = await CampaignService.getEstimatedPoints(
+          campaign.campaignGroupId,
+          minDepositAmount,
+        )
+        const campaignPoints = estimatedPoints.find(
+          (item) => item.campaignId === campaign.id,
+        )
+        if (campaignPoints) {
+          const { juniorTranchePoints, seniorTranchePoints } = campaignPoints
+          if (isUniTranche) {
+            setCampaignBasePoints(juniorTranchePoints ?? 0)
+          } else {
+            setCampaignBasePoints(
+              juniorTranchePoints < seniorTranchePoints
+                ? juniorTranchePoints
+                : seniorTranchePoints,
+            )
+          }
+        }
+      }
     }
-  }, [isCampaign])
+    getBasePoints()
+  }, [
+    campaign,
+    isUniTranche,
+    minDepositAmountBN,
+    poolInfo.poolUnderlyingToken.decimals,
+  ])
 
   const approveLender = useCallback(async () => {
     try {
@@ -356,7 +391,7 @@ export function PersonaEvaluation({
         <Box css={styles.iconWrapper}>
           <img src={ApproveLenderImg} alt='approve-lender' />
         </Box>
-        {isCampaign && isVerifyIdentity ? (
+        {campaign && isVerifyIdentity ? (
           <Box css={styles.description}>
             <span>You’ll be rewarded with a minimum of</span>
             <span css={styles.points}>

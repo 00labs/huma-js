@@ -4,11 +4,13 @@ import {
   formatMoney,
   PoolInfoV2,
   sendTxAtom,
+  timeUtil,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
+import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -16,19 +18,21 @@ import {
   useDoesChainSupportNotifi,
   useIsFirstTimeNotifiUser,
 } from '../../../hooks/useNotifi'
-import { TxDoneModal } from '../../TxDoneModal'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
+import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
+  lpConfig: { withdrawalLockoutPeriodInDays: number }
   handleAction: () => void
 }
 
 export function Success({
   poolInfo,
   poolUnderlyingToken,
+  lpConfig,
   handleAction,
 }: Props): React.ReactElement {
   const dispatch = useDispatch()
@@ -69,10 +73,23 @@ export function Success({
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,
   ]
 
+  const getSubContent = () => {
+    const currentTime = moment().add(
+      lpConfig.withdrawalLockoutPeriodInDays,
+      'days',
+    )
+    return [
+      `First redemption date: ${timeUtil.timestampToLL(
+        currentTime.unix(),
+      )}. You can redeem end of each month after.`,
+    ]
+  }
+
   return (
     <TxDoneModal
       handleAction={setupNotificationsOrClose}
       content={content}
+      subContent={getSubContent()}
       buttonText={hasNextStep ? "WHAT'S NEXT" : undefined}
     />
   )

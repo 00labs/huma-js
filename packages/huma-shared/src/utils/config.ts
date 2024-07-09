@@ -53,7 +53,7 @@ const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
   }
 }
 
-const getCampaignAPIUrl = (isDev = false) => `http://localhost:8000/graphql`
+const getCampaignAPIUrl = () => `http://localhost:8000/graphql`
 
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
 const DEFAULT_CHAIN_ID = 137

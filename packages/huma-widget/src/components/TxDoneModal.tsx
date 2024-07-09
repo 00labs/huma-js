@@ -9,12 +9,14 @@ import { CheckIcon } from './icons'
 
 type Props = {
   content: string[]
+  subContent?: string[]
   handleAction: () => void
   buttonText?: string
 }
 
 export function TxDoneModal({
   content,
+  subContent,
   handleAction,
   buttonText,
 }: Props): React.ReactElement {
@@ -33,10 +35,18 @@ export function TxDoneModal({
     `,
     content: css`
       ${theme.cssMixins.colVCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-family: ${subContent ? 'Uni-Neue-Bold' : 'Uni-Neue-Regular'};
       font-size: 18px;
       color: #423b46;
       margin-top: ${theme.spacing(8)};
+      text-align: center;
+    `,
+    subContent: css`
+      ${theme.cssMixins.colVCentered};
+      font-family: 'Uni-Neue-Regular';
+      font-size: 18px;
+      color: #423b46;
+      margin-top: ${theme.spacing(2)};
       text-align: center;
     `,
     check: css`
@@ -72,6 +82,15 @@ export function TxDoneModal({
           </Box>
         ))}
       </Box>
+      {subContent && (
+        <Box css={styles.subContent}>
+          {subContent.map((item) => (
+            <Box sx={{ marginTop: theme.spacing(1) }} key={item}>
+              {item}
+            </Box>
+          ))}
+        </Box>
+      )}
       <Button
         className='transaction-done-modal-close-btn'
         variant='contained'

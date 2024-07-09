@@ -1,3 +1,5 @@
+import { gql } from 'graphql-request'
+
 import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
 
@@ -25,9 +27,11 @@ function getEstimatedPoints(
 ): Promise<CampaignPoints[]> {
   const url = configUtil.getCampaignAPIUrl()
 
-  const query = `
+  const query = gql`
     query {
-      calculatePoints(input: {campaignGroupId:"${campaignGroupId}", principal:${principal}){
+      calculatePoints(input: {campaignGroupId:"${campaignGroupId}", principal:${Number(
+    principal,
+  )}}){
         campaignPointsEstimations {
           campaignId
           juniorTranchePoints

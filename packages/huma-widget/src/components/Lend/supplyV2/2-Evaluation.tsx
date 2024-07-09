@@ -1,13 +1,16 @@
 import { PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import { BigNumber } from 'ethers'
 import React from 'react'
 
+import { Campaign } from '.'
 import { PersonaEvaluation } from './components/PersonaEvaluation'
 import { SecuritizeEvaluation } from './components/SecuritizeEvaluation'
 
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
-  isCampaign?: boolean
+  minDepositAmount: BigNumber
+  campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -15,7 +18,8 @@ type Props = {
 export function Evaluation({
   poolInfo,
   isUniTranche,
-  isCampaign,
+  minDepositAmount,
+  campaign,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -30,7 +34,8 @@ export function Evaluation({
         poolInfo={poolInfo}
         handleClose={handleClose}
         isUniTranche={isUniTranche}
-        isCampaign={isCampaign}
+        campaign={campaign}
+        minDepositAmount={minDepositAmount}
         changeTranche={changeTranche}
       />
     )
