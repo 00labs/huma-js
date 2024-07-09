@@ -85,6 +85,15 @@ export function PersonaEvaluation({
   const isKYCResumedRef = useRef<boolean>(false)
 
   useEffect(() => {
+    const createNewWallet = async () => {
+      if (isWalletOwnershipVerified && campaign && account) {
+        await CampaignService.createNewWallet(account, campaign.referenceCode)
+      }
+    }
+    createNewWallet()
+  }, [account, campaign, isWalletOwnershipVerified])
+
+  useEffect(() => {
     const getBasePoints = async () => {
       if (campaign) {
         const minDepositAmount = ethers.utils.formatUnits(

@@ -29,6 +29,7 @@ import { Notifications } from './7-Notifications'
 export interface Campaign {
   id: string
   campaignGroupId: string
+  referenceCode?: string
 }
 
 /**

@@ -59,10 +59,51 @@ function getEstimatedPoints(
   )
 }
 
+function createNewWallet(
+  account: string,
+  referenceCode?: string,
+): Promise<void> {
+  const url = configUtil.getCampaignAPIUrl()
+
+  const query = gql`
+    mutation {
+      createWallet(
+        input: {
+          address: "${account}"
+          referrerCode: "${referenceCode}"
+        }
+      ) {
+        ... on CreateNewWalletResult {
+          wallet {
+            address
+          }
+        }
+      }
+    }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return []
+        }
+        return res.data.calculatePoints.campaignPointsEstimations
+      })
+      .catch((err) => {
+        console.error(err)
+        return []
+      })
+  )
+}
+
 /**
  * An object that contains functions to interact with Huma's campaign service.
  * @namespace SubgraphService
  */
 export const CampaignService = {
   getEstimatedPoints,
+  createNewWallet,
 }
