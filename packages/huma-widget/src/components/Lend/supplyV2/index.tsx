@@ -25,6 +25,7 @@ import { ApproveAllowance } from './4-ApproveAllowance'
 import { Transfer } from './5-Transfer'
 import { Success } from './6-Success'
 import { Notifications } from './7-Notifications'
+import { PointsEarned } from './8-PointsEarned'
 
 export interface Campaign {
   id: string
@@ -59,6 +60,7 @@ export function LendSupplyV2({
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [transactionHash, setTransactionHash] = useState<string | undefined>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const poolSettings = usePoolSettingsV2(poolName, provider)
   const lpConfig = useLPConfigV2(poolName, provider)
@@ -204,11 +206,20 @@ export function LendSupplyV2({
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
           lpConfig={lpConfig}
+          campaign={campaign}
+          updateTransactionHash={setTransactionHash}
           handleAction={handleClose}
         />
       )}
       {step === WIDGET_STEP.Notifications && (
-        <Notifications handleAction={handleClose} />
+        <Notifications campaign={campaign} handleAction={handleClose} />
+      )}
+      {step === WIDGET_STEP.PointsEarned && transactionHash && (
+        <PointsEarned
+          transactionHash={transactionHash}
+          lpConfig={lpConfig}
+          handleAction={handleClose}
+        />
       )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal

@@ -21,11 +21,14 @@ import {
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { TxDoneModal } from '../../TxDoneModal'
+import { Campaign } from '.'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
   lpConfig: { withdrawalLockoutPeriodInDays: number }
+  campaign?: Campaign
+  updateTransactionHash: (hash: string) => void
   handleAction: () => void
 }
 
@@ -33,11 +36,13 @@ export function Success({
   poolInfo,
   poolUnderlyingToken,
   lpConfig,
+  campaign,
+  updateTransactionHash,
   handleAction,
 }: Props): React.ReactElement {
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const [{ txReceipt }] = useAtom(sendTxAtom)
+  const [{ txReceipt, txHash }] = useAtom(sendTxAtom)
   const { symbol, decimals, address } = poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
@@ -61,13 +66,27 @@ export function Success({
     }
   }, [account, address, decimals, poolInfo.poolSafe, txReceipt])
 
-  const setupNotificationsOrClose = useCallback(() => {
+  useEffect(() => {
+    if (txHash) {
+      updateTransactionHash(txHash)
+    }
+  }, [txHash, updateTransactionHash])
+
+  const handleUserAction = useCallback(() => {
     if (isFirstTimeNotifiUser && notifiChainSupported) {
       dispatch(setStep(WIDGET_STEP.Notifications))
+    } else if (campaign) {
+      dispatch(setStep(WIDGET_STEP.PointsEarned))
     } else {
       handleAction()
     }
-  }, [dispatch, handleAction, isFirstTimeNotifiUser, notifiChainSupported])
+  }, [
+    campaign,
+    dispatch,
+    handleAction,
+    isFirstTimeNotifiUser,
+    notifiChainSupported,
+  ])
 
   const content = [
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,
@@ -85,12 +104,19 @@ export function Success({
     ]
   }
 
+  const getButtonText = () => {
+    if (hasNextStep) {
+      return "WHAT'S NEXT"
+    }
+    return campaign ? 'VIEW POINTS' : undefined
+  }
+
   return (
     <TxDoneModal
-      handleAction={setupNotificationsOrClose}
+      handleAction={handleUserAction}
       content={content}
       subContent={getSubContent()}
-      buttonText={hasNextStep ? "WHAT'S NEXT" : undefined}
+      buttonText={getButtonText()}
     />
   )
 }

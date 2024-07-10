@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request'
 
+import { ChainEnum } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
 
@@ -62,7 +63,7 @@ function getEstimatedPoints(
 function createNewWallet(
   account: string,
   referenceCode?: string,
-): Promise<void> {
+): Promise<{ address: string }> {
   const url = configUtil.getCampaignAPIUrl()
 
   const query = gql`
@@ -90,7 +91,47 @@ function createNewWallet(
           console.error(res.errors)
           return []
         }
-        return res.data.calculatePoints.campaignPointsEstimations
+        return res.data.createWallet.wallet
+      })
+      .catch((err) => {
+        console.error(err)
+        return []
+      })
+  )
+}
+
+function updateWalletPoints(
+  chainId: ChainEnum,
+  account: string,
+  hash: string,
+): Promise<{ pointAccumulated: number }> {
+  const url = configUtil.getCampaignAPIUrl()
+
+  const query = gql`
+    mutation {
+      updateWalletPoints(
+        input: {
+          chainId: ${chainId},
+          walletAddress: "${account}",
+          transactionHash: "${hash}"
+        }
+      ) {
+        ... on UpdateWalletPointsResult {
+          pointAccumulated
+        }
+      }
+    }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return []
+        }
+        return res.data.updateWalletPoints
       })
       .catch((err) => {
         console.error(err)
@@ -106,4 +147,5 @@ function createNewWallet(
 export const CampaignService = {
   getEstimatedPoints,
   createNewWallet,
+  updateWalletPoints,
 }

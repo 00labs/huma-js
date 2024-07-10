@@ -10,8 +10,8 @@ import { CheckIcon } from './icons'
 type Props = {
   content: string[]
   subContent?: string[]
-  handleAction: () => void
   buttonText?: string
+  handleAction: () => void
 }
 
 export function TxDoneModal({
