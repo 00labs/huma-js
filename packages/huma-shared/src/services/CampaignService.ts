@@ -11,14 +11,17 @@ type Season = {
   name: string
 }
 
+type Partner = {
+  id: string
+  name: string
+  multiplier: number
+}
+
 type CampaignGroup = {
   id: string
   name: string
   campaigns: Campaign[]
-  partners: {
-    id: string
-    name: string
-  }[]
+  partners: Partner[]
 }
 
 type Campaign = {
@@ -32,6 +35,7 @@ type Campaign = {
   campaignGroupId?: string
   referenceCode?: string | null
   poolInfo?: PoolInfoV2 | null
+  partner?: Partner | null
 }
 
 function getActiveSeasonAndCampaignGroups(): Promise<{
@@ -214,7 +218,7 @@ function updateWalletPoints(
  * @namespace SubgraphService
  */
 export const CampaignService = {
-  getCampaignGroups: getActiveSeasonAndCampaignGroups,
+  getActiveSeasonAndCampaignGroups,
   getEstimatedPoints,
   createNewWallet,
   updateWalletPoints,
