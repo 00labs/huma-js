@@ -3,16 +3,85 @@ import { gql } from 'graphql-request'
 import { ChainEnum } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
+import { PoolInfoV2 } from '../v2/utils/pool'
 
-/**
- * Represents the pagination options for a query.
- * @typedef {Object} Pagination
- */
-export type Pagination = {
-  first: number | null
-  skip: number | null
-  orderBy: string
-  orderDirection: 'desc' | 'asc'
+type Season = {
+  id: string
+  estimatedTotalPoints: number
+  name: string
+}
+
+type CampaignGroup = {
+  id: string
+  name: string
+  campaigns: Campaign[]
+  partners: {
+    id: string
+    name: string
+  }[]
+}
+
+type Campaign = {
+  id: string
+  name: string
+  chainId: string
+  juniorMultiplier: number
+  lockupPeriodMonths: number
+  seniorMultiplier: number
+  poolAddress: string
+  campaignGroupId?: string
+  referenceCode?: string | null
+  poolInfo?: PoolInfoV2 | null
+}
+
+function getActiveSeasonAndCampaignGroups(): Promise<{
+  activeSeason: Season
+  campaignGroups: CampaignGroup[]
+}> {
+  const url = configUtil.getCampaignAPIUrl()
+
+  const query = gql`
+    query {
+      activeSeason {
+        id
+        estimatedTotalPoints
+        name
+      }
+      campaignGroups {
+        id
+        name
+        campaigns {
+          id
+          name
+          chainId
+          juniorMultiplier
+          lockupPeriodMonths
+          seniorMultiplier
+          poolAddress
+        }
+        partners {
+          id
+          name
+        }
+      }
+    }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return {}
+        }
+        return res.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return {}
+      })
+  )
 }
 
 type CampaignPoints = {
@@ -145,6 +214,7 @@ function updateWalletPoints(
  * @namespace SubgraphService
  */
 export const CampaignService = {
+  getCampaignGroups: getActiveSeasonAndCampaignGroups,
   getEstimatedPoints,
   createNewWallet,
   updateWalletPoints,
