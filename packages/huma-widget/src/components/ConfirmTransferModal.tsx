@@ -36,7 +36,7 @@ export function ConfirmTransferModal({
       margin-top: ${theme.spacing(-0.5)};
     `,
     description: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       color: #49505b;
       margin-top: ${theme.spacing(4)};
@@ -46,13 +46,12 @@ export function ConfirmTransferModal({
       margin-top: ${theme.spacing(9)};
     `,
     transfer: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       ${theme.cssMixins.rowSpaceBetweened}
       ${theme.cssMixins.rowVCentered}
       height: 72px;
       background: #f9f8fa;
       border-radius: 4px;
-      font-weight: 500;
       font-size: 16px;
       color: #49505b;
       padding: ${theme.spacing(3, 2)};
