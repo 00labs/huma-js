@@ -50,7 +50,7 @@ export function InputAmountModal({
       input {
         width: 100%;
         color: ${theme.palette.text.primary};
-        font-family: 'Uni-Neue-Black';
+        font-weight: 800;
         font-size: 40px;
         line-height: 133.4%;
       }
@@ -63,7 +63,7 @@ export function InputAmountModal({
     maxTitle: css`
       position: absolute;
       color: ${theme.palette.text.primary};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 12px;
       line-height: 166%;
       letter-spacing: 0.4px;
@@ -81,14 +81,14 @@ export function InputAmountModal({
       padding: 4px 10px;
       gap: 8px;
       color: #b246ff;
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       font-size: 13px;
       line-height: 22px;
       letter-spacing: 0.46px;
     `,
     info: css`
       color: ${theme.palette.text.primary};
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       font-size: 20px;
       line-height: 160%;
       letter-spacing: 0.15px;

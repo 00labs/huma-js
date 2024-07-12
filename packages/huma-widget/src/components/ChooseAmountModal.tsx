@@ -60,11 +60,11 @@ export function ChooseAmountModal({
 
   const styles = {
     subTitle: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
     `,
     description2: css`
       ${theme.cssMixins.rowCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       color: #a8a1b2;
       margin-top: ${theme.spacing(2)};
@@ -80,7 +80,7 @@ export function ChooseAmountModal({
       margin-top: ${theme.spacing(4)};
     `,
     chosenAmount: css`
-      font-family: 'Inter-Bold';
+      font-weight: 700;
       font-size: 32px;
     `,
     chosenAmountSymbol: css`
@@ -151,9 +151,8 @@ export function ChooseAmountModal({
       }
     `,
     info: css`
-      font-family: 'Uni-Neue-Regular';
-      ${theme.cssMixins.rowSpaceBetweened};
       font-weight: 400;
+      ${theme.cssMixins.rowSpaceBetweened};
       font-size: 16px;
       color: #423b46;
     `,
@@ -163,7 +162,7 @@ export function ChooseAmountModal({
       border-color: #e9e3f1;
     `,
     okButton: css`
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       width: 100%;
       position: absolute;
       bottom: ${theme.spacing(isXsSize ? 2 : 0)};

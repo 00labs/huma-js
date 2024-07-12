@@ -33,7 +33,7 @@ export function TxDoneModal({
     `,
     content: css`
       ${theme.cssMixins.colVCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 18px;
       color: #423b46;
       margin-top: ${theme.spacing(8)};

@@ -35,13 +35,13 @@ export function HumaTable<T>({
 
   const styles = {
     tableHeader: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       ${theme.cssMixins.rowVCentered}
       font-size: 14px;
       color: rgba(0, 0, 0, 0.87);
     `,
     tableBody: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 14px;
       color: rgba(0, 0, 0, 0.87);
     `,
@@ -50,7 +50,7 @@ export function HumaTable<T>({
       flex-direction: column;
       align-items: center;
       margin-top: ${theme.spacing(2)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 14px;
     `,
   }
