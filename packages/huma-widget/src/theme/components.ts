@@ -26,7 +26,7 @@ export function components(theme: Theme): ThemeOptions['components'] {
           },
         },
         root: {
-          fontFamily: 'Uni-Neue-Bold',
+          fontWeight: '700',
           fontSize: '15px',
           borderRadius: '32px',
           '&.MuiButton-containedPrimary': {

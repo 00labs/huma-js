@@ -67,7 +67,7 @@ export function Evaluation({
     content: css`
       ${theme.cssMixins.rowHCentered};
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 24px;
       color: #49505b;
@@ -79,7 +79,7 @@ export function Evaluation({
       height: 72px;
       background: #f9f8fa;
       border-radius: 4px;
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       color: #49505b;
     `,
@@ -94,7 +94,7 @@ export function Evaluation({
       }
     `,
     congratsWrapper: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       padding: ${theme.spacing(0, 2)};
       ${theme.cssMixins.rowVCentered}

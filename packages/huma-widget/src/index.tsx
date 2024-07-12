@@ -1,5 +1,3 @@
-import './index.css'
-
 import { JsonRpcProvider } from '@ethersproject/providers'
 import {
   Provider as Web3Provider,

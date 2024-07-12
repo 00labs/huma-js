@@ -105,7 +105,7 @@ export function Activity({
       margin-top: ${theme.spacing(9)};
     `,
     title: css`
-      font-family: 'Uni-Neue-Black';
+      font-weight: 800;
       font-size: 24px;
       color: #6b6572;
       margin-bottom: ${theme.spacing(2)};

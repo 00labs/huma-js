@@ -79,7 +79,7 @@ export function Evaluation({
       ${theme.cssMixins.rowCentered};
       margin-top: ${theme.spacing(10)};
       padding: ${theme.spacing(0, 2)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       color: #a8a1b2;
     `,

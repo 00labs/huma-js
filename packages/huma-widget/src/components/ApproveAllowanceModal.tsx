@@ -70,7 +70,7 @@ export function ApproveAllowanceModal({
     `,
     description: css`
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       color: #a8a1b2;
       padding: ${theme.spacing(0, 1)};
