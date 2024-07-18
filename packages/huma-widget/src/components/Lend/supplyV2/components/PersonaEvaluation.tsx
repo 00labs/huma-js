@@ -12,7 +12,7 @@ import {
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -96,13 +96,9 @@ export function PersonaEvaluation({
   useEffect(() => {
     const getBasePoints = async () => {
       if (campaign) {
-        const minDepositAmount = ethers.utils.formatUnits(
-          minDepositAmountBN,
-          poolInfo.poolUnderlyingToken.decimals,
-        )
         const estimatedPoints = await CampaignService.getEstimatedPoints(
           campaign.campaignGroupId,
-          minDepositAmount,
+          minDepositAmountBN.toString(),
         )
         const campaignPoints = estimatedPoints.find(
           (item) => item.campaignId === campaign.id,
@@ -122,12 +118,7 @@ export function PersonaEvaluation({
       }
     }
     getBasePoints()
-  }, [
-    campaign,
-    isUniTranche,
-    minDepositAmountBN,
-    poolInfo.poolUnderlyingToken.decimals,
-  ])
+  }, [campaign, isUniTranche, minDepositAmountBN])
 
   const approveLender = useCallback(async () => {
     try {

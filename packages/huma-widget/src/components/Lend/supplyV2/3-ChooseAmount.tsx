@@ -60,7 +60,12 @@ export function ChooseAmount({
       if (campaign && selectedTranche && Number(debouncedValue) > 0) {
         const estimatedPoints = await CampaignService.getEstimatedPoints(
           campaign.campaignGroupId,
-          String(debouncedValue),
+          ethers.utils
+            .parseUnits(
+              String(debouncedValue),
+              poolInfo.poolUnderlyingToken.decimals,
+            )
+            .toString(),
         )
         const campaignPoints = estimatedPoints.find(
           (item) => item.campaignId === campaign.id,
@@ -75,6 +80,7 @@ export function ChooseAmount({
   }, [
     campaign,
     debouncedValue,
+    decimals,
     poolInfo.poolUnderlyingToken.decimals,
     selectedTranche,
   ])

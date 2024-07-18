@@ -27,7 +27,9 @@ export function PointsEarned({
   const theme = useTheme()
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const [pointAccumulated, setPointAccumulated] = useState<number | undefined>()
+  const [pointsAccumulated, setPointsAccumulated] = useState<
+    number | undefined
+  >()
   const lockupMonths = lpConfig.withdrawalLockoutPeriodInDays / 30
   const stepNum = lockupMonths >= 6 ? 6 : lockupMonths
   const steps = Array.from(Array(stepNum).keys())
@@ -36,12 +38,12 @@ export function PointsEarned({
   useEffect(() => {
     const updateWalletPoints = async () => {
       try {
-        const { pointAccumulated } = await CampaignService.updateWalletPoints(
+        const { pointsAccumulated } = await CampaignService.updateWalletPoints(
           chainId!,
           account!,
           transactionHash,
         )
-        setPointAccumulated(pointAccumulated)
+        setPointsAccumulated(pointsAccumulated)
       } catch (error) {
         dispatch(
           setError({
@@ -166,7 +168,7 @@ export function PointsEarned({
         <RibbonIcon />
         <Box css={styles.ribbonContent}>
           <HumaPointsIcon />
-          <Box>{formatNumber(pointAccumulated)} Points</Box>
+          <Box>{formatNumber(pointsAccumulated)} Points</Box>
         </Box>
       </Box>
       <Box css={styles.stepWrapper}>
@@ -187,7 +189,7 @@ export function PointsEarned({
       </Box>
       <Box css={styles.entirePointsDetails}>
         You have earned total{' '}
-        <span css={styles.points}>{formatNumber(pointAccumulated)}</span> Human
+        <span css={styles.points}>{formatNumber(pointsAccumulated)}</span> Human
         Points. If you keep your investment till after 3 months, you’ll gain
         extra points daily.
       </Box>
