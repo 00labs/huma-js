@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
+import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   transactionHash: string
@@ -28,23 +29,34 @@ export function PointsEarned({
   const lockupMonths = lpConfig.withdrawalLockoutPeriodInDays / 30
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const updateWalletPoints = async () => {
-      try {
-        const { pointsAccumulated } = await CampaignService.updateWalletPoints(
-          chainId!,
-          account!,
-          transactionHash,
-        )
-        setPointsAccumulated(pointsAccumulated)
-      } catch (error) {
+      const setErrorMessage = () => {
         dispatch(
           setError({
             errorMessage:
               'Failed to update wallet points. Be assured that your points will be added later.',
           }),
         )
+      }
+
+      try {
+        setLoading(true)
+        const result = await CampaignService.updateWalletPoints(
+          chainId!,
+          account!,
+          transactionHash,
+        )
+        if (!result.pointsAccumulated) {
+          setErrorMessage()
+        }
+        setPointsAccumulated(result.pointsAccumulated)
+      } catch (error) {
+        setErrorMessage()
+      } finally {
+        setLoading(false)
       }
     }
     updateWalletPoints()
@@ -98,6 +110,10 @@ export function PointsEarned({
     everyday: css`
       font-family: 'Uni-Neue-Bold';
     `,
+  }
+
+  if (loading) {
+    return <LoadingModal title='SUPPLY' />
   }
 
   return (
