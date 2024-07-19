@@ -33,6 +33,9 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     juniorAPY: '10-20%',
     title: 'V2 Credit Line Testing Pool',
     desc: 'V2 Credit Line Testing Pool',
+    extra: {
+      hidden: true,
+    },
   },
   ReceivableBackedCreditLine: {
     chainId: ChainEnum.Localhost,
@@ -64,5 +67,8 @@ export const LOCALHOST_METADATA: PoolsInfoV2 = {
     juniorAPY: '10-20%',
     title: 'V2 Receivable Backed Credit Line Testing Pool',
     desc: 'V2 Receivable Backed Credit Line Testing Pool',
+    extra: {
+      hidden: true,
+    },
   },
 }
