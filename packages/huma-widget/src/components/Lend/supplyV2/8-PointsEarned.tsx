@@ -6,12 +6,7 @@ import { useDispatch } from 'react-redux'
 
 import { setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
-import {
-  CheckIcon,
-  CongratulationsIcon,
-  HumaPointsIcon,
-  RibbonIcon,
-} from '../../icons'
+import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 
 type Props = {
   transactionHash: string
@@ -31,9 +26,8 @@ export function PointsEarned({
     number | undefined
   >()
   const lockupMonths = lpConfig.withdrawalLockoutPeriodInDays / 30
-  const stepNum = lockupMonths >= 6 ? 6 : lockupMonths
-  const steps = Array.from(Array(stepNum).keys())
-  const [progress, setProgress] = useState(0)
+  const monthText =
+    lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
 
   useEffect(() => {
     const updateWalletPoints = async () => {
@@ -56,13 +50,6 @@ export function PointsEarned({
     updateWalletPoints()
   }, [account, chainId, dispatch, transactionHash])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((pre) => (pre + 2 > 100 ? 100 : pre + 2))
-    }, 40)
-    return () => clearInterval(interval)
-  }, [])
-
   const styles = {
     wrapper: css`
       height: 518px;
@@ -75,7 +62,7 @@ export function PointsEarned({
       position: relative;
       ${theme.cssMixins.rowHCentered};
       font-family: 'Uni-Neue-Bold';
-      margin-top: ${theme.spacing(-9)};
+      margin-top: ${theme.spacing(-8)};
       color: #fbfbfc;
       font-size: 20px;
       line-height: 160%;
@@ -106,57 +93,11 @@ export function PointsEarned({
       font-size: 16px;
       line-height: 150%;
       letter-spacing: 0.15px;
-      margin-top: ${theme.spacing(1)};
+      margin-top: ${theme.spacing(4)};
     `,
-    points: css`
+    everyday: css`
       font-family: 'Uni-Neue-Bold';
     `,
-    progress: css`
-      width: 100%;
-      margin-top: -42px;
-
-      & > div {
-        display: inline-block;
-        transition: all 0.1s linear;
-      }
-    `,
-    progressLeft: css`
-      width: ${progress}%;
-      height: 7px;
-      background-color: #18dca1;
-    `,
-    progressRight: css`
-      width: ${100 - progress}%;
-      height: 7px;
-      background-color: #d9d9d9;
-    `,
-    stepWrapper: css`
-      margin-top: ${theme.spacing(7)};
-    `,
-    stepItemWrapper: css`
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-    `,
-    stepItem: (index: number) => {
-      const completed = progress >= (100 / (steps.length - 1)) * index
-      return css`
-        svg {
-          width: 24px;
-          height: 24px;
-
-          circle {
-            fill: ${completed ? '#18dca1' : '#d9d9d9'};
-            transition: all 0.1s linear;
-          }
-
-          path {
-            fill: #fff;
-          }
-        }
-      `
-    },
   }
 
   return (
@@ -171,27 +112,14 @@ export function PointsEarned({
           <Box>{formatNumber(pointsAccumulated)} Points</Box>
         </Box>
       </Box>
-      <Box css={styles.stepWrapper}>
-        <Box css={styles.stepItemWrapper}>
-          {steps.map((step, index) => (
-            <Box css={styles.stepItem(index)} key={step}>
-              <CheckIcon />
-            </Box>
-          ))}
-        </Box>
-        <Box css={styles.progress}>
-          <Box css={styles.progressLeft} />
-          <Box css={styles.progressRight} />
-        </Box>
-      </Box>
       <Box css={styles.entirePoints}>
-        Entire {lockupMonths} months worth of points earned
+        <Box>Congratulations,</Box>
+        <Box>you've earned {pointsAccumulated} points</Box>
       </Box>
       <Box css={styles.entirePointsDetails}>
-        You have earned total{' '}
-        <span css={styles.points}>{formatNumber(pointsAccumulated)}</span> Human
-        Points. If you keep your investment till after 3 months, you’ll gain
-        extra points daily.
+        You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
+        {monthText} straight. Plus, If you keep your investment till after{' '}
+        {monthText}, you’ll gain extra points daily.
       </Box>
       <BottomButton variant='contained' onClick={handleAction}>
         GREAT
