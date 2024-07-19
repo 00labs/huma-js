@@ -42,8 +42,17 @@ export type Pagination = {
  * @param {number} chainId - The ID of the chain.
  * @returns {string} The subgraph URL for the given chain ID.
  */
-function getSubgraphUrlForChainId(chainId: number): string {
-  return PoolSubgraphMap[chainId]?.subgraph ?? ''
+function getSubgraphUrlForChainId(chainId: number, apiKey?: string): string {
+  const chainInfo = PoolSubgraphMap[chainId]
+  if (!chainInfo) {
+    return ''
+  }
+
+  if (apiKey && chainInfo.productionSubgraph) {
+    return chainInfo.productionSubgraph.replace('[api-key]', apiKey)
+  }
+
+  return chainInfo.subgraph
 }
 
 /**
@@ -152,7 +161,7 @@ function getRWReceivableInfo(
     orderDirection: 'desc',
   },
 ): Promise<RealWorldReceivableInfoBase[]> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
+  const url = getSubgraphUrlForChainId(chainId)
   if (!url) {
     return Promise.resolve([])
   }
@@ -229,7 +238,7 @@ function checkBorrowAndLendHistory(
   pool: string,
   userAddress: string,
 ): Promise<{ hasBorrowHistory: boolean; hasLendHistory: boolean } | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
+  const url = getSubgraphUrlForChainId(chainId)
   if (!url || !userAddress || !pool) {
     return Promise.resolve(undefined)
   }
@@ -354,8 +363,12 @@ export type V2PoolData = {
   }[]
 }
 
-function fetchAllPoolsData(chainId: number): Promise<V2PoolData | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
+function fetchAllPoolsData(
+  chainId: number,
+  apiKey?: string,
+): Promise<V2PoolData | undefined> {
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
+  console.log(url)
   if (!url) {
     return Promise.resolve(undefined)
   }
