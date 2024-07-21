@@ -5,6 +5,13 @@ import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
 import { PoolInfoV2 } from '../v2/utils/pool'
 
+type Wallet = {
+  id: string
+  address: string
+  referralCode: string
+  referrer: string
+}
+
 type Season = {
   id: string
   estimatedTotalPoints: number
@@ -37,6 +44,43 @@ type Campaign = {
   poolInfo?: PoolInfoV2 | null
   partner?: Partner | null
   multiplierRange?: string
+}
+
+type CampaignPoints = {
+  campaignId: string
+  juniorTranchePoints: number
+  seniorTranchePoints: number
+  lockupPeriodMonths: number
+}
+
+function getWallet(wallet: string): Promise<Wallet | undefined> {
+  const url = configUtil.getCampaignAPIUrl()
+
+  const query = gql`
+    query {
+        wallet(address:"${wallet}") {
+          id
+          address
+          referralCode
+        }
+      }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return undefined
+        }
+        return res.data.wallet
+      })
+      .catch((err) => {
+        console.error(err)
+        return undefined
+      })
+  )
 }
 
 function getActiveSeasonAndCampaignGroups(): Promise<{
@@ -89,13 +133,6 @@ function getActiveSeasonAndCampaignGroups(): Promise<{
   )
 }
 
-type CampaignPoints = {
-  campaignId: string
-  juniorTranchePoints: number
-  seniorTranchePoints: number
-  lockupPeriodMonths: number
-}
-
 function getEstimatedPoints(
   campaignGroupId: string,
   principal: string,
@@ -134,7 +171,7 @@ function getEstimatedPoints(
 
 function createNewWallet(
   account: string,
-  referralCode?: string,
+  referralCode?: string | null | undefined,
 ): Promise<{ address: string }> {
   const url = configUtil.getCampaignAPIUrl()
 
@@ -226,6 +263,7 @@ function updateWalletPoints(
  * @namespace SubgraphService
  */
 export const CampaignService = {
+  getWallet,
   getActiveSeasonAndCampaignGroups,
   getEstimatedPoints,
   createNewWallet,
