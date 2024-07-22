@@ -37,13 +37,13 @@ export function UpcomingList<T>({
 
   const styles = {
     title: css`
-      font-family: 'Uni-Neue-Black';
+      font-weight: 800;
       color: ${theme.palette.text.primary};
       font-size: 24px;
       margin-bottom: ${theme.spacing(2)};
     `,
     description: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       color: ${theme.palette.text.primary};
       font-size: 1rem;
     `,

@@ -74,14 +74,14 @@ export function ErrorModal({
     `,
     messageWrapper: css`
       color: #541313;
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       padding-left: ${theme.spacing(6)};
     `,
     errorMessage: css`
       margin-top: ${theme.spacing(0.5)};
       font-size: 14px;
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       color: #541313;
       cursor: pointer;
       display: -webkit-box;
