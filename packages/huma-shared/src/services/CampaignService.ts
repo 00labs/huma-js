@@ -9,7 +9,24 @@ type Wallet = {
   id: string
   address: string
   referralCode: string
-  referrer: string
+  referrer: {
+    id: string
+    address: string
+  }
+  createdAt: string
+}
+
+type WalletPoint = {
+  id: string
+  rank: number
+  wallet: Wallet
+  totalPoints: number
+  numberOfReferred: number
+}
+
+type WalletRank = {
+  totalCount: number
+  walletPoints: WalletPoint[]
 }
 
 type Season = {
@@ -53,7 +70,9 @@ type CampaignPoints = {
   lockupPeriodMonths: number
 }
 
-function getWallet(wallet: string): Promise<Wallet | undefined> {
+function getWalletInfo(
+  wallet: string,
+): Promise<{ wallet: Wallet; walletPoint: WalletPoint } | undefined> {
   const url = configUtil.getCampaignAPIUrl()
 
   const query = gql`
@@ -62,6 +81,11 @@ function getWallet(wallet: string): Promise<Wallet | undefined> {
           id
           address
           referralCode
+        }
+        walletPoint(address:"${wallet}") {
+          rank
+          numberOfReferred
+          totalPoints
         }
       }
   `
@@ -74,7 +98,83 @@ function getWallet(wallet: string): Promise<Wallet | undefined> {
           console.error(res.errors)
           return undefined
         }
-        return res.data.wallet
+        return res.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return undefined
+      })
+  )
+}
+
+function getWalletRankList(
+  first: number,
+  skip: number,
+): Promise<WalletRank | undefined> {
+  const url = configUtil.getCampaignAPIUrl()
+
+  const query = gql`
+    query {
+        walletPoints(first: ${first}, skip: ${skip}){
+          totalCount
+          walletPoints {
+            id
+            rank
+            wallet {
+              id 
+              address
+            }
+            totalPoints
+            numberOfReferred
+          }
+        }
+      }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return undefined
+        }
+        return res.data.walletPoints
+      })
+      .catch((err) => {
+        console.error(err)
+        return undefined
+      })
+  )
+}
+
+function getRecentJoins(): Promise<Wallet[] | undefined> {
+  const url = configUtil.getCampaignAPIUrl()
+  const query = gql`
+    query {
+      wallets(first: 5, skip: 0, orderBy: "createdAt", orderDirection: "desc") {
+        wallets {
+          id
+          address
+          referrer {
+            id
+            address
+          }
+          createdAt
+        }
+      }
+    }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return undefined
+        }
+        return res.data.wallets?.wallets
       })
       .catch((err) => {
         console.error(err)
@@ -263,7 +363,9 @@ function updateWalletPoints(
  * @namespace SubgraphService
  */
 export const CampaignService = {
-  getWallet,
+  getWalletInfo,
+  getWalletRankList,
+  getRecentJoins,
   getActiveSeasonAndCampaignGroups,
   getEstimatedPoints,
   createNewWallet,
