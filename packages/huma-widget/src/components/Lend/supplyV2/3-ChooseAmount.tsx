@@ -1,25 +1,29 @@
 import {
+  CampaignService,
   formatNumber,
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
+  useDebouncedValue,
   usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { InputAmountModal } from '../../InputAmountModal'
+import { Campaign } from '.'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
   isUniTranche: boolean
+  campaign?: Campaign
 }
 
 export function ChooseAmount({
@@ -27,11 +31,15 @@ export function ChooseAmount({
   poolUnderlyingToken,
   selectedTranche,
   isUniTranche,
+  campaign,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
+  const debouncedValue = useDebouncedValue(currentAmount)
+  const [campaignPoints, setCampaignPoints] = useState<number>(0)
+  const [lockupPeriodMonths, setLockupPeriodMonths] = useState<number>(0)
   const { allowance = BigNumber.from(0) } = usePoolSafeAllowanceV2(
     poolInfo.poolName,
     account,
@@ -46,6 +54,36 @@ export function ChooseAmount({
     balance,
     poolUnderlyingToken.decimals,
   )
+
+  useEffect(() => {
+    const getBasePoints = async () => {
+      if (campaign && selectedTranche && Number(debouncedValue) > 0) {
+        const estimatedPoints = await CampaignService.getEstimatedPoints(
+          campaign.campaignGroupId,
+          ethers.utils
+            .parseUnits(
+              String(debouncedValue),
+              poolInfo.poolUnderlyingToken.decimals,
+            )
+            .toString(),
+        )
+        const campaignPoints = estimatedPoints.find(
+          (item) => item.campaignId === campaign.id,
+        )
+        if (campaignPoints) {
+          setCampaignPoints(campaignPoints[`${selectedTranche}TranchePoints`])
+          setLockupPeriodMonths(campaignPoints.lockupPeriodMonths)
+        }
+      }
+    }
+    getBasePoints()
+  }, [
+    campaign,
+    debouncedValue,
+    decimals,
+    poolInfo.poolUnderlyingToken.decimals,
+    selectedTranche,
+  ])
 
   const handleChangeAmount = (newAmount: number) => {
     setCurrentAmount(newAmount)
@@ -63,6 +101,13 @@ export function ChooseAmount({
     dispatch(setStep(step))
   }
 
+  let info = `${formatNumber(maxAmountFormatted)} Available`
+  if (campaign && campaignPoints > 0) {
+    info = `You will earn ${formatNumber(
+      campaignPoints,
+    )} points for the entire ${lockupPeriodMonths} months right away.`
+  }
+
   return (
     <InputAmountModal
       title='Enter Amount'
@@ -73,7 +118,7 @@ export function ChooseAmount({
       currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
       maxAmount={maxAmountFormatted}
-      info={`${formatNumber(maxAmountFormatted)} Available`}
+      info={info}
       handleAction={handleAction}
       actionText='SUPPLY'
     />

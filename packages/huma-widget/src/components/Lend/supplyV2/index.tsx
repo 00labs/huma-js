@@ -5,6 +5,7 @@ import {
   useLPConfigV2,
   useLenderApprovedV2,
   usePoolInfoV2,
+  usePoolSettingsV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
@@ -24,35 +25,44 @@ import { ApproveAllowance } from './4-ApproveAllowance'
 import { Transfer } from './5-Transfer'
 import { Success } from './6-Success'
 import { Notifications } from './7-Notifications'
+import { PointsEarned } from './8-PointsEarned'
+
+export interface Campaign {
+  id: string
+  campaignGroupId: string
+}
 
 /**
  * Lend pool supply props
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {boolean} shouldApproveAll To check if should approve both tranches.
+ * @property {Campaign} campaign The campaign info.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
-  shouldApproveAll?: boolean
+  campaign?: Campaign
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function LendSupplyV2({
   poolName: poolNameStr,
-  shouldApproveAll,
+  campaign,
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
+  console.log('campaign', campaign)
   const dispatch = useDispatch()
   const poolName = POOL_NAME[poolNameStr]
   const { chainId, provider, account } = useWeb3React()
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [transactionHash, setTransactionHash] = useState<string | undefined>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
+  const poolSettings = usePoolSettingsV2(poolName, provider)
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -74,7 +84,7 @@ export function LendSupplyV2({
   useEffect(() => {
     if (!step && poolInfo && lenderApproveStatusFetched && lpConfig) {
       if (
-        shouldApproveAll &&
+        campaign &&
         !isUniTranche &&
         (!lenderApprovedJunior || !lenderApprovedSenior)
       ) {
@@ -123,7 +133,7 @@ export function LendSupplyV2({
     lenderApprovedSenior,
     lpConfig,
     poolInfo,
-    shouldApproveAll,
+    campaign,
     step,
   ])
 
@@ -131,7 +141,8 @@ export function LendSupplyV2({
     !poolInfo ||
     !poolUnderlyingToken ||
     !lenderApproveStatusFetched ||
-    !lpConfig
+    !lpConfig ||
+    !poolSettings
   ) {
     return (
       <WidgetWrapper
@@ -164,6 +175,8 @@ export function LendSupplyV2({
           handleClose={handleClose}
           isUniTranche={isUniTranche}
           changeTranche={setSelectedTranche}
+          campaign={campaign}
+          minDepositAmount={poolSettings.minDepositAmount}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
@@ -172,6 +185,7 @@ export function LendSupplyV2({
           poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
+          campaign={campaign}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (
@@ -191,11 +205,21 @@ export function LendSupplyV2({
         <Success
           poolInfo={poolInfo}
           poolUnderlyingToken={poolUnderlyingToken}
+          lpConfig={lpConfig}
+          campaign={campaign}
+          updateTransactionHash={setTransactionHash}
           handleAction={handleClose}
         />
       )}
       {step === WIDGET_STEP.Notifications && (
-        <Notifications handleAction={handleClose} />
+        <Notifications campaign={campaign} handleAction={handleClose} />
+      )}
+      {step === WIDGET_STEP.PointsEarned && transactionHash && (
+        <PointsEarned
+          transactionHash={transactionHash}
+          lpConfig={lpConfig}
+          handleAction={handleClose}
+        />
       )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal

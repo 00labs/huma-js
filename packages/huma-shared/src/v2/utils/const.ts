@@ -6,6 +6,7 @@ export const BP_FACTOR = BigNumber.from(10000)
 
 export enum KYC_PROVIDER {
   Securitize = 'Securitize',
+  Persona = 'Persona',
 }
 
 export enum CreditStateV2 {

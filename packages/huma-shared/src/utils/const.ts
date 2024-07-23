@@ -6,3 +6,5 @@ export const EARejectMessage =
 export enum CURRENCY_CODE {
   USD = 840,
 }
+
+export const CAMPAIGN_REFERENCE_CODE = 'CAMPAIGN_REFERENCE_CODE'

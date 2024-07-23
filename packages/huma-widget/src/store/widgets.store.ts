@@ -20,6 +20,7 @@ export enum WIDGET_STEP {
   Transfer = 'Transfer',
   CheckWithdrawable = 'CheckWithdrawable',
   Notifications = 'Notifications',
+  PointsEarned = 'PointsEarned',
   Done = 'Done',
   Error = 'Error',
 }

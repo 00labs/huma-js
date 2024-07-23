@@ -1,5 +1,8 @@
 import {
+  CAMPAIGN_REFERENCE_CODE,
+  CampaignService,
   checkIsDev,
+  formatNumber,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
@@ -10,16 +13,20 @@ import {
 } from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
+import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import Persona, { Client } from 'persona'
+import { Campaign } from '..'
 import { useAppDispatch } from '../../../../hooks/useRedux'
 import { setError, setStep } from '../../../../store/widgets.reducers'
+import { WIDGET_STEP } from '../../../../store/widgets.store'
 import { BottomButton } from '../../../BottomButton'
 import { ApproveLenderImg } from '../../../images'
 import { LoadingModal } from '../../../LoadingModal'
 import { WrapperModal } from '../../../WrapperModal'
-import { WIDGET_STEP } from '../../../../store/widgets.store'
+
+type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
 const LoadingCopiesByType: {
   [key: string]: {
@@ -40,6 +47,8 @@ const LoadingCopiesByType: {
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
+  minDepositAmount: BigNumber
+  campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -47,6 +56,8 @@ type Props = {
 export function PersonaEvaluation({
   poolInfo,
   isUniTranche,
+  minDepositAmount: minDepositAmountBN,
+  campaign,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -61,19 +72,57 @@ export function PersonaEvaluation({
     isWalletOwnershipVerificationRequired,
   } = useAuthErrorHandling(isDev)
   const KYCCopies = poolInfo.KYC!.Persona!
-  const [loadingType, setLoadingType] = useState<
-    'verificationStatus' | 'startKYC' | 'approveLender' | undefined
-  >()
+  const [loadingType, setLoadingType] = useState<LoadingType>()
   const [kycCopy, setKYCCopy] = useState<KYCCopy>(KYCCopies.verifyIdentity)
-  const [inquiryId, setInquiryId] = useState<string | undefined>()
-  const [sessionToken, setSessionToken] = useState<string | undefined>()
-  const [verificationStatus, setVerificationStatus] = useState<
-    VerificationStatusResultV2 | undefined
-  >()
+  const isVerifyIdentity = kycCopy === KYCCopies.verifyIdentity
+  const [inquiryId, setInquiryId] = useState<string>()
+  const [sessionToken, setSessionToken] = useState<string>()
+  const [verificationStatus, setVerificationStatus] =
+    useState<VerificationStatusResultV2>()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
+  const [campaignBasePoints, setCampaignBasePoints] = useState<number>(0)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
+
+  useEffect(() => {
+    const createNewWallet = async () => {
+      if (isWalletOwnershipVerified && campaign && account) {
+        await CampaignService.createNewWallet(
+          account,
+          localStorage.getItem(CAMPAIGN_REFERENCE_CODE) ?? undefined,
+        )
+      }
+    }
+    createNewWallet()
+  }, [account, campaign, isWalletOwnershipVerified])
+
+  useEffect(() => {
+    const getBasePoints = async () => {
+      if (campaign) {
+        const estimatedPoints = await CampaignService.getEstimatedPoints(
+          campaign.campaignGroupId,
+          minDepositAmountBN.toString(),
+        )
+        const campaignPoints = estimatedPoints.find(
+          (item) => item.campaignId === campaign.id,
+        )
+        if (campaignPoints) {
+          const { juniorTranchePoints, seniorTranchePoints } = campaignPoints
+          if (isUniTranche) {
+            setCampaignBasePoints(juniorTranchePoints ?? 0)
+          } else {
+            setCampaignBasePoints(
+              juniorTranchePoints < seniorTranchePoints
+                ? juniorTranchePoints
+                : seniorTranchePoints,
+            )
+          }
+        }
+      }
+    }
+    getBasePoints()
+  }, [campaign, isUniTranche, minDepositAmountBN])
 
   const approveLender = useCallback(async () => {
     try {
@@ -327,12 +376,16 @@ export function PersonaEvaluation({
       }
     `,
     description: css`
-      ${theme.cssMixins.rowCentered};
+      text-align: justify;
       margin-top: ${theme.spacing(10)};
       padding: ${theme.spacing(0, 2)};
       font-family: 'Uni-Neue-Regular';
       font-size: 16px;
       color: #a8a1b2;
+    `,
+    points: css`
+      color: #b246ff;
+      font-family: 'Uni-Neue-Bold';
     `,
   }
 
@@ -342,7 +395,19 @@ export function PersonaEvaluation({
         <Box css={styles.iconWrapper}>
           <img src={ApproveLenderImg} alt='approve-lender' />
         </Box>
-        <Box css={styles.description}>{kycCopy.description}</Box>
+        {campaign && isVerifyIdentity ? (
+          <Box css={styles.description}>
+            <span>You’ll be rewarded with a minimum of</span>
+            <span css={styles.points}>
+              {' '}
+              {formatNumber(campaignBasePoints)} Huma points{' '}
+            </span>
+            <span>after completing KYC and your first investment.</span>
+          </Box>
+        ) : (
+          <Box css={styles.description}>{kycCopy.description}</Box>
+        )}
+
         {Boolean(kycCopy.buttonText) && (
           <BottomButton variant='contained' onClick={handleAction}>
             {kycCopy.buttonText}

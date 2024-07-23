@@ -1,7 +1,7 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
-import { PoolsInfoV2 } from '../utils'
+import { KYC_PROVIDER, PoolsInfoV2 } from '../utils'
 
 export const ALFAJORES_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
@@ -44,7 +44,7 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
         },
         verifyIdentity: {
           title: 'Start KYC',
-          description: `You’ll be rewarded with Huma points after completing KYC and your first investment.`,
+          description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
           buttonText: 'START KYC',
         },
         verificationDeclined: {

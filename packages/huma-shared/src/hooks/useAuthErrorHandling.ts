@@ -67,7 +67,8 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
     if (!account || !chainId || !error || !provider) {
       return
     }
-    if (
+
+    const isUnauthorizedError =
       axios.isAxiosError(error) &&
       error.response?.status === HttpStatusCode.Unauthorized &&
       [
@@ -75,7 +76,10 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         'InvalidIdTokenException',
         'WalletMismatchException',
       ].includes(error.response?.data?.detail?.type)
-    ) {
+
+    const isWalletNotCreatedError = error === 'WalletNotCreatedException'
+
+    if (isUnauthorizedError || isWalletNotCreatedError) {
       setErrorType('NotSignedIn')
       setIsVerificationRequired(true)
       verifyOwnership(
