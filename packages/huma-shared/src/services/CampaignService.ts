@@ -69,6 +69,32 @@ type CampaignPoints = {
   lockupPeriodMonths: number
 }
 
+function checkWalletOwnership(wallet: string): Promise<boolean | undefined> {
+  const url = configUtil.getCampaignAPIUrl()
+
+  const query = gql`
+    query {
+      walletOwnership(address: "${wallet}")
+    }
+  `
+
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return undefined
+        }
+        return res.data.walletOwnership
+      })
+      .catch((err) => {
+        console.error(err)
+        return undefined
+      })
+  )
+}
+
 function getWalletInfo(
   wallet: string,
 ): Promise<{ wallet: Wallet; walletPoint: WalletPoint } | undefined> {
@@ -362,6 +388,7 @@ function updateWalletPoints(
  * @namespace SubgraphService
  */
 export const CampaignService = {
+  checkWalletOwnership,
   getWalletInfo,
   getWalletRankList,
   getRecentJoins,

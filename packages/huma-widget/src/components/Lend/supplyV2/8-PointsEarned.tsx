@@ -1,4 +1,9 @@
-import { CampaignService, formatNumber } from '@huma-finance/shared'
+import {
+  CampaignService,
+  checkIsDev,
+  formatNumber,
+  useAuthErrorHandling,
+} from '@huma-finance/shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
@@ -8,6 +13,10 @@ import { setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
+import { SignIn } from '../../SignIn'
+
+const ERROR_MESSAGE =
+  'Failed to update wallet points. Be assured that your points will be added later.'
 
 type Props = {
   transactionHash: string
@@ -29,38 +38,86 @@ export function PointsEarned({
   const lockupMonths = lpConfig.withdrawalLockoutPeriodInDays / 30
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
-  const [loading, setLoading] = useState(false)
+
+  const {
+    errorType,
+    setError: setAuthError,
+    isWalletOwnershipVerified,
+    isWalletOwnershipVerificationRequired,
+  } = useAuthErrorHandling(checkIsDev())
+  const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
+  const [loadingType, setLoadingType] = useState<'SignIn' | 'Congrats'>()
+
+  useEffect(() => {
+    if (isWalletOwnershipVerificationRequired) {
+      setLoadingType(undefined)
+    }
+  }, [isWalletOwnershipVerificationRequired])
+
+  useEffect(() => {
+    if (isWalletOwnershipVerified) {
+      setWalletOwnership(true)
+    }
+  }, [isWalletOwnershipVerified])
+
+  useEffect(() => {
+    const checkWalletOwnership = async () => {
+      const ownership = await CampaignService.checkWalletOwnership(account!)
+      setWalletOwnership(ownership)
+      if (!ownership) {
+        setAuthError('WalletNotSignInException')
+      }
+    }
+    checkWalletOwnership()
+  }, [account, setAuthError])
+
+  useEffect(() => {
+    if (errorType === 'NotSignedIn') {
+      setLoadingType('SignIn')
+    } else if (errorType === 'UserRejected') {
+      dispatch(
+        setError({
+          errorMessage: 'User has rejected the transaction.',
+        }),
+      )
+    } else if (errorType === 'Other') {
+      dispatch(
+        setError({
+          errorMessage: ERROR_MESSAGE,
+        }),
+      )
+    }
+  }, [dispatch, errorType])
 
   useEffect(() => {
     const updateWalletPoints = async () => {
-      const setErrorMessage = () => {
-        dispatch(
-          setError({
-            errorMessage:
-              'Failed to update wallet points. Be assured that your points will be added later.',
-          }),
-        )
-      }
-
-      try {
-        setLoading(true)
-        const result = await CampaignService.updateWalletPoints(
-          chainId!,
-          account!,
-          transactionHash,
-        )
-        if (!result.pointsAccumulated) {
-          setErrorMessage()
+      if (walletOwnership) {
+        try {
+          const result = await CampaignService.updateWalletPoints(
+            chainId!,
+            account!,
+            transactionHash,
+          )
+          if (!result.pointsAccumulated) {
+            dispatch(
+              setError({
+                errorMessage: ERROR_MESSAGE,
+              }),
+            )
+          }
+          setPointsAccumulated(result.pointsAccumulated)
+          setLoadingType('Congrats')
+        } catch (error) {
+          dispatch(
+            setError({
+              errorMessage: ERROR_MESSAGE,
+            }),
+          )
         }
-        setPointsAccumulated(result.pointsAccumulated)
-      } catch (error) {
-        setErrorMessage()
-      } finally {
-        setLoading(false)
       }
     }
     updateWalletPoints()
-  }, [account, chainId, dispatch, transactionHash])
+  }, [account, chainId, dispatch, transactionHash, walletOwnership])
 
   const styles = {
     wrapper: css`
@@ -112,34 +169,40 @@ export function PointsEarned({
     `,
   }
 
-  if (loading) {
-    return <LoadingModal title='SUPPLY' />
+  if (loadingType === 'SignIn') {
+    return (
+      <SignIn description='Please sign in to check the points that you earned.' />
+    )
   }
 
-  return (
-    <Box css={styles.wrapper}>
-      <Box css={styles.congrats}>
-        <CongratulationsIcon />
-      </Box>
-      <Box css={styles.ribbon}>
-        <RibbonIcon />
-        <Box css={styles.ribbonContent}>
-          <HumaPointsIcon />
-          <Box>{formatNumber(pointsAccumulated)} Points</Box>
+  if (loadingType === 'Congrats') {
+    return (
+      <Box css={styles.wrapper}>
+        <Box css={styles.congrats}>
+          <CongratulationsIcon />
         </Box>
+        <Box css={styles.ribbon}>
+          <RibbonIcon />
+          <Box css={styles.ribbonContent}>
+            <HumaPointsIcon />
+            <Box>{formatNumber(pointsAccumulated)} Points</Box>
+          </Box>
+        </Box>
+        <Box css={styles.entirePoints}>
+          <Box>Congratulations,</Box>
+          <Box>you've earned {pointsAccumulated} points</Box>
+        </Box>
+        <Box css={styles.entirePointsDetails}>
+          You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
+          {monthText} straight. Plus, If you keep your investment till after{' '}
+          {monthText}, you’ll gain extra points daily.
+        </Box>
+        <BottomButton variant='contained' onClick={handleAction}>
+          GREAT
+        </BottomButton>
       </Box>
-      <Box css={styles.entirePoints}>
-        <Box>Congratulations,</Box>
-        <Box>you've earned {pointsAccumulated} points</Box>
-      </Box>
-      <Box css={styles.entirePointsDetails}>
-        You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
-        {monthText} straight. Plus, If you keep your investment till after{' '}
-        {monthText}, you’ll gain extra points daily.
-      </Box>
-      <BottomButton variant='contained' onClick={handleAction}>
-        GREAT
-      </BottomButton>
-    </Box>
-  )
+    )
+  }
+
+  return <LoadingModal title='SUPPLY' />
 }
