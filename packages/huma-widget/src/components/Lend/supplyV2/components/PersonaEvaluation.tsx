@@ -1,4 +1,5 @@
 import {
+  CAMPAIGN_REFERENCE_CODE,
   CampaignService,
   checkIsDev,
   formatNumber,
@@ -87,7 +88,10 @@ export function PersonaEvaluation({
   useEffect(() => {
     const createNewWallet = async () => {
       if (isWalletOwnershipVerified && campaign && account) {
-        await CampaignService.createNewWallet(account, campaign.referenceCode)
+        await CampaignService.createNewWallet(
+          account,
+          localStorage.getItem(CAMPAIGN_REFERENCE_CODE) ?? undefined,
+        )
       }
     }
     createNewWallet()

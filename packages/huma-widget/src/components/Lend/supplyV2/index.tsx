@@ -30,7 +30,6 @@ import { PointsEarned } from './8-PointsEarned'
 export interface Campaign {
   id: string
   campaignGroupId: string
-  referenceCode?: string
 }
 
 /**
@@ -54,6 +53,7 @@ export function LendSupplyV2({
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
+  console.log('campaign', campaign)
   const dispatch = useDispatch()
   const poolName = POOL_NAME[poolNameStr]
   const { chainId, provider, account } = useWeb3React()

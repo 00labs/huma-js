@@ -57,7 +57,6 @@ type Campaign = {
   lockupPeriodMonths: number
   poolAddress: string
   campaignGroupId?: string
-  referenceCode?: string | null
   poolInfo?: PoolInfoV2 | null
   partner?: Partner | null
   multiplierRange?: string
