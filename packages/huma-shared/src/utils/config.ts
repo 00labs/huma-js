@@ -53,6 +53,10 @@ const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
   }
 }
 
+// const getCampaignAPIUrl = () => `http://localhost:8000/graphql`
+const getCampaignAPIUrl = () =>
+  `https://dev.testnet.campaign-points.huma.finance/graphql`
+
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
 const DEFAULT_CHAIN_ID = 137
 
@@ -63,5 +67,6 @@ export const configUtil = {
   getIdentityAPIUrl,
   getAuthServiceUrl,
   getKYCProviderBaseUrl,
+  getCampaignAPIUrl,
   DEFAULT_CHAIN_ID,
 }

@@ -17,6 +17,9 @@ import { ReactComponent as ApproveLenderSvg } from './approve-lender.svg'
 import { ReactComponent as DonutSvg } from './donut.svg'
 import { ReactComponent as UsdcSvg } from './usdc.svg'
 import { ReactComponent as CeloSvg } from './celo.svg'
+import { ReactComponent as CongratulationsSvg } from './congratulations.svg'
+import { ReactComponent as RibbonSvg } from './ribbon.svg'
+import { ReactComponent as HumaPointsSvg } from './huma-points.svg'
 
 export function HumaIcon(props: SvgIconProps): React.ReactElement {
   return <HumaLogoSvg {...props} />
@@ -88,6 +91,18 @@ export function UsdcIcon(props: SvgIconProps): React.ReactElement {
 
 export function CeloIcon(props: SvgIconProps): React.ReactElement {
   return <CeloSvg {...props} />
+}
+
+export function CongratulationsIcon(props: SvgIconProps): React.ReactElement {
+  return <CongratulationsSvg {...props} />
+}
+
+export function RibbonIcon(props: SvgIconProps): React.ReactElement {
+  return <RibbonSvg {...props} />
+}
+
+export function HumaPointsIcon(props: SvgIconProps): React.ReactElement {
+  return <HumaPointsSvg {...props} />
 }
 
 export function getIcon(icon: string) {

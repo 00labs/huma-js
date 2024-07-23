@@ -43,6 +43,7 @@ export function HumaModalHeader({
       position: absolute;
       right: ${theme.spacing(3)};
       top: ${theme.spacing(3)};
+      z-index: 1;
     `,
     headerBand: css`
       height: ${height}px;

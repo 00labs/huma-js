@@ -88,8 +88,8 @@ export function InputAmountModal({
     `,
     info: css`
       color: ${theme.palette.text.primary};
-      font-family: 'Uni-Neue-Bold';
-      font-size: 20px;
+      font-family: 'Uni-Neue-Regular';
+      font-size: 16px;
       line-height: 160%;
       letter-spacing: 0.15px;
     `,
