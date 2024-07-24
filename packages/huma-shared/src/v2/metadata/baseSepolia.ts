@@ -118,5 +118,8 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
         },
       },
     },
+    extra: {
+      enableGetTestUSDC: true,
+    },
   },
 }
