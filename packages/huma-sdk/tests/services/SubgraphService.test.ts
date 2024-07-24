@@ -31,7 +31,7 @@ describe('getSubgraphUrlForChainId', () => {
     expect(
       SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon, 'apiKey'),
     ).toEqual(
-      'https://gateway-arbitrum.network.thegraph.com/api/apiKey/subgraphs/id/3Cb7Uy2BqxvU8hCRNxMUDVaPdpDS9Kd52mWuQVdTpz8',
+      'https://gateway-arbitrum.network.thegraph.com/api/apiKey/subgraphs/id/GaFTstjPKTju5buJ4TzQ3Zjm3mrmMa5LWvCKu3H7JDeU',
     )
   })
 

@@ -368,7 +368,6 @@ function fetchAllPoolsData(
   apiKey?: string,
 ): Promise<V2PoolData | undefined> {
   const url = getSubgraphUrlForChainId(chainId, apiKey)
-  console.log(url)
   if (!url) {
     return Promise.resolve(undefined)
   }
