@@ -74,7 +74,6 @@ export function PersonaEvaluation({
   const KYCCopies = poolInfo.KYC!.Persona!
   const [loadingType, setLoadingType] = useState<LoadingType>()
   const [kycCopy, setKYCCopy] = useState<KYCCopy>(KYCCopies.verifyIdentity)
-  const isVerifyIdentity = kycCopy === KYCCopies.verifyIdentity
   const [inquiryId, setInquiryId] = useState<string>()
   const [sessionToken, setSessionToken] = useState<string>()
   const [verificationStatus, setVerificationStatus] =
@@ -395,7 +394,7 @@ export function PersonaEvaluation({
         <Box css={styles.iconWrapper}>
           <img src={ApproveLenderImg} alt='approve-lender' />
         </Box>
-        {campaign && isVerifyIdentity ? (
+        {campaign && kycCopy === KYCCopies.verifyIdentity ? (
           <Box css={styles.description}>
             <span>You’ll be rewarded with a minimum of</span>
             <span css={styles.points}>

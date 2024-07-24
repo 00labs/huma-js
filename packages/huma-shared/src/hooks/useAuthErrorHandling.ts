@@ -78,8 +78,13 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
       ].includes(error.response?.data?.detail?.type)
 
     const isWalletNotCreatedError = error === 'WalletNotCreatedException'
+    const isWalletNotSignInError = error === 'WalletNotSignInException'
 
-    if (isUnauthorizedError || isWalletNotCreatedError) {
+    if (
+      isUnauthorizedError ||
+      isWalletNotCreatedError ||
+      isWalletNotSignInError
+    ) {
       setErrorType('NotSignedIn')
       setIsVerificationRequired(true)
       verifyOwnership(
