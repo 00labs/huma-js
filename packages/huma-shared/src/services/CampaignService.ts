@@ -5,6 +5,39 @@ import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
 import { PoolInfoV2 } from '../v2/utils/pool'
 
+export type CampaignSeason = {
+  id: string
+  name: string
+  estimatedTotalPoints: number
+}
+
+export type CampaignPartner = {
+  id: string
+  name: string
+  multiplier: number
+}
+
+export type Campaign = {
+  id: string
+  name: string
+  chainId: string
+  juniorMultiplier: number
+  seniorMultiplier: number
+  lockupPeriodMonths: number
+  poolAddress: string
+  campaignGroupId: string
+  poolInfo: PoolInfoV2
+  partner?: CampaignPartner | null
+  multiplierRange?: string
+}
+
+export type CampaignGroup = {
+  id: string
+  name: string
+  campaigns: Campaign[]
+  partners: CampaignPartner[]
+}
+
 type Wallet = {
   id: string
   address: string
@@ -27,39 +60,6 @@ type WalletPoint = {
 type WalletRank = {
   totalCount: number
   walletPoints: WalletPoint[]
-}
-
-type Season = {
-  id: string
-  estimatedTotalPoints: number
-  name: string
-}
-
-type Partner = {
-  id: string
-  name: string
-  multiplier: number
-}
-
-type CampaignGroup = {
-  id: string
-  name: string
-  campaigns: Campaign[]
-  partners: Partner[]
-}
-
-type Campaign = {
-  id: string
-  name: string
-  chainId: string
-  juniorMultiplier: number
-  seniorMultiplier: number
-  lockupPeriodMonths: number
-  poolAddress: string
-  campaignGroupId?: string
-  poolInfo?: PoolInfoV2 | null
-  partner?: Partner | null
-  multiplierRange?: string
 }
 
 type CampaignPoints = {
@@ -209,7 +209,7 @@ function getRecentJoins(): Promise<Wallet[] | undefined> {
 }
 
 function getActiveSeasonAndCampaignGroups(): Promise<{
-  activeSeason: Season
+  activeSeason: CampaignSeason
   campaignGroups: CampaignGroup[]
 }> {
   const url = configUtil.getCampaignAPIUrl()
