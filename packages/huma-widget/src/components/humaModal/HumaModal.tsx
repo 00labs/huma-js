@@ -3,8 +3,6 @@ import { Dialog } from '@mui/material'
 import { useMQ } from '@huma-finance/shared'
 import React from 'react'
 
-import { white } from '../../theme/palette'
-
 type HumaModalType = {
   children?: React.ReactNode
   isOpen: boolean
