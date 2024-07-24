@@ -15,6 +15,11 @@ import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
 import { SignIn } from '../../SignIn'
 
+enum LOADING_STATE {
+  SignIn = 'SignIn',
+  Congrats = 'Congrats',
+}
+
 const ERROR_MESSAGE =
   'Failed to update wallet points. Be assured that your points will be added later.'
 
@@ -35,7 +40,7 @@ export function PointsEarned({
   const [pointsAccumulated, setPointsAccumulated] = useState<
     number | undefined
   >()
-  const lockupMonths = lpConfig.withdrawalLockoutPeriodInDays / 30
+  const lockupMonths = Math.round(lpConfig.withdrawalLockoutPeriodInDays / 30)
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
 
@@ -46,11 +51,11 @@ export function PointsEarned({
     isWalletOwnershipVerificationRequired,
   } = useAuthErrorHandling(checkIsDev())
   const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
-  const [loadingType, setLoadingType] = useState<'SignIn' | 'Congrats'>()
+  const [loadingState, setLoadingState] = useState<LOADING_STATE>()
 
   useEffect(() => {
     if (isWalletOwnershipVerificationRequired) {
-      setLoadingType(undefined)
+      setLoadingState(undefined)
     }
   }, [isWalletOwnershipVerificationRequired])
 
@@ -73,7 +78,7 @@ export function PointsEarned({
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
-      setLoadingType('SignIn')
+      setLoadingState(LOADING_STATE.SignIn)
     } else if (errorType === 'UserRejected') {
       dispatch(
         setError({
@@ -106,7 +111,7 @@ export function PointsEarned({
             )
           }
           setPointsAccumulated(result.pointsAccumulated)
-          setLoadingType('Congrats')
+          setLoadingState(LOADING_STATE.Congrats)
         } catch (error) {
           dispatch(
             setError({
@@ -169,13 +174,13 @@ export function PointsEarned({
     `,
   }
 
-  if (loadingType === 'SignIn') {
+  if (loadingState === LOADING_STATE.SignIn) {
     return (
       <SignIn description='Please sign in to check the points that you earned.' />
     )
   }
 
-  if (loadingType === 'Congrats') {
+  if (loadingState === LOADING_STATE.Congrats) {
     return (
       <Box css={styles.wrapper}>
         <Box css={styles.congrats}>

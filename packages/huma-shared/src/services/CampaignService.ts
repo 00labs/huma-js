@@ -78,21 +78,23 @@ function checkWalletOwnership(wallet: string): Promise<boolean | undefined> {
     }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return undefined
-        }
-        return res.data.walletOwnership
-      })
-      .catch((err) => {
-        console.error(err)
+  return requestPost<{
+    data?: {
+      walletOwnership: boolean
+    }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
         return undefined
-      })
-  )
+      }
+      return res.data?.walletOwnership
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 function getWalletInfo(
@@ -115,21 +117,21 @@ function getWalletInfo(
       }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return undefined
-        }
-        return res.data
-      })
-      .catch((err) => {
-        console.error(err)
+  return requestPost<{
+    data?: { wallet: Wallet; walletPoint: WalletPoint }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
         return undefined
-      })
-  )
+      }
+      return res.data
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 function getWalletRankList(
@@ -156,21 +158,21 @@ function getWalletRankList(
       }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return undefined
-        }
-        return res.data.walletPoints
-      })
-      .catch((err) => {
-        console.error(err)
+  return requestPost<{
+    data?: { walletPoints: WalletRank }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
         return undefined
-      })
-  )
+      }
+      return res.data?.walletPoints
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 function getRecentJoins(): Promise<Wallet[] | undefined> {
@@ -199,7 +201,7 @@ function getRecentJoins(): Promise<Wallet[] | undefined> {
           console.error(res.errors)
           return undefined
         }
-        return res.data.wallets?.wallets
+        return res.data?.wallets?.wallets
       })
       .catch((err) => {
         console.error(err)
@@ -209,8 +211,8 @@ function getRecentJoins(): Promise<Wallet[] | undefined> {
 }
 
 function getActiveSeasonAndCampaignGroups(): Promise<{
-  activeSeason: CampaignSeason
-  campaignGroups: CampaignGroup[]
+  activeSeason?: CampaignSeason
+  campaignGroups?: CampaignGroup[]
 }> {
   const url = configUtil.getCampaignAPIUrl()
 
@@ -241,21 +243,24 @@ function getActiveSeasonAndCampaignGroups(): Promise<{
     }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return {}
-        }
-        return res.data
-      })
-      .catch((err) => {
-        console.error(err)
+  return requestPost<{
+    data?: {
+      activeSeason: CampaignSeason
+      campaignGroups: CampaignGroup[]
+    }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
         return {}
-      })
-  )
+      }
+      return res.data ?? {}
+    })
+    .catch((err) => {
+      console.error(err)
+      return {}
+    })
 }
 
 function getEstimatedPoints(
@@ -277,27 +282,31 @@ function getEstimatedPoints(
     }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return []
-        }
-        return res.data.calculateEstimatedPoints.campaignPointsEstimations
-      })
-      .catch((err) => {
-        console.error(err)
+  return requestPost<{
+    data?: {
+      calculateEstimatedPoints?: {
+        campaignPointsEstimations?: CampaignPoints[]
+      }
+    }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
         return []
-      })
-  )
+      }
+      return res.data?.calculateEstimatedPoints?.campaignPointsEstimations ?? []
+    })
+    .catch((err) => {
+      console.error(err)
+      return []
+    })
 }
 
 function createNewWallet(
   account: string,
   referralCode?: string | null | undefined,
-): Promise<{ address: string }> {
+): Promise<{ wallet: string } | undefined> {
   const url = configUtil.getCampaignAPIUrl()
 
   const query = gql`
@@ -323,28 +332,32 @@ function createNewWallet(
     }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return []
-        }
-        return res.data.createWallet.wallet
-      })
-      .catch((err) => {
-        console.error(err)
-        return []
-      })
-  )
+  return requestPost<{
+    data?: {
+      createWallet?: {
+        wallet: string
+      }
+    }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data?.createWallet
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 function updateWalletPoints(
   chainId: ChainEnum,
   account: string,
   hash: string,
-): Promise<{ pointsAccumulated: number }> {
+): Promise<{ pointsAccumulated?: number }> {
   const url = configUtil.getCampaignAPIUrl()
 
   const query = gql`
@@ -366,21 +379,23 @@ function updateWalletPoints(
     }
   `
 
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return []
-        }
-        return res.data.updateWalletPoints
-      })
-      .catch((err) => {
-        console.error(err)
-        return []
-      })
-  )
+  return requestPost<{
+    data?: {
+      updateWalletPoints?: { pointsAccumulated?: number }
+    }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return {}
+      }
+      return res.data?.updateWalletPoints ?? {}
+    })
+    .catch((err) => {
+      console.error(err)
+      return {}
+    })
 }
 
 /**
