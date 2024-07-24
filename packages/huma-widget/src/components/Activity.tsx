@@ -107,11 +107,10 @@ export function Activity({
     title: css`
       font-weight: 800;
       font-size: 24px;
-      color: #6b6572;
+      color: ${theme.palette.text.primary};
       margin-bottom: ${theme.spacing(2)};
     `,
     tableWrapper: css`
-      background: #ffffff;
       box-shadow: 0px 4px 40px 8px rgba(0, 0, 0, 0.04);
       border-radius: 24px;
       padding: ${getPadding()};

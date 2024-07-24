@@ -66,7 +66,7 @@ export function ChooseAmountModal({
       ${theme.cssMixins.rowCentered};
       font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(2)};
     `,
     chosenAmountWrapper: css`
@@ -154,7 +154,7 @@ export function ChooseAmountModal({
       font-weight: 400;
       ${theme.cssMixins.rowSpaceBetweened};
       font-size: 16px;
-      color: #423b46;
+      color: ${theme.palette.text.secondary};
     `,
     divider: css`
       margin: ${theme.spacing(2, 0)};
@@ -171,7 +171,7 @@ export function ChooseAmountModal({
       ${theme.cssMixins.rowHCentered};
       font-weight: 400;
       font-size: 12px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(1)};
       letter-spacing: 0px;
       width: 100%;
@@ -188,8 +188,11 @@ export function ChooseAmountModal({
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     setInputTouched(true)
-    // @ts-ignore
-    handleChangeAmount(event.target.value)
+    if (!event.target.value) {
+      handleChangeAmount(0)
+    } else {
+      handleChangeAmount(Number(event.target.value))
+    }
   }
 
   const handleSetMax = () => {
