@@ -31,7 +31,7 @@ export function WrapperModal({
       font-weight: 400;
       font-size: 16px;
       line-height: 24px;
-      color: #49505b;
+      color: ${theme.palette.text.secondary};
     `,
     bottom: css`
       & .MuiButtonBase-root {

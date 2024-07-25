@@ -97,7 +97,6 @@ export const typography: ThemeOptions['typography'] = {
     fontWeight: 500,
     letterSpacing: coreThemeConstants.letterSpacing.sm,
     lineHeight: coreThemeConstants.lineHeight.md,
-    color: 'rgba(0, 0, 0, 0.87)',
   },
   labsSmall: {
     fontSize: '0.75rem',

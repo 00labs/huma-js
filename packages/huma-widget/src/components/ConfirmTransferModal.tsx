@@ -38,7 +38,7 @@ export function ConfirmTransferModal({
     description: css`
       font-weight: 400;
       font-size: 16px;
-      color: #49505b;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(4)};
       text-align: center;
     `,
@@ -53,7 +53,7 @@ export function ConfirmTransferModal({
       background: #f9f8fa;
       border-radius: 4px;
       font-size: 16px;
-      color: #49505b;
+      color: ${theme.palette.text.primary};
       padding: ${theme.spacing(3, 2)};
       margin-bottom: ${theme.spacing(1)};
       position: relative;
