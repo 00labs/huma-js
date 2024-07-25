@@ -49,13 +49,13 @@ export function useFactoring<T>(
       margin: 0 auto;
     `,
     title: css`
-      font-family: 'Uni-Neue-Black';
+      font-weight: 800;
       color: ${theme.palette.text.primary};
       font-size: 24px;
       margin-bottom: 16px;
     `,
     description: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       color: ${theme.palette.text.primary};
       font-size: 1rem;
     `,

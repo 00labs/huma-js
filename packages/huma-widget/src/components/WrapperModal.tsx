@@ -21,17 +21,17 @@ export function WrapperModal({
     `,
     header: css`
       ${theme.cssMixins.rowHCentered};
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       font-size: 20px;
       margin-top: ${theme.spacing(-0.5)};
     `,
     content: css`
       ${theme.cssMixins.rowHCentered};
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 24px;
-      color: #49505b;
+      color: ${theme.palette.text.secondary};
     `,
     bottom: css`
       & .MuiButtonBase-root {

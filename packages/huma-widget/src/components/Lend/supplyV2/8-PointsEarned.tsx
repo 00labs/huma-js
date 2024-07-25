@@ -135,9 +135,9 @@ export function PointsEarned({
     ribbon: css`
       position: relative;
       ${theme.cssMixins.rowHCentered};
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       margin-top: ${theme.spacing(-8)};
-      color: #fbfbfc;
+      color: ${theme.palette.text.primary};
       font-size: 20px;
       line-height: 160%;
       letter-spacing: 0.15px;
@@ -154,7 +154,7 @@ export function PointsEarned({
     entirePoints: css`
       color: ${theme.palette.text.tertiary};
       text-align: center;
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       font-size: 20px;
       line-height: 160%;
       letter-spacing: 0.15px;
@@ -163,14 +163,14 @@ export function PointsEarned({
     entirePointsDetails: css`
       color: ${theme.palette.text.tertiary};
       text-align: center;
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 150%;
       letter-spacing: 0.15px;
       margin-top: ${theme.spacing(4)};
     `,
     everyday: css`
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
     `,
   }
 

@@ -80,7 +80,7 @@ export function ConfirmTransfer({
     itemWrapper: css`
       margin-top: ${theme.spacing(9)};
       color: ${theme.palette.text.primary};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 175%;
       letter-spacing: 0.15px;
@@ -93,10 +93,10 @@ export function ConfirmTransfer({
     `,
     itemValue: css`
       font-size: 20px;
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
     `,
     divider: css`
-      border-color: #eae6f0;
+      border-color: ${theme.palette.divider};
       margin-bottom: ${theme.spacing(3)};
     `,
   }

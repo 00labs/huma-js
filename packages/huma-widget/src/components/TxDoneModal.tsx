@@ -35,17 +35,17 @@ export function TxDoneModal({
     `,
     content: css`
       ${theme.cssMixins.colVCentered};
-      font-family: ${subContent ? 'Uni-Neue-Bold' : 'Uni-Neue-Regular'};
+      font-weight: ${subContent ? 700 : 400};
       font-size: 18px;
-      color: #423b46;
+      color: ${theme.palette.text.primary};
       margin-top: ${theme.spacing(8)};
       text-align: center;
     `,
     subContent: css`
       ${theme.cssMixins.colVCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 18px;
-      color: #423b46;
+      color: ${theme.palette.text.primary};
       margin-top: ${theme.spacing(2)};
       text-align: center;
     `,
