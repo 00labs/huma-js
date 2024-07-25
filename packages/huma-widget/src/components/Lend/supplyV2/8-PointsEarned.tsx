@@ -15,7 +15,8 @@ import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
 import { SignIn } from '../../SignIn'
 
-enum LOADING_STATE {
+enum STATE {
+  Loading = 'Loading',
   SignIn = 'SignIn',
   Congrats = 'Congrats',
 }
@@ -51,11 +52,11 @@ export function PointsEarned({
     isWalletOwnershipVerificationRequired,
   } = useAuthErrorHandling(checkIsDev())
   const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
-  const [loadingState, setLoadingState] = useState<LOADING_STATE>()
+  const [state, setState] = useState<STATE>(STATE.Loading)
 
   useEffect(() => {
     if (isWalletOwnershipVerificationRequired) {
-      setLoadingState(undefined)
+      setState(STATE.Loading)
     }
   }, [isWalletOwnershipVerificationRequired])
 
@@ -78,7 +79,7 @@ export function PointsEarned({
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
-      setLoadingState(LOADING_STATE.SignIn)
+      setState(STATE.SignIn)
     } else if (errorType === 'UserRejected') {
       dispatch(
         setError({
@@ -111,7 +112,7 @@ export function PointsEarned({
             )
           }
           setPointsAccumulated(result.pointsAccumulated)
-          setLoadingState(LOADING_STATE.Congrats)
+          setState(STATE.Congrats)
         } catch (error) {
           dispatch(
             setError({
@@ -174,13 +175,13 @@ export function PointsEarned({
     `,
   }
 
-  if (loadingState === LOADING_STATE.SignIn) {
+  if (state === STATE.SignIn) {
     return (
       <SignIn description='Please sign in to check the points that you earned.' />
     )
   }
 
-  if (loadingState === LOADING_STATE.Congrats) {
+  if (state === STATE.Congrats) {
     return (
       <Box css={styles.wrapper}>
         <Box css={styles.congrats}>
