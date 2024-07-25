@@ -3,8 +3,6 @@ import { Dialog } from '@mui/material'
 import { useMQ } from '@huma-finance/shared'
 import React from 'react'
 
-import { white } from '../../theme/palette'
-
 type HumaModalType = {
   children?: React.ReactNode
   isOpen: boolean
@@ -55,7 +53,9 @@ export function HumaModal({
       open={isOpen}
       PaperProps={{
         style: {
-          background: white,
+          border: '1px solid #202020',
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(50px)',
           borderRadius: '16px',
           overflow: overflow || 'inherit',
           overflowY: overflowY || 'inherit',

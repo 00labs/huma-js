@@ -77,10 +77,8 @@ export function InputAmountModal({
       justify-content: center;
       align-items: center;
       border-radius: 32px;
-      background: #f7f1ff;
       padding: 4px 10px;
       gap: 8px;
-      color: ${theme.palette.primary.main};
       font-weight: 700;
       font-size: 13px;
       line-height: 22px;
@@ -133,7 +131,11 @@ export function InputAmountModal({
                   </Button>
                 </Box>
               ) : (
-                <Button css={styles.max} onClick={setMaxAmount}>
+                <Button
+                  variant='contained'
+                  css={styles.max}
+                  onClick={setMaxAmount}
+                >
                   {maxAmountText}
                 </Button>
               ),

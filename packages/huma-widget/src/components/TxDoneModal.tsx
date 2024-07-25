@@ -37,7 +37,7 @@ export function TxDoneModal({
       ${theme.cssMixins.colVCentered};
       font-weight: ${subContent ? 700 : 400};
       font-size: 18px;
-      color: ${theme.palette.text.primary};
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(8)};
       text-align: center;
     `,

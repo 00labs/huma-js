@@ -154,7 +154,7 @@ export function ChooseAmountModal({
       font-weight: 400;
       ${theme.cssMixins.rowSpaceBetweened};
       font-size: 16px;
-      color: ${theme.palette.text.primary};
+      color: ${theme.palette.text.secondary};
     `,
     divider: css`
       margin: ${theme.spacing(2, 0)};
@@ -187,8 +187,11 @@ export function ChooseAmountModal({
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     setInputTouched(true)
-    // @ts-ignore
-    handleChangeAmount(event.target.value)
+    if (!event.target.value) {
+      handleChangeAmount(0)
+    } else {
+      handleChangeAmount(Number(event.target.value))
+    }
   }
 
   const handleSetMax = () => {

@@ -55,13 +55,6 @@ export function ErrorModal({
       width: 100%;
       display: inline-table;
       padding: ${theme.spacing(2, 0)};
-      background: linear-gradient(
-          0deg,
-          rgba(255, 255, 255, 0.9),
-          rgba(255, 255, 255, 0.9)
-        ),
-        #d32f2f;
-      border-radius: 4px;
       position: relative;
       margin-top: ${theme.spacing(9)};
       height: 79px;
@@ -73,7 +66,7 @@ export function ErrorModal({
       margin: ${theme.spacing(0, 2)};
     `,
     messageWrapper: css`
-      color: ${theme.palette.error.dark};
+      color: ${theme.palette.text.primary};
       font-weight: 400;
       font-size: 16px;
       padding-left: ${theme.spacing(6)};
@@ -82,7 +75,7 @@ export function ErrorModal({
       margin-top: ${theme.spacing(0.5)};
       font-size: 14px;
       font-weight: 400;
-      color: ${theme.palette.error.dark};
+      color: ${theme.palette.text.primary};
       cursor: pointer;
       display: -webkit-box;
       line-height: 16px;
