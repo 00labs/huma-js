@@ -69,8 +69,11 @@ type CampaignPoints = {
   lockupPeriodMonths: number
 }
 
-function checkWalletOwnership(wallet: string): Promise<boolean | undefined> {
-  const url = configUtil.getCampaignAPIUrl()
+function checkWalletOwnership(
+  wallet: string,
+  isDev: boolean,
+): Promise<boolean | undefined> {
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     query {
@@ -99,8 +102,9 @@ function checkWalletOwnership(wallet: string): Promise<boolean | undefined> {
 
 function getWalletInfo(
   wallet: string,
+  isDev: boolean,
 ): Promise<{ wallet: Wallet; walletPoint: WalletPoint } | undefined> {
-  const url = configUtil.getCampaignAPIUrl()
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     query {
@@ -137,8 +141,9 @@ function getWalletInfo(
 function getWalletRankList(
   first: number,
   skip: number,
+  isDev: boolean,
 ): Promise<WalletRank | undefined> {
-  const url = configUtil.getCampaignAPIUrl()
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     query {
@@ -175,8 +180,8 @@ function getWalletRankList(
     })
 }
 
-function getRecentJoins(): Promise<Wallet[] | undefined> {
-  const url = configUtil.getCampaignAPIUrl()
+function getRecentJoins(isDev: boolean): Promise<Wallet[] | undefined> {
+  const url = configUtil.getCampaignAPIUrl(isDev)
   const query = gql`
     query {
       wallets(first: 5, skip: 0, orderBy: "createdAt", orderDirection: "desc") {
@@ -210,11 +215,11 @@ function getRecentJoins(): Promise<Wallet[] | undefined> {
   )
 }
 
-function getActiveSeasonAndCampaignGroups(): Promise<{
+function getActiveSeasonAndCampaignGroups(isDev: boolean): Promise<{
   activeSeason?: CampaignSeason
   campaignGroups?: CampaignGroup[]
 }> {
-  const url = configUtil.getCampaignAPIUrl()
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     query {
@@ -266,8 +271,9 @@ function getActiveSeasonAndCampaignGroups(): Promise<{
 function getEstimatedPoints(
   campaignGroupId: string,
   principal: string,
+  isDev: boolean,
 ): Promise<CampaignPoints[]> {
-  const url = configUtil.getCampaignAPIUrl()
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     query {
@@ -305,9 +311,10 @@ function getEstimatedPoints(
 
 function createNewWallet(
   account: string,
-  referralCode?: string | null | undefined,
+  referralCode: string | null | undefined,
+  isDev: boolean,
 ): Promise<{ wallet: string } | undefined> {
-  const url = configUtil.getCampaignAPIUrl()
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     mutation {
@@ -357,8 +364,9 @@ function updateWalletPoints(
   chainId: ChainEnum,
   account: string,
   hash: string,
+  isDev: boolean,
 ): Promise<{ pointsAccumulated?: number }> {
-  const url = configUtil.getCampaignAPIUrl()
+  const url = configUtil.getCampaignAPIUrl(isDev)
 
   const query = gql`
     mutation {

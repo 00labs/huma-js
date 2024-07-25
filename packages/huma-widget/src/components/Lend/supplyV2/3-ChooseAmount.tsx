@@ -1,5 +1,6 @@
 import {
   CampaignService,
+  checkIsDev,
   formatNumber,
   PoolInfoV2,
   TrancheType,
@@ -33,6 +34,7 @@ export function ChooseAmount({
   isUniTranche,
   campaign,
 }: Props): React.ReactElement | null {
+  const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
   const { symbol, decimals } = poolUnderlyingToken
@@ -66,6 +68,7 @@ export function ChooseAmount({
               poolInfo.poolUnderlyingToken.decimals,
             )
             .toString(),
+          isDev,
         )
         const campaignPoints = estimatedPoints.find(
           (item) => item.campaignId === campaign.id,
@@ -81,6 +84,7 @@ export function ChooseAmount({
     campaign,
     debouncedValue,
     decimals,
+    isDev,
     poolInfo.poolUnderlyingToken.decimals,
     selectedTranche,
   ])

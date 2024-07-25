@@ -90,11 +90,12 @@ export function PersonaEvaluation({
         await CampaignService.createNewWallet(
           account,
           localStorage.getItem(CAMPAIGN_REFERENCE_CODE) ?? undefined,
+          isDev,
         )
       }
     }
     createNewWallet()
-  }, [account, campaign, isWalletOwnershipVerified])
+  }, [account, campaign, isDev, isWalletOwnershipVerified])
 
   useEffect(() => {
     const getBasePoints = async () => {
@@ -102,6 +103,7 @@ export function PersonaEvaluation({
         const estimatedPoints = await CampaignService.getEstimatedPoints(
           campaign.campaignGroupId,
           minDepositAmountBN.toString(),
+          isDev,
         )
         const campaignPoints = estimatedPoints.find(
           (item) => item.campaignId === campaign.id,
@@ -121,7 +123,7 @@ export function PersonaEvaluation({
       }
     }
     getBasePoints()
-  }, [campaign, isUniTranche, minDepositAmountBN])
+  }, [campaign, isDev, isUniTranche, minDepositAmountBN])
 
   const approveLender = useCallback(async () => {
     try {
