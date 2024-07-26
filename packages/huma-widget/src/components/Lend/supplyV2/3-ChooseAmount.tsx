@@ -77,6 +77,8 @@ export function ChooseAmount({
           setCampaignPoints(campaignPoints[`${selectedTranche}TranchePoints`])
           setLockupPeriodMonths(campaignPoints.lockupPeriodMonths)
         }
+      } else {
+        setCampaignPoints(0)
       }
     }
     getBasePoints()
