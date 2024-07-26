@@ -28,10 +28,10 @@ export function SignIn({ description }: Props): React.ReactElement {
     content: css`
       ${theme.cssMixins.rowHCentered};
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 24px;
-      color: #49505b;
+      color: ${theme.palette.text.secondary};
       margin-bottom: ${theme.spacing(8)};
     `,
   }

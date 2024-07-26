@@ -33,7 +33,7 @@ export function ChooseTranche({
   const styles = {
     subTitle: css`
       color: ${theme.palette.text.primary} !important;
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 150%;
       letter-spacing: 0.15px;
@@ -49,7 +49,7 @@ export function ChooseTranche({
 
       .MuiFormControlLabel-label {
         color: ${theme.palette.text.primary};
-        font-family: 'Uni-Neue-Regular';
+        font-weight: 400;
         font-size: 16px;
         line-height: 150%;
         letter-spacing: 0.15px;

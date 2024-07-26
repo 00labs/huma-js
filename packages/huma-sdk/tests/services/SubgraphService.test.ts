@@ -5,6 +5,7 @@ import {
   POOL_TYPE,
   requestPost,
   isV2Pool,
+  PoolSubgraphMap,
 } from '@huma-finance/shared'
 
 import { SubgraphService } from '../../src/services/SubgraphService'
@@ -18,12 +19,26 @@ jest.mock('@huma-finance/shared', () => ({
 describe('getSubgraphUrlForChainId', () => {
   it('should return the correct subgraph URL for a given chain ID', () => {
     expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon)).toEqual(
-      'https://api.studio.thegraph.com/query/38092/huma-polygon/version/latest',
+      PoolSubgraphMap[ChainEnum.Polygon].subgraph,
     )
     expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Celo)).toEqual(
-      'https://api.studio.thegraph.com/query/38092/huma-celo/version/latest',
+      PoolSubgraphMap[ChainEnum.Celo].subgraph,
     )
     expect(SubgraphService.getSubgraphUrlForChainId(12)).toEqual('')
+  })
+
+  it('should return the correct subgraph URL if an apiKey is given', () => {
+    expect(
+      SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon, 'apiKey'),
+    ).toEqual(
+      'https://gateway-arbitrum.network.thegraph.com/api/apiKey/subgraphs/id/GaFTstjPKTju5buJ4TzQ3Zjm3mrmMa5LWvCKu3H7JDeU',
+    )
+  })
+
+  it('should return the correct subgraph URL if an apiKey is given for a non-production network', () => {
+    expect(
+      SubgraphService.getSubgraphUrlForChainId(ChainEnum.Amoy, 'apiKey'),
+    ).toEqual(PoolSubgraphMap[ChainEnum.Amoy].subgraph)
   })
 })
 

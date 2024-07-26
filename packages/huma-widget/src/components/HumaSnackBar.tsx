@@ -33,11 +33,11 @@ export function HumaSnackBar({
     title: css`
       margin-bottom: ${theme.spacing(1)};
       font-size: 16px;
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
     `,
     message: css`
       font-size: 15px;
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
     `,
   }
 

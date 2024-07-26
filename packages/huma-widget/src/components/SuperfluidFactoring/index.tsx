@@ -5,11 +5,11 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolMap,
-  PoolSubgraphMap,
   useFactoring,
 } from '@huma-finance/shared'
 import React from 'react'
 
+import { SubgraphService } from '@huma-finance/sdk'
 import { Activity } from '../Activity'
 import { ApolloWrapper } from '../ApolloWrapper'
 import { StreamFactoringBorrow } from '../StreamFactoring/borrow'
@@ -57,7 +57,7 @@ export function SuperfluidFactoring(): React.ReactElement {
           loading={loading && actionType === 'borrow'}
         />
       </ApolloWrapper>
-      <ApolloWrapper uri={PoolSubgraphMap[chainId!]?.subgraph}>
+      <ApolloWrapper uri={SubgraphService.getSubgraphUrlForChainId(chainId!)}>
         {poolInfo && (
           <Activity
             poolInfo={poolInfo}

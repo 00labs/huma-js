@@ -378,13 +378,13 @@ export function PersonaEvaluation({
       text-align: justify;
       margin-top: ${theme.spacing(10)};
       padding: ${theme.spacing(0, 2)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.primary};
     `,
     points: css`
-      color: #b246ff;
-      font-family: 'Uni-Neue-Bold';
+      color: ${theme.palette.primary.main};
+      font-weight: 700;
     `,
   }
 
