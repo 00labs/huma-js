@@ -36,6 +36,7 @@ export function PointsEarned({
   handleAction,
 }: Props): React.ReactElement {
   const theme = useTheme()
+  const isDev = checkIsDev()
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
   const [pointsAccumulated, setPointsAccumulated] = useState<
@@ -50,7 +51,7 @@ export function PointsEarned({
     setError: setAuthError,
     isWalletOwnershipVerified,
     isWalletOwnershipVerificationRequired,
-  } = useAuthErrorHandling(checkIsDev())
+  } = useAuthErrorHandling(isDev)
   const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
   const [state, setState] = useState<STATE>(STATE.Loading)
 
@@ -68,14 +69,17 @@ export function PointsEarned({
 
   useEffect(() => {
     const checkWalletOwnership = async () => {
-      const ownership = await CampaignService.checkWalletOwnership(account!)
+      const ownership = await CampaignService.checkWalletOwnership(
+        account!,
+        isDev,
+      )
       setWalletOwnership(ownership)
       if (!ownership) {
         setAuthError('WalletNotSignInException')
       }
     }
     checkWalletOwnership()
-  }, [account, setAuthError])
+  }, [account, isDev, setAuthError])
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
@@ -103,6 +107,7 @@ export function PointsEarned({
             chainId!,
             account!,
             transactionHash,
+            isDev,
           )
           if (!result.pointsAccumulated) {
             dispatch(
@@ -123,7 +128,7 @@ export function PointsEarned({
       }
     }
     updateWalletPoints()
-  }, [account, chainId, dispatch, transactionHash, walletOwnership])
+  }, [account, chainId, dispatch, isDev, transactionHash, walletOwnership])
 
   const styles = {
     wrapper: css`
