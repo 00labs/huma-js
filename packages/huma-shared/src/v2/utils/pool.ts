@@ -14,6 +14,7 @@ import { LOCALHOST_METADATA } from '../metadata/localhost'
 import { CELO_METADATA } from '../metadata/celo'
 import { AMOY_METADATA } from '../metadata/amoy'
 import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
+import { SCROLL_SEPOLIA_METADATA } from '../metadata/scrollSepolia'
 import { FirstLossCoverIndex } from '../types'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
 import POOL_CREDIT_LINE_ABI from '../abis/CreditLine.json'
@@ -137,6 +138,7 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Amoy]: AMOY_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
   [ChainEnum.Localhost]: LOCALHOST_METADATA,
+  [ChainEnum.ScrollSepolia]: SCROLL_SEPOLIA_METADATA,
 } as ChainPoolsInfoV2
 
 export const getChainPoolNamesV2 = (

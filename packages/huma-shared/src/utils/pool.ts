@@ -16,6 +16,9 @@ export enum POOL_NAME {
   JiaUSDC = 'JiaUSDC',
   ArfCreditPool1 = 'ArfCreditPool1',
   ArfCreditPoolV2 = 'ArfCreditPoolV2',
+  ArfCreditPool3Months = 'ArfCreditPool3Months',
+  ArfCreditPool6Months = 'ArfCreditPool6Months',
+  ArfCreditPool12Months = 'ArfCreditPool12Months',
   ArfPoolUSDC = 'ArfPoolUSDC',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
@@ -242,6 +245,10 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.BaseSepolia]: {
     subgraph:
       'https://api.studio.thegraph.com/query/38092/huma-base-sepolia/version/latest',
+  },
+  [ChainEnum.ScrollSepolia]: {
+    subgraph:
+      'https://api.studio.thegraph.com/query/38092/huma-scroll-sepolia/version/latest',
   },
 }
 
