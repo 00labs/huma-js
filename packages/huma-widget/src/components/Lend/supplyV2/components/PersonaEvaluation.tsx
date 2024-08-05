@@ -377,7 +377,6 @@ export function PersonaEvaluation({
       }
     `,
     description: css`
-      text-align: justify;
       margin-top: ${theme.spacing(10)};
       padding: ${theme.spacing(0, 2)};
       font-weight: 400;
@@ -398,7 +397,7 @@ export function PersonaEvaluation({
         </Box>
         {campaign && kycCopy === KYCCopies.verifyIdentity ? (
           <Box css={styles.description}>
-            <span>You’ll be rewarded with a minimum of</span>
+            <span>You'll be rewarded with a minimum of</span>
             <span css={styles.points}>
               {' '}
               {formatNumber(campaignBasePoints)} Huma points{' '}
