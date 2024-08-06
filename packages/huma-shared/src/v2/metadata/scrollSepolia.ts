@@ -31,7 +31,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf V2 Testing Pool',
+    title: 'Arf V2 Testing Pool (3 Months)',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     KYC: {
       Persona: {
@@ -88,7 +88,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf V2 Testing Pool',
+    title: 'Arf V2 Testing Pool (6 Months)',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     KYC: {
       Persona: {
@@ -145,7 +145,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf V2 Testing Pool',
+    title: 'Arf V2 Testing Pool (12 Months)',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     KYC: {
       Persona: {
