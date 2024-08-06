@@ -9,13 +9,7 @@ import {
   PoolVersion,
   REDIRECTS,
 } from '../../utils'
-import { ALFAJORES_METADATA } from '../metadata/alfajores'
-import { LOCALHOST_METADATA } from '../metadata/localhost'
-import { CELO_METADATA } from '../metadata/celo'
-import { AMOY_METADATA } from '../metadata/amoy'
-import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
-import { SCROLL_SEPOLIA_METADATA } from '../metadata/scrollSepolia'
-import { FirstLossCoverIndex } from '../types'
+import CALENDAR_ABI from '../abis/Calendar.json'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
 import POOL_CREDIT_LINE_ABI from '../abis/CreditLine.json'
 import POOL_CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
@@ -25,7 +19,14 @@ import POOL_ABI from '../abis/Pool.json'
 import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
-import CALENDAR_ABI from '../abis/Calendar.json'
+import { ALFAJORES_METADATA } from '../metadata/alfajores'
+import { AMOY_METADATA } from '../metadata/amoy'
+import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
+import { CELO_METADATA } from '../metadata/celo'
+import { LOCALHOST_METADATA } from '../metadata/localhost'
+import { SCROLL_METADATA } from '../metadata/scroll'
+import { SCROLL_SEPOLIA_METADATA } from '../metadata/scrollSepolia'
+import { FirstLossCoverIndex } from '../types'
 
 export type TrancheType = 'senior' | 'junior'
 
@@ -138,6 +139,7 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Amoy]: AMOY_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
   [ChainEnum.Localhost]: LOCALHOST_METADATA,
+  [ChainEnum.Scroll]: SCROLL_METADATA,
   [ChainEnum.ScrollSepolia]: SCROLL_SEPOLIA_METADATA,
 } as ChainPoolsInfoV2
 

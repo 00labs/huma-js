@@ -159,7 +159,7 @@ export const CHAINS: {
   [ChainEnum.ScrollSepolia]: {
     id: ChainEnum.ScrollSepolia,
     urls: ['https://sepolia-rpc.scroll.io'],
-    name: 'Scroll',
+    name: 'ScrollSepolia',
     nativeCurrency: ETH,
     explorer: 'https://sepolia.scrollscan.com',
     wait: 1,
