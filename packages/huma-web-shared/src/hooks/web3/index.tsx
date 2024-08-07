@@ -1,5 +1,12 @@
-import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { JsonRpcProvider } from '@ethersproject/providers'
+import {
+  ChainEnum,
+  JsonRpcConnector,
+  MetaMaskConnectionError,
+  supportedChainId,
+  WalletConnectPopup,
+  WalletConnectQR,
+} from '@huma-finance/shared'
 import {
   initializeConnector,
   Web3ReactHooks,
@@ -9,11 +16,8 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
+import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 
-import { ChainEnum, supportedChainId } from '../../utils/chain'
-import { MetaMaskConnectionError } from '../../utils/errors'
-import { JsonRpcConnector } from '../../utils/JsonRpcConnector'
-import { WalletConnectPopup, WalletConnectQR } from '../../utils/WalletConnect'
 import { useAsyncError } from '../useAsyncError'
 import { Provider as ConnectorsProvider } from './useConnectors'
 import {

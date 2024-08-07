@@ -1,9 +1,9 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import {
+  CreditRecordStructOutput,
   getCreditConfigV2,
   getCreditRecordV2,
   getPoolSafeContractV2,
-  CreditRecordStructOutput,
   POOL_NAME,
 } from '@huma-finance/shared'
 import { ethers } from 'ethers'

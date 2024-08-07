@@ -8,12 +8,54 @@ import {
   HDT,
   ReceivableFactoringPool,
 } from '../abis/types'
-import { AccountStats } from '../hooks/usePoolContract'
 import { getChainIdFromSignerOrProvider } from './chain'
 import { CreditState } from './credit'
 import { downScale, upScale } from './number'
 import { getPoolInfo, POOL_NAME, POOL_TYPE } from './pool'
 import { getContract, getERC20Contract } from './web3'
+
+export type CreditRecordType = {
+  unbilledPrincipal: BigNumber
+  dueDate: BigNumber
+  correction: BigNumber
+  totalDue: BigNumber
+  feesAndInterestDue: BigNumber
+  missedPeriods: number
+  remainingPeriods: number
+  state: number
+}
+
+export type CreditRecordStaticType = {
+  creditLimit: BigNumber
+  aprInBps: number
+  intervalInDays: number
+  defaultAmount: BigNumber
+}
+
+export type ReceivableInfoType = {
+  receivableAsset: string
+  receivableAmount: BigNumber
+  receivableParam: BigNumber
+}
+
+export type FeesType = {
+  _frontLoadingFeeFlat: BigNumber
+  _frontLoadingFeeBps: BigNumber
+  _lateFeeFlat: BigNumber
+  _lateFeeBps: BigNumber
+  _membershipFee: BigNumber
+}
+
+export type AccountStats = {
+  creditRecord: CreditRecordType | undefined
+  creditRecordStatic: CreditRecordStaticType | undefined
+  receivableInfo: ReceivableInfoType | undefined
+  isApproved: boolean
+  payoffAmount: number
+  principalAmount: number
+  creditAvailableAmount: number
+  totalDueAmount: number
+}
 
 export async function getPoolApr(
   poolName: POOL_NAME,

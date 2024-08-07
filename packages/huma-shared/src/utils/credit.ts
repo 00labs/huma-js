@@ -1,4 +1,4 @@
-import { CreditRecordType, ReceivableInfoType } from '../hooks/usePoolContract'
+import { CreditRecordType, ReceivableInfoType } from './poolContract'
 
 export enum CreditState {
   Deleted = 0,

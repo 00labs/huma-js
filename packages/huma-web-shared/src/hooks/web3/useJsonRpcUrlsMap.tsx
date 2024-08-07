@@ -1,15 +1,14 @@
+import {
+  JsonRpcProvider,
+  StaticJsonRpcProvider,
+} from '@ethersproject/providers'
+import { ChainEnum, JSON_RPC_FALLBACK_ENDPOINTS } from '@huma-finance/shared'
 import React, {
   createContext,
   PropsWithChildren,
   useContext,
   useMemo,
 } from 'react'
-import {
-  JsonRpcProvider,
-  StaticJsonRpcProvider,
-} from '@ethersproject/providers'
-import { ChainEnum } from '../../utils/chain'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from '../../utils/jsonRpcEndpoints'
 
 export type JsonRpcConnectionMap = {
   [chainId: number]: string | string[] | JsonRpcProvider | JsonRpcProvider[]

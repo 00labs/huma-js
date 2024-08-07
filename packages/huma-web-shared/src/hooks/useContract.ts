@@ -1,17 +1,19 @@
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { useMemo } from 'react'
-
-import ERC20_ABI from '../abis/erc20.json'
-import MULTISEND_ABI from '../abis/Multisend.json'
-import TEST_ERC20_ABI from '../abis/TestERC20.json'
-import { Erc20, Multisend, TestERC20 } from '../abis/types'
 import {
+  Erc20,
+  ERC20_ABI,
+  getContract,
+  isAddress,
+  Multisend,
+  MULTISEND_ABI,
   SupplementaryContracts,
   SupplementaryContractsMap,
-} from '../utils/pool'
-import { getContract, isAddress } from '../utils/web3'
+  TEST_ERC20_ABI,
+  TestERC20,
+} from '@huma-finance/shared'
+import { useMemo } from 'react'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(

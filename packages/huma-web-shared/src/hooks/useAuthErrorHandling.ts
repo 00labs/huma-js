@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
-import axios, { HttpStatusCode } from 'axios'
-import { SiweMessage } from 'siwe'
-import { useWeb3React } from '@web3-react/core'
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { AuthService } from '@huma-finance/shared'
+import { useWeb3React } from '@web3-react/core'
+import axios, { HttpStatusCode } from 'axios'
+import { useEffect, useState } from 'react'
+import { SiweMessage } from 'siwe'
+
 import { useAsyncError } from './useAsyncError'
-import { AuthService } from '../services'
 
 const createSiweMessage = (
   address: string,

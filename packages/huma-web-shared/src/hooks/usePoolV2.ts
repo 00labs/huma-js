@@ -1,20 +1,28 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { BigNumber, Contract } from 'ethers'
-import { useEffect, useState } from 'react'
-
-import { useContract, useERC20Contract, useForceRefresh } from '../../hooks'
 import {
+  CALENDAR_V2_ABI,
+  CHAIN_POOLS_INFO_V2,
   ChainEnum,
+  FIRST_LOSS_COVER_V2_ABI,
+  FirstLossCoverIndex,
   getContract,
+  getCreditConfigV2,
+  getCreditHashV2,
+  getCreditRecordV2,
+  getDueDetailV2,
+  getPoolUnderlyingTokenBalanceV2,
+  getPoolUnderlyingTokenInfoV2,
   isChainEnum,
+  POOL_ABI_V2,
+  POOL_CONFIG_V2_ABI,
   POOL_NAME,
+  PoolInfoV2,
   RealWorldReceivableInfoBase,
-} from '../../utils'
-import CALENDAR_V2_ABI from '../abis/Calendar.json'
-import FIRST_LOSS_COVER_ABI from '../abis/FirstLossCover.json'
-import POOL_CONFIG_V2_ABI from '../abis/PoolConfig.json'
-import RECEIVABLE_V2_ABI from '../abis/Receivable.json'
+  RECEIVABLE_V2_ABI,
+  TrancheType,
+  UnderlyingTokenInfo,
+} from '@huma-finance/shared'
 import {
   Calendar,
   CreditLine,
@@ -24,32 +32,20 @@ import {
   PoolSafe,
   Receivable,
   TrancheVault,
-} from '../abis/types'
-import { CreditRecordStructOutput } from '../abis/types/Credit'
+} from '@huma-finance/shared/src/v2/abis/types'
+import { CreditRecordStructOutput } from '@huma-finance/shared/src/v2/abis/types/Credit'
 import {
   CreditConfigStructOutput,
   CreditManager,
-} from '../abis/types/CreditManager'
+} from '@huma-finance/shared/src/v2/abis/types/CreditManager'
 import {
   LPConfigStructOutput,
   PoolSettingsStructOutput,
-} from '../abis/types/PoolConfig'
-import { FirstLossCoverIndex } from '../types'
-import {
-  CHAIN_POOLS_INFO_V2,
-  POOL_ABI_V2,
-  PoolInfoV2,
-  TrancheType,
-  UnderlyingTokenInfo,
-} from '../utils/pool'
-import {
-  getCreditConfigV2,
-  getCreditHashV2,
-  getCreditRecordV2,
-  getDueDetailV2,
-  getPoolUnderlyingTokenBalanceV2,
-  getPoolUnderlyingTokenInfoV2,
-} from '../utils/poolContract'
+} from '@huma-finance/shared/src/v2/abis/types/PoolConfig'
+import { BigNumber, Contract } from 'ethers'
+import { useEffect, useState } from 'react'
+
+import { useContract, useERC20Contract, useForceRefresh } from '.'
 
 export type CreditStatsV2 = {
   creditRecord?: CreditRecordStructOutput
@@ -148,7 +144,7 @@ export function useFirstLossCoverContractV2(
 
   return useContract<FirstLossCover>(
     firstLossCover,
-    FIRST_LOSS_COVER_ABI,
+    FIRST_LOSS_COVER_V2_ABI,
     provider,
     account,
   )

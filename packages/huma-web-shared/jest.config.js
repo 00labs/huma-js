@@ -6,9 +6,5 @@ module.exports = {
   },
   coverageReporters: ['json-summary', 'text', 'lcov'],
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
-  collectCoverageFrom: [
-    'src/**/*.{js,ts}',
-    '!src/abis/types/**',
-    '!src/utils/types.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.{js,ts}', '!src/utils/types.ts'],
 }

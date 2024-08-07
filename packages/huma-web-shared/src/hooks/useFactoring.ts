@@ -1,3 +1,4 @@
+import { hasRFActiveLoan, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
 import { css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useState } from 'react'
@@ -6,8 +7,6 @@ import { useMQ } from './useMQ'
 import { usePoolInfo } from './usePool'
 import { useAccountStats } from './usePoolContract'
 import { useRefresh } from './useRefresh'
-import { hasRFActiveLoan } from '../utils/credit'
-import { POOL_NAME, POOL_TYPE } from '../utils/pool'
 
 export function useFactoring<T>(
   poolName: POOL_NAME,

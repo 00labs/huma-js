@@ -4,15 +4,14 @@ import {
   TransactionResponse,
   Web3Provider,
 } from '@ethersproject/providers'
-import { atom } from 'jotai'
-import { atomWithReset } from 'jotai/utils'
-
 import {
   getTransactionErrorFromError,
   getTransactionErrorFromHash,
   increaseGasLimit,
   TxStateType,
-} from '../utils/transaction'
+} from '@huma-finance/shared'
+import { atom } from 'jotai'
+import { atomWithReset } from 'jotai/utils'
 
 interface TxStateManagement {
   state: TxStateType

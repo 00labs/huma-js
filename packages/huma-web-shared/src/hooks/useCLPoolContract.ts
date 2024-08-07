@@ -1,6 +1,6 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { BaseCreditPool } from '../abis/types/BaseCreditPool'
-import { POOL_NAME, POOL_TYPE } from '../utils/pool'
+import { BaseCreditPool, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+
 import {
   useAccountStats,
   useBaseConfigPoolContract,
