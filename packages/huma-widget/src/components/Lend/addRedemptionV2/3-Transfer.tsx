@@ -1,8 +1,5 @@
-import {
-  PoolInfoV2,
-  UnderlyingTokenInfo,
-  useTrancheVaultContractV2,
-} from '@huma-finance/shared'
+import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-finance/shared'
+import { useTrancheVaultContractV2 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { useCallback } from 'react'

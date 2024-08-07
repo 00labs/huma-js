@@ -4,6 +4,7 @@ import {
   CALENDAR_V2_ABI,
   CHAIN_POOLS_INFO_V2,
   ChainEnum,
+  CreditStatsV2,
   FIRST_LOSS_COVER_V2_ABI,
   FirstLossCoverIndex,
   getContract,
@@ -33,11 +34,7 @@ import {
   Receivable,
   TrancheVault,
 } from '@huma-finance/shared/src/v2/abis/types'
-import { CreditRecordStructOutput } from '@huma-finance/shared/src/v2/abis/types/Credit'
-import {
-  CreditConfigStructOutput,
-  CreditManager,
-} from '@huma-finance/shared/src/v2/abis/types/CreditManager'
+import { CreditManager } from '@huma-finance/shared/src/v2/abis/types/CreditManager'
 import {
   LPConfigStructOutput,
   PoolSettingsStructOutput,
@@ -46,14 +43,6 @@ import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import { useContract, useERC20Contract, useForceRefresh } from '.'
-
-export type CreditStatsV2 = {
-  creditRecord?: CreditRecordStructOutput
-  creditConfig?: CreditConfigStructOutput
-  creditAvailable?: BigNumber
-  totalDueAmount?: BigNumber
-  payoffAmount?: BigNumber
-}
 
 export const usePoolInfoV2 = (
   poolName: POOL_NAME,

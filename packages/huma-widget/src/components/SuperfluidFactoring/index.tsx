@@ -1,15 +1,15 @@
-import { Box, useTheme } from '@mui/material'
-import { useWeb3React } from '@web3-react/core'
+import { SubgraphService } from '@huma-finance/sdk'
 import {
   CreditEvent,
   POOL_NAME,
   POOL_TYPE,
   PoolMap,
-  useFactoring,
 } from '@huma-finance/shared'
+import { useFactoring } from '@huma-finance/web-shared'
+import { Box, useTheme } from '@mui/material'
+import { useWeb3React } from '@web3-react/core'
 import React from 'react'
 
-import { SubgraphService } from '@huma-finance/sdk'
 import { Activity } from '../Activity'
 import { ApolloWrapper } from '../ApolloWrapper'
 import { StreamFactoringBorrow } from '../StreamFactoring/borrow'

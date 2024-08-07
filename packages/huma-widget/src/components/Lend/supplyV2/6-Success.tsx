@@ -3,10 +3,10 @@ import {
   downScale,
   formatMoney,
   PoolInfoV2,
-  sendTxAtom,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
+import { sendTxAtom } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
 import React, { useCallback, useEffect, useState } from 'react'

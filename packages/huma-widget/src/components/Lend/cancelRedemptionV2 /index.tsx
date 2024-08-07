@@ -1,10 +1,9 @@
+import { POOL_NAME, TrancheType } from '@huma-finance/shared'
 import {
-  POOL_NAME,
-  TrancheType,
   useCancellableRedemptionInfoV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import React, { useCallback, useEffect } from 'react'

@@ -1,9 +1,10 @@
-import { isTxFailed, sendTxAtom, txAtom } from '@huma-finance/shared'
+import { isTxFailed } from '@huma-finance/shared'
+import { sendTxAtom, txAtom } from '@huma-finance/web-shared'
+import { useTheme } from '@mui/material'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect } from 'react'
 
-import { useTheme } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { resetState, setError } from '../store/widgets.reducers'
 import { selectWidgetState } from '../store/widgets.selectors'

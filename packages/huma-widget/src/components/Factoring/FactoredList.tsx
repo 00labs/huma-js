@@ -7,9 +7,8 @@ import {
   hasRFActiveLoan,
   PoolInfoType,
   timestampToLL,
-  useMQ,
-  usePoolUnderlyingToken,
 } from '@huma-finance/shared'
+import { useMQ, usePoolUnderlyingToken } from '@huma-finance/web-shared'
 import React, { useEffect, useState } from 'react'
 
 import { ColumnType } from '../../utilTypes'

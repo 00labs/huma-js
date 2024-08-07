@@ -1,7 +1,8 @@
-import { PoolInfoType, useMultiSendContract } from '@huma-finance/shared'
+import { PoolInfoType } from '@huma-finance/shared'
+import { useMultiSendContract } from '@huma-finance/web-shared'
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 
-import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'

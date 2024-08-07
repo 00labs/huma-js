@@ -20,6 +20,7 @@
     "test:badges": "yarn run test:coverage && yarn jest-coverage-badges"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "ethers": "^5.7.2",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
