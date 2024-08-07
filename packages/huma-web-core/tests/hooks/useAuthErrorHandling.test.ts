@@ -8,7 +8,7 @@ import { useAuthErrorHandling } from '../../src/hooks/useAuthErrorHandling'
 jest.mock('@web3-react/core', () => ({
   useWeb3React: jest.fn(),
 }))
-jest.mock('../../src/services/AuthService', () => ({
+jest.mock('@huma-finance/core', () => ({
   AuthService: {
     createSession: jest.fn(),
     verifySignature: jest.fn(),

@@ -11,7 +11,7 @@ jest.mock('../../src/hooks/useParamsSearch', () => ({
   useParamsSearch: jest.fn(),
 }))
 
-jest.mock('../../src/utils/pool', () => ({
+jest.mock('@huma-finance/core', () => ({
   POOL_NAME: {
     Jia: 'Jia',
     HumaCreditLine: 'HumaCreditLine',

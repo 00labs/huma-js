@@ -9,12 +9,9 @@ import { useContract, useMultiSendContract } from '../../src/hooks/useContract'
 
 jest.mock('@ethersproject/providers')
 
-jest.mock('../../src/utils/web3', () => ({
-  ...jest.requireActual('../../src/utils/web3'),
+jest.mock('@huma-finance/core', () => ({
+  ...jest.requireActual('@huma-finance/core'),
   getContract: jest.fn(),
-}))
-
-jest.mock('../../src/utils/pool', () => ({
   SupplementaryContracts: {
     MultiSend: 'MultiSend',
   },

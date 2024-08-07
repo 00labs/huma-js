@@ -36,7 +36,8 @@ jest.mock('../../src/hooks/useContract', () => ({
   useContract: jest.fn(),
 }))
 
-jest.mock('../../src/utils/pool', () => ({
+jest.mock('@huma-finance/core', () => ({
+  ...jest.requireActual('@huma-finance/core'),
   POOL_NAME: {
     HumaCreditLine: 'HumaCreditLine',
   },

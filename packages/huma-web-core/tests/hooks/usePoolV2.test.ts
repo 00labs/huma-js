@@ -20,13 +20,13 @@ import {
   useWithdrawableAssetsV2,
 } from '../../src/hooks/usePoolV2'
 
-jest.mock('../../../src/hooks/useContract', () => ({
+jest.mock('../../src/hooks/useContract', () => ({
   useContract: jest.fn(),
   useERC20Contract: jest.fn(),
 }))
 
-jest.mock('../../../src/v2/utils/pool', () => ({
-  ...jest.requireActual('../../../src/v2/utils/pool'),
+jest.mock('@huma-finance/core', () => ({
+  ...jest.requireActual('@huma-finance/core'),
   CHAIN_POOLS_INFO_V2: {
     5: {
       JiaV2: {
