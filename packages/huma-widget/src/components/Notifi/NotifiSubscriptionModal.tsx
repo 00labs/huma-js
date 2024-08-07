@@ -1,9 +1,10 @@
-import { getBlockchainConfigFromChain, txAtom } from '@huma-finance/shared'
+import {
+  ChainEnum,
+  getBlockchainConfigFromChain,
+  txAtom,
+} from '@huma-finance/shared'
 import { Box, css, TextField, Typography, useTheme } from '@mui/material'
 import {
-  BroadcastEventTypeItem,
-  CardConfigItemV1,
-  DirectPushEventTypeItem,
   EventTypeItem,
   NotifiFrontendClient,
   SignMessageParams,
@@ -26,58 +27,23 @@ type Props = {
   handleSuccess: () => void
 }
 
-function getIdFromEventType(eventType: EventTypeItem): string {
-  if (eventType.type === 'directPush') {
-    const directPushEventType = eventType as DirectPushEventTypeItem
-    return (
-      directPushEventType.directPushId as {
-        value: string
-      }
-    ).value
-  }
-  if (eventType.type === 'broadcast') {
-    const broadcastEventType = eventType as BroadcastEventTypeItem
-    return (
-      broadcastEventType.broadcastId as {
-        value: string
-      }
-    ).value
-  }
-
-  return ''
-}
-
 async function fetchEventTypes(
   notifiClient: NotifiFrontendClient,
-): Promise<(EventTypeItem & { enabled: boolean })[]> {
-  const subscribedAlerts = await notifiClient.getAlerts()
+  chainId: number | undefined,
+): Promise<EventTypeItem[]> {
+  let cardId = ''
+  if (chainId === ChainEnum.Celo || chainId === ChainEnum.Alfajores) {
+    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_CELO ?? ''
+  } else if (chainId === ChainEnum.Polygon || chainId === ChainEnum.Amoy) {
+    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_POLYGON ?? ''
+  }
 
-  const subscriptionConfig = (await notifiClient.fetchSubscriptionCard({
-    id: process.env.REACT_APP_NOTIFI_CONFIG_ID ?? '',
+  const subscriptionConfig = await notifiClient.fetchTenantConfig({
+    id: cardId ?? '',
     type: 'SUBSCRIPTION_CARD',
-  })) as CardConfigItemV1
+  })
 
-  const eventTypes = subscriptionConfig?.eventTypes?.map(
-    (eventType): EventTypeItem & { enabled: boolean } => {
-      const eventTypeId = getIdFromEventType(eventType)
-      let enabled = false
-      // Check whether the user is subscribed to the event
-      const subscribedAlert = subscribedAlerts?.find(
-        (alert) => alert.filterOptions.indexOf(eventTypeId) >= 0,
-      )
-
-      if (subscribedAlert) {
-        enabled = true
-      }
-
-      return {
-        ...eventType,
-        enabled,
-      }
-    },
-  )
-
-  return eventTypes
+  return subscriptionConfig.cardConfig.eventTypes as EventTypeItem[]
 }
 
 export function NotifiSubscriptionModal({
@@ -125,9 +91,9 @@ export function NotifiSubscriptionModal({
       }
 
       // Fetch all event types
-      const fetchedEventTypes = await fetchEventTypes(notifiClient)
+      const fetchedEventTypes = await fetchEventTypes(notifiClient, chainId)
 
-      //   Authorize this email address for this wallet
+      // Authorize this email address for this wallet
       await notifiClient.ensureTargetGroup({
         name: 'Default',
         emailAddress: emailAddress!,
@@ -203,11 +169,7 @@ export function NotifiSubscriptionModal({
 
   return (
     <WrapperModal title='Connect Your Email'>
-      <Typography
-        variant='body2'
-        textAlign='justify'
-        margin={theme.spacing(6, 0, 4, 0)}
-      >
+      <Typography variant='body2' margin={theme.spacing(6, 0, 4, 0)}>
         Connect your emails to receive important update about your account.
       </Typography>
       <Box css={styles.inputWrapper}>
@@ -217,7 +179,9 @@ export function NotifiSubscriptionModal({
           type='email'
           value={emailAddress}
           onChange={handleEmailAddressChange}
-          variant='standard'
+          variant='outlined'
+          color='primary'
+          focused
         />
       </Box>
       <Box css={styles.disclaimer}>
