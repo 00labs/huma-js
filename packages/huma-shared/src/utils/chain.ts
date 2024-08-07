@@ -146,6 +146,10 @@ export const CHAINS: {
   },
 }
 
+export function isTestnet(chainId: number): boolean {
+  return CHAINS[chainId].isTestnet ?? false
+}
+
 export function isChainEnum(
   chainId: number | string | undefined,
 ): chainId is keyof typeof ChainEnum {
