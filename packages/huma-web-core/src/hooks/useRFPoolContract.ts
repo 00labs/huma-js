@@ -1,9 +1,5 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import {
-  POOL_NAME,
-  POOL_TYPE,
-  ReceivableFactoringPool,
-} from '@huma-finance/core'
+import { POOL_NAME, POOL_TYPE, ReceivableFactoringPool } from '@huma-shan/core'
 
 import {
   useAccountStats,

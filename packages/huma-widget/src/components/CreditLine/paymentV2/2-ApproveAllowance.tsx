@@ -1,4 +1,4 @@
-import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-finance/core'
+import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-shan/core'
 import React, { useCallback } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'

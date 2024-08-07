@@ -1,9 +1,9 @@
-import { CreditStateV2, POOL_NAME } from '@huma-finance/core'
+import { CreditStateV2, POOL_NAME } from '@huma-shan/core'
 import {
   useCreditStatsV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'

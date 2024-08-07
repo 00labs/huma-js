@@ -1,6 +1,6 @@
 # Huma Widgets
 
-The `@huma-finance/widgets` package is an [npm package](https://www.npmjs.com/package/@huma-finance/widgets) of React components used to provide subsets of the Huma Finance Protocol functionality in a small user interface element for:
+The `@huma-shan/widgets` package is an [npm package](https://www.npmjs.com/package/@huma-shan/widgets) of React components used to provide subsets of the Huma Finance Protocol functionality in a small user interface element for:
 
 - Invoice factoring borrow and payment
 - Credit line borrow and payment
@@ -12,17 +12,17 @@ The `@huma-finance/widgets` package is an [npm package](https://www.npmjs.com/pa
 Install the widgets library via `npm` or `yarn`.
 
 ```js
-yarn add @huma-finance/widgets
+yarn add @huma-shan/widgets
 ```
 
 ```js
-npm i --save @huma-finance/widgets
+npm i --save @huma-shan/widgets
 ```
 
 ## Adding Widget to Your App
 
 ```jsx
-import { InvoiceFactoringBorrowWidget } from '@huma-finance/widgets'
+import { InvoiceFactoringBorrowWidget } from '@huma-shan/widgets'
 
 export const InvoiceFactoringBorrowPage = () => {
   return (

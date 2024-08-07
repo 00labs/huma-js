@@ -3,7 +3,7 @@ import {
   POOL_TYPE,
   PoolInfoType,
   getPoolInfo as getPoolInfoInternal,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 
 /**
  * Returns the pool info based on the provided pool name and type, using the same chain ID as the provider/signer given

@@ -7,24 +7,24 @@ In this guide we'll take a look at using Huma's SDK to mint and pay a receivable
 Huma's SDK can be installed using npm or yarn.
 
 ```
-npm install @huma-finance/sdk
-yarn add @huma-finance/sdk
+npm install @huma-shan/sdk
+yarn add @huma-shan/sdk
 ```
 
 You'll also want to install Huma's shared utilities
 
 ```
-npm install @huma-finance/core
-yarn add @huma-finance/core
+npm install @huma-shan/core
+yarn add @huma-shan/core
 ```
 
 ## Mint a Pool Receivable
 
-Create a new file `index.js` and import services from `@huma-finance/sdk` and `@huma-finance/core`
+Create a new file `index.js` and import services from `@huma-shan/sdk` and `@huma-shan/core`
 
 ```
-import { ReceivableService, PaymentMethod } from '@huma-finance/sdk'
-import { POOL_NAME, POOL_TYPE } from "@huma-finance/core";
+import { ReceivableService, PaymentMethod } from '@huma-shan/sdk'
+import { POOL_NAME, POOL_TYPE } from "@huma-shan/core";
 ```
 
 Set up your ethers Provider and import your private key
@@ -78,8 +78,8 @@ If you're stuck or want to view a complete solution, check out our `examples` di
 We can use the Huma SDK to easily obtain ethers Contract instances of any Huma pool.
 
 ```
-import { getPoolContract } from "@huma-finance/sdk";
-import { POOL_NAME, POOL_TYPE } from "@huma-finance/core";
+import { getPoolContract } from "@huma-shan/sdk";
+import { POOL_NAME, POOL_TYPE } from "@huma-shan/core";
 ```
 
 With a ethers provider, pass in some config options for which pool contract you'd like to fetch.

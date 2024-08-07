@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
-      "@huma-finance/core": ["../huma-core/src"],
-      "@huma-finance/sdk": ["../huma-sdk/src"]
+      "@huma-shan/core": ["../huma-core/src"],
+      "@huma-shan/sdk": ["../huma-sdk/src"]
     }
   },
   "references": [

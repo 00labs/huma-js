@@ -1,5 +1,5 @@
-import { getBlockchainConfigFromChain } from '@huma-finance/core'
-import { txAtom } from '@huma-finance/web-core'
+import { getBlockchainConfigFromChain } from '@huma-shan/core'
+import { txAtom } from '@huma-shan/web-core'
 import { Box, css, TextField, Typography, useTheme } from '@mui/material'
 import {
   BroadcastEventTypeItem,

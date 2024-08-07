@@ -4,8 +4,8 @@ import {
   toBigNumber,
   UnderlyingTokenInfo,
   upScale,
-} from '@huma-finance/core'
-import { usePoolSafeAllowanceV2 } from '@huma-finance/web-core'
+} from '@huma-shan/core'
+import { usePoolSafeAllowanceV2 } from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'

@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { PoolInfoType, useAccountStats } from '@huma-finance/core'
+import { PoolInfoType, useAccountStats } from '@huma-shan/core'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 

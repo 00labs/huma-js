@@ -1,5 +1,5 @@
 import { BigNumberish, Overrides, ethers } from 'ethers'
-import { getChainIdFromSignerOrProvider } from '@huma-finance/core'
+import { getChainIdFromSignerOrProvider } from '@huma-shan/core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { getDefaultGasOptions, getERC20Contract } from '../utils'
 

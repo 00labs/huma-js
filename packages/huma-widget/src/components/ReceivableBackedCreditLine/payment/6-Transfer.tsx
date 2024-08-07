@@ -2,13 +2,13 @@ import { TransactionResponse } from '@ethersproject/providers'
 import {
   makePaymentWithReceivable,
   makePrincipalPaymentAndDrawdownWithReceivable,
-} from '@huma-finance/sdk'
+} from '@huma-shan/sdk'
 import {
   PoolInfoV2,
   toBigNumber,
   UnderlyingTokenInfo,
   upScale,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'

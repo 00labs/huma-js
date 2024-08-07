@@ -1,6 +1,6 @@
 import { Wallet, ethers } from 'ethers'
-import { ARWeaveService, getBundlrNetworkConfig } from '@huma-finance/sdk'
-import { ChainEnum } from '@huma-finance/core'
+import { ARWeaveService, getBundlrNetworkConfig } from '@huma-shan/sdk'
+import { ChainEnum } from '@huma-shan/core'
 require('dotenv').config()
 
 async function main() {

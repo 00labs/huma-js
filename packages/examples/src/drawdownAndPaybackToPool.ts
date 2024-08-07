@@ -6,8 +6,8 @@ import {
   getPoolContract,
   getPoolInfo,
   makePaymentToPool,
-} from '@huma-finance/sdk'
-import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
+} from '@huma-shan/sdk'
+import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-shan/core'
 require('dotenv').config()
 
 async function main() {

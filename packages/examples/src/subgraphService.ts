@@ -1,11 +1,6 @@
 import { Wallet, ethers } from 'ethers'
-import { SubgraphService } from '@huma-finance/sdk'
-import {
-  ChainEnum,
-  CreditEvent,
-  POOL_NAME,
-  POOL_TYPE,
-} from '@huma-finance/core'
+import { SubgraphService } from '@huma-shan/sdk'
+import { ChainEnum, CreditEvent, POOL_NAME, POOL_TYPE } from '@huma-shan/core'
 require('dotenv').config()
 
 async function main() {

@@ -1,10 +1,10 @@
 import { Wallet, ethers } from 'ethers'
-import { ChainEnum, POOL_NAME } from '@huma-finance/core'
+import { ChainEnum, POOL_NAME } from '@huma-shan/core'
 import {
   getAvailableBalanceForPool,
   getAvailableCreditForPool,
   getCreditRecordForPool,
-} from '@huma-finance/sdk'
+} from '@huma-shan/sdk'
 require('dotenv').config()
 
 async function main() {

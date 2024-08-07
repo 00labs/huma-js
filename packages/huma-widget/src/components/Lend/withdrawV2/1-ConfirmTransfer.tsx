@@ -5,7 +5,7 @@ import {
   UnderlyingTokenInfo,
   formatAmount,
   getTrancheVaultContractV2,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { Box, Divider, css, useTheme } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'

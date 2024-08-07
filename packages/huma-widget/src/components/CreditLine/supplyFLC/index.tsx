@@ -1,10 +1,10 @@
-import { FirstLossCoverIndex, POOL_NAME } from '@huma-finance/core'
+import { FirstLossCoverIndex, POOL_NAME } from '@huma-shan/core'
 import {
   useFirstLossCoverAllowanceV2,
   useFirstLossCoverRequirementV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'

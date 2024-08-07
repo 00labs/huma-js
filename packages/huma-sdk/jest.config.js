@@ -8,6 +8,6 @@ module.exports = {
   coverageReporters: ['json-summary', 'text', 'lcov'],
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
   moduleNameMapper: {
-    '^@huma-finance/core$': '<rootDir>/../huma-core/src',
+    '^@huma-shan/core$': '<rootDir>/../huma-core/src',
   },
 }

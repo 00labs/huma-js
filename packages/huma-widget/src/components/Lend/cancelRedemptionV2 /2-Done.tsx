@@ -1,4 +1,4 @@
-import { formatNumber, UnderlyingTokenInfo } from '@huma-finance/core'
+import { formatNumber, UnderlyingTokenInfo } from '@huma-shan/core'
 import { ethers } from 'ethers'
 import React from 'react'
 

@@ -2,7 +2,7 @@
 
 ![Badge functions](coverage/badge-functions.svg) ![Badge lines](coverage/badge-lines.svg)
 
-The Huma SDK includes utilities and services for interacting with different layers of our protocol including contracts, our evaluation agent underwriting service, and data storage hosted on ARWeave, Subgraph, on-chain, etc. It's currently offered just as a Javascript NPM package at https://www.npmjs.com/package/@huma-finance/sdk.
+The Huma SDK includes utilities and services for interacting with different layers of our protocol including contracts, our evaluation agent underwriting service, and data storage hosted on ARWeave, Subgraph, on-chain, etc. It's currently offered just as a Javascript NPM package at https://www.npmjs.com/package/@huma-shan/sdk.
 
 ## Getting Started
 

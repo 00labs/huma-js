@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AuthService } from '@huma-finance/core'
+import { AuthService } from '@huma-shan/core'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { useWeb3React } from '@web3-react/core'
 
@@ -8,7 +8,7 @@ import { useAuthErrorHandling } from '../../src/hooks/useAuthErrorHandling'
 jest.mock('@web3-react/core', () => ({
   useWeb3React: jest.fn(),
 }))
-jest.mock('@huma-finance/core', () => ({
+jest.mock('@huma-shan/core', () => ({
   AuthService: {
     createSession: jest.fn(),
     verifySignature: jest.fn(),

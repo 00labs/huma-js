@@ -9,7 +9,7 @@ import {
   getTransactionErrorFromHash,
   increaseGasLimit,
   TxStateType,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 

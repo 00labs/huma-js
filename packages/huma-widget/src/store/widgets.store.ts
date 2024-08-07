@@ -1,4 +1,4 @@
-import { Approval } from '@huma-finance/core'
+import { Approval } from '@huma-shan/core'
 
 export enum WIDGET_TYPE {
   BORROW = 'BORROW',

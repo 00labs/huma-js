@@ -3,8 +3,8 @@ import {
   toBigNumber,
   UnderlyingTokenInfo,
   upScale,
-} from '@huma-finance/core'
-import { useCreditContractV2 } from '@huma-finance/web-core'
+} from '@huma-shan/core'
+import { useCreditContractV2 } from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 

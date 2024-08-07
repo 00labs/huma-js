@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address'
-import { PoolInfoType } from '@huma-finance/core'
+import { PoolInfoType } from '@huma-shan/core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect } from 'react'
 

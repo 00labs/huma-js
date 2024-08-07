@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-conditional-expect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ChainEnum } from '@huma-finance/core'
+import { ChainEnum } from '@huma-shan/core'
 
 import { getContract, getERC20Contract, isAddress } from '../../src/utils/web3'
 

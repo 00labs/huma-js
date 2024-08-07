@@ -6,7 +6,7 @@ import {
   supportedChainId,
   WalletConnectPopup,
   WalletConnectQR,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import {
   initializeConnector,
   Web3ReactHooks,

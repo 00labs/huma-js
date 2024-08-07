@@ -9,7 +9,7 @@ import {
   Slider,
   useTheme,
 } from '@mui/material'
-import { useMQ } from '@huma-finance/web-core'
+import { useMQ } from '@huma-shan/web-core'
 import React, { useState } from 'react'
 
 import { IconType } from '../utilTypes'

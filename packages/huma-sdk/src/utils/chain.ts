@@ -2,7 +2,7 @@ import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import {
   ChainEnum,
   getChainIdFromSignerOrProvider as getChainIdFromSignerOrProviderInternal,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { ethers } from 'ethers'
 
 export function getChainConfirmations(chainId: number): number {

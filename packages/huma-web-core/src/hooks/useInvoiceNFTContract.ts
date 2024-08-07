@@ -5,7 +5,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 

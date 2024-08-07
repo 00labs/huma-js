@@ -4,8 +4,8 @@ import {
   downScale,
   formatMoney,
   ERC20_ABI,
-} from '@huma-finance/core'
-import { sendTxAtom } from '@huma-finance/web-core'
+} from '@huma-shan/core'
+import { sendTxAtom } from '@huma-shan/web-core'
 import React, { useEffect, useState } from 'react'
 
 import { useAtom } from 'jotai'

@@ -8,7 +8,7 @@ import {
   RealWorldReceivableInfoBase,
   SupplementaryContracts,
   SupplementaryContractsMap,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { request, gql } from 'graphql-request'
 
 import { ARWeaveService } from './ARWeaveService'

@@ -1,4 +1,4 @@
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/core'
+import { POOL_NAME, POOL_TYPE } from '@huma-shan/core'
 import { renderHook } from '@testing-library/react'
 
 import { usePoolInfo } from '../../src/hooks/usePool'
@@ -11,7 +11,7 @@ jest.mock('../../src/hooks/useParamsSearch', () => ({
   useParamsSearch: jest.fn(),
 }))
 
-jest.mock('@huma-finance/core', () => ({
+jest.mock('@huma-shan/core', () => ({
   POOL_NAME: {
     Jia: 'Jia',
     HumaCreditLine: 'HumaCreditLine',

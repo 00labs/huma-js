@@ -8,8 +8,8 @@ import {
   usePoolContract,
   ARWeaveService,
   ReceivableService,
-} from '@huma-finance/sdk'
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/core'
+} from '@huma-shan/sdk'
+import { POOL_NAME, POOL_TYPE } from '@huma-shan/core'
 import { useAccount } from 'wagmi'
 import { ethers } from 'ethers'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'

@@ -23,7 +23,7 @@ import {
   RECEIVABLE_V2_ABI,
   TrancheType,
   UnderlyingTokenInfo,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import {
   Calendar,
   CreditLine,
@@ -33,12 +33,12 @@ import {
   PoolSafe,
   Receivable,
   TrancheVault,
-} from '@huma-finance/core/src/v2/abis/types'
-import { CreditManager } from '@huma-finance/core/src/v2/abis/types/CreditManager'
+} from '@huma-shan/core/src/v2/abis/types'
+import { CreditManager } from '@huma-shan/core/src/v2/abis/types/CreditManager'
 import {
   LPConfigStructOutput,
   PoolSettingsStructOutput,
-} from '@huma-finance/core/src/v2/abis/types/PoolConfig'
+} from '@huma-shan/core/src/v2/abis/types/PoolConfig'
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 

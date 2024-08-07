@@ -3,12 +3,12 @@ import {
   TrancheType,
   UnderlyingTokenInfo,
   formatNumber,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import {
   useLPConfigV2,
   usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import React, { useState } from 'react'

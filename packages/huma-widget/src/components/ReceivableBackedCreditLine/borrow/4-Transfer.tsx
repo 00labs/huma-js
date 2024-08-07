@@ -1,5 +1,5 @@
-import { drawdownWithReceivable } from '@huma-finance/sdk'
-import { PoolInfoV2 } from '@huma-finance/core'
+import { drawdownWithReceivable } from '@huma-shan/sdk'
+import { PoolInfoV2 } from '@huma-shan/core'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useState } from 'react'

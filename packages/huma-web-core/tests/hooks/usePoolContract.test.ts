@@ -1,11 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import {
-  CreditState,
-  POOL_NAME,
-  POOL_TYPE,
-  toBigNumber,
-} from '@huma-finance/core'
+import { CreditState, POOL_NAME, POOL_TYPE, toBigNumber } from '@huma-shan/core'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
 
@@ -36,8 +31,8 @@ jest.mock('../../src/hooks/useContract', () => ({
   useContract: jest.fn(),
 }))
 
-jest.mock('@huma-finance/core', () => ({
-  ...jest.requireActual('@huma-finance/core'),
+jest.mock('@huma-shan/core', () => ({
+  ...jest.requireActual('@huma-shan/core'),
   POOL_NAME: {
     HumaCreditLine: 'HumaCreditLine',
   },

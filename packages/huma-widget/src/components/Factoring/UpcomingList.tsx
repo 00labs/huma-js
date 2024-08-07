@@ -1,6 +1,6 @@
 import { Box, css, LinearProgress, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { useMQ } from '@huma-finance/web-core'
+import { useMQ } from '@huma-shan/web-core'
 import React from 'react'
 
 import { ColumnType, WCProps } from '../../utilTypes'

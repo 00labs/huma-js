@@ -2,7 +2,7 @@ import {
   EAPayload,
   EAPreapprovalPayload,
   EAService as EAServiceInternal,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 
 /**
  * Object representing the response to the underwriting approval request.
@@ -13,7 +13,7 @@ import {
  *
  * @typedef {Object} EAPayload
  */
-export type { ApprovalResult, EAPayload } from '@huma-finance/core'
+export type { ApprovalResult, EAPayload } from '@huma-shan/core'
 
 /**
  * Submits a credit underwriting request to Huma's EAVerse. This approves a creditline

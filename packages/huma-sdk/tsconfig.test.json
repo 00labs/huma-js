@@ -2,7 +2,7 @@
   "extends": "./tsconfig",
   "compilerOptions": {
     "paths": {
-      "@huma-finance/core": ["../huma-core/src"]
+      "@huma-shan/core": ["../huma-core/src"]
     }
   },
   "include": ["src/**/*", "src/**/*.json", "tests/**/*"]

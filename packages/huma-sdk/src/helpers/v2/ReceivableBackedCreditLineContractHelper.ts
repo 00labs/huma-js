@@ -12,8 +12,8 @@ import {
   POOL_NAME,
   POOL_TYPE,
   RECEIVABLE_BACKED_CREDIT_LINE_V2_ABI,
-} from '@huma-finance/core'
-import { ReceivableBackedCreditLine } from '@huma-finance/core/src/v2/abis/types'
+} from '@huma-shan/core'
+import { ReceivableBackedCreditLine } from '@huma-shan/core/src/v2/abis/types'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { getChainConfirmations, getContract } from '../../utils'
 import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'

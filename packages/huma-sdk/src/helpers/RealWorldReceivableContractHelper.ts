@@ -3,7 +3,7 @@ import {
   REAL_WORLD_RECEIVABLE_ABI,
   SupplementaryContracts,
   SupplementaryContractsMap,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 
 import { getContract } from '../utils'
 

@@ -1,5 +1,5 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/core'
+import { POOL_NAME, POOL_TYPE } from '@huma-shan/core'
 import { ethers } from 'ethers'
 
 export class HumaContext {

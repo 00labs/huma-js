@@ -1,5 +1,5 @@
 {
-  "name": "@huma-finance/sdk",
+  "name": "@huma-shan/sdk",
   "version": "0.0.58",
   "types": "./dist/index.d.ts",
   "main": "./dist/cjs/index.js",
@@ -28,7 +28,7 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.6.0",
-    "@huma-finance/core": "^0.0.58",
+    "@huma-shan/core": "^0.0.58",
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.1",
     "ethers": "^5.7.2",

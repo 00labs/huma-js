@@ -1,9 +1,9 @@
 import { useWeb3React } from '@web3-react/core'
-import { isEmpty, PoolInfoType, timeUtil } from '@huma-finance/core'
+import { isEmpty, PoolInfoType, timeUtil } from '@huma-shan/core'
 import {
   useLastDepositTime,
   useWithdrawlLockoutInSeconds,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { ErrorModal } from '../../ErrorModal'

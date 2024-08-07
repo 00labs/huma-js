@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { ChainEnum } from '@huma-finance/core'
+import { ChainEnum } from '@huma-shan/core'
 import { BigNumber, Overrides, ethers } from 'ethers'
 import { ARWeaveService } from '../ARWeaveService'
 import { ReceivableService } from '../ReceivableService'

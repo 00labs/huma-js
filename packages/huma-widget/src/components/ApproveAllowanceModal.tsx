@@ -2,13 +2,13 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, BigNumberish } from 'ethers'
-import { PoolInfoType, TxStateType } from '@huma-finance/core'
+import { PoolInfoType, TxStateType } from '@huma-shan/core'
 import {
   sendTxAtom,
   txAtom,
   useMount,
   usePoolUnderlyingTokenContract,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect } from 'react'

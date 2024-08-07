@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { PoolInfoType, toBigNumber } from '@huma-finance/core'
+import { PoolInfoType, toBigNumber } from '@huma-shan/core'
 import React, { useEffect } from 'react'
 
 import useEA from '../../../hooks/useEA'

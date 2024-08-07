@@ -5,7 +5,7 @@ import {
   getCreditRecordV2,
   getPoolSafeContractV2,
   POOL_NAME,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import { ethers } from 'ethers'
 
 /**

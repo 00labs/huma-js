@@ -1,5 +1,5 @@
 import { Overrides, ethers } from 'ethers'
-import { ChainEnum, requestGet } from '@huma-finance/core'
+import { ChainEnum, requestGet } from '@huma-shan/core'
 
 import { isPolygonNetwork } from './chain'
 

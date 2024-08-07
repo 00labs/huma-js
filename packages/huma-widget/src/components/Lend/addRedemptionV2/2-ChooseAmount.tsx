@@ -3,12 +3,12 @@ import {
   PoolInfoV2,
   timestampToLL,
   UnderlyingTokenInfo,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import {
   useLenderDepositRecordV2,
   useLPConfigV2,
   useNextEpochStartTimeV2,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 

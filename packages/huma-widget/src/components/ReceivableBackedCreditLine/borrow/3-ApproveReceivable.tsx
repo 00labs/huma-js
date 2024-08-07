@@ -1,9 +1,9 @@
-import { PoolInfoV2, TxStateType } from '@huma-finance/core'
+import { PoolInfoV2, TxStateType } from '@huma-shan/core'
 import {
   sendTxAtom,
   txAtom,
   useReceivableContractV2,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'

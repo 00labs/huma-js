@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ChainEnum } from '@huma-finance/core'
+import { ChainEnum } from '@huma-shan/core'
 import { ethers } from 'ethers'
 
 import {

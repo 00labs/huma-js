@@ -1,4 +1,4 @@
-import { CreditRecordType, downScale, PoolInfoType } from '@huma-finance/core'
+import { CreditRecordType, downScale, PoolInfoType } from '@huma-shan/core'
 import React, { useCallback, useState } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'

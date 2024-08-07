@@ -1,10 +1,5 @@
-import {
-  downScale,
-  PoolInfoType,
-  toBigNumber,
-  upScale,
-} from '@huma-finance/core'
-import { useFeeManager } from '@huma-finance/web-core'
+import { downScale, PoolInfoType, toBigNumber, upScale } from '@huma-shan/core'
+import { useFeeManager } from '@huma-shan/web-core'
 import React, { useCallback, useState } from 'react'
 
 import { useWeb3React } from '@web3-react/core'

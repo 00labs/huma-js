@@ -2,7 +2,7 @@ import {
   JsonRpcProvider,
   StaticJsonRpcProvider,
 } from '@ethersproject/providers'
-import { ChainEnum, JSON_RPC_FALLBACK_ENDPOINTS } from '@huma-finance/core'
+import { ChainEnum, JSON_RPC_FALLBACK_ENDPOINTS } from '@huma-shan/core'
 import React, {
   createContext,
   PropsWithChildren,

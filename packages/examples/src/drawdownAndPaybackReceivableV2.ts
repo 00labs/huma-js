@@ -1,5 +1,5 @@
 import { BigNumber, Wallet, ethers } from 'ethers'
-import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
+import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-shan/core'
 import {
   HumaContext,
   HumaReceivableFactory,
@@ -7,7 +7,7 @@ import {
   drawdownWithReceivable,
   getReceivableTokenIdFromReferenceId,
   makePrincipalPaymentAndDrawdownWithReceivable,
-} from '@huma-finance/sdk'
+} from '@huma-shan/sdk'
 require('dotenv').config()
 
 function getFutureUnixTimestamp() {

@@ -4,8 +4,8 @@ import {
   formatNumber,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
-} from '@huma-finance/core'
-import { sendTxAtom } from '@huma-finance/web-core'
+} from '@huma-shan/core'
+import { sendTxAtom } from '@huma-shan/web-core'
 import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 

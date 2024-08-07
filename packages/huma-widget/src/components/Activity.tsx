@@ -6,8 +6,8 @@ import {
   isEmpty,
   PoolInfoType,
   timeUtil,
-} from '@huma-finance/core'
-import { useMQ } from '@huma-finance/web-core'
+} from '@huma-shan/core'
+import { useMQ } from '@huma-shan/web-core'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'

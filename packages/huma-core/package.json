@@ -1,5 +1,5 @@
 {
-  "name": "@huma-finance/core",
+  "name": "@huma-shan/core",
   "version": "0.0.58",
   "types": "./dist/index.d.ts",
   "main": "./dist/cjs/index.js",

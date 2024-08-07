@@ -1,6 +1,6 @@
 import { BigNumber, Wallet, ethers } from 'ethers'
-import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
-import { HumaReceivableFactory, HumaContext } from '@huma-finance/sdk'
+import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-shan/core'
+import { HumaReceivableFactory, HumaContext } from '@huma-shan/sdk'
 require('dotenv').config()
 
 async function main() {

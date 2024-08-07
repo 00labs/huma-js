@@ -2,7 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from '@ethersproject/address'
 import { ethers } from 'ethers'
-import { ERC20_ABI, Erc20 } from '@huma-finance/core'
+import { ERC20_ABI, Erc20 } from '@huma-shan/core'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

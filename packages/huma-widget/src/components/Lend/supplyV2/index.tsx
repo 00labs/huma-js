@@ -1,9 +1,9 @@
-import { POOL_NAME, TrancheType, openInNewTab } from '@huma-finance/core'
+import { POOL_NAME, TrancheType, openInNewTab } from '@huma-shan/core'
 import {
   useLenderApprovedV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-} from '@huma-finance/web-core'
+} from '@huma-shan/web-core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'

@@ -3,7 +3,7 @@ import {
   PoolInfoType,
   formatNumber,
   timeUtil,
-} from '@huma-finance/core'
+} from '@huma-shan/core'
 import React from 'react'
 
 import { useAppSelector } from '../../../hooks/useRedux'
