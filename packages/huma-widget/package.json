@@ -1,6 +1,6 @@
 {
   "name": "@huma-shan/widgets",
-  "version": "0.0.58",
+  "version": "0.0.59",
   "publishConfig": {
     "access": "public"
   },
@@ -30,9 +30,9 @@
     "@ethersproject/experimental": "^5.7.0",
     "@ethersproject/providers": "^5.6.0",
     "@ethersproject/units": "^5.6.0",
-    "@huma-shan/sdk": "^0.0.58",
-    "@huma-shan/core": "^0.0.58",
-    "@huma-shan/web-core": "^0.0.58",
+    "@huma-shan/core": "^0.0.59",
+    "@huma-shan/sdk": "^0.0.59",
+    "@huma-shan/web-core": "^0.0.59",
     "@mui/icons-material": "^5.3.0",
     "@mui/material": "^5.0.6",
     "@mui/styles": "^5.0.2",
