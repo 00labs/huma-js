@@ -144,9 +144,8 @@ export function NotifiSubscriptionModal({
       try {
         await login()
 
-        const isDefaultTargetExist = await validateDefaultTargetGroup(
-          frontendClient,
-        )
+        const isDefaultTargetExist =
+          await validateDefaultTargetGroup(frontendClient)
 
         if (!isDefaultTargetExist) {
           await renewTargetGroup()
