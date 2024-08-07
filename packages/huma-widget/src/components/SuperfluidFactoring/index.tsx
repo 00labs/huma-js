@@ -1,11 +1,6 @@
 import { SubgraphService } from '@huma-finance/sdk'
-import {
-  CreditEvent,
-  POOL_NAME,
-  POOL_TYPE,
-  PoolMap,
-} from '@huma-finance/shared'
-import { useFactoring } from '@huma-finance/web-shared'
+import { CreditEvent, POOL_NAME, POOL_TYPE, PoolMap } from '@huma-finance/core'
+import { useFactoring } from '@huma-finance/web-core'
 import { Box, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React from 'react'

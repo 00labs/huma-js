@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { PoolInfoType, toBigNumber, upScale } from '@huma-finance/shared'
+import { PoolInfoType, toBigNumber, upScale } from '@huma-finance/core'
 import React, { useCallback } from 'react'
 import { BigNumber } from 'ethers'
 

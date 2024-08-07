@@ -2,7 +2,7 @@ import {
   FirstLossCoverIndex,
   PoolInfoV2,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { BigNumber } from 'ethers'
 import React from 'react'
 

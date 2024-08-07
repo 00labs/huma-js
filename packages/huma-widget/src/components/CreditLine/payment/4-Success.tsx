@@ -4,8 +4,8 @@ import {
   formatNumber,
   PoolInfoType,
   TRANSFER_ABI,
-} from '@huma-finance/shared'
-import { sendTxAtom } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { sendTxAtom } from '@huma-finance/web-core'
 import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 

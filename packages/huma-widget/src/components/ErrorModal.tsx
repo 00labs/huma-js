@@ -1,6 +1,6 @@
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import { Box, Button, css, Tooltip, Typography, useTheme } from '@mui/material'
-import { txAtom } from '@huma-finance/web-shared'
+import { txAtom } from '@huma-finance/web-core'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 

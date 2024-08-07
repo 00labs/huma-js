@@ -3,8 +3,8 @@ import {
   PoolInfoType,
   toBigNumber,
   upScale,
-} from '@huma-finance/shared'
-import { useFeeManager } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { useFeeManager } from '@huma-finance/web-core'
 import React, { useCallback, useState } from 'react'
 
 import { useWeb3React } from '@web3-react/core'

@@ -2,7 +2,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { getContract } from '@huma-finance/shared'
+import { getContract } from '@huma-finance/core'
 import { renderHook } from '@testing-library/react'
 
 import { useContract, useMultiSendContract } from '../../src/hooks/useContract'

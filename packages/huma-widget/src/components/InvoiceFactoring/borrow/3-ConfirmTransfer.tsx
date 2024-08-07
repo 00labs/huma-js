@@ -1,4 +1,4 @@
-import { isEmpty } from '@huma-finance/shared'
+import { isEmpty } from '@huma-finance/core'
 import React from 'react'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'

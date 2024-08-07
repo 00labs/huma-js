@@ -31,7 +31,7 @@
   },
   "references": [
     {
-      "path": "../huma-shared"
+      "path": "../huma-core"
     }
   ]
 }

@@ -9,7 +9,7 @@ import {
   ChainEnum,
   isV2Pool,
   requestPost,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { gql } from 'graphql-request'
 
 /**

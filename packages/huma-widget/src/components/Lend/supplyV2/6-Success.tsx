@@ -5,8 +5,8 @@ import {
   PoolInfoV2,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
-import { sendTxAtom } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { sendTxAtom } from '@huma-finance/web-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
 import React, { useCallback, useEffect, useState } from 'react'

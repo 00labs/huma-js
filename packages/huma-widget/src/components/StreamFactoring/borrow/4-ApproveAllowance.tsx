@@ -1,4 +1,4 @@
-import { PoolInfoType } from '@huma-finance/shared'
+import { PoolInfoType } from '@huma-finance/core'
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { BigNumber } from 'ethers'

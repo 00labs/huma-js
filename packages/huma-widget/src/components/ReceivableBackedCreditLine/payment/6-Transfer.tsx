@@ -8,7 +8,7 @@ import {
   toBigNumber,
   UnderlyingTokenInfo,
   upScale,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'

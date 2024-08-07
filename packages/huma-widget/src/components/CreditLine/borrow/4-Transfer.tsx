@@ -1,5 +1,5 @@
-import { PoolInfoType } from '@huma-finance/shared'
-import { txAtom } from '@huma-finance/web-shared'
+import { PoolInfoType } from '@huma-finance/core'
+import { txAtom } from '@huma-finance/web-core'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 import { BigNumber } from 'ethers'

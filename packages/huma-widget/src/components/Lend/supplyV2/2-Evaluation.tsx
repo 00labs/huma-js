@@ -8,8 +8,8 @@ import {
   PoolInfoV2,
   timeUtil,
   VerificationStatusResult,
-} from '@huma-finance/shared'
-import { useAuthErrorHandling, useParamsSearch } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { useAuthErrorHandling, useParamsSearch } from '@huma-finance/web-core'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'

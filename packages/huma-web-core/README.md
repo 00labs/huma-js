@@ -1,8 +1,8 @@
-# Huma shared
+# Huma Web Core
 
 ![Badge functions](coverage/badge-functions.svg) ![Badge lines](coverage/badge-lines.svg)
 
-The Huma Shared includes utilities/services/hooks for shared logics.
+The Huma Web Core includes utilities/services/hooks for web shared logics.
 
 ## Available Scripts
 

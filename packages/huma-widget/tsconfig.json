@@ -23,10 +23,10 @@
   "include": ["src/**/*", "src/**/*.json"],
   "references": [
     {
-      "path": "../huma-shared"
+      "path": "../huma-core"
     },
     {
-      "path": "../huma-web-shared"
+      "path": "../huma-web-core"
     },
     {
       "path": "../huma-sdk"

@@ -6,7 +6,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { request } from 'graphql-request'
 
 import { BigNumber, ethers } from 'ethers'

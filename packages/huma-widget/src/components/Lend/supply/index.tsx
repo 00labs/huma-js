@@ -1,4 +1,4 @@
-import { downScale, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { downScale, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
 import {
   useLenderApproved,
   useLenderPosition,
@@ -6,7 +6,7 @@ import {
   usePoolInfo,
   usePoolUnderlyingTokenBalance,
   useWithdrawlLockoutInSeconds,
-} from '@huma-finance/web-shared'
+} from '@huma-finance/web-core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'

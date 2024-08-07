@@ -1,5 +1,5 @@
-import { AccountStats, PoolInfoType } from '@huma-finance/shared'
-import { useFeeManager } from '@huma-finance/web-shared'
+import { AccountStats, PoolInfoType } from '@huma-finance/core'
+import { useFeeManager } from '@huma-finance/web-core'
 import React, { useCallback, useState } from 'react'
 import { ethers } from 'ethers'
 

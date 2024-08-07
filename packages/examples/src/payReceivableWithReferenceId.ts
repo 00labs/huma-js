@@ -1,6 +1,6 @@
 import { Wallet, ethers } from 'ethers'
 import { ReceivableService } from '@huma-finance/sdk'
-import { ChainEnum } from '@huma-finance/shared'
+import { ChainEnum } from '@huma-finance/core'
 require('dotenv').config()
 
 async function main() {

@@ -6,12 +6,12 @@ import {
   requestPost,
   isV2Pool,
   PoolSubgraphMap,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 
 import { SubgraphService } from '../../src/services/SubgraphService'
 
-jest.mock('@huma-finance/shared', () => ({
-  ...jest.requireActual('@huma-finance/shared'),
+jest.mock('@huma-finance/core', () => ({
+  ...jest.requireActual('@huma-finance/core'),
   requestPost: jest.fn(),
   isV2Pool: jest.fn(),
 }))

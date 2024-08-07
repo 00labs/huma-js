@@ -3,7 +3,7 @@ import {
   CURRENCY_CODE,
   PoolInfoV2,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { useWeb3React } from '@web3-react/core'
 import { ContractReceipt, ethers } from 'ethers'
 import moment from 'moment'

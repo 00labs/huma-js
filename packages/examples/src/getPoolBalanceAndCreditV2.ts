@@ -1,5 +1,5 @@
 import { Wallet, ethers } from 'ethers'
-import { ChainEnum, POOL_NAME } from '@huma-finance/shared'
+import { ChainEnum, POOL_NAME } from '@huma-finance/core'
 import {
   getAvailableBalanceForPool,
   getAvailableCreditForPool,

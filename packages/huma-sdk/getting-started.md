@@ -14,17 +14,17 @@ yarn add @huma-finance/sdk
 You'll also want to install Huma's shared utilities
 
 ```
-npm install @huma-finance/shared
-yarn add @huma-finance/shared
+npm install @huma-finance/core
+yarn add @huma-finance/core
 ```
 
 ## Mint a Pool Receivable
 
-Create a new file `index.js` and import services from `@huma-finance/sdk` and `@huma-finance/shared`
+Create a new file `index.js` and import services from `@huma-finance/sdk` and `@huma-finance/core`
 
 ```
 import { ReceivableService, PaymentMethod } from '@huma-finance/sdk'
-import { POOL_NAME, POOL_TYPE } from "@huma-finance/shared";
+import { POOL_NAME, POOL_TYPE } from "@huma-finance/core";
 ```
 
 Set up your ethers Provider and import your private key
@@ -44,7 +44,7 @@ Call on the `mintReceivable` method with an ethers Wallet instance
 
 > Note: Receivables support multiple payment methods. Declarative receivables
 > don't actually transfer ERC20 tokens, they just update their balance on-chain.
-> Payable receivables will actually call pool methods to transfer ERC20 tokens. 
+> Payable receivables will actually call pool methods to transfer ERC20 tokens.
 
 ```
 const wallet = new Wallet(TEST_PRIVATE_KEY, provider);
@@ -79,7 +79,7 @@ We can use the Huma SDK to easily obtain ethers Contract instances of any Huma p
 
 ```
 import { getPoolContract } from "@huma-finance/sdk";
-import { POOL_NAME, POOL_TYPE } from "@huma-finance/shared";
+import { POOL_NAME, POOL_TYPE } from "@huma-finance/core";
 ```
 
 With a ethers provider, pass in some config options for which pool contract you'd like to fetch.
@@ -125,7 +125,7 @@ $ node index.js
 Done in 4.90s.
 ```
 
-# Other SDK examples 
+# Other SDK examples
 
 ## Declare a receivable as paid
 
@@ -145,13 +145,13 @@ console.log(`Success. Tx hash: ${data.transactionHash}`);
 
 ## Mint a receivable with metadata automatically uploaded to ARWeave
 
-Huma supports both lazy funding and pre-funding the ARWeave network to pay for metadata uploads. 
+Huma supports both lazy funding and pre-funding the ARWeave network to pay for metadata uploads.
 
 ```
 // Prefund...
 await prefundBundlr(getBundlrNetworkConfig(5), signer, 1_000_000)
 
-// Or pay as you go! (Note: it's recommended you still prefund with a small 
+// Or pay as you go! (Note: it's recommended you still prefund with a small
 // amount of currency to avoid slippage)
 const data = await ReceivableService.mintReceivableWithMetadata(
     signer,

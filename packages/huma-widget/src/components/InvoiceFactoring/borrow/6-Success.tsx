@@ -1,4 +1,4 @@
-import { formatNumber } from '@huma-finance/shared'
+import { formatNumber } from '@huma-finance/core'
 import React from 'react'
 
 import { useAppSelector } from '../../../hooks/useRedux'

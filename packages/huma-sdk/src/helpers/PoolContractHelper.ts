@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { BigNumberish, Overrides, ethers } from 'ethers'
-import { BaseCreditPool, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { BaseCreditPool, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
 import { TransactionResponse } from '@ethersproject/providers'
 
 import {

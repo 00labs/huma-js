@@ -2,8 +2,8 @@ import {
   PoolInfoType,
   SuperfluidPoolProcessor,
   SuperfluidPoolProcessor_ABI,
-} from '@huma-finance/shared'
-import { useERC2612Permit, useMount } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { useERC2612Permit, useMount } from '@huma-finance/web-core'
 import { BigNumber, Contract, ethers } from 'ethers'
 import React from 'react'
 import { useDispatch } from 'react-redux'

@@ -1,5 +1,5 @@
 import { BigNumber, Wallet, ethers } from 'ethers'
-import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { ChainEnum, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
 import {
   HumaContext,
   HumaReceivableFactory,

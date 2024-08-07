@@ -1,4 +1,4 @@
-import { PoolInfoType } from '@huma-finance/shared'
+import { PoolInfoType } from '@huma-finance/core'
 import { BigNumberish } from 'ethers'
 import React, { useCallback } from 'react'
 

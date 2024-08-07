@@ -5,7 +5,7 @@ import {
   getWalletAddressAbbr,
   PoolInfoType,
   toBigNumber,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { Button, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'

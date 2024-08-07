@@ -1,5 +1,5 @@
-import { isTxFailed } from '@huma-finance/shared'
-import { sendTxAtom, txAtom } from '@huma-finance/web-shared'
+import { isTxFailed } from '@huma-finance/core'
+import { sendTxAtom, txAtom } from '@huma-finance/web-core'
 import { useTheme } from '@mui/material'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'

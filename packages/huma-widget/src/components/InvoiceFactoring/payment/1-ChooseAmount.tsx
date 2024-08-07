@@ -5,8 +5,8 @@ import {
   PoolInfoType,
   toBigNumber,
   upScale,
-} from '@huma-finance/shared'
-import { useRFPoolAllowance } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { useRFPoolAllowance } from '@huma-finance/web-core'
 import React, { useCallback, useState } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setPaymentAmount, setStep } from '../../../store/widgets.reducers'

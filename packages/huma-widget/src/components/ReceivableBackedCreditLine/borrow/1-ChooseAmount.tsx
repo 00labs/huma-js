@@ -2,11 +2,11 @@ import {
   CreditStatsV2,
   PoolInfoV2,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import {
   usePoolSafeAllowanceV2,
   useReceivableInfoV2,
-} from '@huma-finance/web-shared'
+} from '@huma-finance/web-core'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'

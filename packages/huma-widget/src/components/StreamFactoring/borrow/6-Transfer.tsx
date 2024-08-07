@@ -1,5 +1,5 @@
-import { PoolInfoType } from '@huma-finance/shared'
-import { useMultiSendContract } from '@huma-finance/web-shared'
+import { PoolInfoType } from '@huma-finance/core'
+import { useMultiSendContract } from '@huma-finance/web-core'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 

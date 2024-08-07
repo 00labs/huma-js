@@ -1,4 +1,4 @@
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { POOL_NAME, POOL_TYPE } from '@huma-finance/core'
 import { renderHook } from '@testing-library/react'
 
 import { usePoolInfo } from '../../src/hooks/usePool'

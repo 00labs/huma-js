@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChainEnum, requestGet } from '@huma-finance/shared'
+import { ChainEnum, requestGet } from '@huma-finance/core'
 
 import { Overrides, ethers } from 'ethers'
 import {
@@ -7,7 +7,7 @@ import {
   getPolygonGasOptions,
 } from '../../src/utils/maticGasStation'
 
-jest.mock('@huma-finance/shared', () => ({
+jest.mock('@huma-finance/core', () => ({
   requestGet: jest.fn(),
   ChainEnum: {
     Polygon: 137,

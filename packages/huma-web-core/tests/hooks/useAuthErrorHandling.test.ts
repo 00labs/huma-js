@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AuthService } from '@huma-finance/shared'
+import { AuthService } from '@huma-finance/core'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { useWeb3React } from '@web3-react/core'
 

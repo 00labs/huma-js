@@ -1,4 +1,4 @@
-import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-finance/shared'
+import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-finance/core'
 import React, { useCallback } from 'react'
 
 import { PaymentType } from '.'

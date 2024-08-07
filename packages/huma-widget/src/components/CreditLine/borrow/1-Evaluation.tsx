@@ -1,6 +1,6 @@
 import { Box, Button, css, Typography, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { PoolInfoType } from '@huma-finance/shared'
+import { PoolInfoType } from '@huma-finance/core'
 import React, { useEffect, useState } from 'react'
 
 import useEA from '../../../hooks/useEA'

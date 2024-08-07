@@ -1,5 +1,5 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace'
-import { AccountStats, PoolInfoType } from '@huma-finance/shared'
+import { AccountStats, PoolInfoType } from '@huma-finance/core'
 import React, { useCallback } from 'react'
 
 import { ColumnType } from '../../utilTypes'

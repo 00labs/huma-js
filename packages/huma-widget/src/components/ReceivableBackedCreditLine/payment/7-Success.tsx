@@ -4,7 +4,7 @@ import {
   formatNumber,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 

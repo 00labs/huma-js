@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Approval } from '@huma-finance/shared'
+import { Approval } from '@huma-finance/core'
 
 import {
   initialWidgetState,

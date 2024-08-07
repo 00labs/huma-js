@@ -1,4 +1,4 @@
-import { supportedChainId } from '@huma-finance/shared'
+import { supportedChainId } from '@huma-finance/core'
 import { useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'

@@ -1,4 +1,4 @@
-import { TrancheType, UnderlyingTokenInfo } from '@huma-finance/shared'
+import { TrancheType, UnderlyingTokenInfo } from '@huma-finance/core'
 import {
   css,
   FormControl,

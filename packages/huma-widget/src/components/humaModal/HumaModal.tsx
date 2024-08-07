@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import { Dialog } from '@mui/material'
-import { useMQ } from '@huma-finance/web-shared'
+import { useMQ } from '@huma-finance/web-core'
 import React from 'react'
 
 type HumaModalType = {

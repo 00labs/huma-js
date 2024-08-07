@@ -3,7 +3,7 @@ import {
   formatNumber,
   timeUtil,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import React from 'react'
 
 import { useAppSelector } from '../../../hooks/useRedux'

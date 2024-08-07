@@ -1,5 +1,5 @@
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
-import { useAccountStats, usePoolInfo } from '@huma-finance/web-shared'
+import { POOL_NAME, POOL_TYPE } from '@huma-finance/core'
+import { useAccountStats, usePoolInfo } from '@huma-finance/web-core'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumberish } from 'ethers'
 import React, { useEffect } from 'react'

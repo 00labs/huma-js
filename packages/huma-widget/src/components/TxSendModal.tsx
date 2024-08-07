@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { Contract } from 'ethers'
-import { PoolInfoType, TxStateType } from '@huma-finance/shared'
-import { sendTxAtom, useMount, usePoolContract } from '@huma-finance/web-shared'
+import { PoolInfoType, TxStateType } from '@huma-finance/core'
+import { sendTxAtom, useMount, usePoolContract } from '@huma-finance/web-core'
 import { useAtom } from 'jotai'
 import React, { useEffect } from 'react'
 

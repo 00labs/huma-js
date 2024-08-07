@@ -2,7 +2,7 @@ import {
   JsonRpcConnector,
   WalletConnectPopup,
   WalletConnectQR,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { useWeb3React } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'

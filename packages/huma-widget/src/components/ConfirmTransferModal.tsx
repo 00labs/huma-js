@@ -1,4 +1,4 @@
-import { combineStyles } from '@huma-finance/shared'
+import { combineStyles } from '@huma-finance/core'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import { Box, Button, css, Typography, useTheme } from '@mui/material'
 import React from 'react'

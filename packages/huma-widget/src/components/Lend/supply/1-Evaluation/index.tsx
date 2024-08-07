@@ -1,4 +1,4 @@
-import { PoolInfoType } from '@huma-finance/shared'
+import { PoolInfoType } from '@huma-finance/core'
 import React from 'react'
 
 import { EvaluationEA } from './EvaluationEA'

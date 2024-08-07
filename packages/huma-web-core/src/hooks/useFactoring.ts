@@ -1,4 +1,4 @@
-import { hasRFActiveLoan, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { hasRFActiveLoan, POOL_NAME, POOL_TYPE } from '@huma-finance/core'
 import { css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useState } from 'react'

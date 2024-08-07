@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { getExplorerUrl, openInNewTab } from '@huma-finance/shared'
+import { getExplorerUrl, openInNewTab } from '@huma-finance/core'
 import React from 'react'
 
 type Props = {

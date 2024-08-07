@@ -4,8 +4,8 @@ import {
   PoolInfoV2,
   TxStateType,
   UnderlyingTokenInfo,
-} from '@huma-finance/shared'
-import { sendTxAtom, txAtom, useMount } from '@huma-finance/web-shared'
+} from '@huma-finance/core'
+import { sendTxAtom, txAtom, useMount } from '@huma-finance/web-core'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, BigNumberish } from 'ethers'

@@ -9,7 +9,7 @@ import {
   ARWeaveService,
   ReceivableService,
 } from '@huma-finance/sdk'
-import { POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { POOL_NAME, POOL_TYPE } from '@huma-finance/core'
 import { useAccount } from 'wagmi'
 import { ethers } from 'ethers'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'

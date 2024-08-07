@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jest/no-conditional-expect */
-import { ChainEnum, getCreditRecordV2, POOL_NAME } from '@huma-finance/shared'
+import { ChainEnum, getCreditRecordV2, POOL_NAME } from '@huma-finance/core'
 import { BigNumber, ethers } from 'ethers'
 
 import { getTotalDueV2 } from '../../../src/helpers/v2/ReceivableBackedCreditLineContractHelper'
@@ -13,8 +13,8 @@ const provider = new ethers.providers.JsonRpcProvider(
   },
 )
 
-jest.mock('@huma-finance/shared', () => ({
-  ...jest.requireActual('@huma-finance/shared'),
+jest.mock('@huma-finance/core', () => ({
+  ...jest.requireActual('@huma-finance/core'),
   getCreditRecordV2: jest.fn(),
 }))
 

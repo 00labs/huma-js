@@ -5,7 +5,7 @@ import {
   RECEIVABLE_V2_ABI,
   getPoolConfigContractV2,
   getPoolCreditContractV2,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 
 import {
   JsonRpcProvider,

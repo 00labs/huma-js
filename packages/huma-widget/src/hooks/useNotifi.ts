@@ -3,7 +3,7 @@ import {
   checkIsDev,
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import {
   NotifiFrontendClient,
   newFrontendClient,

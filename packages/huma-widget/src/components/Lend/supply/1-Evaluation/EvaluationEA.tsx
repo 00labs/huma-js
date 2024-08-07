@@ -1,6 +1,6 @@
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { EAService, PoolInfoType } from '@huma-finance/shared'
+import { EAService, PoolInfoType } from '@huma-finance/core'
 import React, { useState } from 'react'
 
 import { useAppDispatch } from '../../../../hooks/useRedux'

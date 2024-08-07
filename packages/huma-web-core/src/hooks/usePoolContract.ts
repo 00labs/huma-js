@@ -13,7 +13,7 @@ import {
   ReceivableFactoringPool,
   toBigNumber,
   upScale,
-} from '@huma-finance/shared'
+} from '@huma-finance/core'
 import { BigNumber, Contract } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 

@@ -1,5 +1,5 @@
 import { Box, Button, css, Typography, useTheme } from '@mui/material'
-import { txAtom } from '@huma-finance/web-shared'
+import { txAtom } from '@huma-finance/web-core'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 
