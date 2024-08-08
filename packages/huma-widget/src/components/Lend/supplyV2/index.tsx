@@ -36,12 +36,14 @@ export interface Campaign {
  * Lend pool supply props
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
+ * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
+  pointsTestnetExperience: boolean
   campaign?: Campaign
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
@@ -49,6 +51,7 @@ export interface LendSupplyPropsV2 {
 
 export function LendSupplyV2({
   poolName: poolNameStr,
+  pointsTestnetExperience,
   campaign,
   handleClose,
   handleSuccess,
@@ -174,6 +177,7 @@ export function LendSupplyV2({
           handleClose={handleClose}
           isUniTranche={isUniTranche}
           changeTranche={setSelectedTranche}
+          pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
           minDepositAmount={poolSettings.minDepositAmount}
         />
@@ -184,6 +188,7 @@ export function LendSupplyV2({
           poolUnderlyingToken={poolUnderlyingToken}
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
+          pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
         />
       )}
@@ -217,6 +222,7 @@ export function LendSupplyV2({
         <PointsEarned
           transactionHash={transactionHash}
           lpConfig={lpConfig}
+          pointsTestnetExperience={pointsTestnetExperience}
           handleAction={handleClose}
         />
       )}

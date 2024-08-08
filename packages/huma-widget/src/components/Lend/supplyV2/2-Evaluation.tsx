@@ -10,6 +10,7 @@ type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
   minDepositAmount: BigNumber
+  pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
@@ -20,6 +21,7 @@ export function Evaluation({
   isUniTranche,
   minDepositAmount,
   campaign,
+  pointsTestnetExperience,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -34,6 +36,7 @@ export function Evaluation({
         poolInfo={poolInfo}
         handleClose={handleClose}
         isUniTranche={isUniTranche}
+        pointsTestnetExperience={pointsTestnetExperience}
         campaign={campaign}
         minDepositAmount={minDepositAmount}
         changeTranche={changeTranche}

@@ -48,6 +48,7 @@ type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
   minDepositAmount: BigNumber
+  pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
@@ -58,6 +59,7 @@ export function PersonaEvaluation({
   isUniTranche,
   minDepositAmount: minDepositAmountBN,
   campaign,
+  pointsTestnetExperience,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -91,11 +93,18 @@ export function PersonaEvaluation({
           account,
           localStorage.getItem(CAMPAIGN_REFERENCE_CODE) ?? undefined,
           isDev,
+          pointsTestnetExperience,
         )
       }
     }
     createNewWallet()
-  }, [account, campaign, isDev, isWalletOwnershipVerified])
+  }, [
+    account,
+    campaign,
+    isDev,
+    isWalletOwnershipVerified,
+    pointsTestnetExperience,
+  ])
 
   useEffect(() => {
     const getBasePoints = async () => {
@@ -104,6 +113,7 @@ export function PersonaEvaluation({
           campaign.campaignGroupId,
           minDepositAmountBN.toString(),
           isDev,
+          pointsTestnetExperience,
         )
         const campaignPoints = estimatedPoints.find(
           (item) => item.campaignId === campaign.id,
@@ -123,7 +133,13 @@ export function PersonaEvaluation({
       }
     }
     getBasePoints()
-  }, [campaign, isDev, isUniTranche, minDepositAmountBN])
+  }, [
+    campaign,
+    isDev,
+    isUniTranche,
+    minDepositAmountBN,
+    pointsTestnetExperience,
+  ])
 
   const approveLender = useCallback(async () => {
     try {
