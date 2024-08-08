@@ -62,7 +62,7 @@ export function ErrorModal({
     errorIcon: css`
       position: absolute;
       font-size: 20px;
-      color: #d32f2f;
+      color: ${theme.palette.error.main};
       margin: ${theme.spacing(0, 2)};
     `,
     messageWrapper: css`

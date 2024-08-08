@@ -55,7 +55,6 @@ export enum LenderEvent {
   ReinvestYieldConfigSet = 6,
   CoverDeposited = 7,
   CoverRedeemed = 8,
-  LenderFundWithdrawn = 9,
 }
 
 export const CreditEventText = {
@@ -77,7 +76,6 @@ export const LenderEventText = {
   [String(LenderEvent.RedemptionRequestAdded)]: 'Request redemption',
   [String(LenderEvent.RedemptionRequestRemoved)]: 'Cancel redemption request',
   [String(LenderEvent.LenderFundDisbursed)]: 'Withdraw',
-  [String(LenderEvent.LenderFundWithdrawn)]: 'Withdraw',
   [String(LenderEvent.CoverDeposited)]: 'Supply first loss cover',
   [String(LenderEvent.CoverRedeemed)]: 'Redeem first loss cover',
 }

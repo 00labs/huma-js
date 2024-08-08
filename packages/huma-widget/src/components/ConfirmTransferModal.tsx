@@ -86,7 +86,7 @@ export function ConfirmTransferModal({
       animation-iteration-count: infinite;
       animation-timing-function: linear;
 
-      color: #b246ff;
+      color: ${theme.palette.primary.main};
       position: absolute;
       margin: auto;
       top: 0;

@@ -96,7 +96,7 @@ export function ConfirmTransfer({
       font-weight: 700;
     `,
     divider: css`
-      border-color: #eae6f0;
+      border-color: ${theme.palette.divider};
       margin-bottom: ${theme.spacing(3)};
     `,
   }

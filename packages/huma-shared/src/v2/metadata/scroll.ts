@@ -3,38 +3,36 @@ import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
 import { KYC_PROVIDER, PoolsInfoV2 } from '../utils'
 
-export const ALFAJORES_METADATA: PoolsInfoV2 = {
+export const SCROLL_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
-    chainId: ChainEnum.Alfajores,
+    chainId: ChainEnum.Scroll,
     poolVersion: 'v2',
     industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPoolV2,
-    poolType: POOL_TYPE.ReceivableBackedCreditLine,
-    pool: '0xc324e091bbdf681b28d07f2e98774c3465c03bCb',
-    poolConfig: '0x1ad35eb7d600039d4707817b8093a89e388da5c1',
-    poolCredit: '0x14b11f2fda011b6277a21e77a8e312b4b1d53c59',
-    poolCreditManager: '0x82f6d4ea15ed9b4f5a49fec82748469e2c58c763',
-    poolSafe: '0x90540caa8573b577369d2a14821ece6373c40529',
-    seniorTrancheVault: '0x9a534eb31c7858fbf90361939f648d16c6576f55',
-    juniorTrancheVault: '0x70f977516ed2d4a96e155b6c9f9546932298b241',
-    epochManager: '0xdfba71d2d20dac522d38a9b513056e7cdcc877f0',
-    receivable: '0x5D1F2f000ef0C42bDa974E30d32145bcCaAec77c',
+    poolType: POOL_TYPE.CreditLine,
+    pool: '0x5227254a6aCa397e95F310b52f6D3143A5A9Ee14',
+    poolConfig: '0xebf8D31C5492Dc93FC73a6AD136d47c45AB2C7a5',
+    poolCredit: '0xc6F10af4746784a0DD095f4E5718d53ff94eB4a0',
+    poolCreditManager: '0x061411d05074Bc974f814AC86309D2204f4c265d',
+    poolSafe: '0x7F4f55fAeE753D8dbB3E5F04861dB38E9DB70c3D',
+    seniorTrancheVault: '0x4cdCedcF50266aD9ed809048BC9874320EC902bC',
+    juniorTrancheVault: '0x483D02C11f8F1E31C267040A6C86AaB80c428BaB',
+    epochManager: '0x1a2C87Be5e785493310526faA7739Bbe4E10c0F6',
     poolUnderlyingToken: {
-      address: '0x6548f5146c8deA61C4C7269988DDfB22BC431cd2',
+      address: '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4',
       symbol: 'USDC',
       decimals: 6,
       icon: 'USDC',
     },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
-        '0xb45E27781cbA4E61332adb5d32AB6f64fA316759',
-      [FirstLossCoverIndex.admin]: '0xd4E748A822FAc98D2CCC4645D85B7d2964726f7f',
+        '0xceA6753113741f82A7a3d86355D4d9BB7126F25E',
+      [FirstLossCoverIndex.admin]: '0x4222372912cc6554a11ecBeC141cBf6b7d62B630',
     },
     seniorAPY: '10-20%',
     juniorAPY: '10-20%',
-    title: 'Arf V2 Testing Pool',
+    title: 'Arf Credit Pool v2',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
-    // supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
     KYC: {
       Persona: {
         signInRequired: {
@@ -58,6 +56,9 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
             'Your verification request is under review. Please check back later.',
         },
       },
+    },
+    extra: {
+      enableGetTestUSDC: true,
     },
   },
 }
