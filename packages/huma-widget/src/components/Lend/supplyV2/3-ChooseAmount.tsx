@@ -24,6 +24,7 @@ type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
   selectedTranche: TrancheType | undefined
   isUniTranche: boolean
+  pointsTestnetExperience: boolean
   campaign?: Campaign
 }
 
@@ -32,6 +33,7 @@ export function ChooseAmount({
   poolUnderlyingToken,
   selectedTranche,
   isUniTranche,
+  pointsTestnetExperience,
   campaign,
 }: Props): React.ReactElement | null {
   const isDev = checkIsDev()
@@ -69,6 +71,7 @@ export function ChooseAmount({
             )
             .toString(),
           isDev,
+          pointsTestnetExperience,
         )
         const campaignPoints = estimatedPoints.find(
           (item) => item.campaignId === campaign.id,
@@ -87,6 +90,7 @@ export function ChooseAmount({
     debouncedValue,
     decimals,
     isDev,
+    pointsTestnetExperience,
     poolInfo.poolUnderlyingToken.decimals,
     selectedTranche,
   ])

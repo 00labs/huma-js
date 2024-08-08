@@ -27,12 +27,14 @@ const ERROR_MESSAGE =
 type Props = {
   transactionHash: string
   lpConfig: { withdrawalLockoutPeriodInDays: number }
+  pointsTestnetExperience: boolean
   handleAction: () => void
 }
 
 export function PointsEarned({
   transactionHash,
   lpConfig,
+  pointsTestnetExperience,
   handleAction,
 }: Props): React.ReactElement {
   const theme = useTheme()
@@ -72,6 +74,7 @@ export function PointsEarned({
       const ownership = await CampaignService.checkWalletOwnership(
         account!,
         isDev,
+        pointsTestnetExperience,
       )
       setWalletOwnership(ownership)
       if (!ownership) {
@@ -79,7 +82,7 @@ export function PointsEarned({
       }
     }
     checkWalletOwnership()
-  }, [account, isDev, setAuthError])
+  }, [account, isDev, pointsTestnetExperience, setAuthError])
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
@@ -104,10 +107,11 @@ export function PointsEarned({
       if (walletOwnership) {
         try {
           const result = await CampaignService.updateWalletPoints(
-            chainId!,
             account!,
             transactionHash,
+            chainId!,
             isDev,
+            pointsTestnetExperience,
           )
           if (!result.pointsAccumulated) {
             dispatch(
@@ -128,7 +132,15 @@ export function PointsEarned({
       }
     }
     updateWalletPoints()
-  }, [account, chainId, dispatch, isDev, transactionHash, walletOwnership])
+  }, [
+    account,
+    chainId,
+    dispatch,
+    isDev,
+    pointsTestnetExperience,
+    transactionHash,
+    walletOwnership,
+  ])
 
   const styles = {
     wrapper: css`

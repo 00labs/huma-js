@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CHAINS } from './chain'
 
 const getDevPrefix = (isDev = false) => (isDev ? 'dev.' : '')
@@ -53,9 +54,15 @@ const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
   }
 }
 
-const getCampaignAPIUrl = (isDev: boolean) =>
-  // @TODO Should remove the testnet path because no need to separate testnet and mainet for campaign
-  `https://${isDev ? 'dev.testnet.' : ''}campaign-points.huma.finance/graphql`
+// const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
+//   `https://${getDevPrefix(isDev)}${
+//     pointsTestnetExperience ? 'testnet.' : ''
+//   }campaign-points.huma.finance/graphql`
+
+// @TODO - Remove this function and use the one above
+// @ts-ignore
+const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
+  `https://dev.testnet.campaign-points.huma.finance/graphql`
 
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
 const DEFAULT_CHAIN_ID = 137
