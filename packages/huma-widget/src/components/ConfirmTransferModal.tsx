@@ -53,7 +53,7 @@ export function ConfirmTransferModal({
       background: #f9f8fa;
       border-radius: 4px;
       font-size: 16px;
-      color: ${theme.palette.text.secondary};
+      color: ${theme.palette.text.primary};
       padding: ${theme.spacing(3, 2)};
       margin-bottom: ${theme.spacing(1)};
       position: relative;
