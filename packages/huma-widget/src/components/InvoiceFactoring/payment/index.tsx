@@ -1,10 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import {
-  POOL_NAME,
-  POOL_TYPE,
-  useAccountStats,
-  usePoolInfo,
-} from '@huma-finance/shared'
+import { POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
+import { useAccountStats, usePoolInfo } from '@huma-finance/web-shared'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 

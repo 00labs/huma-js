@@ -2,10 +2,10 @@ import {
   decodeLogs,
   downScale,
   formatNumber,
-  sendTxAtom,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
+import { sendTxAtom } from '@huma-finance/web-shared'
 import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 

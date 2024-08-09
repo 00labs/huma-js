@@ -1,9 +1,5 @@
-import {
-  CampaignService,
-  checkIsDev,
-  formatNumber,
-  useAuthErrorHandling,
-} from '@huma-finance/shared'
+import { CampaignService, checkIsDev, formatNumber } from '@huma-finance/shared'
+import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'

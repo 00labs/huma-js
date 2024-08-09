@@ -7,6 +7,8 @@ import { SiweMessage } from 'siwe'
 
 import { useAsyncError } from './useAsyncError'
 
+type ErrorType = 'NotSignedIn' | 'UserRejected' | 'Other'
+
 const createSiweMessage = (
   address: string,
   chainId: number,
@@ -45,6 +47,7 @@ const verifyOwnership = async (
 export type AuthState = {
   isWalletOwnershipVerificationRequired: boolean
   isWalletOwnershipVerified: boolean
+  errorType?: ErrorType
   error: unknown
   setError: React.Dispatch<React.SetStateAction<unknown>>
 }
@@ -59,12 +62,14 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
   const handleVerificationCompletion = () => {
     setIsVerified(true)
   }
+  const [errorType, setErrorType] = useState<ErrorType | undefined>()
 
   useEffect(() => {
     if (!account || !chainId || !error || !provider) {
       return
     }
-    if (
+
+    const isUnauthorizedError =
       axios.isAxiosError(error) &&
       error.response?.status === HttpStatusCode.Unauthorized &&
       [
@@ -72,7 +77,16 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         'InvalidIdTokenException',
         'WalletMismatchException',
       ].includes(error.response?.data?.detail?.type)
+
+    const isWalletNotCreatedError = error === 'WalletNotCreatedException'
+    const isWalletNotSignInError = error === 'WalletNotSignInException'
+
+    if (
+      isUnauthorizedError ||
+      isWalletNotCreatedError ||
+      isWalletNotSignInError
     ) {
+      setErrorType('NotSignedIn')
       setIsVerificationRequired(true)
       verifyOwnership(
         account,
@@ -81,12 +95,18 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
         provider,
         handleVerificationCompletion,
       ).catch((e) => setError(e))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
+      setErrorType('UserRejected')
+    } else {
+      setErrorType('Other')
     }
   }, [chainId, isDev, error, throwError, account, provider])
 
   return {
     isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
+    errorType,
     error,
     setError,
   }

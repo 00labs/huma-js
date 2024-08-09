@@ -4,9 +4,11 @@ import {
   POOL_NAME,
   TrancheRedemptionStatus,
   TrancheType,
+} from '@huma-finance/shared'
+import {
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'

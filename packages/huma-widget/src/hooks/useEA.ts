@@ -5,8 +5,8 @@ import {
   EARejectMessage,
   EARejectReason,
   EAService,
-  useAuthErrorHandling,
 } from '@huma-finance/shared'
+import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 
