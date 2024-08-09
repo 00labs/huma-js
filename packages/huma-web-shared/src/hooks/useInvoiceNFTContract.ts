@@ -1,10 +1,14 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import {
+  ERC20_TRANSFERABLE_RECEIVABLE_ABI,
+  ERC20TransferableReceivable,
+  POOL_NAME,
+  POOL_TYPE,
+  PoolContractMap,
+} from '@huma-finance/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
-import ERC20_TRANSFERRABLE_ABI from '../abis/ERC20TransferableReceivable.json'
-import { ERC20TransferableReceivable } from '../abis/types/ERC20TransferableReceivable'
-import { POOL_NAME, POOL_TYPE, PoolContractMap } from '../utils/pool'
 import { useContract } from './useContract'
 
 export function useInvoiceNFTContract(
@@ -17,7 +21,7 @@ export function useInvoiceNFTContract(
     : undefined
   return useContract<ERC20TransferableReceivable>(
     InvoiceNFTAddress,
-    ERC20_TRANSFERRABLE_ABI,
+    ERC20_TRANSFERABLE_RECEIVABLE_ABI,
     provider,
   )
 }

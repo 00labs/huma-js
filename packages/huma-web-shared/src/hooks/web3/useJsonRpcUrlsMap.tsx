@@ -1,15 +1,14 @@
+import {
+  JsonRpcProvider,
+  StaticJsonRpcProvider,
+} from '@ethersproject/providers'
+import { ChainEnum, JSON_RPC_FALLBACK_ENDPOINTS } from '@huma-finance/core'
 import React, {
   createContext,
   PropsWithChildren,
   useContext,
   useMemo,
 } from 'react'
-import {
-  JsonRpcProvider,
-  StaticJsonRpcProvider,
-} from '@ethersproject/providers'
-import { ChainEnum } from '../../utils/chain'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from '../../utils/jsonRpcEndpoints'
 
 export type JsonRpcConnectionMap = {
   [chainId: number]: string | string[] | JsonRpcProvider | JsonRpcProvider[]
@@ -49,8 +48,6 @@ function toJsonRpcMap<T>(
     [ChainEnum.Amoy]: getChainConnections(ChainEnum.Amoy),
     [ChainEnum.Alfajores]: getChainConnections(ChainEnum.Alfajores),
     [ChainEnum.Celo]: getChainConnections(ChainEnum.Celo),
-    [ChainEnum.Scroll]: getChainConnections(ChainEnum.Scroll),
-    [ChainEnum.ScrollSepolia]: getChainConnections(ChainEnum.ScrollSepolia),
   }
 }
 

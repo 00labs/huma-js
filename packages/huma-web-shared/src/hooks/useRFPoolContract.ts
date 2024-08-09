@@ -1,6 +1,10 @@
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { ReceivableFactoringPool } from '../abis/types/ReceivableFactoringPool'
-import { POOL_NAME, POOL_TYPE } from '../utils/pool'
+import {
+  POOL_NAME,
+  POOL_TYPE,
+  ReceivableFactoringPool,
+} from '@huma-finance/core'
+
 import {
   useAccountStats,
   useFeeManager,

@@ -1,17 +1,19 @@
+import {
+  JsonRpcConnector,
+  WalletConnectPopup,
+  WalletConnectQR,
+} from '@huma-finance/core'
+import { useWeb3React } from '@web3-react/core'
+import { EIP1193 } from '@web3-react/eip1193'
+import { MetaMask } from '@web3-react/metamask'
+import { Network } from '@web3-react/network'
 import React, {
   createContext,
   PropsWithChildren,
   useContext,
   useEffect,
 } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import { EIP1193 } from '@web3-react/eip1193'
-import { MetaMask } from '@web3-react/metamask'
-import { Network } from '@web3-react/network'
 import invariant from 'tiny-invariant'
-
-import { JsonRpcConnector } from '../../utils/JsonRpcConnector'
-import { WalletConnectPopup, WalletConnectQR } from '../../utils/WalletConnect'
 
 export interface Connectors {
   user: EIP1193 | JsonRpcConnector | undefined

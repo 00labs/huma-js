@@ -1,19 +1,22 @@
 import { MaxUint256 } from '@ethersproject/constants'
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import {
+  BASE_FEE_MANAGER_ABI,
+  BaseCreditPool,
+  BaseFeeManager,
+  BasePoolConfig,
+  CreditState,
+  downScale,
+  HDT,
+  POOL_NAME,
+  POOL_TYPE,
+  ReceivableFactoringPool,
+  toBigNumber,
+  upScale,
+} from '@huma-finance/core'
 import { BigNumber, Contract } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import BASE_FEE_MANAGER_ABI from '../abis/BaseFeeManager.json'
-import {
-  BaseCreditPool,
-  BasePoolConfig,
-  HDT,
-  ReceivableFactoringPool,
-} from '../abis/types'
-import { BaseFeeManager } from '../abis/types/BaseFeeManager'
-import { CreditState } from '../utils/credit'
-import { downScale, toBigNumber, upScale } from '../utils/number'
-import { POOL_NAME, POOL_TYPE } from '../utils/pool'
 import { useContract, useERC20Contract } from './useContract'
 import { useForceRefresh } from './useForceRefresh'
 import { usePoolInfo } from './usePool'
