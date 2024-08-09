@@ -3,7 +3,7 @@ import {
   POOL_TYPE,
   PoolContractMap,
   PoolInfoType,
-} from '@huma-finance/core'
+} from '@huma-finance/shared'
 
 export const usePoolInfo = (
   poolName: POOL_NAME,

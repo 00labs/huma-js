@@ -3,9 +3,9 @@ import {
   decodeLogs,
   downScale,
   formatMoney,
-  sendTxAtom,
   ERC20_ABI,
 } from '@huma-finance/shared'
+import { sendTxAtom } from '@huma-finance/web-shared'
 import React, { useEffect, useState } from 'react'
 
 import { useAtom } from 'jotai'

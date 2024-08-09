@@ -2,15 +2,15 @@
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { getContract } from '@huma-finance/core'
+import { getContract } from '@huma-finance/shared'
 import { renderHook } from '@testing-library/react'
 
 import { useContract, useMultiSendContract } from '../../src/hooks/useContract'
 
 jest.mock('@ethersproject/providers')
 
-jest.mock('@huma-finance/core', () => ({
-  ...jest.requireActual('@huma-finance/core'),
+jest.mock('@huma-finance/shared', () => ({
+  ...jest.requireActual('@huma-finance/shared'),
   getContract: jest.fn(),
   SupplementaryContracts: {
     MultiSend: 'MultiSend',

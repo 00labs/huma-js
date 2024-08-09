@@ -3,7 +3,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   ReceivableFactoringPool,
-} from '@huma-finance/core'
+} from '@huma-finance/shared'
 
 import {
   useAccountStats,

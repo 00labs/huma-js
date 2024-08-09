@@ -5,7 +5,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   toBigNumber,
-} from '@huma-finance/core'
+} from '@huma-finance/shared'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { BigNumber } from 'ethers'
 
@@ -36,8 +36,8 @@ jest.mock('../../src/hooks/useContract', () => ({
   useContract: jest.fn(),
 }))
 
-jest.mock('@huma-finance/core', () => ({
-  ...jest.requireActual('@huma-finance/core'),
+jest.mock('@huma-finance/shared', () => ({
+  ...jest.requireActual('@huma-finance/shared'),
   POOL_NAME: {
     HumaCreditLine: 'HumaCreditLine',
   },

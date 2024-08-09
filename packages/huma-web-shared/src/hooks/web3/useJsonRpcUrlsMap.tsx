@@ -2,7 +2,7 @@ import {
   JsonRpcProvider,
   StaticJsonRpcProvider,
 } from '@ethersproject/providers'
-import { ChainEnum, JSON_RPC_FALLBACK_ENDPOINTS } from '@huma-finance/core'
+import { ChainEnum, JSON_RPC_FALLBACK_ENDPOINTS } from '@huma-finance/shared'
 import React, {
   createContext,
   PropsWithChildren,
@@ -48,6 +48,8 @@ function toJsonRpcMap<T>(
     [ChainEnum.Amoy]: getChainConnections(ChainEnum.Amoy),
     [ChainEnum.Alfajores]: getChainConnections(ChainEnum.Alfajores),
     [ChainEnum.Celo]: getChainConnections(ChainEnum.Celo),
+    [ChainEnum.ScrollSepolia]: getChainConnections(ChainEnum.ScrollSepolia),
+    [ChainEnum.Scroll]: getChainConnections(ChainEnum.Scroll),
   }
 }
 

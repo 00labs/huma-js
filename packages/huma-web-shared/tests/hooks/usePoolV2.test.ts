@@ -25,8 +25,8 @@ jest.mock('../../src/hooks/useContract', () => ({
   useERC20Contract: jest.fn(),
 }))
 
-jest.mock('@huma-finance/core', () => ({
-  ...jest.requireActual('@huma-finance/core'),
+jest.mock('@huma-finance/shared', () => ({
+  ...jest.requireActual('@huma-finance/shared'),
   CHAIN_POOLS_INFO_V2: {
     5: {
       JiaV2: {

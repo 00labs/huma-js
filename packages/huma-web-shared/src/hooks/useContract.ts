@@ -12,7 +12,7 @@ import {
   SupplementaryContractsMap,
   TEST_ERC20_ABI,
   TestERC20,
-} from '@huma-finance/core'
+} from '@huma-finance/shared'
 import { useMemo } from 'react'
 
 // returns null on errors
