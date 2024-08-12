@@ -250,6 +250,12 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph:
       'https://api.studio.thegraph.com/query/38092/huma-scroll-sepolia/version/latest',
   },
+  [ChainEnum.Scroll]: {
+    subgraph:
+      'https://api.studio.thegraph.com/query/71608/huma-scroll/version/latest',
+    productionSubgraph:
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/AHQ6VhwnEXpH3mKRVi9V9MYFuj66cwXevDcuVr2SU84',
+  },
 }
 
 export const PoolContractMap: PoolContractMapType = {
