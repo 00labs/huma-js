@@ -3,17 +3,18 @@ import {
   downScale,
   formatMoney,
   PoolInfoV2,
-  sendTxAtom,
   timeUtil,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
+import { sendTxAtom } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
 import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { Campaign } from '.'
 import {
   useDoesChainSupportNotifi,
   useIsFirstTimeNotifiUser,
@@ -21,7 +22,6 @@ import {
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { TxDoneModal } from '../../TxDoneModal'
-import { Campaign } from '.'
 
 type Props = {
   poolInfo: PoolInfoV2

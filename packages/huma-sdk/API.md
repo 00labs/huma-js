@@ -1,8 +1,6 @@
 ## Objects
 
 <dl>
-<dt><a href="#usePoolContract">usePoolContract</a> ⇒ <code>T</code></dt>
-<dd><p>A react hook that returns a contract instance of a specific pool using an ethers provider or signer</p></dd>
 <dt><a href="#ARWeaveService">ARWeaveService</a> : <code>object</code></dt>
 <dd><p>An object that contains functions to interact with Huma-related data stored on ARWeave</p></dd>
 <dt><a href="#EAService">EAService</a> : <code>object</code></dt>
@@ -65,14 +63,6 @@ associated with the given pool name on the current chain.</p></dd>
 associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#getReceivableTokenIdFromReferenceId">getReceivableTokenIdFromReferenceId(referenceId, creator, poolName, signer)</a> ⇒</dt>
 <dd><p>Retrieves the receivable token ID associated with a given reference ID.</p></dd>
-<dt><a href="#useContract">useContract(address, ABI, signerOrProvider)</a> ⇒ <code>T</code> | <code>null</code></dt>
-<dd><p>Custom hook for creating an ethers instance of a smart contract.</p></dd>
-<dt><a href="#useERC20TransferableReceivableContract">useERC20TransferableReceivableContract(signerOrProvider, chainId, poolName)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
-<dd><p>A react hook that returns an ethers contract instance for the ERC20TransferableReceivable contract
-associated with the given pool name on the current chain.</p></dd>
-<dt><a href="#useRealWorldReceivableContract">useRealWorldReceivableContract(signerOrProvider, chainId)</a> ⇒ <code>Contract</code> | <code>null</code></dt>
-<dd><p>A react hook that returns an ethers contract instance for the RealWorldReceivable contract
-associated with the given pool name on the current chain.</p></dd>
 <dt><a href="#preapprove">preapprove(payload, chainId)</a> ⇒ <code>Promise.&lt;Approval&gt;</code></dt>
 <dd><p>Checks whether or not a credit underwriting request to Huma's EAVerse would be approved.
 Note that this does not approve a creditline in Huma's pools and an approve call is still required.</p></dd>
@@ -96,65 +86,6 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 <dt><a href="#Pagination">Pagination</a> : <code>Object</code></dt>
 <dd><p>Represents the pagination options for a query.</p></dd>
 </dl>
-
-<a name="usePoolContract"></a>
-
-## usePoolContract ⇒ <code>T</code>
-<p>A react hook that returns a contract instance of a specific pool using an ethers provider or signer</p>
-
-**Kind**: global namespace  
-**Returns**: <code>T</code> - <p>A contract instance of the specific pool.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>An ethers signer or provider instance.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
-| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
-| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
-
-
-* [usePoolContract](#usePoolContract) ⇒ <code>T</code>
-    * [.useCreditRecordDetails(userAddress, signerOrProvider, chainId, poolName, poolType)](#usePoolContract.useCreditRecordDetails) ⇒ <code>Array.&lt;(CreditRecordDetails\|undefined), function(): void&gt;</code>
-    * [.CreditRecordDetails](#usePoolContract.CreditRecordDetails) : <code>Object</code>
-
-<a name="usePoolContract.useCreditRecordDetails"></a>
-
-### usePoolContract.useCreditRecordDetails(userAddress, signerOrProvider, chainId, poolName, poolType) ⇒ <code>Array.&lt;(CreditRecordDetails\|undefined), function(): void&gt;</code>
-<p>A react hook that returns the credit record details for a user in a given pool, as well as a function to refresh the data.</p>
-
-**Kind**: static method of [<code>usePoolContract</code>](#usePoolContract)  
-**Returns**: <code>Array.&lt;(CreditRecordDetails\|undefined), function(): void&gt;</code> - <p>An array containing the credit record details and a function to refresh the data.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| userAddress | <code>string</code> | <p>The address of the user to get the credit record details for.</p> |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The signer or provider object to use for the contract.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
-| poolName | <code>POOL\_NAME</code> | <p>The name of the pool to get the credit record details for.</p> |
-| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
-
-<a name="usePoolContract.CreditRecordDetails"></a>
-
-### usePoolContract.CreditRecordDetails : <code>Object</code>
-<p>CreditRecordDetails type object representing the details of a credit line.</p>
-
-**Kind**: static typedef of [<code>usePoolContract</code>](#usePoolContract)  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| aprInBps | <code>number</code> | <p>The APR (annual percentage rate) in basis points.</p> |
-| correction | <code>BigNumber</code> | <p>adjustment of interest over or under-counted because of drawdown or principal payment in the middle of a billing period</p> |
-| creditLimit | <code>BigNumber</code> | <p>The credit limit in the pools base currency.</p> |
-| defaultAmount | <code>BigNumber</code> | <p>The amount of the default, if any.</p> |
-| dueDate | <code>BigNumber</code> | <p>The due date of the next payment.</p> |
-| feesAndInterestDue | <code>BigNumber</code> | <p>The fees and interest due.</p> |
-| intervalInDays | <code>number</code> | <p>The interval in days between payment periods.</p> |
-| missedPeriods | <code>number</code> | <p>The number of missed periods.</p> |
-| remainingPeriods | <code>number</code> | <p>The number of remaining periods before this credit line is considered paid off.</p> |
-| state | <code>number</code> | <p>The state of the factorization. Please see the CreditState in huma-contracts for more details.</p> |
-| totalDue | <code>BigNumber</code> | <p>The total due amount of this credit line.</p> |
-| unbilledPrincipal | <code>BigNumber</code> | <p>The unbilled principal of the next payment.</p> |
 
 <a name="ARWeaveService"></a>
 
@@ -911,49 +842,6 @@ associated with the given pool name on the current chain.</p>
 | creator | <p>The creator of the receivable.</p> |
 | poolName | <p>The name of the pool.</p> |
 | signer | <p>The signer used for the contract interaction.</p> |
-
-<a name="useContract"></a>
-
-## useContract(address, ABI, signerOrProvider) ⇒ <code>T</code> \| <code>null</code>
-<p>Custom hook for creating an ethers instance of a smart contract.</p>
-
-**Kind**: global function  
-**Returns**: <code>T</code> \| <code>null</code> - <p>An instance of the smart contract, or null if an error occurs.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| address | <code>string</code> \| <code>null</code> \| <code>undefined</code> | <p>The address of the smart contract instance.</p> |
-| ABI | <code>any</code> | <p>The ABI of the smart contract.</p> |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The signer or provider used to sign transactions or retrieve blockchain data. Note that this signerOrProvider must be connected to the same network as the smart contract in question.</p> |
-
-<a name="useERC20TransferableReceivableContract"></a>
-
-## useERC20TransferableReceivableContract(signerOrProvider, chainId, poolName) ⇒ <code>Contract</code> \| <code>null</code>
-<p>A react hook that returns an ethers contract instance for the ERC20TransferableReceivable contract
-associated with the given pool name on the current chain.</p>
-
-**Kind**: global function  
-**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the ERC20TransferableReceivable contract or null if it could not be found.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
-| poolName | <code>POOL\_NAME</code> | <p>The name of the pool to get the contract for.</p> |
-
-<a name="useRealWorldReceivableContract"></a>
-
-## useRealWorldReceivableContract(signerOrProvider, chainId) ⇒ <code>Contract</code> \| <code>null</code>
-<p>A react hook that returns an ethers contract instance for the RealWorldReceivable contract
-associated with the given pool name on the current chain.</p>
-
-**Kind**: global function  
-**Returns**: <code>Contract</code> \| <code>null</code> - <p>A contract instance for the RealWorldReceivable contract or null if it could not be found.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| signerOrProvider | <code>ethers.providers.Provider</code> \| <code>ethers.Signer</code> | <p>The provider or signer instance to use for the contract.</p> |
-| chainId | <code>number</code> | <p>The chain id where the contract instance exists</p> |
 
 <a name="preapprove"></a>
 

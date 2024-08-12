@@ -26,6 +26,9 @@
       "path": "../huma-shared"
     },
     {
+      "path": "../huma-web-shared"
+    },
+    {
       "path": "../huma-sdk"
     }
   ]

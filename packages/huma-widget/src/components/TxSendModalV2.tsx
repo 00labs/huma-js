@@ -1,4 +1,5 @@
-import { sendTxAtom, TxStateType, useMount } from '@huma-finance/shared'
+import { TxStateType } from '@huma-finance/shared'
+import { sendTxAtom, useMount } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { Contract } from 'ethers'
 import { useAtom } from 'jotai'

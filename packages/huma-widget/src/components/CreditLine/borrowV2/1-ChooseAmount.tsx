@@ -3,8 +3,8 @@ import {
   formatNumber,
   PoolInfoV2,
   UnderlyingTokenInfo,
-  usePoolSafeAllowanceV2,
 } from '@huma-finance/shared'
+import { usePoolSafeAllowanceV2 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { useCallback, useState } from 'react'

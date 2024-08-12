@@ -1,8 +1,5 @@
-import {
-  FirstLossCoverIndex,
-  PoolInfoV2,
-  useFirstLossCoverContractV2,
-} from '@huma-finance/shared'
+import { FirstLossCoverIndex, PoolInfoV2 } from '@huma-finance/shared'
+import { useFirstLossCoverContractV2 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import React, { useCallback } from 'react'

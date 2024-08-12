@@ -1,4 +1,5 @@
-import { isTxFailed, sendTxAtom, txAtom } from '@huma-finance/shared'
+import { isTxFailed } from '@huma-finance/shared'
+import { sendTxAtom, txAtom } from '@huma-finance/web-shared'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect } from 'react'

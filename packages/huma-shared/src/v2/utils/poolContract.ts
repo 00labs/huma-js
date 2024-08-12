@@ -37,6 +37,14 @@ import {
 import { FirstLossCoverIndex } from '../types'
 import { getTrancheVaultContractV2 } from './trancheVaultContract'
 
+export type CreditStatsV2 = {
+  creditRecord?: CreditRecordStructOutput
+  creditConfig?: CreditConfigStructOutput
+  creditAvailable?: BigNumber
+  totalDueAmount?: BigNumber
+  payoffAmount?: BigNumber
+}
+
 export const getPoolInfoV2 = (
   poolName: POOL_NAME,
   chainId: number | undefined,
