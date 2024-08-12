@@ -7,7 +7,7 @@
     ]
   },
   "scripts": {
-    "lerna:publish": "yarn lerna publish patch --no-private --access=public",
+    "lerna:publish": "yarn lerna publish patch --no-private",
     "lerna:publish:canary": "yarn lerna publish patch --preid beta --canary --no-private",
     "start:widget": "yarn workspace @huma-finance/widgets cosmos",
     "build:all": "yarn build:shared && yarn build:web-shared && yarn build:sdk && yarn build:widget",
