@@ -5,19 +5,21 @@ import {
   PoolInfoV2,
   TrancheType,
   UnderlyingTokenInfo,
+} from '@huma-finance/shared'
+import {
   useDebouncedValue,
   usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
+import { Campaign } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { InputAmountModal } from '../../InputAmountModal'
-import { Campaign } from '.'
 
 type Props = {
   poolInfo: PoolInfoV2

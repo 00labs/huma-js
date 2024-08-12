@@ -1,8 +1,5 @@
-import {
-  PoolInfoV2,
-  TrancheType,
-  useTrancheVaultContractV2,
-} from '@huma-finance/shared'
+import { PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import { useTrancheVaultContractV2 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 

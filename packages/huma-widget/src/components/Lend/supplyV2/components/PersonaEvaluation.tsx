@@ -8,9 +8,9 @@ import {
   KYCCopy,
   PoolInfoV2,
   TrancheType,
-  useAuthErrorHandling,
   VerificationStatusResultV2,
 } from '@huma-finance/shared'
+import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'

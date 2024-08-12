@@ -2,12 +2,10 @@ import { MaxUint256 } from '@ethersproject/constants'
 import {
   getERC20Contract,
   PoolInfoV2,
-  sendTxAtom,
-  txAtom,
   TxStateType,
   UnderlyingTokenInfo,
-  useMount,
 } from '@huma-finance/shared'
+import { sendTxAtom, txAtom, useMount } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, BigNumberish } from 'ethers'
