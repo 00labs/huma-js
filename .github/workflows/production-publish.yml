@@ -3,10 +3,10 @@ name: Production NPM Packages Publishing
 on:
   pull_request:
     types: [closed]
-    branches: ["master"]
+    branches: ['master']
 
 jobs:
-  deploy-beta:
+  deploy-prod:
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -21,8 +21,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.13.0
-          registry-url: "https://registry.npmjs.org"
-          cache: "yarn"
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
 
       - name: Cache Yarn dependencies
         uses: actions/cache@v3
