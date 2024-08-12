@@ -76,6 +76,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x7cc09098f664d28d5b07E4ee822502c4A3dB08DE',
     juniorTrancheVault: '0xb6DBd8167933E1c004c0F8Ba4A06d50a2A2AaB6c',
     epochManager: '0x3DAc98fB0FD0FD4D3698302aee64c5af37a3B1Ae',
+    receivable: '0x1e5bcc05b411f04f2e003dbecbd1660bce59a317',
     poolUnderlyingToken: {
       address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
       symbol: 'USDC',
@@ -133,6 +134,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x3A2b2c3ee4f5bA247B2eD91372Db14eA319D6764',
     juniorTrancheVault: '0xae7379910E51cec2378BAF2A5553C3aa45310acD',
     epochManager: '0xA8d737b5187Cc8eAaD0b7a97C7b04657679c5a43',
+    receivable: '0x997ad2f9145c2848e02763eaa60e46cff2c06988',
     poolUnderlyingToken: {
       address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
       symbol: 'USDC',
