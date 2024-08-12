@@ -18,6 +18,12 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x64B2a42C1f69F35bCB4abAbadfAC8b681D15Cd70',
     juniorTrancheVault: '0x848C97580F8C5f9E194CBf5E70463417c5c70CcF',
     epochManager: '0x3Abf059E221d82c290aCa12B6DE3fdF4d64b5f5E',
+    poolUnderlyingToken: {
+      address: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x64e605642C1343f5d9D7151fC7a54dED81145741',
@@ -28,32 +34,33 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     title: 'Jia V2 Testing Pool',
     desc: 'Jia brings real-world asset returns to crypto investors while tackling the multi-trillion-dollar credit gap in emerging markets. By providing blockchain-based financing to small businesses and rewarding borrowers who repay with ownership, Jia enables them to create wealth and prosperity for themselves and their communities.',
     KYC: {
-      provider: KYC_PROVIDER.Securitize,
-      signInRequired: {
-        title: 'Sign In',
-        description:
-          'Please sign in to verify that you are the owner of the wallet.',
-      },
-      verifyIdentity: {
-        title: 'Verify Identity',
-        description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
-        buttonText: 'VERIFY MY IDENTITY',
-      },
-      emailSignatureLink: {
-        title: 'Pool Documents',
-        description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
-        buttonText: 'EMAIL DOCUSIGN LINK',
-      },
-      resendSignatureLink: {
-        title: 'Resend Documents',
-        description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
-        buttonText: 'RESEND DOCUSIGN LINK',
-      },
-      docUnderReview: {
-        title: 'Under Review',
-        description:
-          'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
-        buttonText: 'THANK YOU',
+      Securitize: {
+        signInRequired: {
+          title: 'Sign In',
+          description:
+            'Please sign in to verify that you are the owner of the wallet.',
+        },
+        verifyIdentity: {
+          title: 'Verify Identity',
+          description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
+          buttonText: 'VERIFY MY IDENTITY',
+        },
+        emailSignatureLink: {
+          title: 'Pool Documents',
+          description: `By lending to this pool, you become a subscriber member of the Jia Pioneer Fund LLC. Please sign the LLC Agreement via DocuSign, securing your off-chain claim to the Fund's returns and collateral.`,
+          buttonText: 'EMAIL DOCUSIGN LINK',
+        },
+        resendSignatureLink: {
+          title: 'Resend Documents',
+          description: `Please check your inbox for the LLC Agreement sent via DocuSign. If you haven't received it, check your spam folder or click below to resend.`,
+          buttonText: 'RESEND DOCUSIGN LINK',
+        },
+        docUnderReview: {
+          title: 'Under Review',
+          description:
+            'Your documents are being reviewed and you will be notified upon approval. Thank you for your patience. Any questions? Email invest@jia.xyz.',
+          buttonText: 'THANK YOU',
+        },
       },
     },
   },
@@ -71,6 +78,12 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0xBBd6abFb659974300BEe318C3c2C69c268d3788b',
     juniorTrancheVault: '0xa53Fd5659Fb9Ef172CAd7301459656b0eadb8ff7',
     epochManager: '0x3c2e19A2AdEc4344dD91425cc91288336F0DD961',
+    poolUnderlyingToken: {
+      address: '0x04C89607413713Ec9775E14b954286519d836FEf',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0x3011866c9feC8476622c7aeDb55a0fEB60955356',

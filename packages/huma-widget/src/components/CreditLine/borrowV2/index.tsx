@@ -1,10 +1,9 @@
+import { CreditStateV2, POOL_NAME } from '@huma-finance/shared'
 import {
-  CreditStateV2,
-  POOL_NAME,
   useCreditStatsV2,
   usePoolInfoV2,
   usePoolUnderlyingTokenInfoV2,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -56,7 +55,7 @@ export function CreditLineBorrowV2({
     provider,
   )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
   const { creditRecord } = accountStats
   const accountState = creditRecord?.state
 

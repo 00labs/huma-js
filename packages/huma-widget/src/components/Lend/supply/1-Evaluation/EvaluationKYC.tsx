@@ -6,10 +6,9 @@ import {
   IdentityService,
   PoolInfoType,
   timeUtil,
-  useAuthErrorHandling,
-  useParamsSearch,
   VerificationStatusResult,
 } from '@huma-finance/shared'
+import { useAuthErrorHandling, useParamsSearch } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -115,9 +114,9 @@ export function EvaluationKYC({
       ${theme.cssMixins.rowCentered};
       margin-top: ${theme.spacing(10)};
       padding: ${theme.spacing(0, 2)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
     `,
   }
 
@@ -148,6 +147,7 @@ export function EvaluationKYC({
   }, [envelopeLastQueryTimeKey])
 
   useEffect(() => {
+    setKYCCopy(JiaPoolCopies.verifyIdentity)
     const docuSignStatus = localStorage.getItem(envelopeDocuSignStatusKey)
     setDocSignatureStatus(docuSignStatus as DocSignatureStatus['status'])
     if (docuSignStatus === 'completed') {
@@ -281,7 +281,7 @@ export function EvaluationKYC({
         : '5557baf5-d3c2-4c80-b522-c05a11c6e586'
       const baseUrl = configUtil.getKYCProviderBaseUrl(KYCProvider, chainId!)
       const originUrl = window.location.href.split('?')[0]
-      const redirectUrl = `${originUrl}?poolName=${poolInfo.poolName}&kycProvider=${KYCProvider}&kycPool=${poolInfo.pool}`
+      const redirectUrl = `${originUrl}?poolName=${poolInfo.poolName}&chainId=${poolInfo.chainId}&poolType=${poolInfo.poolType}&kycProvider=${KYCProvider}&kycPool=${poolInfo.pool}`
       const providerAuthorizeUrl = `${baseUrl}/#/authorize?issuerId=${issuerId}&scope=details&details=verification&redirectUrl=${redirectUrl}`
       window.location.href = isNotOnboarded ? providerAuthorizeUrl : baseUrl
     } else {

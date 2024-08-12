@@ -9,7 +9,7 @@ import {
   Slider,
   useTheme,
 } from '@mui/material'
-import { useMQ } from '@huma-finance/shared'
+import { useMQ } from '@huma-finance/web-shared'
 import React, { useState } from 'react'
 
 import { IconType } from '../utilTypes'
@@ -60,13 +60,13 @@ export function ChooseAmountModal({
 
   const styles = {
     subTitle: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
     `,
     description2: css`
       ${theme.cssMixins.rowCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(2)};
     `,
     chosenAmountWrapper: css`
@@ -80,7 +80,7 @@ export function ChooseAmountModal({
       margin-top: ${theme.spacing(4)};
     `,
     chosenAmount: css`
-      font-family: 'Inter-Bold';
+      font-weight: 700;
       font-size: 32px;
     `,
     chosenAmountSymbol: css`
@@ -134,7 +134,7 @@ export function ChooseAmountModal({
       margin-bottom: ${theme.spacing(7)};
       &.MuiSlider-root {
         height: 8px !important;
-        color: #e9e9e9;
+        color: ${theme.palette.text.primary};
       }
       & .MuiSlider-track {
         height: 8px !important;
@@ -151,19 +151,17 @@ export function ChooseAmountModal({
       }
     `,
     info: css`
-      font-family: 'Uni-Neue-Regular';
-      ${theme.cssMixins.rowSpaceBetweened};
       font-weight: 400;
+      ${theme.cssMixins.rowSpaceBetweened};
       font-size: 16px;
-      color: #423b46;
+      color: ${theme.palette.text.secondary};
     `,
     divider: css`
       margin: ${theme.spacing(2, 0)};
-      background: #49505b;
-      border-color: #e9e3f1;
+      border-color: ${theme.palette.divider};
     `,
     okButton: css`
-      font-family: 'Uni-Neue-Bold';
+      font-weight: 700;
       width: 100%;
       position: absolute;
       bottom: ${theme.spacing(isXsSize ? 2 : 0)};
@@ -172,7 +170,7 @@ export function ChooseAmountModal({
       ${theme.cssMixins.rowHCentered};
       font-weight: 400;
       font-size: 12px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(1)};
       letter-spacing: 0px;
       width: 100%;
@@ -189,8 +187,11 @@ export function ChooseAmountModal({
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     setInputTouched(true)
-    // @ts-ignore
-    handleChangeAmount(event.target.value)
+    if (!event.target.value) {
+      handleChangeAmount(0)
+    } else {
+      handleChangeAmount(Number(event.target.value))
+    }
   }
 
   const handleSetMax = () => {

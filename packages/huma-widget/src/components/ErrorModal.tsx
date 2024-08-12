@@ -1,6 +1,6 @@
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import { Box, Button, css, Tooltip, Typography, useTheme } from '@mui/material'
-import { txAtom } from '@huma-finance/shared'
+import { txAtom } from '@huma-finance/web-shared'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 
@@ -55,13 +55,6 @@ export function ErrorModal({
       width: 100%;
       display: inline-table;
       padding: ${theme.spacing(2, 0)};
-      background: linear-gradient(
-          0deg,
-          rgba(255, 255, 255, 0.9),
-          rgba(255, 255, 255, 0.9)
-        ),
-        #d32f2f;
-      border-radius: 4px;
       position: relative;
       margin-top: ${theme.spacing(9)};
       height: 79px;
@@ -69,20 +62,20 @@ export function ErrorModal({
     errorIcon: css`
       position: absolute;
       font-size: 20px;
-      color: #d32f2f;
+      color: ${theme.palette.error.main};
       margin: ${theme.spacing(0, 2)};
     `,
     messageWrapper: css`
-      color: #541313;
-      font-family: 'Uni-Neue-Regular';
+      color: ${theme.palette.text.primary};
+      font-weight: 400;
       font-size: 16px;
       padding-left: ${theme.spacing(6)};
     `,
     errorMessage: css`
       margin-top: ${theme.spacing(0.5)};
       font-size: 14px;
-      font-family: 'Uni-Neue-Regular';
-      color: #541313;
+      font-weight: 400;
+      color: ${theme.palette.text.primary};
       cursor: pointer;
       display: -webkit-box;
       line-height: 16px;

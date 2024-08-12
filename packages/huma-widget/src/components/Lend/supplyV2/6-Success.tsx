@@ -3,41 +3,50 @@ import {
   downScale,
   formatMoney,
   PoolInfoV2,
-  sendTxAtom,
+  timeUtil,
   TRANSFER_ABI,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
+import { sendTxAtom } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
+import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { Campaign } from '.'
 import {
   useDoesChainSupportNotifi,
   useIsFirstTimeNotifiUser,
 } from '../../../hooks/useNotifi'
-import { TxDoneModal } from '../../TxDoneModal'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
+import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolInfo: PoolInfoV2
   poolUnderlyingToken: UnderlyingTokenInfo
+  lpConfig: { withdrawalLockoutPeriodInDays: number }
+  campaign?: Campaign
+  updateTransactionHash: (hash: string) => void
   handleAction: () => void
 }
 
 export function Success({
   poolInfo,
   poolUnderlyingToken,
+  lpConfig,
+  campaign,
+  updateTransactionHash,
   handleAction,
 }: Props): React.ReactElement {
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const [{ txReceipt }] = useAtom(sendTxAtom)
+  const [{ txReceipt, txHash }] = useAtom(sendTxAtom)
   const { symbol, decimals, address } = poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
   const hasNextStep = isFirstTimeNotifiUser
 
   useEffect(() => {
@@ -57,23 +66,57 @@ export function Success({
     }
   }, [account, address, decimals, poolInfo.poolSafe, txReceipt])
 
-  const setupNotificationsOrClose = useCallback(() => {
+  useEffect(() => {
+    if (txHash) {
+      updateTransactionHash(txHash)
+    }
+  }, [txHash, updateTransactionHash])
+
+  const handleUserAction = useCallback(() => {
     if (isFirstTimeNotifiUser && notifiChainSupported) {
       dispatch(setStep(WIDGET_STEP.Notifications))
+    } else if (campaign) {
+      dispatch(setStep(WIDGET_STEP.PointsEarned))
     } else {
       handleAction()
     }
-  }, [dispatch, handleAction, isFirstTimeNotifiUser, notifiChainSupported])
+  }, [
+    campaign,
+    dispatch,
+    handleAction,
+    isFirstTimeNotifiUser,
+    notifiChainSupported,
+  ])
 
   const content = [
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,
   ]
 
+  const getSubContent = () => {
+    const currentTime = moment().add(
+      lpConfig.withdrawalLockoutPeriodInDays,
+      'days',
+    )
+    return [
+      `First redemption date: ${timeUtil.timestampToLL(
+        currentTime.unix(),
+      )}. You can redeem end of each month after.`,
+    ]
+  }
+
+  const getButtonText = () => {
+    if (hasNextStep) {
+      return "WHAT'S NEXT"
+    }
+    return campaign ? 'VIEW POINTS' : undefined
+  }
+
   return (
     <TxDoneModal
-      handleAction={setupNotificationsOrClose}
+      handleAction={handleUserAction}
       content={content}
-      buttonText={hasNextStep ? "WHAT'S NEXT" : undefined}
+      subContent={getSubContent()}
+      buttonText={getButtonText()}
     />
   )
 }

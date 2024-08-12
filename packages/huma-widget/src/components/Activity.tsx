@@ -6,8 +6,8 @@ import {
   isEmpty,
   PoolInfoType,
   timeUtil,
-  useMQ,
 } from '@huma-finance/shared'
+import { useMQ } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
@@ -105,13 +105,12 @@ export function Activity({
       margin-top: ${theme.spacing(9)};
     `,
     title: css`
-      font-family: 'Uni-Neue-Black';
+      font-weight: 800;
       font-size: 24px;
-      color: #6b6572;
+      color: ${theme.palette.text.primary};
       margin-bottom: ${theme.spacing(2)};
     `,
     tableWrapper: css`
-      background: #ffffff;
       box-shadow: 0px 4px 40px 8px rgba(0, 0, 0, 0.04);
       border-radius: 24px;
       padding: ${getPadding()};

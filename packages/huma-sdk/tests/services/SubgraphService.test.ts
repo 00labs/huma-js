@@ -5,6 +5,7 @@ import {
   POOL_TYPE,
   requestPost,
   isV2Pool,
+  PoolSubgraphMap,
 } from '@huma-finance/shared'
 
 import { SubgraphService } from '../../src/services/SubgraphService'
@@ -18,12 +19,26 @@ jest.mock('@huma-finance/shared', () => ({
 describe('getSubgraphUrlForChainId', () => {
   it('should return the correct subgraph URL for a given chain ID', () => {
     expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon)).toEqual(
-      'https://api.studio.thegraph.com/query/38092/huma-polygon/version/latest',
+      PoolSubgraphMap[ChainEnum.Polygon].subgraph,
     )
     expect(SubgraphService.getSubgraphUrlForChainId(ChainEnum.Celo)).toEqual(
-      'https://api.studio.thegraph.com/query/38092/huma-celo/version/latest',
+      PoolSubgraphMap[ChainEnum.Celo].subgraph,
     )
     expect(SubgraphService.getSubgraphUrlForChainId(12)).toEqual('')
+  })
+
+  it('should return the correct subgraph URL if an apiKey is given', () => {
+    expect(
+      SubgraphService.getSubgraphUrlForChainId(ChainEnum.Polygon, 'apiKey'),
+    ).toEqual(
+      'https://gateway-arbitrum.network.thegraph.com/api/apiKey/subgraphs/id/GaFTstjPKTju5buJ4TzQ3Zjm3mrmMa5LWvCKu3H7JDeU',
+    )
+  })
+
+  it('should return the correct subgraph URL if an apiKey is given for a non-production network', () => {
+    expect(
+      SubgraphService.getSubgraphUrlForChainId(ChainEnum.Amoy, 'apiKey'),
+    ).toEqual(PoolSubgraphMap[ChainEnum.Amoy].subgraph)
   })
 })
 
@@ -187,50 +202,6 @@ describe('getRWReceivableInfo', () => {
       poolType,
     )
     expect(result).toStrictEqual(rwreceivables)
-  })
-})
-
-describe('getPoolStats', () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
-  it('should return undefined if no subgraph url is found', async () => {
-    const chainId = 12 // ChainId without receivables Subgraph url
-    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
-
-    const result = await SubgraphService.getPoolStats(chainId, pool)
-    expect(result).toStrictEqual(undefined)
-  })
-
-  it('should return undefined if requestPost returns error', async () => {
-    ;(requestPost as jest.Mock).mockResolvedValue({ errors: 'errors' })
-
-    const chainId = ChainEnum.Goerli
-    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
-
-    const result = await SubgraphService.getPoolStats(chainId, pool)
-    expect(result).toStrictEqual(undefined)
-  })
-
-  it('should return pool stats', async () => {
-    const pool = '0xc866A11cf6A3D178624Ff46B8A49202206A7c51B'
-    const poolStat = {
-      id: pool,
-      amountCreditOriginated: 300,
-      amountCreditRepaid: 400,
-      amountCreditDefaulted: 500,
-    }
-    ;(requestPost as jest.Mock).mockResolvedValue({
-      data: {
-        poolStat,
-      },
-    })
-
-    const chainId = ChainEnum.Goerli
-
-    const result = await SubgraphService.getPoolStats(chainId, pool)
-    expect(result).toStrictEqual(poolStat)
   })
 })
 

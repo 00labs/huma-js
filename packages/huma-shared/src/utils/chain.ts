@@ -28,6 +28,7 @@ export interface BasicChainInformation {
   requestAPIUrl?: string | undefined
   isTestnet: boolean
   icon: string
+  disabled?: boolean
 }
 
 interface ExtendedChainInformation extends BasicChainInformation {
@@ -45,6 +46,8 @@ export enum ChainEnum {
   Localhost = 31337,
   HumaTestnet = 31338,
   BaseSepolia = 84532,
+  Scroll = 534352,
+  ScrollSepolia = 534351,
 }
 
 export const CHAINS: {
@@ -70,6 +73,7 @@ export const CHAINS: {
     requestAPIUrl: 'https://dev.goerli.rnreader.huma.finance',
     isTestnet: true,
     icon: 'Ethereum',
+    disabled: true,
   },
   [ChainEnum.Localhost]: {
     id: ChainEnum.Localhost,
@@ -100,6 +104,7 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Polygon',
+    disabled: true,
   },
   [ChainEnum.Amoy]: {
     id: ChainEnum.Amoy,
@@ -141,6 +146,30 @@ export const CHAINS: {
     isTestnet: true,
     icon: 'Ethereum',
   },
+  [ChainEnum.Scroll]: {
+    id: ChainEnum.Scroll,
+    urls: ['https://rpc.scroll.io'],
+    name: 'Scroll',
+    nativeCurrency: ETH,
+    explorer: 'https://scrollscan.com',
+    wait: 1,
+    isTestnet: false,
+    icon: 'Ethereum',
+  },
+  [ChainEnum.ScrollSepolia]: {
+    id: ChainEnum.ScrollSepolia,
+    urls: ['https://sepolia-rpc.scroll.io'],
+    name: 'ScrollSepolia',
+    nativeCurrency: ETH,
+    explorer: 'https://sepolia.scrollscan.com',
+    wait: 1,
+    isTestnet: true,
+    icon: 'Ethereum',
+  },
+}
+
+export function isTestnet(chainId: number): boolean {
+  return CHAINS[chainId].isTestnet ?? false
 }
 
 export function isChainEnum(

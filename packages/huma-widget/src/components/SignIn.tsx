@@ -2,7 +2,11 @@ import { Box, css, Typography, useTheme } from '@mui/material'
 import React from 'react'
 import { ApproveLenderImg } from './images'
 
-export function SignIn(): React.ReactElement {
+type Props = {
+  description?: string
+}
+
+export function SignIn({ description }: Props): React.ReactElement {
   const theme = useTheme()
   const styles = {
     wrapper: css`
@@ -24,10 +28,10 @@ export function SignIn(): React.ReactElement {
     content: css`
       ${theme.cssMixins.rowHCentered};
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
       line-height: 24px;
-      color: #49505b;
+      color: ${theme.palette.text.secondary};
       margin-bottom: ${theme.spacing(8)};
     `,
   }
@@ -41,7 +45,8 @@ export function SignIn(): React.ReactElement {
         <img src={ApproveLenderImg} alt='approve-lender' />
       </Box>
       <Box css={styles.content}>
-        Please sign in to verify your ownership of the wallet.
+        {description ??
+          'Please sign in to verify your ownership of the wallet.'}
       </Box>
     </Box>
   )

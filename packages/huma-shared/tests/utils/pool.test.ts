@@ -51,7 +51,7 @@ describe('usePools', () => {
   })
 
   it('returns an array of pool objects sorted by order', () => {
-    const chainId = ChainEnum.Mumbai
+    const chainId = ChainEnum.Polygon
     const pools = usePools(chainId)
     expect(pools).toBeDefined()
     expect(Array.isArray(pools)).toBe(true)

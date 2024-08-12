@@ -10,6 +10,7 @@ import {
   isV2Pool,
   requestPost,
 } from '@huma-finance/shared'
+import { gql } from 'graphql-request'
 
 /**
  * Represents the payload of a credit event.
@@ -41,8 +42,17 @@ export type Pagination = {
  * @param {number} chainId - The ID of the chain.
  * @returns {string} The subgraph URL for the given chain ID.
  */
-function getSubgraphUrlForChainId(chainId: number): string {
-  return PoolSubgraphMap[chainId]?.subgraph ?? ''
+function getSubgraphUrlForChainId(chainId: number, apiKey?: string): string {
+  const chainInfo = PoolSubgraphMap[chainId]
+  if (!chainInfo) {
+    return ''
+  }
+
+  if (apiKey && chainInfo.productionSubgraph) {
+    return chainInfo.productionSubgraph.replace('[api-key]', apiKey)
+  }
+
+  return chainInfo.subgraph
 }
 
 /**
@@ -90,14 +100,21 @@ function getCreditEventsForUser(
     }
   `
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return requestPost(url, JSON.stringify({ query })).then((res: any) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return []
-    }
-    return res.data.creditEvents
-  })
+  return (
+    requestPost(url, JSON.stringify({ query }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res: any) => {
+        if (res.errors) {
+          console.error(res.errors)
+          return []
+        }
+        return res.data.creditEvents
+      })
+      .catch((err) => {
+        console.error(err)
+        return []
+      })
+  )
 }
 
 /**
@@ -144,7 +161,7 @@ function getRWReceivableInfo(
     orderDirection: 'desc',
   },
 ): Promise<RealWorldReceivableInfoBase[]> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
+  const url = getSubgraphUrlForChainId(chainId)
   if (!url) {
     return Promise.resolve([])
   }
@@ -189,67 +206,22 @@ function getRWReceivableInfo(
     }
   }>(url, JSON.stringify({ query: RWReceivablesQuery }), {
     withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return []
-    }
-    return res.data.rwreceivables.map((item) => {
-      item.poolAddress = item.pool
-      item.tokenURI = item.tokenUri
-      return item
-    })
   })
-}
-
-type PoolStats = {
-  id: string
-  totalPoolAssets: number
-  amountCreditOriginated: number
-  amountCreditRepaid: number
-  amountCreditDefaulted: number
-}
-
-/**
- * Returns the pool's stats.
- *
- * @memberof SubgraphService
- * @param {number} chainId - The ID of the chain.
- * @param {string} pool - The address of the pool.
- * @returns {Promise<{PoolStats}>} The pool's stats info.
- */
-function getPoolStats(
-  chainId: number,
-  pool: string,
-): Promise<PoolStats | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
-  if (!url) {
-    return Promise.resolve(undefined)
-  }
-
-  const PoolStatsQuery = `
-    query {
-      poolStat(id:"${pool?.toLowerCase()}") {
-        id
-        amountCreditOriginated
-        amountCreditRepaid
-        amountCreditDefaulted
-        totalPoolAssets
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return []
       }
-    }`
-
-  return requestPost<{
-    errors?: unknown
-    data: { poolStat: PoolStats }
-  }>(url, JSON.stringify({ query: PoolStatsQuery }), {
-    withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    return res.data.poolStat
-  })
+      return res.data.rwreceivables.map((item) => {
+        item.poolAddress = item.pool
+        item.tokenURI = item.tokenUri
+        return item
+      })
+    })
+    .catch((err) => {
+      console.error(err)
+      return []
+    })
 }
 
 /**
@@ -266,7 +238,7 @@ function checkBorrowAndLendHistory(
   pool: string,
   userAddress: string,
 ): Promise<{ hasBorrowHistory: boolean; hasLendHistory: boolean } | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
+  const url = getSubgraphUrlForChainId(chainId)
   if (!url || !userAddress || !pool) {
     return Promise.resolve(undefined)
   }
@@ -322,29 +294,257 @@ function checkBorrowAndLendHistory(
     }
   }>(url, JSON.stringify({ query: borrowAndLendHistoryQuery }), {
     withCredentials: false,
-  }).then((res) => {
-    if (res.errors) {
-      console.error(res.errors)
-      return undefined
-    }
-    const { creditEvents = [], lenders = [] } = res.data
-    const hasBorrowHistory = creditEvents.some((creditEvent) =>
-      [
-        CreditEvent.DrawdownMade,
-        CreditEvent.DrawdownMadeWithReceivable,
-      ].includes(creditEvent.event),
-    )
-    let hasLendHistory = creditEvents.some(
-      (creditEvent) => creditEvent.event === CreditEvent.LiquidityDeposited,
-    )
-    if (!hasLendHistory) {
-      const firstLossCoverTrancheType = 2
-      hasLendHistory = lenders.some(
-        (lender) => lender.tranche.type !== firstLossCoverTrancheType,
-      )
-    }
-    return { hasBorrowHistory, hasLendHistory }
   })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      const { creditEvents = [], lenders = [] } = res.data
+      const hasBorrowHistory = creditEvents.some((creditEvent) =>
+        [
+          CreditEvent.DrawdownMade,
+          CreditEvent.DrawdownMadeWithReceivable,
+        ].includes(creditEvent.event),
+      )
+      let hasLendHistory = creditEvents.some(
+        (creditEvent) => creditEvent.event === CreditEvent.LiquidityDeposited,
+      )
+      if (!hasLendHistory) {
+        const firstLossCoverTrancheType = 2
+        hasLendHistory = lenders.some(
+          (lender) => lender.tranche.type !== firstLossCoverTrancheType,
+        )
+      }
+      return { hasBorrowHistory, hasLendHistory }
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
+export type V2PoolData = {
+  pools: {
+    address: string
+    version: number
+    availableBalanceForPool: string
+    apr: number
+    yieldInBps: number
+    currentEpochEndTime: string
+    rewardRateInBpsForPoolOwner: number
+    rewardRateInBpsForEA: number
+    liquidityCap: string
+    maxSeniorJuniorRatio: number
+    fixedSeniorYieldInBps: number
+    tranchesRiskAdjustmentInBps: number
+    withdrawalLockoutInDays: number
+  }[]
+  tranches: {
+    pool: {
+      id: string
+    }
+    type: number
+    totalAssets: string
+    unprocessedTrancheProfit: string
+    minLiquidity: string
+    maxLiquidity: string
+    riskYieldMultiplierInBps: number
+    flcIndex: number
+  }[]
+  protocolStats: {
+    protocolFeeInBps: number
+  }
+  poolStats: {
+    id: string
+    amountCreditOriginated: number
+    amountCreditRepaid: number
+    amountCreditDefaulted: number
+  }[]
+}
+
+function fetchAllPoolsData(
+  chainId: number,
+  apiKey?: string,
+): Promise<V2PoolData | undefined> {
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  // Query for all pools
+  const QUERY = gql`
+    query {
+      pools {
+        address
+        version
+        availableBalanceForPool
+        apr
+        yieldInBps
+        currentEpochEndTime
+        rewardRateInBpsForPoolOwner
+        rewardRateInBpsForEA
+        liquidityCap
+        maxSeniorJuniorRatio
+        fixedSeniorYieldInBps
+        tranchesRiskAdjustmentInBps
+        withdrawalLockoutInDays
+      }
+      tranches {
+        type
+        pool {
+          id
+        }
+        totalAssets
+        unprocessedTrancheProfit
+        minLiquidity
+        maxLiquidity
+        riskYieldMultiplierInBps
+        flcIndex
+      }
+      poolStats {
+        id
+        amountCreditOriginated
+        amountCreditRepaid
+        amountCreditDefaulted
+      }
+      protocolStats(id: "protocol-stats") {
+        protocolFeeInBps
+      }
+    }
+  `
+
+  return requestPost<{
+    errors?: unknown
+    data: V2PoolData
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
+export type AccountData = {
+  creditlines: {
+    correction: number
+    dueDate: number
+    creditLineType: number
+    billRefreshDate: number
+    feesAndInterestDue: number
+    missedPeriods: number
+    owner: string
+    pool: string
+    poolEntity: {
+      id: string
+      version: number
+    }
+    remainingPeriods: number
+    state: number
+    totalDue: number
+    totalPastDue: number
+    unbilledPrincipal: number
+    settlementState: number
+    committedAmount: number
+    receivableAddress: string
+    receivableParam: string
+  }[]
+  lenders: {
+    owner: string
+    pool: string
+    poolEntity: {
+      id: string
+      version: number
+    }
+    withdrawableFunds: number
+    tranche: {
+      type: number
+    }
+    amount: number
+    shares: number
+    reinvestYield: boolean
+    state: number
+  }[]
+}
+
+function fetchAllAccountData(
+  chainId: number,
+  account: string,
+): Promise<AccountData | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  const QUERY = gql`
+    query {
+      creditLines(where: { owner: "${account}" }){
+        correction
+        dueDate
+        creditLineType
+        billRefreshDate
+        feesAndInterestDue
+        missedPeriods
+        owner
+        pool
+        poolEntity {
+          id
+          version
+        }
+        remainingPeriods
+        state
+        totalDue
+        totalPastDue
+        unbilledPrincipal
+        settlementState
+        committedAmount
+        receivableAddress
+        receivableParam
+      }
+      lenders(where: { owner: "${account}" }){
+        owner
+        pool
+        poolEntity {
+          id
+          version
+        }
+        withdrawableFunds
+        tranche {
+          type
+        }
+        amount
+        shares
+        reinvestYield
+        state
+      }
+    }
+  `
+
+  return requestPost<{
+    errors?: unknown
+    data: AccountData
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
 }
 
 /**
@@ -356,6 +556,7 @@ export const SubgraphService = {
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
-  getPoolStats,
   checkBorrowAndLendHistory,
+  fetchAllPoolsData,
+  fetchAllAccountData,
 }

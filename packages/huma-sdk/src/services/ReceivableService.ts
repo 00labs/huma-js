@@ -4,7 +4,6 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
-  PoolSubgraphMap,
   RealWorldReceivableInfo,
   RealWorldReceivableInfoBase,
   SupplementaryContracts,
@@ -56,7 +55,7 @@ async function getTokenIdByURI(
     }
   `
 
-  const receivableSubgraph = PoolSubgraphMap[chainId]?.subgraph
+  const receivableSubgraph = SubgraphService.getSubgraphUrlForChainId(chainId)
   if (!receivableSubgraph) {
     throw new Error('No receivable subgraph exists for this chain')
   }
@@ -404,7 +403,7 @@ async function createReceivableWithMetadata(
  * @async
  * @function
  * @memberof ReceivableService
- * @param {ethers.providers.Provider} provider - The provider used to query the chain.
+ * @param {number} chainID - The chain to query for receivables
  * @param {string} owner - The receivable token owner to query from.
  * @param {POOL_NAME} poolName - The pool name. Used to lookup the pool address to pay to.
  * @param {POOL_TYPE} poolType - The pool type. Used to lookup the pool address to pay to.
@@ -412,7 +411,7 @@ async function createReceivableWithMetadata(
  * @returns {Promise<RealWorldReceivableInfo[]>} - An array of receivables owned by the owner for the pool.
  */
 async function loadReceivablesOfOwnerWithMetadata<T>(
-  provider: ethers.providers.Provider,
+  chainId: number,
   owner: string,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
@@ -420,11 +419,6 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
 ): Promise<RealWorldReceivableInfo<T>[]> {
   if (!ethers.utils.isAddress(owner)) {
     throw new Error('Invalid owner address')
-  }
-
-  const chainId = await getChainIdFromSignerOrProvider(provider)
-  if (!chainId) {
-    throw new Error('No Chain Id found')
   }
 
   const rwReceivablesBase = await SubgraphService.getRWReceivableInfo(

@@ -26,7 +26,7 @@ export function components(theme: Theme): ThemeOptions['components'] {
           },
         },
         root: {
-          fontFamily: 'Uni-Neue-Bold',
+          fontWeight: '700',
           fontSize: '15px',
           borderRadius: '32px',
           '&.MuiButton-containedPrimary': {
@@ -44,7 +44,8 @@ export function components(theme: Theme): ThemeOptions['components'] {
           textTransform: 'none',
           '&.Mui-disabled': {
             border: 'none',
-            background: 'rgba(0, 0, 0, 0.12)',
+            background:
+              'linear-gradient(232.71deg, rgba(178, 70, 255, 0.25) 5%, rgba(255, 106, 138, 0.25) 175%)',
             boxShadow: 'unset',
           },
         },

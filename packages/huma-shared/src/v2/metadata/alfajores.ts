@@ -1,7 +1,7 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
-import { PoolsInfoV2 } from '../utils'
+import { KYC_PROVIDER, PoolsInfoV2 } from '../utils'
 
 export const ALFAJORES_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
@@ -18,6 +18,13 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x9a534eb31c7858fbf90361939f648d16c6576f55',
     juniorTrancheVault: '0x70f977516ed2d4a96e155b6c9f9546932298b241',
     epochManager: '0xdfba71d2d20dac522d38a9b513056e7cdcc877f0',
+    receivable: '0x5D1F2f000ef0C42bDa974E30d32145bcCaAec77c',
+    poolUnderlyingToken: {
+      address: '0x6548f5146c8deA61C4C7269988DDfB22BC431cd2',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
     firstLossCovers: {
       [FirstLossCoverIndex.borrower]:
         '0xb45E27781cbA4E61332adb5d32AB6f64fA316759',
@@ -27,6 +34,30 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
     juniorAPY: '10-20%',
     title: 'Arf V2 Testing Pool',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
-    supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    // supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
+    KYC: {
+      Persona: {
+        signInRequired: {
+          title: 'Sign In',
+          description:
+            'Please sign in to verify that you are the owner of the wallet.',
+        },
+        verifyIdentity: {
+          title: 'Start KYC',
+          description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
+          buttonText: 'START KYC',
+        },
+        verificationDeclined: {
+          title: 'Verification Declined',
+          description:
+            'Your verification request has been declined. Please contact support for more information.',
+        },
+        verificationNeedsReview: {
+          title: 'Verification Needs Review',
+          description:
+            'Your verification request is under review. Please check back later.',
+        },
+      },
+    },
   },
 }

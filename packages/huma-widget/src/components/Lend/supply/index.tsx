@@ -1,14 +1,12 @@
+import { downScale, POOL_NAME, POOL_TYPE } from '@huma-finance/shared'
 import {
-  downScale,
-  POOL_NAME,
-  POOL_TYPE,
   useLenderApproved,
   useLenderPosition,
   usePoolAllowance,
   usePoolInfo,
   usePoolUnderlyingTokenBalance,
   useWithdrawlLockoutInSeconds,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -66,7 +64,7 @@ export function LendSupply({
     provider,
   )
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
-  const { notifiChainSupported } = useDoesChainSupportNotifi(account, chainId)
+  const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
   const [lenderApproved, refreshLenderApproved] = useLenderApproved(
     poolName,
     poolType,

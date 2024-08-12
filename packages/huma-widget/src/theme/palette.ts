@@ -1,7 +1,7 @@
 import { ThemeOptions } from '@mui/material'
 
 // primary
-export const primaryPurple = '#c265d0'
+export const primaryPurple = '#b246ff'
 export const primaryBlueLight = '#4473EB'
 export const primaryGradient =
   'linear-gradient(232.71deg, #A363F4 4.17%, #FF6A8A 178.69%);'
@@ -45,9 +45,9 @@ const yellow = {
 
 const grey = {
   100: '#CBD6DE',
-  200: '#6B6B6B',
-  300: '#606060',
-  400: '#5E7485',
+  200: '#BDB5C8',
+  300: '#d3ccdd',
+  400: '#EAE6F0',
   600: '#395062',
   700: '#6B6572',
   800: '#4A4A4A',
@@ -136,9 +136,9 @@ export const paletteCore: ThemeOptions['palette'] = {
     main: green[200],
   },
   text: {
-    primary: black[5],
-    secondary: black[6],
-    tertiary: black[3],
+    primary: grey[400],
+    secondary: grey[200],
+    tertiary: grey[300],
     quaternary: grey[400],
   },
   warning: {

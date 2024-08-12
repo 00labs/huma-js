@@ -2,12 +2,10 @@ import { MaxUint256 } from '@ethersproject/constants'
 import {
   getERC20Contract,
   PoolInfoV2,
-  sendTxAtom,
-  txAtom,
   TxStateType,
   UnderlyingTokenInfo,
-  useMount,
 } from '@huma-finance/shared'
+import { sendTxAtom, txAtom, useMount } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, BigNumberish } from 'ethers'
@@ -66,9 +64,9 @@ export function ApproveAllowanceModalV2({
     `,
     description: css`
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       padding: ${theme.spacing(0, 1)};
     `,
   }

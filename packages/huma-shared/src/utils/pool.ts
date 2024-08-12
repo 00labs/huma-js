@@ -16,6 +16,9 @@ export enum POOL_NAME {
   JiaUSDC = 'JiaUSDC',
   ArfCreditPool1 = 'ArfCreditPool1',
   ArfCreditPoolV2 = 'ArfCreditPoolV2',
+  ArfCreditPool3Months = 'ArfCreditPool3Months',
+  ArfCreditPool6Months = 'ArfCreditPool6Months',
+  ArfCreditPool12Months = 'ArfCreditPool12Months',
   ArfPoolUSDC = 'ArfPoolUSDC',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
@@ -102,6 +105,7 @@ export type PoolInfo = {
 export type PoolSubgraphMapType = {
   [chainId: number]: {
     subgraph: string
+    productionSubgraph?: string
   }
 }
 
@@ -207,7 +211,9 @@ export const PoolMap: PoolMapType = {
 export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.Polygon]: {
     subgraph:
-      'https://api.studio.thegraph.com/query/38092/huma-polygon/version/latest',
+      'https://api.studio.thegraph.com/query/71608/huma-polygon/version/latest',
+    productionSubgraph:
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/GaFTstjPKTju5buJ4TzQ3Zjm3mrmMa5LWvCKu3H7JDeU',
   },
   [ChainEnum.Goerli]: {
     subgraph: 'https://api.thegraph.com/subgraphs/name/00labs/huma-goerli',
@@ -221,7 +227,9 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   },
   [ChainEnum.Celo]: {
     subgraph:
-      'https://api.studio.thegraph.com/query/38092/huma-celo/version/latest',
+      'https://api.studio.thegraph.com/query/71608/huma-celo/version/latest',
+    productionSubgraph:
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/3Cb7Uy2BqxvU8hCRNxMUDVaPdpDS9Kd52mWuQVdTpz8',
   },
   [ChainEnum.Alfajores]: {
     subgraph:
@@ -237,6 +245,16 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
   [ChainEnum.BaseSepolia]: {
     subgraph:
       'https://api.studio.thegraph.com/query/38092/huma-base-sepolia/version/latest',
+  },
+  [ChainEnum.ScrollSepolia]: {
+    subgraph:
+      'https://api.studio.thegraph.com/query/38092/huma-scroll-sepolia/version/latest',
+  },
+  [ChainEnum.Scroll]: {
+    subgraph:
+      'https://api.studio.thegraph.com/query/71608/huma-scroll/version/latest',
+    productionSubgraph:
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/AHQ6VhwnEXpH3mKRVi9V9MYFuj66cwXevDcuVr2SU84',
   },
 }
 
@@ -358,6 +376,7 @@ export const PoolContractMap: PoolContractMapType = {
           detailsPage: true,
         },
         redirect: REDIRECTS.Rain,
+        isClosed: true,
       },
     },
     [POOL_TYPE.Stream]: {
@@ -502,6 +521,7 @@ export const PoolContractMap: PoolContractMapType = {
           rwrUploader: '0x4c6388346f2a3af2d64461339a5cdd3a3d63ccf5',
         },
         redirect: REDIRECTS.ImpactMarket,
+        isClosed: true,
       },
       [POOL_NAME.ArfCreditPool1]: {
         chainId: ChainEnum.Celo,
@@ -643,90 +663,6 @@ export const PoolContractMap: PoolContractMapType = {
       },
     },
   },
-  [ChainEnum.Mumbai]: {
-    [POOL_TYPE.Stream]: {
-      [POOL_NAME.Superfluid]: {
-        chainId: ChainEnum.Mumbai,
-        poolVersion: 'v1',
-        basePoolConfig: '0xf80AD89c7820d2f933c35370cccfA7B6Cc2c93aa',
-        pool: '0xC08AC7Ba5E8633ac6398C317dF1CEBED3A313c8A',
-        poolProcessor: '0xb78C28a48eE7E7BdBc93E9Fea2862DB595Bd10a3',
-        poolFeeManager: '0xBF40B58c7E8f4ca87362A49c135D6be9Ca4a8b2a',
-        poolUnderlyingToken: {
-          address: '0xbe49ac1EadAc65dccf204D4Df81d650B50122aB2',
-          symbol: 'USDC',
-          decimals: 18,
-          icon: 'USDC',
-        },
-        assetAddress: '0xAEA5908A082F5667aEA425AEACE8dF6aEDb03694',
-        poolName: POOL_NAME.Superfluid,
-        poolType: POOL_TYPE.Stream,
-        industry: 'Invoice Factoring',
-        poolAbi: STEAM_FACTORING_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        poolAssetAbi: TRADABLE_STREAM_ABI,
-        HDT: {
-          address: '0xa7cd9aEA02EE65Fce9F2e3fa079F9AC6a50EE282',
-          abi: HDT_ABI,
-        },
-        extra: {
-          subgraph:
-            'https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-mumbai',
-          superToken: {
-            id: '0x42bb40bf79730451b11f6de1cba222f17b87afd7',
-            symbol: 'fUSDCx',
-            decimals: 18,
-          },
-        },
-      },
-    },
-    [POOL_TYPE.CreditLine]: {
-      [POOL_NAME.Raincards]: {
-        chainId: ChainEnum.Mumbai,
-        poolVersion: 'v1',
-        industry: 'None',
-        basePoolConfig: '0x10b7CBe54178eB6C81b2D84Ac073747BcA744F6C',
-        pool: '0xf8065dA82cC990325059c436939c6a90C322E9Dd',
-        poolFeeManager: '0x87534B96FD15EbD6Aa0456F45045B541e5E8889a',
-        poolUnderlyingToken: {
-          address: '0xb961c37ABDDA55929327fa9d20eBDE6BB8B1348E',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.Raincards,
-        poolType: POOL_TYPE.CreditLine,
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0x8Ec8f8AFE179032e2929C49eF4f8Ea2d18245B9a',
-          abi: HDT_ABI,
-        },
-      },
-      [POOL_NAME.ArfCreditPool1]: {
-        chainId: ChainEnum.Mumbai,
-        poolVersion: 'v1',
-        basePoolConfig: '0xc7E7d40F2D2B8E93E53727ECBec0Bf5683AFb7C4',
-        pool: '0x51d996A8B0956F532663eB4fEe5fEC5a6eE81c63',
-        poolFeeManager: '0xDe39F0a6Fb305e4B2D4a7621d7e55e783121870B',
-        poolUnderlyingToken: {
-          address: '0xcFcaac79a9c4C9B8919d20b9d7214EF7Bd9A6e8F',
-          symbol: 'USDC',
-          decimals: 6,
-          icon: 'USDC',
-        },
-        poolName: POOL_NAME.ArfCreditPool1,
-        poolType: POOL_TYPE.CreditLine,
-        industry: 'Remittance Financing',
-        poolAbi: BASE_CREDIT_POOL_ABI,
-        basePoolConfigAbi: BASE_POOL_CONFIG_ABI,
-        HDT: {
-          address: '0xd5DC108eDC7dFE5f2811Da5ffAed914C99aCBAe8',
-          abi: HDT_ABI,
-        },
-      },
-    },
-  },
   [ChainEnum.Amoy]: {
     [POOL_TYPE.CreditLine]: {
       [POOL_NAME.ArfPoolUSDC]: {
@@ -772,14 +708,6 @@ export const SupplementaryContractsMap: {
       '0xDa21D2Be30353EC6Aa5AcD37999806cCefaa4C6A',
     [SupplementaryContracts.RealWorldReceivable]:
       '0xCf67CcEaC38b5E1880d62b5DB531Ab1E77614E3D',
-  },
-  [ChainEnum.Mumbai]: {
-    [SupplementaryContracts.MultiSend]:
-      '0x7DeabC1F7E47eD5Cf23Fa4390C48D6ab8543eE82',
-    [SupplementaryContracts.RealWorldReceivable]:
-      '0xcCE0Ff2017eFC86EF49f165D895E2A19FfBA3A1a',
-    [SupplementaryContracts.TestUSDC]:
-      '0xcFcaac79a9c4C9B8919d20b9d7214EF7Bd9A6e8F',
   },
   [ChainEnum.Alfajores]: {
     [SupplementaryContracts.RealWorldReceivable]:

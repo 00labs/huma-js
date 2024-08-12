@@ -1,11 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import { PoolInfoType, TxStateType } from '@huma-finance/shared'
 import {
-  PoolInfoType,
   sendTxAtom,
   txAtom,
-  TxStateType,
   useInvoiceNFTContract,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import React, { useEffect } from 'react'

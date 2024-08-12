@@ -1,4 +1,5 @@
-import { getBlockchainConfigFromChain, txAtom } from '@huma-finance/shared'
+import { getBlockchainConfigFromChain } from '@huma-finance/shared'
+import { txAtom } from '@huma-finance/web-shared'
 import { Box, css, TextField, Typography, useTheme } from '@mui/material'
 import {
   BroadcastEventTypeItem,
@@ -158,9 +159,9 @@ export function NotifiSubscriptionModal({
   const styles = {
     disclaimer: css`
       ${theme.cssMixins.rowCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(6)};
     `,
     inputField: css`

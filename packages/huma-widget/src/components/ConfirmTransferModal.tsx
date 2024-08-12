@@ -36,9 +36,9 @@ export function ConfirmTransferModal({
       margin-top: ${theme.spacing(-0.5)};
     `,
     description: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #49505b;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(4)};
       text-align: center;
     `,
@@ -46,15 +46,14 @@ export function ConfirmTransferModal({
       margin-top: ${theme.spacing(9)};
     `,
     transfer: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       ${theme.cssMixins.rowSpaceBetweened}
       ${theme.cssMixins.rowVCentered}
       height: 72px;
       background: #f9f8fa;
       border-radius: 4px;
-      font-weight: 500;
       font-size: 16px;
-      color: #49505b;
+      color: ${theme.palette.text.primary};
       padding: ${theme.spacing(3, 2)};
       margin-bottom: ${theme.spacing(1)};
       position: relative;
@@ -87,7 +86,7 @@ export function ConfirmTransferModal({
       animation-iteration-count: infinite;
       animation-timing-function: linear;
 
-      color: #b246ff;
+      color: ${theme.palette.primary.main};
       position: absolute;
       margin: auto;
       top: 0;

@@ -7,9 +7,8 @@ import {
   hasRFActiveLoan,
   PoolInfoType,
   timestampToLL,
-  useMQ,
-  usePoolUnderlyingToken,
 } from '@huma-finance/shared'
+import { useMQ, usePoolUnderlyingToken } from '@huma-finance/web-shared'
 import React, { useEffect, useState } from 'react'
 
 import { ColumnType } from '../../utilTypes'
@@ -85,13 +84,13 @@ export function FactoredList<T>({
 
   const styles = {
     title: css`
-      font-family: 'Uni-Neue-Black';
+      font-weight: 800;
       color: ${theme.palette.text.primary};
       font-size: 24px;
       margin-bottom: ${theme.spacing(2)};
     `,
     description: css`
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       color: ${theme.palette.text.primary};
       font-size: 1rem;
     `,

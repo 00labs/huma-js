@@ -1,4 +1,5 @@
-import { PoolInfoV2, txAtom, useCreditContractV2 } from '@huma-finance/shared'
+import { PoolInfoV2 } from '@huma-finance/shared'
+import { txAtom, useCreditContractV2 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useResetAtom } from 'jotai/utils'

@@ -1,10 +1,8 @@
-import './index.css'
-
 import { JsonRpcProvider } from '@ethersproject/providers'
 import {
   Provider as Web3Provider,
   ProviderProps as Web3Props,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { ThemeProvider } from '@mui/material'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { Provider as AtomProvider } from 'jotai'

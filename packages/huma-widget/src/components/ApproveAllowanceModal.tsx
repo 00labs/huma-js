@@ -2,14 +2,13 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, BigNumberish } from 'ethers'
+import { PoolInfoType, TxStateType } from '@huma-finance/shared'
 import {
-  PoolInfoType,
   sendTxAtom,
   txAtom,
-  TxStateType,
   useMount,
   usePoolUnderlyingTokenContract,
-} from '@huma-finance/shared'
+} from '@huma-finance/web-shared'
 import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect } from 'react'
@@ -70,9 +69,9 @@ export function ApproveAllowanceModal({
     `,
     description: css`
       margin-top: ${theme.spacing(4)};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: 400;
       font-size: 16px;
-      color: #a8a1b2;
+      color: ${theme.palette.text.secondary};
       padding: ${theme.spacing(0, 1)};
     `,
   }

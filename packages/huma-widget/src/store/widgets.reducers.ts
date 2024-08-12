@@ -108,7 +108,6 @@ export const widgetSlice = createSlice({
         payload,
       }: PayloadAction<{ errorMessage: string; errorReason?: string }>,
     ) => {
-      console.trace()
       state.errorMessage = payload.errorMessage
       state.errorReason = payload.errorReason
       state.step = WIDGET_STEP.Error

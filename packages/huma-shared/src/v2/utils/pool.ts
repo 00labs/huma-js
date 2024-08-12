@@ -9,14 +9,7 @@ import {
   PoolVersion,
   REDIRECTS,
 } from '../../utils'
-import { ALFAJORES_METADATA } from '../metadata/alfajores'
-import { CELO_METADATA } from '../metadata/celo'
-import { HUMA_TESTNET_METADATA } from '../metadata/humaTestnet'
-import { LOCALHOST_METADATA } from '../metadata/localhost'
-import { AMOY_METADATA } from '../metadata/amoy'
-import { MUMBAI_METADATA } from '../metadata/mumbai'
-import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
-import { FirstLossCoverIndex } from '../types'
+import CALENDAR_ABI from '../abis/Calendar.json'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
 import POOL_CREDIT_LINE_ABI from '../abis/CreditLine.json'
 import POOL_CREDIT_MANAGER_ABI from '../abis/CreditManager.json'
@@ -26,7 +19,14 @@ import POOL_ABI from '../abis/Pool.json'
 import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
-import CALENDAR_ABI from '../abis/Calendar.json'
+import { ALFAJORES_METADATA } from '../metadata/alfajores'
+import { AMOY_METADATA } from '../metadata/amoy'
+import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
+import { CELO_METADATA } from '../metadata/celo'
+import { LOCALHOST_METADATA } from '../metadata/localhost'
+import { SCROLL_METADATA } from '../metadata/scroll'
+import { SCROLL_SEPOLIA_METADATA } from '../metadata/scrollSepolia'
+import { FirstLossCoverIndex } from '../types'
 
 export type TrancheType = 'senior' | 'junior'
 
@@ -80,25 +80,34 @@ export type PoolInfoV2 = {
   lenderApprovalProvider?: LenderApprovalProvider
   industry: IndustryType
   KYC?: {
-    provider: 'Securitize'
-    signInRequired: KYCCopy
-    verifyIdentity: KYCCopy
-    emailSignatureLink: KYCCopy
-    resendSignatureLink: KYCCopy
-    docUnderReview: KYCCopy
+    Securitize?: {
+      signInRequired: KYCCopy
+      verifyIdentity: KYCCopy
+      emailSignatureLink: KYCCopy
+      resendSignatureLink: KYCCopy
+      docUnderReview: KYCCopy
+    }
+    Persona?: {
+      signInRequired: KYCCopy
+      verifyIdentity: KYCCopy
+      verificationDeclined: KYCCopy
+      verificationNeedsReview: KYCCopy
+    }
   }
   supplyLink?: string
-  poolUnderlyingToken?: {
+  poolUnderlyingToken: {
     address: string
     symbol: string
     decimals: number
     icon: string
   }
+  receivable?: string
   isClosed?: boolean
   extra?: {
     hidden?: boolean
     borrower?: string // For single borrower pools
     rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
+    enableGetTestUSDC?: boolean
   }
   redirect?: REDIRECTS
 }
@@ -128,10 +137,10 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Alfajores]: ALFAJORES_METADATA,
   [ChainEnum.Celo]: CELO_METADATA,
   [ChainEnum.Amoy]: AMOY_METADATA,
-  [ChainEnum.Mumbai]: MUMBAI_METADATA,
   [ChainEnum.BaseSepolia]: BASE_SEPOLIA_METADATA,
-  [ChainEnum.HumaTestnet]: HUMA_TESTNET_METADATA,
   [ChainEnum.Localhost]: LOCALHOST_METADATA,
+  [ChainEnum.Scroll]: SCROLL_METADATA,
+  [ChainEnum.ScrollSepolia]: SCROLL_SEPOLIA_METADATA,
 } as ChainPoolsInfoV2
 
 export const getChainPoolNamesV2 = (

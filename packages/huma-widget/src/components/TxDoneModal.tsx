@@ -1,5 +1,5 @@
 import { Box, Button, css, Typography, useTheme } from '@mui/material'
-import { txAtom } from '@huma-finance/shared'
+import { txAtom } from '@huma-finance/web-shared'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 
@@ -9,12 +9,14 @@ import { CheckIcon } from './icons'
 
 type Props = {
   content: string[]
-  handleAction: () => void
+  subContent?: string[]
   buttonText?: string
+  handleAction: () => void
 }
 
 export function TxDoneModal({
   content,
+  subContent,
   handleAction,
   buttonText,
 }: Props): React.ReactElement {
@@ -33,10 +35,18 @@ export function TxDoneModal({
     `,
     content: css`
       ${theme.cssMixins.colVCentered};
-      font-family: 'Uni-Neue-Regular';
+      font-weight: ${subContent ? 700 : 400};
       font-size: 18px;
-      color: #423b46;
+      color: ${theme.palette.text.secondary};
       margin-top: ${theme.spacing(8)};
+      text-align: center;
+    `,
+    subContent: css`
+      ${theme.cssMixins.colVCentered};
+      font-weight: 400;
+      font-size: 18px;
+      color: ${theme.palette.text.primary};
+      margin-top: ${theme.spacing(2)};
       text-align: center;
     `,
     check: css`
@@ -72,6 +82,15 @@ export function TxDoneModal({
           </Box>
         ))}
       </Box>
+      {subContent && (
+        <Box css={styles.subContent}>
+          {subContent.map((item) => (
+            <Box sx={{ marginTop: theme.spacing(1) }} key={item}>
+              {item}
+            </Box>
+          ))}
+        </Box>
+      )}
       <Button
         className='transaction-done-modal-close-btn'
         variant='contained'
