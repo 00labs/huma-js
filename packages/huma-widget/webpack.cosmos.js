@@ -15,9 +15,6 @@ module.exports = (webpackConfig) => {
         path: require.resolve('path-browserify'),
         buffer: require.resolve('buffer'),
       },
-      alias: {
-        zlib: require.resolve('browserify-zlib'),
-      },
     },
     module: {
       rules: [
