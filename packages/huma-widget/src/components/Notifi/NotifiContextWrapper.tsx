@@ -1,3 +1,4 @@
+import { arrayify } from '@ethersproject/bytes'
 import { ChainEnum, getBlockchainConfigFromChain } from '@huma-finance/shared'
 import { NotifiContextProvider } from '@notifi-network/notifi-react'
 import { useWeb3React } from '@web3-react/core'
@@ -5,13 +6,15 @@ import { providers } from 'ethers'
 import React, { useMemo } from 'react'
 
 type Props = {
-  chainId: ChainEnum
+  chainId: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children?: any
 }
 
 export function NotifiContextWrapper({
   chainId,
   children,
-}: React.PropsWithChildren<Props>): React.ReactElement | null {
+}: Props): React.ReactElement | null {
   const { account, provider } = useWeb3React()
   const signer = useMemo(() => {
     if (provider instanceof providers.JsonRpcProvider) {

@@ -33,6 +33,11 @@ async function fetchEventTypes(
     cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_CELO ?? ''
   } else if (chainId === ChainEnum.Polygon || chainId === ChainEnum.Amoy) {
     cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_POLYGON ?? ''
+  } else if (
+    chainId === ChainEnum.Scroll ||
+    chainId === ChainEnum.ScrollSepolia
+  ) {
+    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_SCROLL ?? ''
   }
 
   const subscriptionConfig = await notifiClient.fetchTenantConfig({
