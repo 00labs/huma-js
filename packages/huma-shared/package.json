@@ -104,7 +104,8 @@
     "url-loader": "^4.1.1"
   },
   "peerDependencies": {
-    "ethers": "^5.6.1"
+    "ethers": "^5.6.1",
+    "@web3-react/types": "^8.2.0"
   },
   "optionalDependencies": {
     "encoding": "^0.1.13"
