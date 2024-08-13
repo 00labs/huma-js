@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { PoolInfoType, useAccountStats } from '@huma-finance/shared'
+import { PoolInfoType } from '@huma-finance/shared'
+import { useAccountStats } from '@huma-finance/web-shared'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -27,12 +28,14 @@ export function StreamFactoringPayment({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { account } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [{ creditRecord }] = useAccountStats(
     poolInfo.poolName,
     poolInfo.poolType,
+    chainId,
     account,
+    provider,
   )
 
   useEffect(() => {

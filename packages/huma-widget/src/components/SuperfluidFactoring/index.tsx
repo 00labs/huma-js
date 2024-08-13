@@ -5,8 +5,8 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolMap,
-  useFactoring,
 } from '@huma-finance/shared'
+import { useFactoring } from '@huma-finance/web-shared'
 import React from 'react'
 
 import { SubgraphService } from '@huma-finance/sdk'

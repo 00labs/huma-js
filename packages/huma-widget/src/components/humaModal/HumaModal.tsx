@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import { Dialog } from '@mui/material'
-import { useMQ } from '@huma-finance/shared'
+import { useMQ } from '@huma-finance/web-shared'
 import React from 'react'
 
 type HumaModalType = {
@@ -46,6 +46,7 @@ export function HumaModal({
 
   return (
     <Dialog
+      id='huma-modal'
       disableScrollLock
       maxWidth={false}
       fullScreen={isXsSize}

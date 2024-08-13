@@ -1,7 +1,7 @@
 import { ThemeOptions } from '@mui/material'
 
 // primary
-export const primaryPurple = '#c265d0'
+export const primaryPurple = '#b246ff'
 export const primaryBlueLight = '#4473EB'
 export const primaryGradient =
   'linear-gradient(232.71deg, #A363F4 4.17%, #FF6A8A 178.69%);'

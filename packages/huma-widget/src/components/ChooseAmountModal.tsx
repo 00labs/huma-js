@@ -9,7 +9,7 @@ import {
   Slider,
   useTheme,
 } from '@mui/material'
-import { useMQ } from '@huma-finance/shared'
+import { useMQ } from '@huma-finance/web-shared'
 import React, { useState } from 'react'
 
 import { IconType } from '../utilTypes'
@@ -134,7 +134,7 @@ export function ChooseAmountModal({
       margin-bottom: ${theme.spacing(7)};
       &.MuiSlider-root {
         height: 8px !important;
-        color: #e9e9e9;
+        color: ${theme.palette.text.primary};
       }
       & .MuiSlider-track {
         height: 8px !important;
@@ -158,8 +158,7 @@ export function ChooseAmountModal({
     `,
     divider: css`
       margin: ${theme.spacing(2, 0)};
-      background: #49505b;
-      border-color: #e9e3f1;
+      border-color: ${theme.palette.divider};
     `,
     okButton: css`
       font-weight: 700;
