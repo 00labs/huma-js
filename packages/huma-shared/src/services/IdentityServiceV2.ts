@@ -117,6 +117,28 @@ const resumeVerification = async (
   )
 
 /**
+ * Consent to subscription.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {string} documentHash The subscription file hash.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const consentToSubscription = async (
+  walletAddress: string,
+  chainId: number,
+  documentHash: string,
+  isDev = false,
+): Promise<void> =>
+  requestPost<void>(
+    `${configUtil.getIdentityAPIUrl(
+      chainId,
+      isDev,
+    )}/wallets/${walletAddress}/consent-to-subscription?chainId=${chainId}&documentHash=${documentHash}`,
+  )
+
+/**
  * Approve wallet as lender.
  *
  * @param {string} walletAddress The wallet address.
@@ -142,5 +164,6 @@ export const IdentityServiceV2 = {
   getVerificationStatusV2,
   startVerification,
   resumeVerification,
+  consentToSubscription,
   approveLender,
 }
