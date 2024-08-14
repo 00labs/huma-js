@@ -13,6 +13,7 @@ export enum IdentityVerificationStatusV2 {
   APPROVED = 'approved',
   DECLINED = 'declined',
   NEEDS_REVIEW = 'needs_review',
+  CONSENTED_TO_SUBSCRIPTION = 'consented_to_subscription',
 }
 
 /**
