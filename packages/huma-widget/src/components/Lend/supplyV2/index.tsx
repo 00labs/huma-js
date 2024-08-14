@@ -1,4 +1,9 @@
-import { openInNewTab, POOL_NAME, TrancheType } from '@huma-finance/shared'
+import {
+  IdentityVerificationStatusV2,
+  openInNewTab,
+  POOL_NAME,
+  TrancheType,
+} from '@huma-finance/shared'
 import {
   useLenderApprovedV2,
   useLPConfigV2,
@@ -36,14 +41,14 @@ export interface Campaign {
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
- * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {function((IdentityVerificationStatusV2|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   pointsTestnetExperience: boolean
   campaign?: Campaign
-  handleClose: () => void
+  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
   handleSuccess?: (blockNumber?: number) => void
 }
 

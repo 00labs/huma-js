@@ -51,7 +51,7 @@ type Props = {
   pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
-  handleClose: () => void
+  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
 }
 
 export function PersonaEvaluation({
@@ -250,7 +250,8 @@ export function PersonaEvaluation({
           }
 
           case IdentityVerificationStatusV2.APPROVED: {
-            await approveLender()
+            setKYCCopy(KYCCopies.verificationApproved)
+            setLoadingType(undefined)
             break
           }
 
@@ -263,6 +264,11 @@ export function PersonaEvaluation({
           case IdentityVerificationStatusV2.NEEDS_REVIEW: {
             setKYCCopy(KYCCopies.verificationNeedsReview)
             setLoadingType(undefined)
+            break
+          }
+
+          case IdentityVerificationStatusV2.CONSENTED_TO_SUBSCRIPTION: {
+            await approveLender()
             break
           }
 
@@ -340,6 +346,7 @@ export function PersonaEvaluation({
     const client: Client = new Persona.Client({
       inquiryId,
       sessionToken,
+      frameWidth: '480px',
       onReady: () => {
         client.open()
         setShowPersonaClient(true)
@@ -375,7 +382,8 @@ export function PersonaEvaluation({
 
         case IdentityVerificationStatusV2.DECLINED:
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
-          handleClose()
+        case IdentityVerificationStatusV2.APPROVED:
+          handleClose(verificationStatus.status)
           break
 
         default:

@@ -1,7 +1,7 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
-import { KYC_PROVIDER, PoolsInfoV2 } from '../utils'
+import { PoolsInfoV2 } from '../utils'
 
 export const ALFAJORES_METADATA: PoolsInfoV2 = {
   ArfCreditPoolV2: {
@@ -34,30 +34,6 @@ export const ALFAJORES_METADATA: PoolsInfoV2 = {
     juniorAPY: '10-20%',
     title: 'Arf V2 Testing Pool',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
-    // supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
-    KYC: {
-      Persona: {
-        signInRequired: {
-          title: 'Sign In',
-          description:
-            'Please sign in to verify that you are the owner of the wallet.',
-        },
-        verifyIdentity: {
-          title: 'Start KYC',
-          description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
-          buttonText: 'START KYC',
-        },
-        verificationDeclined: {
-          title: 'Verification Declined',
-          description:
-            'Your verification request has been declined. Please contact support for more information.',
-        },
-        verificationNeedsReview: {
-          title: 'Verification Needs Review',
-          description:
-            'Your verification request is under review. Please check back later.',
-        },
-      },
-    },
+    supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
   },
 }
