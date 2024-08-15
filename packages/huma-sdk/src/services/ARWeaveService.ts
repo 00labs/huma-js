@@ -69,6 +69,17 @@ export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
         nodeUrl: 'https://node1.bundlr.network',
         currency: '', // Uploads with Celo is not currently supported by Bundlr
       }
+    case 534352: // Scroll
+      return {
+        nodeUrl: 'https://node1.bundlr.network',
+        currency: 'scroll-eth',
+      }
+    case 534351: // Scroll Sepolia
+      return {
+        nodeUrl: 'https://devnet.bundlr.network',
+        currency: 'scroll-eth',
+        providerUrl: 'https://rpc.ankr.com/scroll_sepolia_testnet',
+      }
     default:
       return {
         nodeUrl: '',

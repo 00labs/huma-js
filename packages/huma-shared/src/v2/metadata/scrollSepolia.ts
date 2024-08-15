@@ -178,4 +178,62 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
       enableGetTestUSDC: true,
     },
   },
+  ArfCreditPoolV2: {
+    chainId: ChainEnum.ScrollSepolia,
+    poolVersion: 'v2',
+    industry: 'Remittance Financing',
+    poolName: POOL_NAME.ArfCreditPoolV2,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
+    pool: '0xD0bf87bB23316317ca29d59F5758f985b67D9496',
+    poolConfig: '0x77f067fbD7226bC8518BE431FBe5b73F809D925B',
+    poolCredit: '0xfCF2abc68abA45e0246Fd5614dD3b54De2d28490',
+    poolCreditManager: '0x9Ef6059Eb4492aaAA382f02d91e36A72bEf1f485',
+    poolSafe: '0x9Fd1a276124c17A1AE17D388f02F0D3ac1f7700F',
+    seniorTrancheVault: '0xE92d34e0DDb3813D24e81aa5A2ac25aec317228B',
+    juniorTrancheVault: '0xDd17e41C28Cf3128CBc1Db2FAAE4154F7642F4D4',
+    epochManager: '0xeDf9Aa80cCb9530e405F3886C5A021BB2115D1B7',
+    receivable: '0x6dC1a2740e918940b91B30bEED4C65E912387514',
+    poolUnderlyingToken: {
+      address: '0x50dc34a634F3E29CfBad79E9cECD2759a6bA8Eae',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
+    firstLossCovers: {
+      [FirstLossCoverIndex.borrower]:
+        '0x62CCa405a1dD603F518f998fBb25F673B037013D',
+      [FirstLossCoverIndex.admin]: '0x906C7fE7128d926f0418CBCD8eb759DEe3c0E5Cb',
+    },
+    seniorAPY: '10-20%',
+    juniorAPY: '10-20%',
+    title: 'Arf V2 Testing Pool',
+    desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
+    KYC: {
+      Persona: {
+        signInRequired: {
+          title: 'Sign In',
+          description:
+            'Please sign in to verify that you are the owner of the wallet.',
+        },
+        verifyIdentity: {
+          title: 'Start KYC',
+          description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
+          buttonText: 'START KYC',
+        },
+        verificationDeclined: {
+          title: 'Verification Declined',
+          description:
+            'Your verification request has been declined. Please contact support for more information.',
+        },
+        verificationNeedsReview: {
+          title: 'Verification Needs Review',
+          description:
+            'Your verification request is under review. Please check back later.',
+        },
+      },
+    },
+    extra: {
+      hidden: true,
+    },
+  },
 }
