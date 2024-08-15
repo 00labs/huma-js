@@ -30,9 +30,9 @@ export const PERSONA_KYC_COPY = {
       'Please sign in to verify that you are the owner of the wallet.',
   },
   verifyIdentity: {
-    title: 'Start KYC',
+    title: 'Start KYC/KYB',
     description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
-    buttonText: 'START KYC',
+    buttonText: 'START KYC/KYB',
   },
   verificationDeclined: {
     title: 'Verification Declined',

@@ -8,7 +8,6 @@ import {
   useLenderApprovedV2,
   useLPConfigV2,
   usePoolInfoV2,
-  usePoolSettingsV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
@@ -67,7 +66,6 @@ export function LendSupplyV2({
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const [transactionHash, setTransactionHash] = useState<string | undefined>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-  const poolSettings = usePoolSettingsV2(poolName, provider)
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -146,8 +144,7 @@ export function LendSupplyV2({
     !poolInfo ||
     !poolUnderlyingToken ||
     !lenderApproveStatusFetched ||
-    !lpConfig ||
-    !poolSettings
+    !lpConfig
   ) {
     return (
       <WidgetWrapper
@@ -182,7 +179,6 @@ export function LendSupplyV2({
           changeTranche={setSelectedTranche}
           pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
-          minDepositAmount={poolSettings.minDepositAmount}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
