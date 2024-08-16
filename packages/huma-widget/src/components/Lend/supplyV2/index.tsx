@@ -1,9 +1,13 @@
-import { openInNewTab, POOL_NAME, TrancheType } from '@huma-finance/shared'
+import {
+  IdentityVerificationStatusV2,
+  openInNewTab,
+  POOL_NAME,
+  TrancheType,
+} from '@huma-finance/shared'
 import {
   useLenderApprovedV2,
   useLPConfigV2,
   usePoolInfoV2,
-  usePoolSettingsV2,
   usePoolUnderlyingTokenInfoV2,
 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
@@ -36,14 +40,14 @@ export interface Campaign {
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
- * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {function((IdentityVerificationStatusV2|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   pointsTestnetExperience: boolean
   campaign?: Campaign
-  handleClose: () => void
+  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
@@ -62,7 +66,6 @@ export function LendSupplyV2({
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const [transactionHash, setTransactionHash] = useState<string | undefined>()
   const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-  const poolSettings = usePoolSettingsV2(poolName, provider)
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -141,8 +144,7 @@ export function LendSupplyV2({
     !poolInfo ||
     !poolUnderlyingToken ||
     !lenderApproveStatusFetched ||
-    !lpConfig ||
-    !poolSettings
+    !lpConfig
   ) {
     return (
       <WidgetWrapper
@@ -177,7 +179,6 @@ export function LendSupplyV2({
           changeTranche={setSelectedTranche}
           pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
-          minDepositAmount={poolSettings.minDepositAmount}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (

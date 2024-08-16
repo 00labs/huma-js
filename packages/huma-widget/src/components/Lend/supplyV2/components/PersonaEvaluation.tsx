@@ -2,7 +2,6 @@ import {
   CAMPAIGN_REFERENCE_CODE,
   CampaignService,
   checkIsDev,
-  formatNumber,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
@@ -13,7 +12,6 @@ import {
 import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -47,17 +45,15 @@ const LoadingCopiesByType: {
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
-  minDepositAmount: BigNumber
   pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
-  handleClose: () => void
+  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
 }
 
 export function PersonaEvaluation({
   poolInfo,
   isUniTranche,
-  minDepositAmount: minDepositAmountBN,
   campaign,
   pointsTestnetExperience,
   changeTranche,
@@ -81,7 +77,6 @@ export function PersonaEvaluation({
   const [verificationStatus, setVerificationStatus] =
     useState<VerificationStatusResultV2>()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
-  const [campaignBasePoints, setCampaignBasePoints] = useState<number>(0)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
@@ -103,41 +98,6 @@ export function PersonaEvaluation({
     campaign,
     isDev,
     isWalletOwnershipVerified,
-    pointsTestnetExperience,
-  ])
-
-  useEffect(() => {
-    const getBasePoints = async () => {
-      if (campaign) {
-        const estimatedPoints = await CampaignService.getEstimatedPoints(
-          campaign.campaignGroupId,
-          minDepositAmountBN.toString(),
-          isDev,
-          pointsTestnetExperience,
-        )
-        const campaignPoints = estimatedPoints.find(
-          (item) => item.campaignId === campaign.id,
-        )
-        if (campaignPoints) {
-          const { juniorTranchePoints, seniorTranchePoints } = campaignPoints
-          if (isUniTranche) {
-            setCampaignBasePoints(juniorTranchePoints ?? 0)
-          } else {
-            setCampaignBasePoints(
-              juniorTranchePoints < seniorTranchePoints
-                ? juniorTranchePoints
-                : seniorTranchePoints,
-            )
-          }
-        }
-      }
-    }
-    getBasePoints()
-  }, [
-    campaign,
-    isDev,
-    isUniTranche,
-    minDepositAmountBN,
     pointsTestnetExperience,
   ])
 
@@ -250,7 +210,8 @@ export function PersonaEvaluation({
           }
 
           case IdentityVerificationStatusV2.APPROVED: {
-            await approveLender()
+            setKYCCopy(KYCCopies.verificationApproved)
+            setLoadingType(undefined)
             break
           }
 
@@ -263,6 +224,11 @@ export function PersonaEvaluation({
           case IdentityVerificationStatusV2.NEEDS_REVIEW: {
             setKYCCopy(KYCCopies.verificationNeedsReview)
             setLoadingType(undefined)
+            break
+          }
+
+          case IdentityVerificationStatusV2.CONSENTED_TO_SUBSCRIPTION: {
+            await approveLender()
             break
           }
 
@@ -340,6 +306,7 @@ export function PersonaEvaluation({
     const client: Client = new Persona.Client({
       inquiryId,
       sessionToken,
+      frameWidth: '480px',
       onReady: () => {
         client.open()
         setShowPersonaClient(true)
@@ -375,7 +342,8 @@ export function PersonaEvaluation({
 
         case IdentityVerificationStatusV2.DECLINED:
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
-          handleClose()
+        case IdentityVerificationStatusV2.APPROVED:
+          handleClose(verificationStatus.status)
           break
 
         default:
@@ -413,12 +381,10 @@ export function PersonaEvaluation({
         </Box>
         {campaign && kycCopy === KYCCopies.verifyIdentity ? (
           <Box css={styles.description}>
-            <span>You'll be rewarded with a minimum of</span>
-            <span css={styles.points}>
-              {' '}
-              {formatNumber(campaignBasePoints)} Huma points{' '}
+            <span>
+              You'll be rewarded with Huma points after completing KYC/KYB and
+              your first investment.
             </span>
-            <span>after completing KYC and your first investment.</span>
           </Box>
         ) : (
           <Box css={styles.description}>{kycCopy.description}</Box>

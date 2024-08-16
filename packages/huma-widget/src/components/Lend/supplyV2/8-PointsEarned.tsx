@@ -1,4 +1,9 @@
-import { CampaignService, checkIsDev, formatNumber } from '@huma-finance/shared'
+import {
+  CampaignService,
+  checkIsDev,
+  formatNumber,
+  isEmpty,
+} from '@huma-finance/shared'
 import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
@@ -40,6 +45,8 @@ export function PointsEarned({
   const [pointsAccumulated, setPointsAccumulated] = useState<
     number | undefined
   >()
+  const hasPointsAccumulated =
+    !isEmpty(pointsAccumulated) && pointsAccumulated! > 0
   const lockupMonths = Math.round(lpConfig.withdrawalLockoutPeriodInDays / 30)
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
@@ -109,21 +116,10 @@ export function PointsEarned({
             isDev,
             pointsTestnetExperience,
           )
-          if (!result.pointsAccumulated) {
-            dispatch(
-              setError({
-                errorMessage: ERROR_MESSAGE,
-              }),
-            )
-          }
           setPointsAccumulated(result.pointsAccumulated)
           setState(STATE.Congrats)
         } catch (error) {
-          dispatch(
-            setError({
-              errorMessage: ERROR_MESSAGE,
-            }),
-          )
+          console.error('Failed to update wallet points', error)
         }
       }
     }
@@ -204,12 +200,22 @@ export function PointsEarned({
           <RibbonIcon />
           <Box css={styles.ribbonContent}>
             <HumaPointsIcon />
-            <Box>{formatNumber(pointsAccumulated)} Points</Box>
+            <Box>
+              {hasPointsAccumulated
+                ? `${formatNumber(pointsAccumulated)} Points`
+                : 'Points earned'}
+            </Box>
           </Box>
         </Box>
         <Box css={styles.entirePoints}>
-          <Box>Congratulations,</Box>
-          <Box>you've earned {pointsAccumulated} points</Box>
+          {hasPointsAccumulated ? (
+            <>
+              <Box>Congratulations,</Box>
+              <Box>you've earned {pointsAccumulated} points</Box>
+            </>
+          ) : (
+            <Box>Congratulations on joining the Huma Protocol!</Box>
+          )}
         </Box>
         <Box css={styles.entirePointsDetails}>
           You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
