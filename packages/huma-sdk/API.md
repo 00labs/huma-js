@@ -433,6 +433,7 @@ in Huma's pools that can be drawn down by the borrower.</p>
     * [.getCreditEventsForUser(userAddress, chainId, poolName, poolType, event)](#SubgraphService.getCreditEventsForUser) ⇒ <code>Promise.&lt;Array.&lt;CreditEventPayload&gt;&gt;</code>
     * [.getLastFactorizedAmountFromPool(userAddress, chainId, poolName, poolType)](#SubgraphService.getLastFactorizedAmountFromPool) ⇒ <code>Promise.&lt;number&gt;</code>
     * [.getRWReceivableInfo(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getRWReceivableInfo) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
+    * [.getReceivableV2Info(userAddress, chainId, poolName, poolType, pagination)](#SubgraphService.getReceivableV2Info) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
     * [.checkBorrowAndLendHistory(chainId, pool, userAddress)](#SubgraphService.checkBorrowAndLendHistory) ⇒ <code>Promise.&lt;{hasBorrowHistory: boolean, hasLendHistory: boolean}&gt;</code>
 
 <a name="SubgraphService.getSubgraphUrlForChainId"></a>
@@ -489,6 +490,22 @@ in Huma's pools that can be drawn down by the borrower.</p>
 | Param | Type | Description |
 | --- | --- | --- |
 | userAddress | <code>string</code> | <p>The address of the user.</p> |
+| chainId | <code>number</code> | <p>The ID of the chain.</p> |
+| poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
+| poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+| pagination | [<code>Pagination</code>](#Pagination) | <p>The pagination option.</p> |
+
+<a name="SubgraphService.getReceivableV2Info"></a>
+
+### SubgraphService.getReceivableV2Info(userAddress, chainId, poolName, poolType, pagination) ⇒ <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code>
+<p>Returns the paginated V2 receivables' info for the original creator.</p>
+
+**Kind**: static method of [<code>SubgraphService</code>](#SubgraphService)  
+**Returns**: <code>Promise.&lt;RealWorldReceivableInfoBase&gt;</code> - <p>The paginated real world receivables' info.</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userAddress | <code>string</code> | <p>The address of the original creator.</p> |
 | chainId | <code>number</code> | <p>The ID of the chain.</p> |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |

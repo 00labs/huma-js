@@ -37,7 +37,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
     supplyLink: 'https://uer4clyybno.typeform.com/arfcreditline',
     redirect: REDIRECTS.Arf,
     extra: {
-      rwrUploader: '0x39eacecfae2a174dacd10d10bbd09a6dd2541c18',
+      rwrUploader: '0xEA57a8A51377752fFddaa3db4d13CE8F97677F2D',
     },
   },
   Raincards: {

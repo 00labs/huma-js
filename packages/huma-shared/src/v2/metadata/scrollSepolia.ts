@@ -39,6 +39,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     },
     extra: {
       enableGetTestUSDC: true,
+      rwrUploader: '0x60891b087e81ee2a61b7606f68019ec112c539b9',
     },
   },
   ArfCreditPool6Months: {
@@ -76,6 +77,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     },
     extra: {
       enableGetTestUSDC: true,
+      rwrUploader: '0x60891b087e81ee2a61b7606f68019ec112c539b9',
     },
   },
   ArfCreditPool12Months: {
@@ -113,6 +115,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     },
     extra: {
       enableGetTestUSDC: true,
+      rwrUploader: '0x60891b087e81ee2a61b7606f68019ec112c539b9',
     },
   },
   ArfCreditPoolV2: {

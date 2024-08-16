@@ -45,11 +45,6 @@ export function ChooseAmount({
     ethers.utils.formatUnits(payoffAmountBN, decimals),
   )
 
-  console.log('totalDueAmountBN', totalDueAmountBN.toString())
-  console.log('payoffAmountBN', payoffAmountBN.toString())
-  console.log('payoffAmount', payoffAmount)
-  console.log('currentAmount', currentAmount)
-
   useEffect(() => {
     setCurrentAmount(totalDueAmount)
   }, [totalDueAmount])
