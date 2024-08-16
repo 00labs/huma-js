@@ -6,7 +6,7 @@ import { providers } from 'ethers'
 import React, { useMemo } from 'react'
 
 type Props = {
-  chainId: number
+  chainId: number | undefined
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children?: any
 }
@@ -23,7 +23,9 @@ export function NotifiContextWrapper({
     return undefined
   }, [provider])
 
+  console.log('1')
   if (account == null || signer == null || chainId == null) {
+    console.log('2')
     return null
   }
 

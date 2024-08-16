@@ -1,18 +1,14 @@
-import { ChainEnum, getBlockchainConfigFromChain } from '@huma-finance/shared'
 import { txAtom } from '@huma-finance/web-shared'
 import { Box, css, TextField, Typography, useTheme } from '@mui/material'
-import {
-  EventTypeItem,
-  NotifiFrontendClient,
-  SignMessageParams,
-  Uint8SignMessageFunction,
-} from '@notifi-network/notifi-frontend-client'
-import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useState } from 'react'
 
-import { useNotifiClient } from '../../hooks/useNotifi'
+import {
+  useNotifiFrontendClientContext,
+  useNotifiTargetContext,
+  useNotifiTenantConfigContext,
+  useNotifiTopicContext,
+} from '@notifi-network/notifi-react'
 import { useAppDispatch } from '../../hooks/useRedux'
 import { resetState } from '../../store/widgets.reducers'
 import { BottomButton } from '../BottomButton'
@@ -24,50 +20,24 @@ type Props = {
   handleSuccess: () => void
 }
 
-async function fetchEventTypes(
-  notifiClient: NotifiFrontendClient,
-  chainId: number | undefined,
-): Promise<EventTypeItem[]> {
-  let cardId = ''
-  if (chainId === ChainEnum.Celo || chainId === ChainEnum.Alfajores) {
-    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_CELO ?? ''
-  } else if (chainId === ChainEnum.Polygon || chainId === ChainEnum.Amoy) {
-    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_POLYGON ?? ''
-  } else if (
-    chainId === ChainEnum.Scroll ||
-    chainId === ChainEnum.ScrollSepolia
-  ) {
-    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_SCROLL ?? ''
-  }
-
-  const subscriptionConfig = await notifiClient.fetchTenantConfig({
-    id: cardId ?? '',
-    type: 'SUBSCRIPTION_CARD',
-  })
-
-  return subscriptionConfig.cardConfig.eventTypes as EventTypeItem[]
-}
-
 export function NotifiSubscriptionModal({
   handleSuccess,
 }: Props): React.ReactElement {
   const theme = useTheme()
   const reset = useResetAtom(txAtom)
   const dispatch = useAppDispatch()
-  const { account, chainId, provider } = useWeb3React()
   const [showSuccessScreen, setShowSuccessScreen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
-  const { notifiClient } = useNotifiClient(account, chainId)
-
-  const signMessage: Uint8SignMessageFunction = async (
-    message: Uint8Array,
-  ): Promise<Uint8Array> => {
-    const signer = provider!.getSigner()
-    const signature = await signer.signMessage(Buffer.from(message))
-    return ethers.utils.arrayify(signature)
-  }
+  const {
+    frontendClientStatus: { isInitialized, isAuthenticated },
+    frontendClient,
+    login,
+  } = useNotifiFrontendClientContext()
+  const { fusionEventTopics } = useNotifiTenantConfigContext()
+  const { subscribeAlertsDefault } = useNotifiTopicContext()
+  const { renewTargetGroup } = useNotifiTargetContext()
 
   const handleEmailAddressChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -78,39 +48,36 @@ export function NotifiSubscriptionModal({
   }
 
   const logInAndSubscribe = async (): Promise<void> => {
-    if (notifiClient != null && chainId != null) {
+    if (!isAuthenticated) {
       setIsLoading(true)
 
       // Ask user to sign a message to authenticate
       try {
-        await notifiClient.logIn({
-          walletBlockchain: getBlockchainConfigFromChain(chainId),
-          signMessage,
-        } as SignMessageParams)
+        await login()
       } catch (e) {
         setIsLoading(false)
         return
       }
 
-      // Fetch all event types
-      const fetchedEventTypes = await fetchEventTypes(notifiClient, chainId)
-
       // Authorize this email address for this wallet
-      await notifiClient.ensureTargetGroup({
+      await frontendClient.ensureTargetGroup({
         name: 'Default',
         emailAddress: emailAddress!,
       })
 
-      // Intentionally running this in serial because the Notifi ensureAlert can't handle
-      // multiple calls. Notified their team to fix this.
-      // eslint-disable-next-line no-restricted-syntax
-      for (const eventType of fetchedEventTypes) {
-        // eslint-disable-next-line no-await-in-loop
-        await notifiClient.ensureAlert({
-          eventType,
-          inputs: {},
-        })
+      await renewTargetGroup()
+      const targetGroups = await frontendClient.getTargetGroups()
+      const targetGroupId = targetGroups.find(
+        (targetGroup) => targetGroup.name === 'Default',
+      )?.id
+
+      if (!targetGroupId) {
+        console.error("Could not find targetGroupId for 'Default' target group")
+        setIsLoading(false)
+        return
       }
+
+      await subscribeAlertsDefault(fusionEventTopics, targetGroupId)
 
       setShowSuccessScreen(true)
       setIsLoading(false)
@@ -193,7 +160,7 @@ export function NotifiSubscriptionModal({
       <BottomButton
         variant='contained'
         onClick={logInAndSubscribe}
-        disabled={!emailValid || isLoading}
+        disabled={!emailValid || isLoading || !isInitialized}
       >
         CONNECT EMAIL
       </BottomButton>
