@@ -1,16 +1,11 @@
-import {
-  CampaignService,
-  checkIsDev,
-  formatNumber,
-  isEmpty,
-} from '@huma-finance/shared'
-import { useAuthErrorHandling } from '@huma-finance/web-shared'
+import { checkIsDev, formatNumber, isEmpty } from '@huma-finance/shared'
+// import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { setError } from '../../../store/widgets.reducers'
+// import { setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
@@ -22,8 +17,8 @@ enum STATE {
   Congrats = 'Congrats',
 }
 
-const ERROR_MESSAGE =
-  'Failed to update wallet points. Be assured that your points will be added later.'
+// const ERROR_MESSAGE =
+//   'Failed to update wallet points. Be assured that your points will be added later.'
 
 type Props = {
   transactionHash: string
@@ -51,77 +46,78 @@ export function PointsEarned({
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
 
-  const {
-    errorType,
-    setError: setAuthError,
-    isWalletOwnershipVerified,
-    isWalletOwnershipVerificationRequired,
-  } = useAuthErrorHandling(isDev)
-  const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
+  // const {
+  //   errorType,
+  //   setError: setAuthError,
+  //   isWalletOwnershipVerified,
+  //   isWalletOwnershipVerificationRequired,
+  // } = useAuthErrorHandling(isDev)
+  // const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
   const [state, setState] = useState<STATE>(STATE.Loading)
 
-  useEffect(() => {
-    if (isWalletOwnershipVerificationRequired) {
-      setState(STATE.Loading)
-    }
-  }, [isWalletOwnershipVerificationRequired])
+  // useEffect(() => {
+  //   if (isWalletOwnershipVerificationRequired) {
+  //     setState(STATE.Loading)
+  //   }
+  // }, [isWalletOwnershipVerificationRequired])
 
-  useEffect(() => {
-    if (isWalletOwnershipVerified) {
-      setWalletOwnership(true)
-    }
-  }, [isWalletOwnershipVerified])
+  // useEffect(() => {
+  //   if (isWalletOwnershipVerified) {
+  //     setWalletOwnership(true)
+  //   }
+  // }, [isWalletOwnershipVerified])
 
-  useEffect(() => {
-    const checkWalletOwnership = async () => {
-      const ownership = await CampaignService.checkWalletOwnership(
-        account!,
-        isDev,
-        pointsTestnetExperience,
-      )
-      setWalletOwnership(ownership)
-      if (!ownership) {
-        setAuthError('WalletNotSignInException')
-      }
-    }
-    checkWalletOwnership()
-  }, [account, isDev, pointsTestnetExperience, setAuthError])
+  // useEffect(() => {
+  //   const checkWalletOwnership = async () => {
+  //     const ownership = await CampaignService.checkWalletOwnership(
+  //       account!,
+  //       isDev,
+  //       pointsTestnetExperience,
+  //     )
+  //     setWalletOwnership(ownership)
+  //     if (!ownership) {
+  //       setAuthError('WalletNotSignInException')
+  //     }
+  //   }
+  //   checkWalletOwnership()
+  // }, [account, isDev, pointsTestnetExperience, setAuthError])
 
-  useEffect(() => {
-    if (errorType === 'NotSignedIn') {
-      setState(STATE.SignIn)
-    } else if (errorType === 'UserRejected') {
-      dispatch(
-        setError({
-          errorMessage: 'User has rejected the transaction.',
-        }),
-      )
-    } else if (errorType === 'Other') {
-      dispatch(
-        setError({
-          errorMessage: ERROR_MESSAGE,
-        }),
-      )
-    }
-  }, [dispatch, errorType])
+  // useEffect(() => {
+  //   if (errorType === 'NotSignedIn') {
+  //     setState(STATE.SignIn)
+  //   } else if (errorType === 'UserRejected') {
+  //     dispatch(
+  //       setError({
+  //         errorMessage: 'User has rejected the transaction.',
+  //       }),
+  //     )
+  //   } else if (errorType === 'Other') {
+  //     dispatch(
+  //       setError({
+  //         errorMessage: ERROR_MESSAGE,
+  //       }),
+  //     )
+  //   }
+  // }, [dispatch, errorType])
 
   useEffect(() => {
     const updateWalletPoints = async () => {
-      if (walletOwnership) {
-        try {
-          const result = await CampaignService.updateWalletPoints(
-            account!,
-            transactionHash,
-            chainId!,
-            isDev,
-            pointsTestnetExperience,
-          )
-          setPointsAccumulated(result.pointsAccumulated)
-          setState(STATE.Congrats)
-        } catch (error) {
-          console.error('Failed to update wallet points', error)
-        }
+      // if (walletOwnership) {
+      try {
+        // const result = await CampaignService.updateWalletPoints(
+        //   account!,
+        //   transactionHash,
+        //   chainId!,
+        //   isDev,
+        //   pointsTestnetExperience,
+        // )
+        // setPointsAccumulated(result.pointsAccumulated)
+        setPointsAccumulated(5000)
+        setState(STATE.Congrats)
+      } catch (error) {
+        console.error('Failed to update wallet points', error)
       }
+      // }
     }
     updateWalletPoints()
   }, [
@@ -131,7 +127,7 @@ export function PointsEarned({
     isDev,
     pointsTestnetExperience,
     transactionHash,
-    walletOwnership,
+    // walletOwnership,
   ])
 
   const styles = {
