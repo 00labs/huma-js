@@ -4,13 +4,14 @@ import {
   formatNumber,
   isEmpty,
 } from '@huma-finance/shared'
-import { useAuthErrorHandling } from '@huma-finance/web-shared'
+import { txAtom, useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useState } from 'react'
+import { useResetAtom } from 'jotai/utils'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { setError } from '../../../store/widgets.reducers'
+import { resetState, setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
@@ -41,6 +42,7 @@ export function PointsEarned({
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useDispatch()
+  const reset = useResetAtom(txAtom)
   const { account, chainId } = useWeb3React()
   const [pointsAccumulated, setPointsAccumulated] = useState<
     number | undefined
@@ -134,6 +136,12 @@ export function PointsEarned({
     walletOwnership,
   ])
 
+  const handleCloseModal = useCallback(() => {
+    reset()
+    dispatch(resetState())
+    handleAction()
+  }, [dispatch, handleAction, reset])
+
   const styles = {
     wrapper: css`
       height: 518px;
@@ -222,7 +230,7 @@ export function PointsEarned({
           {monthText} straight. Plus, If you keep your investment till after{' '}
           {monthText}, you’ll gain extra points daily.
         </Box>
-        <BottomButton variant='contained' onClick={handleAction}>
+        <BottomButton variant='contained' onClick={handleCloseModal}>
           GREAT
         </BottomButton>
       </Box>
