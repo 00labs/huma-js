@@ -139,7 +139,7 @@ export const CHAINS: {
   [ChainEnum.BaseSepolia]: {
     id: ChainEnum.BaseSepolia,
     urls: ['https://sepolia.base.org'],
-    name: 'BaseSepolia',
+    name: 'Base Sepolia Testnet',
     nativeCurrency: ETH,
     explorer: 'https://sepolia.basescan.org',
     wait: 1,
@@ -159,7 +159,7 @@ export const CHAINS: {
   [ChainEnum.ScrollSepolia]: {
     id: ChainEnum.ScrollSepolia,
     urls: ['https://sepolia-rpc.scroll.io'],
-    name: 'ScrollSepolia',
+    name: 'Scroll Sepolia Testnet',
     nativeCurrency: ETH,
     explorer: 'https://sepolia.scrollscan.com',
     wait: 1,
