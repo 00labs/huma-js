@@ -225,6 +225,96 @@ function getRWReceivableInfo(
 }
 
 /**
+ * Returns the paginated V2 receivables' info for the original creator.
+ *
+ * @memberof SubgraphService
+ * @param {string} userAddress - The address of the original creator.
+ * @param {number} chainId - The ID of the chain.
+ * @param {POOL_NAME} poolName - The name of the pool.
+ * @param {POOL_TYPE} poolType - The type of the pool.
+ * @param {Pagination} pagination - The pagination option.
+ * @returns {Promise<RealWorldReceivableInfoBase>} The paginated real world receivables' info.
+ */
+function getReceivableV2Info(
+  userAddress: string,
+  chainId: number,
+  poolName: POOL_NAME,
+  poolType: POOL_TYPE,
+  pagination: Pagination = {
+    first: null,
+    skip: null,
+    orderBy: 'tokenId',
+    orderDirection: 'desc',
+  },
+): Promise<RealWorldReceivableInfoBase[]> {
+  const url = getSubgraphUrlForChainId(chainId)
+  if (!url) {
+    return Promise.resolve([])
+  }
+
+  let poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
+  if (!poolAddress) {
+    poolAddress = CHAIN_POOLS_INFO_V2[chainId as ChainEnum]?.[poolName]?.pool
+  }
+
+  const ReceivablesV2Query = `
+  query {
+    rwreceivables(
+      where: {
+        creator: "${userAddress}"
+      }
+      first: ${pagination.first}
+      skip: ${pagination.skip}
+      orderBy: "${pagination.orderBy}"
+      orderDirection: "${pagination.orderDirection}"
+    ) {
+      id
+      tokenId
+      receivableAmount
+      paidAmount
+      owner
+      creator
+      pool
+      maturityDate
+      currencyCode
+      tokenUri
+      status
+    }
+  }
+`
+
+  return requestPost<{
+    errors?: unknown
+    data: {
+      rwreceivables: Array<
+        RealWorldReceivableInfoBase & {
+          pool: string
+          tokenUri: string
+          creator: string
+        }
+      >
+    }
+  }>(url, JSON.stringify({ query: ReceivablesV2Query }), {
+    withCredentials: false,
+  })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return []
+      }
+      return res.data.rwreceivables.map((item) => {
+        item.poolAddress = item.pool
+        item.tokenURI = item.tokenUri
+        return item
+      })
+    })
+    .catch((err) => {
+      console.error(err)
+      return []
+    })
+}
+
+/**
  * Returns if user has borrow or lend history.
  *
  * @memberof SubgraphService
@@ -556,6 +646,7 @@ export const SubgraphService = {
   getCreditEventsForUser,
   getLastFactorizedAmountFromPool,
   getRWReceivableInfo,
+  getReceivableV2Info,
   checkBorrowAndLendHistory,
   fetchAllPoolsData,
   fetchAllAccountData,

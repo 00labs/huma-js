@@ -35,7 +35,7 @@ const LoadingCopiesByType: {
     description: `Checking your verification status...`,
   },
   startKYC: {
-    description: `Starting KYC...`,
+    description: `Starting KYC/KYB...`,
   },
   approveLender: {
     description: `Approving as lender...`,

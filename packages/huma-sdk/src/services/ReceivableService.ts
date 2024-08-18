@@ -4,6 +4,7 @@ import {
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
+  PoolVersion,
   RealWorldReceivableInfo,
   RealWorldReceivableInfoBase,
   SupplementaryContracts,
@@ -415,19 +416,31 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
   owner: string,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  poolVersion: PoolVersion,
   pagination?: Pagination,
 ): Promise<RealWorldReceivableInfo<T>[]> {
   if (!ethers.utils.isAddress(owner)) {
     throw new Error('Invalid owner address')
   }
 
-  const rwReceivablesBase = await SubgraphService.getRWReceivableInfo(
-    owner,
-    chainId,
-    poolName,
-    poolType,
-    pagination,
-  )
+  let rwReceivablesBase: RealWorldReceivableInfoBase[] = []
+  if (poolVersion === 'v1') {
+    rwReceivablesBase = await SubgraphService.getRWReceivableInfo(
+      owner,
+      chainId,
+      poolName,
+      poolType,
+      pagination,
+    )
+  } else {
+    rwReceivablesBase = await SubgraphService.getReceivableV2Info(
+      owner,
+      chainId,
+      poolName,
+      poolType,
+      pagination,
+    )
+  }
 
   const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) => {
     if (!rwrInfoBase.tokenURI) {
