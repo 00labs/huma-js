@@ -8,7 +8,7 @@ import {
   useLenderApprovedV2,
   useLPConfigV2,
   usePoolInfoV2,
-  usePoolUnderlyingTokenInfoV2,
+  useTrancheVaultAssetsV2,
 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
@@ -62,10 +62,10 @@ export function LendSupplyV2({
   const poolName = POOL_NAME[poolNameStr]
   const { chainId, provider, account } = useWeb3React()
   const poolInfo = usePoolInfoV2(poolName, chainId)
+  const { poolUnderlyingToken } = poolInfo || {}
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const [transactionHash, setTransactionHash] = useState<string | undefined>()
-  const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -80,6 +80,8 @@ export function LendSupplyV2({
     account,
     provider,
   )
+  const [juniorAssets] = useTrancheVaultAssetsV2(poolName, 'junior', provider)
+  const [seniorAssets] = useTrancheVaultAssetsV2(poolName, 'senior', provider)
 
   const lenderApproveStatusFetched =
     lenderApprovedSenior !== undefined && lenderApprovedJunior !== undefined
@@ -144,7 +146,9 @@ export function LendSupplyV2({
     !poolInfo ||
     !poolUnderlyingToken ||
     !lenderApproveStatusFetched ||
-    !lpConfig
+    !lpConfig ||
+    !juniorAssets ||
+    !seniorAssets
   ) {
     return (
       <WidgetWrapper
@@ -184,30 +188,22 @@ export function LendSupplyV2({
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
           poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
+          lpConfig={lpConfig}
+          juniorAssets={juniorAssets}
+          seniorAssets={seniorAssets}
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
-          campaign={campaign}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (
-        <ApproveAllowance
-          poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
-        />
+        <ApproveAllowance poolInfo={poolInfo} />
       )}
       {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer
-          poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
-          trancheType={selectedTranche}
-        />
+        <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
       )}
       {step === WIDGET_STEP.Done && (
         <Success
           poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
           lpConfig={lpConfig}
           campaign={campaign}
           updateTransactionHash={setTransactionHash}

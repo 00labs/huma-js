@@ -73,7 +73,7 @@ export function ChooseAmount({
       currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
       maxAmount={creditAvailableFormatted}
-      info={`${formatNumber(creditAvailableFormatted)} Available`}
+      infos={[`${formatNumber(creditAvailableFormatted)} Available`]}
       handleAction={handleAction}
       actionText='BORROW'
     />

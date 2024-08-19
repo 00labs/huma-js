@@ -83,7 +83,7 @@ export function ChooseAmount({
       handleChangeAmount={handleChangeAmount}
       maxAmount={payoffAmount}
       maxAmountText='Pay Off'
-      info={`${formatNumber(totalDueAmount.toFixed(0))} Due`}
+      infos={[`${formatNumber(totalDueAmount.toFixed(0))} Due`]}
       handleAction={handleAction}
       actionText='PAY'
     />
