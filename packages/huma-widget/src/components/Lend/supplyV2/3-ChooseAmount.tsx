@@ -117,7 +117,7 @@ export function ChooseAmount({
   if (campaign && campaignPoints > 0) {
     info = `You will earn ${formatNumber(
       campaignPoints,
-    )} points for the entire ${lockupPeriodMonths} months right away.`
+    )} Huma points for the entire ${lockupPeriodMonths} months.`
   }
 
   return (
