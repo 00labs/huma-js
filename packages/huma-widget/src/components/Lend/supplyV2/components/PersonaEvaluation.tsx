@@ -80,7 +80,6 @@ export function PersonaEvaluation({
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
-  const [bypassKyc, setBypassKyc] = useState<boolean>(true)
 
   useEffect(() => {
     const createNewWallet = async () => {
@@ -162,9 +161,17 @@ export function PersonaEvaluation({
           case IdentityVerificationStatusV2.NOT_STARTED: {
             const startVerificationResult =
               await IdentityServiceV2.startVerification(account, chainId, isDev)
+            const isVerificationBypassed =
+              startVerificationResult.status ===
+              IdentityVerificationStatusV2.BYPASSED
             setInquiryId(startVerificationResult.personaInquiryId)
-            setKYCCopy(KYCCopies.verifyIdentity)
+            setKYCCopy(
+              isVerificationBypassed
+                ? KYCCopies.verificationBypassed
+                : KYCCopies.verifyIdentity,
+            )
             setLoadingType(undefined)
+
             break
           }
 
@@ -333,7 +340,7 @@ export function PersonaEvaluation({
 
   // Start KYC flow directly
   useEffect(() => {
-    if (verificationStatus && !bypassKyc) {
+    if (verificationStatus) {
       switch (verificationStatus.status) {
         case IdentityVerificationStatusV2.NOT_STARTED:
         case IdentityVerificationStatusV2.CREATED:
@@ -346,7 +353,7 @@ export function PersonaEvaluation({
           break
       }
     }
-  }, [bypassKyc, startKYC, verificationStatus])
+  }, [startKYC, verificationStatus])
 
   const handleAction = () => {
     if (verificationStatus) {
@@ -362,6 +369,10 @@ export function PersonaEvaluation({
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
         case IdentityVerificationStatusV2.APPROVED:
           handleClose(verificationStatus.status)
+          break
+
+        case IdentityVerificationStatusV2.BYPASSED:
+          handleClose(IdentityVerificationStatusV2.APPROVED)
           break
 
         default:
@@ -391,30 +402,6 @@ export function PersonaEvaluation({
     `,
   }
 
-  if (bypassKyc) {
-    return (
-      <WrapperModal title='You Got Lucky!'>
-        <Box css={styles.iconWrapper}>
-          <img src={ApproveLenderImg} alt='approve-lender' />
-        </Box>
-        <Box css={styles.description}>
-          <span>
-            Our testnet is so popular that we have reached the daily KYC/KYB
-            testing limit. We will bypass this step and whitelist you as an
-            approved testing lender so that you can continue with the remaining
-            testing.
-          </span>
-        </Box>
-        <BottomButton
-          variant='contained'
-          onClick={() => handleClose(IdentityVerificationStatusV2.APPROVED)}
-        >
-          GO TO PURCHASE AGREEMENT
-        </BottomButton>
-      </WrapperModal>
-    )
-  }
-
   if (!loadingType) {
     return (
       <WrapperModal title={kycCopy.title}>
@@ -429,7 +416,7 @@ export function PersonaEvaluation({
             </span>
           </Box>
         ) : (
-          <Box css={styles.description}>GO TO PURCHASE AGREEMENT</Box>
+          <Box css={styles.description}>{kycCopy.description}</Box>
         )}
 
         {Boolean(kycCopy.buttonText) && (

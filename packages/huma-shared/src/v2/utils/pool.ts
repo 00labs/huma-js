@@ -93,6 +93,7 @@ export type PoolInfoV2 = {
       verificationDeclined: KYCCopy
       verificationNeedsReview: KYCCopy
       verificationApproved: KYCCopy
+      verificationBypassed: KYCCopy
     }
   }
   supplyLink?: string
