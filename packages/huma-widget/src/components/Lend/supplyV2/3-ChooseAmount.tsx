@@ -77,21 +77,34 @@ export function ChooseAmount({
     dispatch(setStep(step))
   }
 
-  const getAvailable = () => {
-    const trancheCap =
-      selectedTranche === 'junior' ? juniorAvailableCapBN : seniorAvailableCapBN
+  const getTrancheCap = () => {
+    if (selectedTranche === 'junior') {
+      return juniorAvailableCapBN
+    }
+    return seniorAvailableCapBN
+  }
+
+  const getMaxAmount = () => {
+    const trancheCap = getTrancheCap()
     return balance.gt(trancheCap) ? trancheCap : balance
   }
 
   const getInfos = () => {
-    const available = getAvailable()
-    const infos: string[] = [
+    const trancheCap = getTrancheCap()
+    const currentAmountBN = ethers.utils.parseUnits(
+      String(currentAmount),
+      decimals,
+    )
+    const remainingCap = trancheCap.sub(currentAmountBN)
+
+    if (remainingCap.lt(0)) {
+      return ['0 remaining capacity']
+    }
+    return [
       `${formatNumber(
-        ethers.utils.formatUnits(available, decimals),
+        ethers.utils.formatUnits(remainingCap, decimals),
       )} remaining capacity`,
     ]
-
-    return infos
   }
 
   return (
@@ -103,7 +116,7 @@ export function ChooseAmount({
       tokenSymbol={symbol}
       currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
-      maxAmount={Number(ethers.utils.formatUnits(getAvailable(), decimals))}
+      maxAmount={Number(ethers.utils.formatUnits(getMaxAmount(), decimals))}
       maxAmountTitle={`${formatNumber(
         ethers.utils.formatUnits(balance, decimals),
       )} balance`}
