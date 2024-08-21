@@ -23,7 +23,7 @@ export enum PoolStatusV2 {
   Closed, // The pool is permanently closed after maturity.
 }
 
-export const PERSONA_KYC_COPY = {
+export const ARF_PERSONA_KYC_COPY = {
   signInRequired: {
     title: 'Sign In',
     description:
@@ -47,7 +47,7 @@ export const PERSONA_KYC_COPY = {
   verificationApproved: {
     title: 'Verification Approved',
     description:
-      'Your verification request is approved. Please check and agree the subscription agreement.',
-    buttonText: 'GO TO AGREEMENT',
+      'Congratulations. You have been approved as a lender for Arf pools. Next, please proceed to purchase agreement.',
+    buttonText: 'GO TO PURCHASE AGREEMENT',
   },
 }

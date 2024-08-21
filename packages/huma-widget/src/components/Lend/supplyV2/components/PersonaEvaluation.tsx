@@ -409,7 +409,7 @@ export function PersonaEvaluation({
           variant='contained'
           onClick={() => handleClose(IdentityVerificationStatusV2.APPROVED)}
         >
-          GO TO AGREEMENT
+          GO TO PURCHASE AGREEMENT
         </BottomButton>
       </WrapperModal>
     )
@@ -429,7 +429,7 @@ export function PersonaEvaluation({
             </span>
           </Box>
         ) : (
-          <Box css={styles.description}>GO TO AGREEMENT</Box>
+          <Box css={styles.description}>GO TO PURCHASE AGREEMENT</Box>
         )}
 
         {Boolean(kycCopy.buttonText) && (

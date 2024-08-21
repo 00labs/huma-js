@@ -1,7 +1,7 @@
 import { ChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { FirstLossCoverIndex } from '../types'
-import { PERSONA_KYC_COPY, PoolsInfoV2 } from '../utils'
+import { ARF_PERSONA_KYC_COPY, PoolsInfoV2 } from '../utils'
 
 export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
   // JiaV2: {
@@ -95,7 +95,7 @@ export const BASE_SEPOLIA_METADATA: PoolsInfoV2 = {
     title: 'Arf V2 Testing Pool',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     KYC: {
-      Persona: PERSONA_KYC_COPY,
+      Persona: ARF_PERSONA_KYC_COPY,
     },
     extra: {
       enableGetTestUSDC: true,
