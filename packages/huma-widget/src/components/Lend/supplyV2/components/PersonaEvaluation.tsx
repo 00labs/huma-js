@@ -161,9 +161,17 @@ export function PersonaEvaluation({
           case IdentityVerificationStatusV2.NOT_STARTED: {
             const startVerificationResult =
               await IdentityServiceV2.startVerification(account, chainId, isDev)
+            const isVerificationBypassed =
+              startVerificationResult.status ===
+              IdentityVerificationStatusV2.BYPASSED
             setInquiryId(startVerificationResult.personaInquiryId)
-            setKYCCopy(KYCCopies.verifyIdentity)
+            setKYCCopy(
+              isVerificationBypassed
+                ? KYCCopies.verificationBypassed
+                : KYCCopies.verifyIdentity,
+            )
             setLoadingType(undefined)
+
             break
           }
 
@@ -299,7 +307,7 @@ export function PersonaEvaluation({
     }
   }, [showPersonaClient])
 
-  const startKYC = async () => {
+  const startKYC = useCallback(async () => {
     isActionOngoingRef.current = true
     isKYCResumedRef.current = false
     setLoadingType('startKYC')
@@ -328,7 +336,24 @@ export function PersonaEvaluation({
         setLoadingType(undefined)
       },
     })
-  }
+  }, [checkVerificationStatus, inquiryId, sessionToken])
+
+  // Start KYC flow directly
+  useEffect(() => {
+    if (verificationStatus) {
+      switch (verificationStatus.status) {
+        case IdentityVerificationStatusV2.NOT_STARTED:
+        case IdentityVerificationStatusV2.CREATED:
+        case IdentityVerificationStatusV2.PENDING:
+        case IdentityVerificationStatusV2.EXPIRED:
+          startKYC()
+          break
+
+        default:
+          break
+      }
+    }
+  }, [startKYC, verificationStatus])
 
   const handleAction = () => {
     if (verificationStatus) {
@@ -344,6 +369,10 @@ export function PersonaEvaluation({
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
         case IdentityVerificationStatusV2.APPROVED:
           handleClose(verificationStatus.status)
+          break
+
+        case IdentityVerificationStatusV2.BYPASSED:
+          handleClose(IdentityVerificationStatusV2.APPROVED)
           break
 
         default:
