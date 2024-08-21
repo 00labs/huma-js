@@ -5,7 +5,6 @@ import {
   PoolInfoV2,
   timeUtil,
   TRANSFER_ABI,
-  UnderlyingTokenInfo,
 } from '@huma-finance/shared'
 import { sendTxAtom } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
@@ -25,7 +24,6 @@ import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolInfo: PoolInfoV2
-  poolUnderlyingToken: UnderlyingTokenInfo
   lpConfig: { withdrawalLockoutPeriodInDays: number }
   campaign?: Campaign
   updateTransactionHash: (hash: string) => void
@@ -34,7 +32,6 @@ type Props = {
 
 export function Success({
   poolInfo,
-  poolUnderlyingToken,
   lpConfig,
   campaign,
   updateTransactionHash,
@@ -43,7 +40,7 @@ export function Success({
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
   const [{ txReceipt, txHash }] = useAtom(sendTxAtom)
-  const { symbol, decimals, address } = poolUnderlyingToken
+  const { symbol, decimals, address } = poolInfo.poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
   const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)

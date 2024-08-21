@@ -1,21 +1,13 @@
+import { formatNumber, PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import { LPConfigStructOutput } from '@huma-finance/shared/src/v2/abis/types/PoolConfig'
 import {
-  CampaignService,
-  checkIsDev,
-  formatNumber,
-  PoolInfoV2,
-  TrancheType,
-  UnderlyingTokenInfo,
-} from '@huma-finance/shared'
-import {
-  useDebouncedValue,
   usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,
 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
-import { Campaign } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -23,29 +15,25 @@ import { InputAmountModal } from '../../InputAmountModal'
 
 type Props = {
   poolInfo: PoolInfoV2
-  poolUnderlyingToken: UnderlyingTokenInfo
+  lpConfig: LPConfigStructOutput
+  juniorAssets: BigNumber
+  seniorAssets: BigNumber
   selectedTranche: TrancheType | undefined
   isUniTranche: boolean
-  pointsTestnetExperience: boolean
-  campaign?: Campaign
 }
 
 export function ChooseAmount({
   poolInfo,
-  poolUnderlyingToken,
+  lpConfig,
+  juniorAssets: juniorAssetsBN,
+  seniorAssets: seniorAssetsBN,
   selectedTranche,
   isUniTranche,
-  pointsTestnetExperience,
-  campaign,
 }: Props): React.ReactElement | null {
-  const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { account, provider } = useWeb3React()
-  const { symbol, decimals } = poolUnderlyingToken
+  const { symbol, decimals } = poolInfo.poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
-  const debouncedValue = useDebouncedValue(currentAmount)
-  const [campaignPoints, setCampaignPoints] = useState<number>(0)
-  const [lockupPeriodMonths, setLockupPeriodMonths] = useState<number>(0)
   const { allowance = BigNumber.from(0) } = usePoolSafeAllowanceV2(
     poolInfo.poolName,
     account,
@@ -56,46 +44,22 @@ export function ChooseAmount({
     account,
     provider,
   )
-  const maxAmountFormatted = ethers.utils.formatUnits(
-    balance,
-    poolUnderlyingToken.decimals,
-  )
 
-  useEffect(() => {
-    const getBasePoints = async () => {
-      if (campaign && selectedTranche && Number(debouncedValue) > 0) {
-        const estimatedPoints = await CampaignService.getEstimatedPoints(
-          campaign.campaignGroupId,
-          ethers.utils
-            .parseUnits(
-              String(debouncedValue),
-              poolInfo.poolUnderlyingToken.decimals,
-            )
-            .toString(),
-          isDev,
-          pointsTestnetExperience,
-        )
-        const campaignPoints = estimatedPoints.find(
-          (item) => item.campaignId === campaign.id,
-        )
-        if (campaignPoints) {
-          setCampaignPoints(campaignPoints[`${selectedTranche}TranchePoints`])
-          setLockupPeriodMonths(campaignPoints.lockupPeriodMonths)
-        }
-      } else {
-        setCampaignPoints(0)
-      }
+  const { juniorAvailableCapBN, seniorAvailableCapBN } = useMemo(() => {
+    const { maxSeniorJuniorRatio, liquidityCap: liquidityCapBN } = lpConfig
+    const totalDeployedBN = seniorAssetsBN.add(juniorAssetsBN)
+    const totalAvailableCapBN = liquidityCapBN.sub(totalDeployedBN)
+    const maxSeniorAssetsBN = juniorAssetsBN.mul(maxSeniorJuniorRatio)
+    let seniorAvailableCapBN = maxSeniorAssetsBN.sub(seniorAssetsBN)
+    seniorAvailableCapBN = seniorAvailableCapBN.gt(totalAvailableCapBN)
+      ? totalAvailableCapBN
+      : seniorAvailableCapBN
+
+    return {
+      juniorAvailableCapBN: totalAvailableCapBN.sub(seniorAvailableCapBN),
+      seniorAvailableCapBN,
     }
-    getBasePoints()
-  }, [
-    campaign,
-    debouncedValue,
-    decimals,
-    isDev,
-    pointsTestnetExperience,
-    poolInfo.poolUnderlyingToken.decimals,
-    selectedTranche,
-  ])
+  }, [juniorAssetsBN, lpConfig, seniorAssetsBN])
 
   const handleChangeAmount = (newAmount: number) => {
     setCurrentAmount(newAmount)
@@ -113,24 +77,37 @@ export function ChooseAmount({
     dispatch(setStep(step))
   }
 
-  let info = `${formatNumber(maxAmountFormatted)} Available`
-  if (campaign && campaignPoints > 0) {
-    info = `You will earn ${formatNumber(
-      campaignPoints,
-    )} Huma points for the entire ${lockupPeriodMonths} months.`
+  const getAvailable = () => {
+    const trancheCap =
+      selectedTranche === 'junior' ? juniorAvailableCapBN : seniorAvailableCapBN
+    return balance.gt(trancheCap) ? trancheCap : balance
+  }
+
+  const getInfos = () => {
+    const available = getAvailable()
+    const infos: string[] = [
+      `${formatNumber(
+        ethers.utils.formatUnits(available, decimals),
+      )} remaining capacity`,
+    ]
+
+    return infos
   }
 
   return (
     <InputAmountModal
       title='Enter Amount'
-      subTitle={`Supplying ${symbol} with ${
+      subTitle={`Depositing to ${
         isUniTranche ? 'uni tranche' : selectedTranche
-      }`}
+      } tranche`}
       tokenSymbol={symbol}
       currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
-      maxAmount={maxAmountFormatted}
-      info={info}
+      maxAmount={Number(ethers.utils.formatUnits(getAvailable(), decimals))}
+      maxAmountTitle={`${formatNumber(
+        ethers.utils.formatUnits(balance, decimals),
+      )} balance`}
+      infos={getInfos()}
       handleAction={handleAction}
       actionText='SUPPLY'
     />
