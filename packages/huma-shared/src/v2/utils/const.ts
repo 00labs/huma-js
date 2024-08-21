@@ -48,6 +48,6 @@ export const PERSONA_KYC_COPY = {
     title: 'Verification Approved',
     description:
       'Your verification request is approved. Please check and agree the subscription agreement.',
-    buttonText: 'GO TO SUBSCRIPTION',
+    buttonText: 'GO TO AGREEMENT',
   },
 }

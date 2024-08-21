@@ -80,6 +80,7 @@ export function PersonaEvaluation({
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
+  const [bypassKyc, setBypassKyc] = useState<boolean>(true)
 
   useEffect(() => {
     const createNewWallet = async () => {
@@ -299,7 +300,7 @@ export function PersonaEvaluation({
     }
   }, [showPersonaClient])
 
-  const startKYC = async () => {
+  const startKYC = useCallback(async () => {
     isActionOngoingRef.current = true
     isKYCResumedRef.current = false
     setLoadingType('startKYC')
@@ -328,7 +329,24 @@ export function PersonaEvaluation({
         setLoadingType(undefined)
       },
     })
-  }
+  }, [checkVerificationStatus, inquiryId, sessionToken])
+
+  // Start KYC flow directly
+  useEffect(() => {
+    if (verificationStatus && !bypassKyc) {
+      switch (verificationStatus.status) {
+        case IdentityVerificationStatusV2.NOT_STARTED:
+        case IdentityVerificationStatusV2.CREATED:
+        case IdentityVerificationStatusV2.PENDING:
+        case IdentityVerificationStatusV2.EXPIRED:
+          startKYC()
+          break
+
+        default:
+          break
+      }
+    }
+  }, [bypassKyc, startKYC, verificationStatus])
 
   const handleAction = () => {
     if (verificationStatus) {
@@ -373,6 +391,30 @@ export function PersonaEvaluation({
     `,
   }
 
+  if (bypassKyc) {
+    return (
+      <WrapperModal title='You Got Lucky!'>
+        <Box css={styles.iconWrapper}>
+          <img src={ApproveLenderImg} alt='approve-lender' />
+        </Box>
+        <Box css={styles.description}>
+          <span>
+            Our testnet is so popular that we have reached the daily KYC/KYB
+            testing limit. We will bypass this step and whitelist you as an
+            approved testing lender so that you can continue with the remaining
+            testing.
+          </span>
+        </Box>
+        <BottomButton
+          variant='contained'
+          onClick={() => handleClose(IdentityVerificationStatusV2.APPROVED)}
+        >
+          GO TO AGREEMENT
+        </BottomButton>
+      </WrapperModal>
+    )
+  }
+
   if (!loadingType) {
     return (
       <WrapperModal title={kycCopy.title}>
@@ -387,7 +429,7 @@ export function PersonaEvaluation({
             </span>
           </Box>
         ) : (
-          <Box css={styles.description}>{kycCopy.description}</Box>
+          <Box css={styles.description}>GO TO AGREEMENT</Box>
         )}
 
         {Boolean(kycCopy.buttonText) && (
