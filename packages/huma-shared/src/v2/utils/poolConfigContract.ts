@@ -21,7 +21,6 @@ const getFlcTotalAssetsAfterRisk = (
   return flcTotalAssetsAfterRisk
 }
 
-// Please refer to: https://docs.google.com/spreadsheets/d/1Pkqj7pcJ6OxFG8ZTYQLAeAKf3ouD0mAzT9AKoH1ym4s/edit#gid=0 for APY formula
 export const getPoolOverviewV2 = (
   protocolFeeInBps: number,
   yieldInBps: number,
@@ -50,8 +49,7 @@ export const getPoolOverviewV2 = (
   juniorTrancheApy: number
 } => {
   const BP_FACTOR_NUMBER = BP_FACTOR.toNumber()
-  // APY = (1+APR/12)^12 - 1
-  const APY = (1 + yieldInBps / BP_FACTOR_NUMBER / 12) ** 12 - 1
+  const APY = yieldInBps / BP_FACTOR_NUMBER
 
   const juniorAssets = liquidityCap.div(maxSeniorJuniorRatio + 1)
   const seniorAssets = liquidityCap.sub(juniorAssets)
