@@ -10,6 +10,7 @@ export enum IdentityVerificationStatusV2 {
   CREATED = 'created',
   PENDING = 'pending',
   EXPIRED = 'expired',
+  ACCREDITED = 'accredited',
   APPROVED = 'approved',
   BYPASSED = 'bypassed',
   DECLINED = 'declined',
@@ -28,6 +29,43 @@ export type VerificationStatusResultV2 = {
   walletAddress: string
   status: IdentityVerificationStatusV2
   personaInquiryId: string
+}
+
+/**
+ * Object representing the response to the identity accreditation request.
+ * @typedef {Object} AccreditationResultV2
+ * @property {string} walletAddress the wallet address to get the verification status.
+ * @property {string} accreditedAt The accreditation passed time.
+ */
+export type AccreditationResultV2 = {
+  walletAddress: string
+  accreditedAt: string
+}
+
+/**
+ * Object representing the response to the identity start verification request.
+ * @typedef {Object} StartVerificationResultV2
+ * @property {string} walletAddress the wallet address to get the verification status.
+ * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
+ * @property {string} personaInquiryId The persona inquiry id.
+ */
+export type StartVerificationResultV2 = {
+  walletAddress: string
+  status: IdentityVerificationStatusV2
+  personaInquiryId: string
+}
+
+/**
+ * Object representing the response to the identity verification resume request.
+ * @typedef {Object} ResumeVerificationResultV2
+ * @property {string} walletAddress The wallet address to resume the verification.
+ * @property {string} sessionToken The session token.
+ * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
+ */
+export type ResumeVerificationResultV2 = {
+  walletAddress: string
+  sessionToken: string
+  status: IdentityVerificationStatusV2
 }
 
 /**
@@ -51,18 +89,37 @@ const getVerificationStatusV2 = async (
     )}/wallets/${walletAddress}/verification-status?&chainId=${chainId}`,
   )
 
-/**
- * Object representing the response to the identity verification status request.
- * @typedef {Object} StartVerificationResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
- * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
- * @property {string} personaInquiryId The persona inquiry id.
- */
-export type StartVerificationResultV2 = {
-  walletAddress: string
-  status: IdentityVerificationStatusV2
-  personaInquiryId: string
+export type AccreditationAnswers = {
+  question1: string
+  question1Answer: boolean
+  question2: string
+  question2Answer: boolean
+  question3: string
+  question3Answer: boolean
 }
+
+/**
+ * Start wallet's accreditation process.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {AccreditationAnswers} answers accreditation answer.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<VerificationStatusResultV2>} Promise that returns the start verification result.
+ */
+const accredit = async (
+  walletAddress: string,
+  chainId: number,
+  answers: AccreditationAnswers,
+  isDev = false,
+): Promise<AccreditationResultV2> =>
+  requestPost<AccreditationResultV2>(
+    `${configUtil.getIdentityAPIUrl(
+      chainId,
+      isDev,
+    )}/wallets/${walletAddress}/accredit?chainId=${chainId}`,
+    { answers },
+  )
 
 /**
  * Start wallet's verification process.
@@ -83,19 +140,6 @@ const startVerification = async (
       isDev,
     )}/wallets/${walletAddress}/start-verification?chainId=${chainId}`,
   )
-
-/**
- * Object representing the response to the identity verification resume request.
- * @typedef {Object} StartVerificationResultV2
- * @property {string} walletAddress The wallet address to resume the verification.
- * @property {string} sessionToken The session token.
- * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
- */
-export type ResumeVerificationResultV2 = {
-  walletAddress: string
-  sessionToken: string
-  status: IdentityVerificationStatusV2
-}
 
 /**
  * Resume wallet's verification process.
@@ -163,6 +207,7 @@ const approveLender = async (
 
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
+  accredit,
   startVerification,
   resumeVerification,
   consentToSubscription,
