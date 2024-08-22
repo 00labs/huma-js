@@ -54,7 +54,6 @@ const getFlcTotalAssetsAfterRisk = (
   return flcTotalAssetsAfterRisk.toNumber()
 }
 
-// Please refer to: https://docs.google.com/spreadsheets/d/1Pkqj7pcJ6OxFG8ZTYQLAeAKf3ouD0mAzT9AKoH1ym4s/edit#gid=0 for APY formula
 export const getPoolOverviewV2 = async (
   poolName: POOL_NAME,
   provider: JsonRpcProvider | Web3Provider | undefined,
@@ -100,9 +99,8 @@ export const getPoolOverviewV2 = async (
     ])
 
   const BP_FACTOR_NUMBER = BP_FACTOR.toNumber()
-  // APY = (1+APR/12)^12 - 1
-  const APY = (1 + feeStructure.yieldInBps / BP_FACTOR_NUMBER / 12) ** 12 - 1
-
+  const APY = feeStructure.yieldInBps
+  
   const poolCap = lpConfig.liquidityCap.toNumber()
   const juniorAssets = poolCap / (lpConfig.maxSeniorJuniorRatio + 1)
   const seniorAssets = poolCap - juniorAssets
