@@ -51,9 +51,9 @@ export const ARF_PERSONA_KYC_COPY = {
     buttonText: 'GO TO PURCHASE AGREEMENT',
   },
   verificationBypassed: {
-    title: 'Verification Approved',
+    title: 'Verification Bypassed',
     description:
-      'Our testnet is so popular that we have reached the daily KYC/KYB testing limit. We will bypass this step and whitelist you as an approved testing lender so that you can continue with the remaining testing.',
+      'Our testnet campaign is so popular that we have reached the daily KYC/KYB testing limit. We will bypass this step and allowlist you as an approved testing lender so that you can continue with the remaining testing.',
     buttonText: 'GO TO PURCHASE AGREEMENT',
   },
 }

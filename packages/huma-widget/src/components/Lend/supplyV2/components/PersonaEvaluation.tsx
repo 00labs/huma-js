@@ -158,19 +158,19 @@ export function PersonaEvaluation({
         setInquiryId(verificationStatus.personaInquiryId)
 
         switch (verificationStatus.status) {
-          case IdentityVerificationStatusV2.NOT_STARTED: {
+          case IdentityVerificationStatusV2.ACCREDITED: {
             const startVerificationResult =
               await IdentityServiceV2.startVerification(account, chainId, isDev)
-            const isVerificationBypassed =
+            setInquiryId(startVerificationResult.personaInquiryId)
+            setKYCCopy(KYCCopies.verifyIdentity)
+            setLoadingType(undefined)
+            if (
               startVerificationResult.status ===
               IdentityVerificationStatusV2.BYPASSED
-            setInquiryId(startVerificationResult.personaInquiryId)
-            setKYCCopy(
-              isVerificationBypassed
-                ? KYCCopies.verificationBypassed
-                : KYCCopies.verifyIdentity,
-            )
-            setLoadingType(undefined)
+            ) {
+              setVerificationStatus(startVerificationResult)
+              setKYCCopy(KYCCopies.verificationBypassed)
+            }
 
             break
           }
@@ -214,6 +214,13 @@ export function PersonaEvaluation({
             setKYCCopy(KYCCopies.verifyIdentity)
             setLoadingType(undefined)
             isKYCResumedRef.current = true
+            break
+          }
+
+          case IdentityVerificationStatusV2.BYPASSED: {
+            setKYCCopy(KYCCopies.verificationBypassed)
+            setLoadingType(undefined)
+
             break
           }
 
@@ -342,7 +349,7 @@ export function PersonaEvaluation({
   useEffect(() => {
     if (verificationStatus) {
       switch (verificationStatus.status) {
-        case IdentityVerificationStatusV2.NOT_STARTED:
+        case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
         case IdentityVerificationStatusV2.EXPIRED:
@@ -358,7 +365,7 @@ export function PersonaEvaluation({
   const handleAction = () => {
     if (verificationStatus) {
       switch (verificationStatus.status) {
-        case IdentityVerificationStatusV2.NOT_STARTED:
+        case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
         case IdentityVerificationStatusV2.EXPIRED:
