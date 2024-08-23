@@ -26,22 +26,6 @@ import { WrapperModal } from '../../../WrapperModal'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
-const LoadingCopiesByType: {
-  [key: string]: {
-    description: string
-  }
-} = {
-  verificationStatus: {
-    description: `Checking your verification status...`,
-  },
-  startKYC: {
-    description: `Starting KYC/KYB...`,
-  },
-  approveLender: {
-    description: ``,
-  },
-}
-
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
@@ -337,6 +321,7 @@ export function PersonaEvaluation({
         isActionOngoingRef.current = false
         setShowPersonaClient(false)
         setLoadingType(undefined)
+        handleClose()
       },
       onError: () => {
         isActionOngoingRef.current = false
@@ -344,18 +329,21 @@ export function PersonaEvaluation({
         setLoadingType(undefined)
       },
     })
-  }, [checkVerificationStatus, inquiryId, sessionToken])
+  }, [checkVerificationStatus, handleClose, inquiryId, sessionToken])
 
   // Start KYC flow directly for the first time
   useEffect(() => {
+    if (isActionOngoingRef.current || isKYCResumedRef.current) {
+      return
+    }
     if (verificationStatus && !KYCAutoStarted) {
       switch (verificationStatus.status) {
         case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
         case IdentityVerificationStatusV2.EXPIRED: {
-          setKYCAutoStarted(true)
           startKYC()
+          setKYCAutoStarted(true)
           break
         }
 
@@ -441,7 +429,7 @@ export function PersonaEvaluation({
   return (
     <LoadingModal
       title='Lender Approval'
-      description={LoadingCopiesByType[loadingType].description}
+      description='Checking your verification status...'
     />
   )
 }
