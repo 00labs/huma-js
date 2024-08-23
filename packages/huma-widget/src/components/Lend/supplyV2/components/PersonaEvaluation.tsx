@@ -38,7 +38,7 @@ const LoadingCopiesByType: {
     description: `Starting KYC/KYB...`,
   },
   approveLender: {
-    description: `Approving as lender...`,
+    description: ``,
   },
 }
 
@@ -77,6 +77,7 @@ export function PersonaEvaluation({
   const [verificationStatus, setVerificationStatus] =
     useState<VerificationStatusResultV2>()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
+  const [KYCAutoStarted, setKYCAutoStarted] = useState<boolean>(false)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
@@ -345,22 +346,24 @@ export function PersonaEvaluation({
     })
   }, [checkVerificationStatus, inquiryId, sessionToken])
 
-  // Start KYC flow directly
+  // Start KYC flow directly for the first time
   useEffect(() => {
-    if (verificationStatus) {
+    if (verificationStatus && !KYCAutoStarted) {
       switch (verificationStatus.status) {
         case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
-        case IdentityVerificationStatusV2.EXPIRED:
+        case IdentityVerificationStatusV2.EXPIRED: {
+          setKYCAutoStarted(true)
           startKYC()
           break
+        }
 
         default:
           break
       }
     }
-  }, [startKYC, verificationStatus])
+  }, [KYCAutoStarted, startKYC, verificationStatus])
 
   const handleAction = () => {
     if (verificationStatus) {
