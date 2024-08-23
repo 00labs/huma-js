@@ -26,22 +26,6 @@ import { WrapperModal } from '../../../WrapperModal'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
-const LoadingCopiesByType: {
-  [key: string]: {
-    description: string
-  }
-} = {
-  verificationStatus: {
-    description: `Checking your verification status...`,
-  },
-  startKYC: {
-    description: `Starting KYC/KYB...`,
-  },
-  approveLender: {
-    description: `Approving as lender...`,
-  },
-}
-
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
@@ -77,6 +61,7 @@ export function PersonaEvaluation({
   const [verificationStatus, setVerificationStatus] =
     useState<VerificationStatusResultV2>()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
+  const [KYCAutoStarted, setKYCAutoStarted] = useState<boolean>(false)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
@@ -336,6 +321,7 @@ export function PersonaEvaluation({
         isActionOngoingRef.current = false
         setShowPersonaClient(false)
         setLoadingType(undefined)
+        handleClose()
       },
       onError: () => {
         isActionOngoingRef.current = false
@@ -343,24 +329,29 @@ export function PersonaEvaluation({
         setLoadingType(undefined)
       },
     })
-  }, [checkVerificationStatus, inquiryId, sessionToken])
+  }, [checkVerificationStatus, handleClose, inquiryId, sessionToken])
 
-  // Start KYC flow directly
+  // Start KYC flow directly for the first time
   useEffect(() => {
-    if (verificationStatus) {
+    if (isActionOngoingRef.current || isKYCResumedRef.current) {
+      return
+    }
+    if (verificationStatus && !KYCAutoStarted) {
       switch (verificationStatus.status) {
         case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
-        case IdentityVerificationStatusV2.EXPIRED:
+        case IdentityVerificationStatusV2.EXPIRED: {
           startKYC()
+          setKYCAutoStarted(true)
           break
+        }
 
         default:
           break
       }
     }
-  }, [startKYC, verificationStatus])
+  }, [KYCAutoStarted, startKYC, verificationStatus])
 
   const handleAction = () => {
     if (verificationStatus) {
@@ -438,7 +429,7 @@ export function PersonaEvaluation({
   return (
     <LoadingModal
       title='Lender Approval'
-      description={LoadingCopiesByType[loadingType].description}
+      description='Checking your verification status...'
     />
   )
 }
