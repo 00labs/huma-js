@@ -40,6 +40,7 @@ export interface Campaign {
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
+ * @property {string} personaEnvironmentId Persona environment id.
  * @property {function((IdentityVerificationStatusV2|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
@@ -47,6 +48,7 @@ export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   pointsTestnetExperience: boolean
   campaign?: Campaign
+  personaEnvironmentId?: string
   handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
   handleSuccess?: (blockNumber?: number) => void
 }
@@ -55,6 +57,7 @@ export function LendSupplyV2({
   poolName: poolNameStr,
   pointsTestnetExperience,
   campaign,
+  personaEnvironmentId,
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
@@ -183,6 +186,7 @@ export function LendSupplyV2({
           changeTranche={setSelectedTranche}
           pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
+          personaEnvironmentId={personaEnvironmentId}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (

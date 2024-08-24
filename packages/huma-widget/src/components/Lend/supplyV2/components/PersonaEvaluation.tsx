@@ -31,6 +31,7 @@ type Props = {
   isUniTranche: boolean
   pointsTestnetExperience: boolean
   campaign?: Campaign
+  personaEnvironmentId?: string
   changeTranche: (tranche: TrancheType) => void
   handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
 }
@@ -38,8 +39,9 @@ type Props = {
 export function PersonaEvaluation({
   poolInfo,
   isUniTranche,
-  campaign,
   pointsTestnetExperience,
+  campaign,
+  personaEnvironmentId,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -304,6 +306,7 @@ export function PersonaEvaluation({
     isKYCResumedRef.current = false
     setLoadingType('startKYC')
     const client: Client = new Persona.Client({
+      environmentId: personaEnvironmentId,
       inquiryId,
       sessionToken,
       frameWidth: '480px',
@@ -329,7 +332,13 @@ export function PersonaEvaluation({
         setLoadingType(undefined)
       },
     })
-  }, [checkVerificationStatus, handleClose, inquiryId, sessionToken])
+  }, [
+    checkVerificationStatus,
+    handleClose,
+    inquiryId,
+    personaEnvironmentId,
+    sessionToken,
+  ])
 
   // Start KYC flow directly for the first time
   useEffect(() => {

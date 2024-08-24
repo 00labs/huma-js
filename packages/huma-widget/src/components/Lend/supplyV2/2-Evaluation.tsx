@@ -10,6 +10,7 @@ type Props = {
   isUniTranche: boolean
   pointsTestnetExperience: boolean
   campaign?: Campaign
+  personaEnvironmentId?: string
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -17,8 +18,9 @@ type Props = {
 export function Evaluation({
   poolInfo,
   isUniTranche,
-  campaign,
   pointsTestnetExperience,
+  campaign,
+  personaEnvironmentId,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -35,6 +37,7 @@ export function Evaluation({
         isUniTranche={isUniTranche}
         pointsTestnetExperience={pointsTestnetExperience}
         campaign={campaign}
+        personaEnvironmentId={personaEnvironmentId}
         changeTranche={changeTranche}
       />
     )
