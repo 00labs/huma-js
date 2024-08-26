@@ -9,10 +9,11 @@ import {
   useLPConfigV2,
   useNextEpochStartTimeV2,
 } from '@huma-finance/web-shared'
+import { useWeb3React } from '@web3-react/core'
+import dayjs from 'dayjs'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
-import { useWeb3React } from '@web3-react/core'
 import { TrancheInfo } from '.'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import {
@@ -62,20 +63,18 @@ export function ChooseAmount({
   useEffect(() => {
     if (depositRecord && lpConfig && nextEpochStartTime) {
       const SECONDS_IN_A_DAY = 24 * 60 * 60
-      if (
-        nextEpochStartTime <
+      const lockupEndTime =
         depositRecord.lastDepositTime.toNumber() +
-          lpConfig.withdrawalLockoutPeriodInDays * SECONDS_IN_A_DAY
-      ) {
+        lpConfig.withdrawalLockoutPeriodInDays * SECONDS_IN_A_DAY
+      if (nextEpochStartTime < lockupEndTime) {
+        const lockupEndTimeDayjs = dayjs.unix(lockupEndTime).date(1)
         dispatch(setStep(WIDGET_STEP.Error))
         dispatch(
           setError({
             errorReason: 'Redemption too soon',
             errorMessage: `Your last deposit was on ${timestampToLL(
               depositRecord!.lastDepositTime.toNumber(),
-            )}. Depositors need to wait ${
-              lpConfig!.withdrawalLockoutPeriodInDays
-            } days before redemption`,
+            )}. You can redeem on ${timestampToLL(lockupEndTimeDayjs.unix())}.`,
           }),
         )
       }
