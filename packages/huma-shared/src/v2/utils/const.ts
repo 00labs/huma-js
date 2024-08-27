@@ -31,7 +31,7 @@ export const ARF_PERSONA_KYC_COPY = {
   },
   verifyIdentity: {
     title: 'Start KYC/KYB',
-    description: `This pool is only available to accredited investors at the moment. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Persona}.`,
+    description: `This pool is only available to verified investors at the moment. Please complete identity verification via ${KYC_PROVIDER.Persona}.`,
     buttonText: 'START KYC/KYB',
   },
   verificationDeclined: {
