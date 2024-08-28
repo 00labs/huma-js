@@ -33,17 +33,20 @@ export type TrancheInfo = {
  * Lend pool add redemption props
  * @typedef {Object} AddRedemptionPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
+ * @property {POOL_NTrancheTypeAME} tranche The tranche type.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool withdraw action is successful.
  */
 export type AddRedemptionPropsV2 = {
   poolName: keyof typeof POOL_NAME
+  tranche?: TrancheType
   handleClose: () => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
 export function AddRedemptionV2({
   poolName: poolNameStr,
+  tranche,
   handleClose,
   handleSuccess,
 }: AddRedemptionPropsV2): React.ReactElement | null {
@@ -80,6 +83,14 @@ export function AddRedemptionV2({
 
   useEffect(() => {
     if (!step && trancheInfoFetched) {
+      if (tranche) {
+        setTrancheInfo(
+          tranche === 'junior' ? juniorTrancheInfo : seniorTrancheInfo,
+        )
+        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+        return
+      }
+
       if (juniorTrancheInfo.assets.gt(0) && seniorTrancheInfo.assets.lte(0)) {
         setTrancheInfo(juniorTrancheInfo)
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
@@ -96,7 +107,14 @@ export function AddRedemptionV2({
         dispatch(setStep(WIDGET_STEP.ChooseTranche))
       }
     }
-  }, [dispatch, juniorTrancheInfo, seniorTrancheInfo, step, trancheInfoFetched])
+  }, [
+    dispatch,
+    juniorTrancheInfo,
+    seniorTrancheInfo,
+    step,
+    tranche,
+    trancheInfoFetched,
+  ])
 
   const handleRedeemSuccess = useCallback(
     (blockNumber: number) => {

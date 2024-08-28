@@ -880,6 +880,7 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
         InvalidAccount,
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        'v1', // version
       )
     } catch (error) {
       expect((error as any).message).toBe('Invalid owner address')
@@ -922,6 +923,7 @@ describe('loadReceivablesOfOwnerWithMetadata', () => {
         owner,
         POOL_NAME.HumaCreditLine,
         POOL_TYPE.CreditLine,
+        'v1', // version
       )
     expect(result).toStrictEqual([
       {

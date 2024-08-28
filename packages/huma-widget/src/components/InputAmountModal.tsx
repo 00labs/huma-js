@@ -1,4 +1,12 @@
-import { Box, Button, css, TextField, useTheme } from '@mui/material'
+import { isEmpty } from '@huma-finance/shared'
+import {
+  Box,
+  Button,
+  css,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import React, { useState } from 'react'
 import { NumericFormat } from 'react-number-format'
 
@@ -15,7 +23,7 @@ type Props = {
   maxAmount: number | string
   maxAmountText?: string
   maxAmountTitle?: string
-  info?: string
+  infos?: string[]
   handleChangeAmount: (amount: number) => void
   handleAction: () => void
 }
@@ -30,7 +38,7 @@ export function InputAmountModal({
   maxAmount,
   maxAmountText = 'MAX',
   maxAmountTitle,
-  info,
+  infos,
   handleChangeAmount,
   handleAction,
 }: Props): React.ReactElement | null {
@@ -85,11 +93,15 @@ export function InputAmountModal({
       letter-spacing: 0.46px;
     `,
     info: css`
-      color: ${theme.palette.text.primary};
+      color: ${theme.palette.text.secondary};
       font-weight: 400;
       font-size: 16px;
       line-height: 160%;
       letter-spacing: 0.15px;
+    `,
+    subInfo: css`
+      position: absolute;
+      bottom: ${theme.spacing(6)};
     `,
   }
 
@@ -105,6 +117,25 @@ export function InputAmountModal({
   const setMaxAmount = () => {
     handleChangeAmount(Number(maxAmount))
   }
+
+  const getDisabled = () => {
+    if (Number(currentAmount) <= 0) {
+      return true
+    }
+    if (!isEmpty(maxAmount) && Number(currentAmount) > Number(maxAmount)) {
+      return true
+    }
+    return false
+  }
+
+  const getEndAdornment = () => (
+    <Box css={styles.maxWrapper}>
+      {maxAmountTitle && <Box css={styles.maxTitle}>{maxAmountTitle}</Box>}
+      <Button variant='contained' css={styles.max} onClick={setMaxAmount}>
+        {maxAmountText}
+      </Button>
+    </Box>
+  )
 
   return (
     <WrapperModal title={title} subTitle={subTitle}>
@@ -122,34 +153,25 @@ export function InputAmountModal({
             customInput={TextField}
             placeholder={`0${suffix}`}
             variant='standard'
-            InputProps={{
-              endAdornment: maxAmountTitle ? (
-                <Box css={styles.maxWrapper}>
-                  <Box css={styles.maxTitle}>{maxAmountTitle}</Box>
-                  <Button css={styles.max} onClick={setMaxAmount}>
-                    {maxAmountText}
-                  </Button>
-                </Box>
-              ) : (
-                <Button
-                  variant='contained'
-                  css={styles.max}
-                  onClick={setMaxAmount}
-                >
-                  {maxAmountText}
-                </Button>
-              ),
-            }}
+            InputProps={{ endAdornment: getEndAdornment() }}
           />
         </Box>
       </Box>
 
-      {info && <Box css={styles.info}>{info}</Box>}
+      {infos && (
+        <Box>
+          {infos.map((info) => (
+            <Typography css={styles.info} key={info}>
+              {info}
+            </Typography>
+          ))}
+        </Box>
+      )}
 
       <BottomButton
         variant='contained'
         onClick={handleAction}
-        disabled={Number(currentAmount) <= 0}
+        disabled={getDisabled()}
       >
         {actionText}
       </BottomButton>

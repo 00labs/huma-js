@@ -1,11 +1,17 @@
-import { CampaignService, checkIsDev, formatNumber } from '@huma-finance/shared'
-import { useAuthErrorHandling } from '@huma-finance/web-shared'
+import {
+  CampaignService,
+  checkIsDev,
+  formatNumber,
+  isEmpty,
+} from '@huma-finance/shared'
+import { txAtom, useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useState } from 'react'
+import { useResetAtom } from 'jotai/utils'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { setError } from '../../../store/widgets.reducers'
+import { resetState, setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
@@ -36,10 +42,13 @@ export function PointsEarned({
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useDispatch()
+  const reset = useResetAtom(txAtom)
   const { account, chainId } = useWeb3React()
   const [pointsAccumulated, setPointsAccumulated] = useState<
     number | undefined
   >()
+  const hasPointsAccumulated =
+    !isEmpty(pointsAccumulated) && pointsAccumulated! > 0
   const lockupMonths = Math.round(lpConfig.withdrawalLockoutPeriodInDays / 30)
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
@@ -109,21 +118,10 @@ export function PointsEarned({
             isDev,
             pointsTestnetExperience,
           )
-          if (!result.pointsAccumulated) {
-            dispatch(
-              setError({
-                errorMessage: ERROR_MESSAGE,
-              }),
-            )
-          }
           setPointsAccumulated(result.pointsAccumulated)
           setState(STATE.Congrats)
         } catch (error) {
-          dispatch(
-            setError({
-              errorMessage: ERROR_MESSAGE,
-            }),
-          )
+          console.error('Failed to update wallet points', error)
         }
       }
     }
@@ -137,6 +135,12 @@ export function PointsEarned({
     transactionHash,
     walletOwnership,
   ])
+
+  const handleCloseModal = useCallback(() => {
+    reset()
+    dispatch(resetState())
+    handleAction()
+  }, [dispatch, handleAction, reset])
 
   const styles = {
     wrapper: css`
@@ -204,19 +208,29 @@ export function PointsEarned({
           <RibbonIcon />
           <Box css={styles.ribbonContent}>
             <HumaPointsIcon />
-            <Box>{formatNumber(pointsAccumulated)} Points</Box>
+            <Box>
+              {hasPointsAccumulated
+                ? `${formatNumber(pointsAccumulated)} Points`
+                : 'Points earned'}
+            </Box>
           </Box>
         </Box>
         <Box css={styles.entirePoints}>
-          <Box>Congratulations,</Box>
-          <Box>you've earned {pointsAccumulated} points</Box>
+          {hasPointsAccumulated ? (
+            <>
+              <Box>Congratulations,</Box>
+              <Box>you've earned {pointsAccumulated} points</Box>
+            </>
+          ) : (
+            <Box>Congratulations on joining the Huma Protocol!</Box>
+          )}
         </Box>
         <Box css={styles.entirePointsDetails}>
           You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
           {monthText} straight. Plus, If you keep your investment till after{' '}
           {monthText}, you’ll gain extra points daily.
         </Box>
-        <BottomButton variant='contained' onClick={handleAction}>
+        <BottomButton variant='contained' onClick={handleCloseModal}>
           GREAT
         </BottomButton>
       </Box>

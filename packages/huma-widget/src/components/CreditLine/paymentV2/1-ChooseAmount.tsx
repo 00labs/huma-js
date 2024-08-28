@@ -45,11 +45,6 @@ export function ChooseAmount({
     ethers.utils.formatUnits(payoffAmountBN, decimals),
   )
 
-  console.log('totalDueAmountBN', totalDueAmountBN.toString())
-  console.log('payoffAmountBN', payoffAmountBN.toString())
-  console.log('payoffAmount', payoffAmount)
-  console.log('currentAmount', currentAmount)
-
   useEffect(() => {
     setCurrentAmount(totalDueAmount)
   }, [totalDueAmount])
@@ -88,7 +83,7 @@ export function ChooseAmount({
       handleChangeAmount={handleChangeAmount}
       maxAmount={payoffAmount}
       maxAmountText='Pay Off'
-      info={`${formatNumber(totalDueAmount.toFixed(0))} Due`}
+      infos={[`${formatNumber(totalDueAmount.toFixed(0))} Due`]}
       handleAction={handleAction}
       actionText='PAY'
     />

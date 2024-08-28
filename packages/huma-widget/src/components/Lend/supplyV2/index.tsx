@@ -1,10 +1,14 @@
-import { openInNewTab, POOL_NAME, TrancheType } from '@huma-finance/shared'
+import {
+  IdentityVerificationStatusV2,
+  openInNewTab,
+  POOL_NAME,
+  TrancheType,
+} from '@huma-finance/shared'
 import {
   useLenderApprovedV2,
   useLPConfigV2,
   usePoolInfoV2,
-  usePoolSettingsV2,
-  usePoolUnderlyingTokenInfoV2,
+  useTrancheVaultAssetsV2,
 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
@@ -36,14 +40,14 @@ export interface Campaign {
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
- * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {function((IdentityVerificationStatusV2|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   pointsTestnetExperience: boolean
   campaign?: Campaign
-  handleClose: () => void
+  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
@@ -58,11 +62,10 @@ export function LendSupplyV2({
   const poolName = POOL_NAME[poolNameStr]
   const { chainId, provider, account } = useWeb3React()
   const poolInfo = usePoolInfoV2(poolName, chainId)
+  const { poolUnderlyingToken } = poolInfo || {}
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
   const [transactionHash, setTransactionHash] = useState<string | undefined>()
-  const poolUnderlyingToken = usePoolUnderlyingTokenInfoV2(poolName, provider)
-  const poolSettings = usePoolSettingsV2(poolName, provider)
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -77,6 +80,8 @@ export function LendSupplyV2({
     account,
     provider,
   )
+  const [juniorAssets] = useTrancheVaultAssetsV2(poolName, 'junior', provider)
+  const [seniorAssets] = useTrancheVaultAssetsV2(poolName, 'senior', provider)
 
   const lenderApproveStatusFetched =
     lenderApprovedSenior !== undefined && lenderApprovedJunior !== undefined
@@ -142,7 +147,8 @@ export function LendSupplyV2({
     !poolUnderlyingToken ||
     !lenderApproveStatusFetched ||
     !lpConfig ||
-    !poolSettings
+    !juniorAssets ||
+    !seniorAssets
   ) {
     return (
       <WidgetWrapper
@@ -177,36 +183,27 @@ export function LendSupplyV2({
           changeTranche={setSelectedTranche}
           pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
-          minDepositAmount={poolSettings.minDepositAmount}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
         <ChooseAmount
           poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
+          lpConfig={lpConfig}
+          juniorAssets={juniorAssets}
+          seniorAssets={seniorAssets}
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
-          campaign={campaign}
         />
       )}
       {step === WIDGET_STEP.ApproveAllowance && (
-        <ApproveAllowance
-          poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
-        />
+        <ApproveAllowance poolInfo={poolInfo} />
       )}
       {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer
-          poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
-          trancheType={selectedTranche}
-        />
+        <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
       )}
       {step === WIDGET_STEP.Done && (
         <Success
           poolInfo={poolInfo}
-          poolUnderlyingToken={poolUnderlyingToken}
           lpConfig={lpConfig}
           campaign={campaign}
           updateTransactionHash={setTransactionHash}

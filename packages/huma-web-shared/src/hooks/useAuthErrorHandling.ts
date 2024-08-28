@@ -2,7 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { AuthService } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import axios, { HttpStatusCode } from 'axios'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { SiweMessage } from 'siwe'
 
 import { useAsyncError } from './useAsyncError'
@@ -50,6 +50,7 @@ export type AuthState = {
   errorType?: ErrorType
   error: unknown
   setError: React.Dispatch<React.SetStateAction<unknown>>
+  reset: () => void
 }
 
 export const useAuthErrorHandling = (isDev: boolean): AuthState => {
@@ -103,11 +104,19 @@ export const useAuthErrorHandling = (isDev: boolean): AuthState => {
     }
   }, [chainId, isDev, error, throwError, account, provider])
 
+  const reset = useCallback(() => {
+    setIsVerificationRequired(false)
+    setIsVerified(false)
+    setError(null)
+    setErrorType(undefined)
+  }, [])
+
   return {
     isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
     errorType,
     error,
     setError,
+    reset,
   }
 }

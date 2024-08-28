@@ -1,4 +1,4 @@
-import { PoolInfoV2, UnderlyingTokenInfo } from '@huma-finance/shared'
+import { PoolInfoV2 } from '@huma-finance/shared'
 import React, { useCallback } from 'react'
 
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -8,12 +8,10 @@ import { ApproveAllowanceModalV2 } from '../../ApproveAllowanceModalV2'
 
 type Props = {
   poolInfo: PoolInfoV2
-  poolUnderlyingToken: UnderlyingTokenInfo
 }
 
 export function ApproveAllowance({
   poolInfo,
-  poolUnderlyingToken,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const spender = poolInfo.poolSafe
@@ -25,7 +23,7 @@ export function ApproveAllowance({
   return (
     <ApproveAllowanceModalV2
       poolInfo={poolInfo}
-      poolUnderlyingToken={poolUnderlyingToken}
+      poolUnderlyingToken={poolInfo.poolUnderlyingToken}
       spender={spender}
       handleSuccess={handleSuccess}
     />
