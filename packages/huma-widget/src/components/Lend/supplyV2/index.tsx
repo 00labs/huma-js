@@ -124,10 +124,10 @@ export function LendSupplyV2({
         return
       }
 
-      if (poolInfo.supplyLink) {
-        openInNewTab(poolInfo.supplyLink)
-        handleClose()
-      }
+      // if (poolInfo.supplyLink) {
+      //   openInNewTab(poolInfo.supplyLink)
+      //   handleClose()
+      // }
     }
   }, [
     dispatch,
@@ -168,67 +168,77 @@ export function LendSupplyV2({
       handleClose={handleClose}
       handleSuccess={handleSuccess}
     >
-      {step === WIDGET_STEP.ChooseTranche && (
-        <ChooseTranche
-          poolUnderlyingToken={poolUnderlyingToken}
-          selectedTranche={selectedTranche}
-          changeTranche={setSelectedTranche}
-        />
-      )}
-      {step === WIDGET_STEP.Evaluation && (
-        <Evaluation
-          poolInfo={poolInfo}
-          handleClose={handleClose}
-          isUniTranche={isUniTranche}
-          changeTranche={setSelectedTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
-          campaign={campaign}
-        />
-      )}
-      {step === WIDGET_STEP.ChooseAmount && (
-        <ChooseAmount
-          poolInfo={poolInfo}
-          lpConfig={lpConfig}
-          juniorAssets={juniorAssets}
-          seniorAssets={seniorAssets}
-          selectedTranche={selectedTranche}
-          isUniTranche={isUniTranche}
-        />
-      )}
-      {step === WIDGET_STEP.ApproveAllowance && (
-        <ApproveAllowance poolInfo={poolInfo} />
-      )}
-      {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
-      )}
-      {step === WIDGET_STEP.Done && (
-        <Success
-          poolInfo={poolInfo}
-          lpConfig={lpConfig}
-          campaign={campaign}
-          updateTransactionHash={setTransactionHash}
-          handleAction={handleClose}
-        />
-      )}
-      {step === WIDGET_STEP.Notifications && (
-        <Notifications campaign={campaign} handleAction={handleClose} />
-      )}
-      {step === WIDGET_STEP.PointsEarned && transactionHash && (
-        <PointsEarned
-          transactionHash={transactionHash}
-          lpConfig={lpConfig}
-          pointsTestnetExperience={pointsTestnetExperience}
-          handleAction={handleClose}
-        />
-      )}
-      {step === WIDGET_STEP.Error && (
-        <ErrorModal
-          title='Supply'
-          errorReason='Sorry there was an error'
-          errorMessage={errorMessage}
-          handleOk={handleClose}
-        />
-      )}
+      <Notifications campaign={campaign} handleAction={handleClose} />
     </WidgetWrapper>
   )
+  // return (
+  //   <WidgetWrapper
+  //     isOpen
+  //     loadingTitle={`Supply ${poolUnderlyingToken.symbol}`}
+  //     handleClose={handleClose}
+  //     handleSuccess={handleSuccess}
+  //   >
+  //     {step === WIDGET_STEP.ChooseTranche && (
+  //       <ChooseTranche
+  //         poolUnderlyingToken={poolUnderlyingToken}
+  //         selectedTranche={selectedTranche}
+  //         changeTranche={setSelectedTranche}
+  //       />
+  //     )}
+  //     {step === WIDGET_STEP.Evaluation && (
+  //       <Evaluation
+  //         poolInfo={poolInfo}
+  //         handleClose={handleClose}
+  //         isUniTranche={isUniTranche}
+  //         changeTranche={setSelectedTranche}
+  //         pointsTestnetExperience={pointsTestnetExperience}
+  //         campaign={campaign}
+  //       />
+  //     )}
+  //     {step === WIDGET_STEP.ChooseAmount && (
+  //       <ChooseAmount
+  //         poolInfo={poolInfo}
+  //         lpConfig={lpConfig}
+  //         juniorAssets={juniorAssets}
+  //         seniorAssets={seniorAssets}
+  //         selectedTranche={selectedTranche}
+  //         isUniTranche={isUniTranche}
+  //       />
+  //     )}
+  //     {step === WIDGET_STEP.ApproveAllowance && (
+  //       <ApproveAllowance poolInfo={poolInfo} />
+  //     )}
+  //     {step === WIDGET_STEP.Transfer && selectedTranche && (
+  //       <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
+  //     )}
+  //     {step === WIDGET_STEP.Done && (
+  //       <Success
+  //         poolInfo={poolInfo}
+  //         lpConfig={lpConfig}
+  //         campaign={campaign}
+  //         updateTransactionHash={setTransactionHash}
+  //         handleAction={handleClose}
+  //       />
+  //     )}
+  //     {step === WIDGET_STEP.Notifications && (
+  //       <Notifications campaign={campaign} handleAction={handleClose} />
+  //     )}
+  //     {step === WIDGET_STEP.PointsEarned && transactionHash && (
+  //       <PointsEarned
+  //         transactionHash={transactionHash}
+  //         lpConfig={lpConfig}
+  //         pointsTestnetExperience={pointsTestnetExperience}
+  //         handleAction={handleClose}
+  //       />
+  //     )}
+  //     {step === WIDGET_STEP.Error && (
+  //       <ErrorModal
+  //         title='Supply'
+  //         errorReason='Sorry there was an error'
+  //         errorMessage={errorMessage}
+  //         handleOk={handleClose}
+  //       />
+  //     )}
+  //   </WidgetWrapper>
+  // )
 }

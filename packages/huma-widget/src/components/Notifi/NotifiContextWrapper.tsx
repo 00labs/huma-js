@@ -23,9 +23,7 @@ export function NotifiContextWrapper({
     return undefined
   }, [provider])
 
-  console.log('1')
   if (account == null || signer == null || chainId == null) {
-    console.log('2')
     return null
   }
 
