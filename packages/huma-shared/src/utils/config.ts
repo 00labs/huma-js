@@ -56,7 +56,7 @@ const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
 
 const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
   `https://${getDevPrefix(isDev)}${
-    pointsTestnetExperience ? 'testnet.' : ''
+    pointsTestnetExperience ? 'testnet.' : 'mainnet.'
   }campaign-points.huma.finance/graphql`
 
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
