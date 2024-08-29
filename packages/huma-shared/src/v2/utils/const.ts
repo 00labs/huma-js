@@ -47,7 +47,7 @@ export const ARF_PERSONA_KYC_COPY = {
   verificationApproved: {
     title: 'Verification Approved',
     description:
-      'Congratulations. You have been approved as a lender for Arf pools. Next, please proceed to purchase agreement.',
+      'Congratulations! You have been approved as a lender for Arf pools. Next, please proceed to purchase agreement.',
     buttonText: 'GO TO PURCHASE AGREEMENT',
   },
   verificationBypassed: {
