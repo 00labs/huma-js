@@ -33,6 +33,39 @@ export async function getPolygonGasOptions(
   }
 }
 
+export async function getPolygonscanGasOptions(
+  network: number,
+): Promise<Overrides> {
+  // Use getPolygonGasOptions for testnet
+  if (network !== ChainEnum.Polygon) {
+    return getPolygonGasOptions(network)
+  }
+
+  let maxFeePerGas = ethers.BigNumber.from(40000000000) // fallback to 40 gwei
+  let maxPriorityFeePerGas = ethers.BigNumber.from(40000000000) // fallback to 40 gwei
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any = await requestGet(
+      'https://api.polygonscan.com/api?module=gastracker&action=gasoracle',
+    )
+    maxFeePerGas = ethers.utils.parseUnits(
+      `${Math.ceil(data.result.FastGasPrice)}`,
+      'gwei',
+    )
+    maxPriorityFeePerGas = ethers.utils.parseUnits(
+      `${data.result.FastGasPrice - data.result.suggestBaseFee}`,
+      'gwei',
+    )
+  } catch (error) {
+    console.error(error)
+  }
+
+  return {
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+  }
+}
+
 export async function getDefaultGasOptions(
   gasOpts: Overrides,
   network: number,
@@ -43,7 +76,7 @@ export async function getDefaultGasOptions(
   }
 
   if (isPolygonNetwork(network)) {
-    gasOpts = await getPolygonGasOptions(network)
+    gasOpts = await getPolygonscanGasOptions(network)
   }
 
   return gasOpts
