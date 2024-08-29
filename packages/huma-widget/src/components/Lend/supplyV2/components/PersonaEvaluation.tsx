@@ -2,7 +2,6 @@ import {
   CAMPAIGN_REFERENCE_CODE,
   CampaignService,
   checkIsDev,
-  formatNumber,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
@@ -13,7 +12,6 @@ import {
 import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -28,36 +26,18 @@ import { WrapperModal } from '../../../WrapperModal'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
-const LoadingCopiesByType: {
-  [key: string]: {
-    description: string
-  }
-} = {
-  verificationStatus: {
-    description: `Checking your verification status...`,
-  },
-  startKYC: {
-    description: `Starting KYC...`,
-  },
-  approveLender: {
-    description: `Approving as lender...`,
-  },
-}
-
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
-  minDepositAmount: BigNumber
   pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
-  handleClose: () => void
+  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
 }
 
 export function PersonaEvaluation({
   poolInfo,
   isUniTranche,
-  minDepositAmount: minDepositAmountBN,
   campaign,
   pointsTestnetExperience,
   changeTranche,
@@ -81,7 +61,7 @@ export function PersonaEvaluation({
   const [verificationStatus, setVerificationStatus] =
     useState<VerificationStatusResultV2>()
   const [showPersonaClient, setShowPersonaClient] = useState<boolean>(false)
-  const [campaignBasePoints, setCampaignBasePoints] = useState<number>(0)
+  const [KYCAutoStarted, setKYCAutoStarted] = useState<boolean>(false)
   const isKYCCompletedRef = useRef<boolean>(false)
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
@@ -103,41 +83,6 @@ export function PersonaEvaluation({
     campaign,
     isDev,
     isWalletOwnershipVerified,
-    pointsTestnetExperience,
-  ])
-
-  useEffect(() => {
-    const getBasePoints = async () => {
-      if (campaign) {
-        const estimatedPoints = await CampaignService.getEstimatedPoints(
-          campaign.campaignGroupId,
-          minDepositAmountBN.toString(),
-          isDev,
-          pointsTestnetExperience,
-        )
-        const campaignPoints = estimatedPoints.find(
-          (item) => item.campaignId === campaign.id,
-        )
-        if (campaignPoints) {
-          const { juniorTranchePoints, seniorTranchePoints } = campaignPoints
-          if (isUniTranche) {
-            setCampaignBasePoints(juniorTranchePoints ?? 0)
-          } else {
-            setCampaignBasePoints(
-              juniorTranchePoints < seniorTranchePoints
-                ? juniorTranchePoints
-                : seniorTranchePoints,
-            )
-          }
-        }
-      }
-    }
-    getBasePoints()
-  }, [
-    campaign,
-    isDev,
-    isUniTranche,
-    minDepositAmountBN,
     pointsTestnetExperience,
   ])
 
@@ -198,12 +143,20 @@ export function PersonaEvaluation({
         setInquiryId(verificationStatus.personaInquiryId)
 
         switch (verificationStatus.status) {
-          case IdentityVerificationStatusV2.NOT_STARTED: {
+          case IdentityVerificationStatusV2.ACCREDITED: {
             const startVerificationResult =
               await IdentityServiceV2.startVerification(account, chainId, isDev)
             setInquiryId(startVerificationResult.personaInquiryId)
             setKYCCopy(KYCCopies.verifyIdentity)
             setLoadingType(undefined)
+            if (
+              startVerificationResult.status ===
+              IdentityVerificationStatusV2.BYPASSED
+            ) {
+              setVerificationStatus(startVerificationResult)
+              setKYCCopy(KYCCopies.verificationBypassed)
+            }
+
             break
           }
 
@@ -249,8 +202,16 @@ export function PersonaEvaluation({
             break
           }
 
+          case IdentityVerificationStatusV2.BYPASSED: {
+            setKYCCopy(KYCCopies.verificationBypassed)
+            setLoadingType(undefined)
+
+            break
+          }
+
           case IdentityVerificationStatusV2.APPROVED: {
-            await approveLender()
+            setKYCCopy(KYCCopies.verificationApproved)
+            setLoadingType(undefined)
             break
           }
 
@@ -263,6 +224,11 @@ export function PersonaEvaluation({
           case IdentityVerificationStatusV2.NEEDS_REVIEW: {
             setKYCCopy(KYCCopies.verificationNeedsReview)
             setLoadingType(undefined)
+            break
+          }
+
+          case IdentityVerificationStatusV2.CONSENTED_TO_SUBSCRIPTION: {
+            await approveLender()
             break
           }
 
@@ -333,13 +299,14 @@ export function PersonaEvaluation({
     }
   }, [showPersonaClient])
 
-  const startKYC = async () => {
+  const startKYC = useCallback(async () => {
     isActionOngoingRef.current = true
     isKYCResumedRef.current = false
     setLoadingType('startKYC')
     const client: Client = new Persona.Client({
       inquiryId,
       sessionToken,
+      frameWidth: '480px',
       onReady: () => {
         client.open()
         setShowPersonaClient(true)
@@ -354,6 +321,7 @@ export function PersonaEvaluation({
         isActionOngoingRef.current = false
         setShowPersonaClient(false)
         setLoadingType(undefined)
+        handleClose()
       },
       onError: () => {
         isActionOngoingRef.current = false
@@ -361,12 +329,34 @@ export function PersonaEvaluation({
         setLoadingType(undefined)
       },
     })
-  }
+  }, [checkVerificationStatus, handleClose, inquiryId, sessionToken])
+
+  // Start KYC flow directly for the first time
+  useEffect(() => {
+    if (isActionOngoingRef.current || isKYCResumedRef.current) {
+      return
+    }
+    if (verificationStatus && !KYCAutoStarted) {
+      switch (verificationStatus.status) {
+        case IdentityVerificationStatusV2.ACCREDITED:
+        case IdentityVerificationStatusV2.CREATED:
+        case IdentityVerificationStatusV2.PENDING:
+        case IdentityVerificationStatusV2.EXPIRED: {
+          startKYC()
+          setKYCAutoStarted(true)
+          break
+        }
+
+        default:
+          break
+      }
+    }
+  }, [KYCAutoStarted, startKYC, verificationStatus])
 
   const handleAction = () => {
     if (verificationStatus) {
       switch (verificationStatus.status) {
-        case IdentityVerificationStatusV2.NOT_STARTED:
+        case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
         case IdentityVerificationStatusV2.EXPIRED:
@@ -375,7 +365,12 @@ export function PersonaEvaluation({
 
         case IdentityVerificationStatusV2.DECLINED:
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
-          handleClose()
+        case IdentityVerificationStatusV2.APPROVED:
+          handleClose(verificationStatus.status)
+          break
+
+        case IdentityVerificationStatusV2.BYPASSED:
+          handleClose(IdentityVerificationStatusV2.APPROVED)
           break
 
         default:
@@ -413,12 +408,10 @@ export function PersonaEvaluation({
         </Box>
         {campaign && kycCopy === KYCCopies.verifyIdentity ? (
           <Box css={styles.description}>
-            <span>You'll be rewarded with a minimum of</span>
-            <span css={styles.points}>
-              {' '}
-              {formatNumber(campaignBasePoints)} Huma points{' '}
+            <span>
+              You'll be rewarded with Huma points after completing KYC/KYB and
+              your first investment.
             </span>
-            <span>after completing KYC and your first investment.</span>
           </Box>
         ) : (
           <Box css={styles.description}>{kycCopy.description}</Box>
@@ -436,7 +429,7 @@ export function PersonaEvaluation({
   return (
     <LoadingModal
       title='Lender Approval'
-      description={LoadingCopiesByType[loadingType].description}
+      description='Checking your verification status...'
     />
   )
 }

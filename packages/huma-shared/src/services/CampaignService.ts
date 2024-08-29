@@ -418,6 +418,24 @@ function updateWalletPoints(
     })
 }
 
+async function checkAndCreateWallet(
+  account: string,
+  referralCode: string | null | undefined,
+  isDev: boolean,
+  pointsTestnetExperience: boolean,
+): Promise<{ wallet: string } | undefined> {
+  const result = await getWalletInfo(account, isDev, pointsTestnetExperience)
+  if (!result?.wallet) {
+    return createNewWallet(
+      account,
+      referralCode,
+      isDev,
+      pointsTestnetExperience,
+    )
+  }
+  return undefined
+}
+
 /**
  * An object that contains functions to interact with Huma's campaign service.
  * @namespace SubgraphService
@@ -431,4 +449,5 @@ export const CampaignService = {
   getEstimatedPoints,
   createNewWallet,
   updateWalletPoints,
+  checkAndCreateWallet,
 }

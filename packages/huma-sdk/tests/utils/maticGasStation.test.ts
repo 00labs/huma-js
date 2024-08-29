@@ -87,9 +87,9 @@ describe('getDefaultGasOptions', () => {
 
   test('should get gas options from Polygon gas station if network is Polygon and gas options are not set', async () => {
     ;(requestGet as jest.Mock).mockResolvedValue({
-      fast: {
-        maxFee: '50',
-        maxPriorityFee: '50',
+      result: {
+        FastGasPrice: '50',
+        suggestBaseFee: '.05',
       },
     })
 
@@ -97,7 +97,7 @@ describe('getDefaultGasOptions', () => {
 
     expect(result).toEqual({
       maxFeePerGas: ethers.BigNumber.from('50000000000'),
-      maxPriorityFeePerGas: ethers.BigNumber.from('50000000000'),
+      maxPriorityFeePerGas: ethers.BigNumber.from('49950000000'),
     })
   })
 })

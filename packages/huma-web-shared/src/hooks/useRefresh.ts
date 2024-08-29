@@ -22,8 +22,6 @@ export const useRefresh = (): [
           latestBlockNumber >= targetBlockNumberRef.current
         ) {
           if (callbackRef.current) {
-            console.log('target block number', targetBlockNumberRef.current)
-            console.log('latest block number', latestBlockNumber)
             callbackRef.current()
             targetBlockNumberRef.current = undefined
             callbackRef.current = undefined
