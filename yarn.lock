@@ -3664,31 +3664,31 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@notifi-network/notifi-frontend-client@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@notifi-network/notifi-frontend-client/-/notifi-frontend-client-1.0.1.tgz#fa409dd7f9d53c3465f9c76be783d3d7489c1fdd"
-  integrity sha512-AtvvxYc6rHapXbujhnPOo3scsBcQFvtXm+rbbpKHcn4Gu5yZRGHZ9HVOf1UTxNgq3XVFOsFufJ82u1Ybf9WyxQ==
+"@notifi-network/notifi-frontend-client@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@notifi-network/notifi-frontend-client/-/notifi-frontend-client-1.1.2.tgz#2c5f1cd8ed6ee5df0c2f254034a443df4a6f8cab"
+  integrity sha512-JzJsIi6oknezPxthlrbZ1WTpNks3BOJOxjypKXT6KnuMr5S6jH7Q/Voqf6477ii6DKr5zJ2WcuEtCJVJjMr/UA==
   dependencies:
-    "@notifi-network/notifi-graphql" "^1.0.0"
+    "@notifi-network/notifi-graphql" "^1.1.2"
     graphql-request "^6.0.0"
     localforage "^1.10.0"
 
-"@notifi-network/notifi-graphql@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@notifi-network/notifi-graphql/-/notifi-graphql-1.0.0.tgz#b944bb075a2e5c43e3d6bedef2b3f4b2a7a70136"
-  integrity sha512-38T3wWdi/DM1IeZMhM5wPOys0eZ55Id0rBQTZRdM84vRhPQ55vSYg4f67V2jOZ/wE6fYV0n9NRMUMWxFIgM5vQ==
+"@notifi-network/notifi-graphql@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@notifi-network/notifi-graphql/-/notifi-graphql-1.1.2.tgz#a73abd2c3890d2d9c573af5a3cf3f9fb775f8ea3"
+  integrity sha512-My7IJ52J/j46D8ZxbPRTTi3m/qv1oUgDozgWd1Y6oIaT4SMrPq5oKe+8XSq8/s5KDD6kyRJ8G4lRUwfAo+Pobw==
   dependencies:
     graphql "^16.6.0"
     graphql-request "^6.0.0"
     graphql-ws "^5.16.0"
     uuid "^8.3.2"
 
-"@notifi-network/notifi-react@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@notifi-network/notifi-react/-/notifi-react-1.1.1.tgz#1d1caa0299ac6429db169092f4e22ba12538eaad"
-  integrity sha512-EEpJdcSrVrtLZDdhFwUER6LD6uaPEfDDUU31NJ3SwkJgngVLDOA9hcXqDlmmp5Dx5IMACwYVZ09hrRHlk0TPjw==
+"@notifi-network/notifi-react@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@notifi-network/notifi-react/-/notifi-react-1.1.2.tgz#42753e7b7dbb8a96329d96248ed7afe52f99c293"
+  integrity sha512-UlQCzpXHXTPPnZZAj43R9VHVMil0BvR/fkAKpli277kUVKp0pXLny7bf903RKqepRTOTQ4a6pi3kx2L0hHeg1A==
   dependencies:
-    "@notifi-network/notifi-frontend-client" "^1.0.1"
+    "@notifi-network/notifi-frontend-client" "^1.1.2"
     "@xmtp/consent-proof-signature" "^0.1.2"
     "@xmtp/content-type-reaction" "^1.1.7"
     "@xmtp/content-type-remote-attachment" "^1.1.8"
