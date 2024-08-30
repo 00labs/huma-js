@@ -27,7 +27,9 @@ export const getPoolOverviewV2 = (
   rewardRateInBpsForPoolOwner: number,
   rewardRateInBpsForEA: number,
   liquidityCap: BigNumber,
-  maxSeniorJuniorRatio: number,
+  seniorDeployedAssets: BigNumber,
+  juniorDeployedAssets: BigNumber,
+  defaultMaxSeniorJuniorRatio: number,
   fixedSeniorYieldInBps: number,
   tranchesRiskAdjustmentInBps: number,
   flcConfigs: {
@@ -51,8 +53,20 @@ export const getPoolOverviewV2 = (
   const BP_FACTOR_NUMBER = BP_FACTOR.toNumber()
   const APY = yieldInBps / BP_FACTOR_NUMBER
 
-  const juniorAssets = liquidityCap.div(maxSeniorJuniorRatio + 1)
-  const seniorAssets = liquidityCap.sub(juniorAssets)
+  const totalDeployedAssets = seniorDeployedAssets.add(juniorDeployedAssets)
+  const seniorMaxAssets = liquidityCap
+    .sub(totalDeployedAssets)
+    .add(seniorDeployedAssets)
+  const currentMaxSeniorJuniorRatio = seniorMaxAssets
+    .div(juniorDeployedAssets)
+    .toNumber()
+
+  let juniorAssets = liquidityCap.div(defaultMaxSeniorJuniorRatio + 1)
+  let seniorAssets = liquidityCap.sub(juniorAssets)
+  if (currentMaxSeniorJuniorRatio < defaultMaxSeniorJuniorRatio) {
+    juniorAssets = juniorDeployedAssets
+    seniorAssets = seniorMaxAssets
+  }
 
   const totalProfit = liquidityCap
     .mul(Math.round(APY * BP_FACTOR_NUMBER))
