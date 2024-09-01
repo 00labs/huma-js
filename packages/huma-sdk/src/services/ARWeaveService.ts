@@ -256,7 +256,7 @@ async function queryForMetadata(
  */
 async function fetchMetadataFromUrl(url: string): Promise<JSON | null> {
   try {
-    const response = await axios.get(url)
+    const response = await axios.get(url, { withCredentials: false })
     return response.data
   } catch (error) {
     console.error('Error fetching data:', error)
