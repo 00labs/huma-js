@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers'
 
+import { SOLANA_DEVNET_METADATA } from 'v2/metadata/solana/devnet'
 import {
   ChainEnum,
   isChainEnum,
@@ -144,6 +145,32 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Scroll]: SCROLL_METADATA,
   [ChainEnum.ScrollSepolia]: SCROLL_SEPOLIA_METADATA,
 } as ChainPoolsInfoV2
+
+export type SolanaPoolInfo = {
+  title: string
+  chainId: ChainEnum
+  pool: string
+  poolName: POOL_NAME
+  poolType: POOL_TYPE
+  poolUnderlyingToken: {
+    address: string
+    symbol: string
+    decimals: number
+    icon: string
+  }
+}
+
+export type SolanaPoolsInfo = {
+  [poolName in POOL_NAME]?: SolanaPoolInfo
+}
+
+export type SolanaChainPoolsInfo = {
+  [chainId in ChainEnum]: SolanaPoolsInfo
+}
+
+export const SOLANA_CHAIN_POOLS_INFO = {
+  [ChainEnum.SolanaDevnet]: SOLANA_DEVNET_METADATA,
+} as SolanaChainPoolsInfo
 
 export const getChainPoolNamesV2 = (
   chainId: number | undefined,

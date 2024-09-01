@@ -48,6 +48,8 @@ export enum ChainEnum {
   BaseSepolia = 84532,
   Scroll = 534352,
   ScrollSepolia = 534351,
+  SolanaDevnet = 103,
+  SolanaMainnet = 101,
 }
 
 export const CHAINS: {
@@ -165,6 +167,16 @@ export const CHAINS: {
     wait: 3,
     isTestnet: true,
     icon: 'Ethereum',
+  },
+  [ChainEnum.SolanaDevnet]: {
+    id: ChainEnum.SolanaDevnet,
+    urls: [],
+    name: 'Solana Devnet',
+    nativeCurrency: ETH,
+    explorer: '',
+    wait: 3,
+    isTestnet: true,
+    icon: '',
   },
 }
 
