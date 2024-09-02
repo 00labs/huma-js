@@ -262,6 +262,7 @@ function getReceivableV2Info(
     rwreceivables(
       where: {
         creator: "${userAddress}"
+        pool: "${poolAddress}"
       }
       first: ${pagination.first}
       skip: ${pagination.skip}
