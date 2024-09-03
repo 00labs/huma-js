@@ -481,7 +481,6 @@ function fetchAllPoolsData(
         fixedSeniorYieldInBps
         tranchesRiskAdjustmentInBps
         withdrawalLockoutInDays
-        minDepositAmount
       }
       tranches {
         type
