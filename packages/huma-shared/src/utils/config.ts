@@ -63,6 +63,30 @@ const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
 const DEFAULT_CHAIN_ID = 137
 
 export const configUtil = {
+  dappLink: 'https://app.huma.finance/#',
+  linkedInLink: 'https://www.linkedin.com/company/huma-finance',
+  discordLink: 'https://discord.gg/29zVxZ6kCN',
+  youtubeLink: 'https://www.youtube.com/@humafinance',
+  twitterLink: 'https://twitter.com/humafinance',
+  githubLink: 'https://github.com/00labs',
+  whitepaperLink: 'https://docs.huma.finance/',
+  lendingPoolLink: 'https://docs.huma.finance/#4.0-lending-protocol',
+  devGuideLink:
+    'https://docs.huma.finance/developer-guidelines/getting_started',
+  dspDevGuideLink:
+    'https://docs.huma.finance/developer-guidelines/decentralized_signal_portfolio',
+  eaDevGuideLink:
+    'https://docs.huma.finance/developer-guidelines/evaluation_agent',
+  trancheLink: 'https://docs.huma.finance/lenders/tranches',
+  termsOfServiceLink: 'https://huma.finance/#/termsOfUse',
+  privacyPolicyLink: 'https://huma.finance/#/privacyPolicy',
+  careersLink: '',
+  blogLink: 'https://blog.huma.finance',
+  contactLink: 'mailto:support@huma.finance',
+  partnerLink:
+    'https://uer4clyybno.typeform.com/humapartner?typeform-source=landing',
+  auditLink:
+    'https://github.com/00labs/huma-contracts-v2/blob/develop/audit/spearbit.pdf',
   getEAVerseUrl,
   getEABaseUrlV1,
   getRequestAPIUrl,
