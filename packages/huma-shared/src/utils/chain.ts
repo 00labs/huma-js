@@ -48,6 +48,9 @@ export enum ChainEnum {
   BaseSepolia = 84532,
   Scroll = 534352,
   ScrollSepolia = 534351,
+}
+
+export enum SolanaChainEnum {
   SolanaDevnet = 103,
   SolanaMainnet = 101,
 }
@@ -168,20 +171,14 @@ export const CHAINS: {
     isTestnet: true,
     icon: 'Ethereum',
   },
-  [ChainEnum.SolanaDevnet]: {
-    id: ChainEnum.SolanaDevnet,
-    urls: [],
-    name: 'Solana Devnet',
-    nativeCurrency: ETH,
-    explorer: '',
-    wait: 3,
-    isTestnet: true,
-    icon: '',
-  },
 }
 
 export function isTestnet(chainId: number): boolean {
   return CHAINS[chainId].isTestnet ?? false
+}
+
+export function isSolanaTestnet(chainId: SolanaChainEnum): boolean {
+  return chainId !== SolanaChainEnum.SolanaMainnet
 }
 
 export function isChainEnum(
