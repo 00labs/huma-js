@@ -73,6 +73,10 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  SolanaLendSupply,
+  SolanaLendSupplyProps,
+} from './components/Lend/solanaSupply'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -526,5 +530,44 @@ export function ReceivableBackedCreditLinePaymentWidgetV2(
     <Widget {...props}>
       <ReceivableBackedCreditLinePaymentV2 {...props} />
     </Widget>
+  )
+}
+
+/**
+ * Object representing the props passed to Solana widgets
+ * @typedef {Object} SolanaWidgetProps
+ */
+type SolanaWidgetProps = {
+  handleClose?: () => void
+}
+
+function SolanaWidget(props: WCProps<SolanaWidgetProps>) {
+  const { children } = props
+
+  return (
+    <ThemeProvider theme={themeHuma}>
+      <ReduxProvider store={store}>{children}</ReduxProvider>
+    </ThemeProvider>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaLendSupplyWidgetProps
+ * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
+ * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
+ */
+type SolanaLendSupplyWidgetProps = SolanaLendSupplyProps & SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaLendSupplyWidgetProps} props - Widget props
+ */
+export function SolanaLendSupplyWidget(props: SolanaLendSupplyWidgetProps) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaLendSupply {...props} />
+    </SolanaWidget>
   )
 }

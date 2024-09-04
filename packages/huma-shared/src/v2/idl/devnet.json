@@ -1,5 +1,5 @@
 {
-  "address": "9Tx5QCUZcXkqAD4SFW8ZYfwPhTTXoDzZRQAiAksXzi5E",
+  "address": "6VsBVe7dhKyEGoihwUtGwU9MeS6suKDSuZEMC4LHZyka",
   "metadata": {
     "name": "huma_solana",
     "version": "0.1.0",
@@ -9,6 +9,19 @@
   "instructions": [
     {
       "name": "add_approved_lender",
+      "docs": [
+        "Adds an approved lender.",
+        "",
+        "Lenders need to pass compliance requirements. Pool operator will administer off-chain",
+        "to make sure potential lenders meet the requirements. Afterwards, the pool operator will",
+        "call this instruction to mark a lender as approved.",
+        "",
+        "# Arguments",
+        "* `lender` - The lender address.",
+        "",
+        "# Access Control",
+        "Only pool operators can call this instruction."
+      ],
       "discriminator": [77, 24, 23, 235, 196, 2, 125, 248],
       "accounts": [
         {
@@ -52,8 +65,7 @@
           "name": "pool_operator_config"
         },
         {
-          "name": "tranche_mint",
-          "writable": true
+          "name": "tranche_mint"
         },
         {
           "name": "approved_lender",
@@ -99,6 +111,12 @@
     },
     {
       "name": "add_liquidity_asset",
+      "docs": [
+        "Adds an asset that can serve as the underlying asset for the pools.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [51, 80, 131, 225, 90, 86, 81, 248],
       "accounts": [
         {
@@ -158,6 +176,15 @@
     },
     {
       "name": "add_pauser",
+      "docs": [
+        "Adds a pauser, who can pause the entire protocol.",
+        "",
+        "# Arguments",
+        "* `pauser` - The address to be added to the pauser list.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [164, 101, 59, 65, 139, 178, 135, 187],
       "accounts": [
         {
@@ -209,13 +236,22 @@
       ],
       "args": [
         {
-          "name": "pauser_key",
+          "name": "pauser",
           "type": "pubkey"
         }
       ]
     },
     {
       "name": "add_pool_operator",
+      "docs": [
+        "Adds a new operator to the pool.",
+        "",
+        "# Arguments",
+        "* `operator` - The address of the pool operator.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [87, 245, 32, 78, 182, 157, 163, 249],
       "accounts": [
         {
@@ -277,11 +313,19 @@
     },
     {
       "name": "add_redemption_request",
+      "docs": [
+        "Records a new redemption request.",
+        "",
+        "# Arguments",
+        "* `shares` - The number of shares the lender wants to redeem.",
+        "",
+        "# Access Control",
+        "Only lenders can call this instruction."
+      ],
       "discriminator": [72, 203, 201, 17, 75, 60, 157, 47],
       "accounts": [
         {
           "name": "lender",
-          "writable": true,
           "signer": true
         },
         {
@@ -396,11 +440,11 @@
           }
         },
         {
-          "name": "pool_account_tranche",
+          "name": "pool_tranche_token",
           "writable": true
         },
         {
-          "name": "lender_account_tranche",
+          "name": "lender_tranche_token",
           "writable": true
         },
         {
@@ -427,7 +471,7 @@
         },
         {
           "name": "hook_program",
-          "address": "6ESgVCpCAQpnaZe6pd6YiqAL4DqTtgLtx2yQ2QzV2Jy6"
+          "address": "Bb31NqmD3LbAbDDnwD8iLfBkRx2T8KGYc3u1py4hTSuh"
         },
         {
           "name": "token_program"
@@ -450,6 +494,23 @@
     },
     {
       "name": "approve_credit",
+      "docs": [
+        "Approves the credit with the terms provided.",
+        "",
+        "# Arguments",
+        "* `borrower` - The borrower address.",
+        "* `credit_limit` - The credit limit of the credit line.",
+        "* `num_periods` - The number of periods before the credit line expires.",
+        "* `yield_bps` - The expected yield expressed in basis points, 1% is 100, 100% is 10000.",
+        "* `committed_amount` - The amount that the borrower has committed to use. If the used credit",
+        "is less than this amount, the borrower will be charged yield using this amount.",
+        "* `designated_start_date` - The date on which the credit should be initiated, if the credit",
+        "has commitment.",
+        "* `revolving` - A flag indicating if the repeated borrowing is allowed.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [72, 9, 104, 21, 215, 72, 35, 144],
       "accounts": [
         {
@@ -591,6 +652,12 @@
     },
     {
       "name": "approve_receivable",
+      "docs": [
+        "Approves a receivable and adjusts available credit by applying the advance ratio.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [117, 201, 147, 119, 71, 35, 253, 218],
       "accounts": [
         {
@@ -598,6 +665,20 @@
           "writable": true,
           "signer": true,
           "relations": ["pool_config"]
+        },
+        {
+          "name": "huma_program_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104, 117, 109, 97, 95, 112, 114, 111, 103, 114, 97, 109, 95,
+                  97, 117, 116, 104, 111, 114, 105, 116, 121
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "asset",
@@ -705,18 +786,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "pool_config.pool_id",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "credit_state.borrower",
-                "account": "CreditState"
-              },
-              {
-                "kind": "account",
-                "path": "receivable_info.reference_id",
-                "account": "ReceivableInfo"
+                "path": "asset"
               },
               {
                 "kind": "const",
@@ -766,11 +836,19 @@
     },
     {
       "name": "cancel_redemption_request",
+      "docs": [
+        "Cancels a redemption request submitted before.",
+        "",
+        "# Arguments",
+        "* `shares` - The number of shares in the redemption request to be canceled.",
+        "",
+        "# Access Control",
+        "Only lenders can call this instruction."
+      ],
       "discriminator": [77, 155, 4, 179, 114, 233, 162, 45],
       "accounts": [
         {
           "name": "lender",
-          "writable": true,
           "signer": true
         },
         {
@@ -916,7 +994,7 @@
         },
         {
           "name": "hook_program",
-          "address": "6ESgVCpCAQpnaZe6pd6YiqAL4DqTtgLtx2yQ2QzV2Jy6"
+          "address": "Bb31NqmD3LbAbDDnwD8iLfBkRx2T8KGYc3u1py4hTSuh"
         },
         {
           "name": "token_program"
@@ -939,11 +1017,19 @@
     },
     {
       "name": "change_huma_owner",
+      "docs": [
+        "Changes the Huma owner.",
+        "",
+        "# Arguments",
+        "* `new_owner` - The new Huma owner.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [0, 115, 141, 68, 122, 216, 36, 53],
       "accounts": [
         {
           "name": "owner",
-          "writable": true,
           "signer": true,
           "relations": ["huma_config"]
         },
@@ -974,11 +1060,19 @@
     },
     {
       "name": "change_pool_owner",
+      "docs": [
+        "Changes the pool owner.",
+        "",
+        "# Arguments",
+        "* `new_owner` - The new pool owner.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [169, 55, 183, 24, 152, 180, 167, 11],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -1025,6 +1119,12 @@
     },
     {
       "name": "close_credit",
+      "docs": [
+        "Closes a credit record.",
+        "",
+        "# Access Control",
+        "Only the borrower and EA can call this instruction."
+      ],
       "discriminator": [151, 225, 136, 142, 221, 237, 105, 183],
       "accounts": [
         {
@@ -1130,6 +1230,10 @@
         },
         {
           "name": "evaluation_agent",
+          "docs": [
+            "The recipient of the rent refunds.",
+            "`has_one` constraint."
+          ],
           "writable": true,
           "relations": ["pool_config"]
         },
@@ -1142,13 +1246,18 @@
     },
     {
       "name": "close_epoch",
+      "docs": [
+        "Closes the current epoch, handles tranche redemption requests and starts the next epoch.",
+        "",
+        "# Dev Notes",
+        "We expect a cron-like mechanism like Autotask to call this instruction periodically to close epochs.",
+        "",
+        "# Access Control",
+        "Anyone can call this instruction to trigger epoch closure, but no one will be able to",
+        "close an epoch prematurely."
+      ],
       "discriminator": [13, 87, 7, 133, 109, 14, 83, 25],
       "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
         {
           "name": "huma_config",
           "pda": {
@@ -1327,12 +1436,108 @@
       "args": []
     },
     {
+      "name": "close_lender_accounts",
+      "docs": [
+        "Closes the accounts owned by the lender.",
+        "",
+        "# Access Control",
+        "Only lenders can call this instruction."
+      ],
+      "discriminator": [222, 126, 36, 205, 193, 173, 194, 224],
+      "accounts": [
+        {
+          "name": "lender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              },
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              },
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tranche_mint"
+        },
+        {
+          "name": "lender_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "account",
+                "path": "lender"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  108, 101, 110, 100, 101, 114, 95, 115, 116, 97, 116, 101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "lender_tranche_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "close_pool",
+      "docs": [
+        "Closes the pool after its maturity.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can close a pool."
+      ],
       "discriminator": [140, 189, 209, 23, 239, 62, 239, 11],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -1515,11 +1720,24 @@
     },
     {
       "name": "create_huma_config",
+      "docs": [
+        "Creates a Huma protocol config.",
+        "",
+        "# Arguments",
+        "* `id` - The ID of the config.",
+        "* `treasury` - The Huma Treasury address.",
+        "* `sentinel` - The Sentinel Service account address. This is the account that handles",
+        "various tasks, such as Autopay and starting a committed credit.",
+        "* `protocol_fee_bps` - The Huma protocol fee in bps.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [217, 139, 156, 146, 27, 106, 58, 137],
       "accounts": [
         {
           "name": "owner",
-          "docs": ["Address to be set as protocol owner."],
+          "docs": ["Address to be set as the protocol owner."],
           "writable": true,
           "signer": true
         },
@@ -1553,21 +1771,147 @@
           "type": "pubkey"
         },
         {
-          "name": "protocol_fee_bps",
-          "type": "u16"
-        },
-        {
           "name": "treasury",
           "type": "pubkey"
         },
         {
           "name": "sentinel",
           "type": "pubkey"
+        },
+        {
+          "name": "protocol_fee_bps",
+          "type": "u16"
         }
       ]
     },
     {
+      "name": "create_lender_accounts",
+      "docs": [
+        "Creates the accounts necessary for an approved lender.",
+        "",
+        "# Access Control",
+        "Only the pool owner treasury, EA and other approved lenders can call this instruction."
+      ],
+      "discriminator": [28, 111, 222, 8, 126, 83, 44, 69],
+      "accounts": [
+        {
+          "name": "lender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "huma_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "huma_config.id",
+                "account": "HumaConfig"
+              },
+              {
+                "kind": "const",
+                "value": [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              }
+            ]
+          },
+          "relations": ["pool_config"]
+        },
+        {
+          "name": "pool_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              },
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              },
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              }
+            ]
+          }
+        },
+        {
+          "name": "approved_lender"
+        },
+        {
+          "name": "tranche_mint"
+        },
+        {
+          "name": "lender_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "account",
+                "path": "lender"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  108, 101, 110, 100, 101, 114, 95, 115, 116, 97, 116, 101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "lender_tranche_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "create_pool",
+      "docs": [
+        "Creates a new liquidity pool.",
+        "# Arguments",
+        "* `pool_id` - The ID of the pool.",
+        "* `pool_name` - The name of the pool.",
+        "* `pool_owner_treasury` - The address of the pool owner treasury, which will be responsible",
+        "for providing initial liquidity and receiving pool owner fees.",
+        "* `evaluation_agent` - The address of the Evaluation Agent, which is responsible for making",
+        "various credit decisions.",
+        "* `tranches_policy_type` - The tranches policy type that governs the profit distribution",
+        "mechanism between tranches.",
+        "",
+        "# Access Control",
+        "Anyone can call this instruction. The signer will be designated as the owner of the pool."
+      ],
       "discriminator": [233, 146, 209, 142, 207, 104, 64, 188],
       "accounts": [
         {
@@ -1596,7 +1940,6 @@
         },
         {
           "name": "liquidity_asset",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1650,6 +1993,35 @@
           }
         },
         {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "pool_id"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  112, 111, 111, 108, 95, 97, 117, 116, 104, 111, 114, 105, 116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_underlying_token",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
@@ -1672,7 +2044,7 @@
           "type": "pubkey"
         },
         {
-          "name": "tranche_policy_type",
+          "name": "tranches_policy_type",
           "type": {
             "defined": {
               "name": "TranchesPolicyType"
@@ -1683,6 +2055,12 @@
     },
     {
       "name": "create_pool_accounts",
+      "docs": [
+        "Creates various accounts needed by the pool.",
+        "",
+        "# Access Control",
+        "Only the pool owner can call this instruction."
+      ],
       "discriminator": [173, 80, 72, 98, 140, 177, 251, 8],
       "accounts": [
         {
@@ -1697,6 +2075,7 @@
         },
         {
           "name": "pool_config",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1748,7 +2127,7 @@
           }
         },
         {
-          "name": "junior_tranche_mint",
+          "name": "junior_mint",
           "writable": true,
           "pda": {
             "seeds": [
@@ -1768,8 +2147,9 @@
           }
         },
         {
-          "name": "senior_tranche_mint",
+          "name": "senior_mint",
           "writable": true,
+          "optional": true,
           "pda": {
             "seeds": [
               {
@@ -1804,6 +2184,16 @@
     },
     {
       "name": "create_receivable",
+      "docs": [
+        "Creates a new receivable NFT.",
+        "",
+        "# Arguments",
+        "* `args` - The parameters used during creation. See the doc string for `CreateReceivableArgs`",
+        "for what each field represents.",
+        "",
+        "# Access Control",
+        "Anyone can call this instruction."
+      ],
       "discriminator": [41, 254, 56, 162, 208, 98, 23, 9],
       "accounts": [
         {
@@ -1815,11 +2205,25 @@
         {
           "name": "owner",
           "docs": [
-            "This will be the `authority`, `owner` and `update authority` of the receivable,",
+            "This will be the `authority`, `owner` and `update_authority` of the receivable,",
             "as well as the one paying for account storage."
           ],
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "huma_program_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104, 117, 109, 97, 95, 112, 114, 111, 103, 114, 97, 109, 95,
+                  97, 117, 116, 104, 111, 114, 105, 116, 121
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "huma_config",
@@ -1877,16 +2281,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "pool_config.pool_id",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "owner"
-              },
-              {
-                "kind": "arg",
-                "path": "args.reference_id"
+                "path": "asset"
               },
               {
                 "kind": "const",
@@ -1926,11 +2321,27 @@
     },
     {
       "name": "declare_payment",
+      "docs": [
+        "Declares a payment for a receivable.",
+        "",
+        "# Note",
+        "Due to its self-declaration nature, this information is for transparency only and is not guaranteed",
+        "to be accurate. Some asset originators may choose to have an audit firm periodically certify the declared",
+        "payments to enhance credibility.",
+        "Declaring a payment on a receivable here does not necessarily mean the same amount has been paid back",
+        "to the associated credit line. The receivable creditor is responsible for calling this function when",
+        "payment is received from the debtor.",
+        "",
+        "# Arguments",
+        "* `payment_amount` - The amount of the payment being declared.",
+        "",
+        "# Access Control",
+        "Only the update authority of the receivable NFT can declare a payment."
+      ],
       "discriminator": [238, 48, 82, 155, 64, 143, 45, 103],
       "accounts": [
         {
           "name": "authority",
-          "writable": true,
           "signer": true
         },
         {
@@ -1992,17 +2403,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "pool_config.pool_id",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "authority"
-              },
-              {
-                "kind": "account",
-                "path": "receivable_info.reference_id",
-                "account": "ReceivableInfo"
+                "path": "asset"
               },
               {
                 "kind": "const",
@@ -2038,11 +2439,28 @@
     },
     {
       "name": "deposit",
+      "docs": [
+        "LP deposits to the pool to earn yield and share losses.",
+        "",
+        "All deposits should be made by calling this function and",
+        "`make_initial_deposit()` (for pool owner and EA's initial deposit) only.",
+        "Please do NOT directly transfer any digital assets to the pool,",
+        "which will cause a permanent loss and we cannot help reverse transactions",
+        "or retrieve assets from the contracts.",
+        "",
+        "# Arguments",
+        "* `assets` - The number of underlyingTokens to be deposited.",
+        "",
+        "# Returns",
+        "The number of tranche token to be minted.",
+        "",
+        "# Access Control",
+        "Only approved lenders can call this instruction."
+      ],
       "discriminator": [242, 35, 198, 137, 82, 225, 242, 182],
       "accounts": [
         {
           "name": "depositor",
-          "writable": true,
           "signer": true
         },
         {
@@ -2141,27 +2559,23 @@
           "relations": ["pool_config"]
         },
         {
-          "name": "approved_lender"
-        },
-        {
           "name": "tranche_mint",
           "writable": true
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "depositor_account_underlying",
+          "name": "depositor_underlying_token",
           "writable": true
         },
         {
-          "name": "depositor_account_tranche",
+          "name": "depositor_tranche_token",
           "writable": true
         },
         {
-          "name": "token_program",
-          "docs": ["Solana ecosystem accounts"]
+          "name": "token_program"
         },
         {
           "name": "associated_token_program",
@@ -2182,11 +2596,17 @@
     },
     {
       "name": "disable_pool",
+      "docs": [
+        "Disables the pool. Once a pool is disabled, no money moves in or out.",
+        "",
+        "# Access Control",
+        "Any pool operator can disable a pool. Only the pool owner and the Huma",
+        "owner can enable it again."
+      ],
       "discriminator": [248, 118, 211, 160, 149, 150, 135, 37],
       "accounts": [
         {
           "name": "operator",
-          "writable": true,
           "signer": true
         },
         {
@@ -2230,11 +2650,16 @@
     },
     {
       "name": "disburse",
+      "docs": [
+        "Transfers all the amount that has been redeemed but not yet disbursed to the lender.",
+        "",
+        "# Access Control",
+        "Only lenders can call this instruction."
+      ],
       "discriminator": [68, 250, 205, 89, 217, 142, 13, 44],
       "accounts": [
         {
           "name": "lender",
-          "writable": true,
           "signer": true
         },
         {
@@ -2361,8 +2786,7 @@
           "writable": true
         },
         {
-          "name": "token_program",
-          "docs": ["Solana ecosystem accounts"]
+          "name": "token_program"
         },
         {
           "name": "associated_token_program",
@@ -2377,6 +2801,15 @@
     },
     {
       "name": "drawdown",
+      "docs": [
+        "Borrows against an approved credit line.",
+        "",
+        "# Arguments",
+        "* `amount` - The amount to borrow.",
+        "",
+        "# Access Control",
+        "Only the borrower of the credit line can call this instruction."
+      ],
       "discriminator": [200, 40, 162, 111, 156, 222, 7, 243],
       "accounts": [
         {
@@ -2498,14 +2931,15 @@
           }
         },
         {
-          "name": "underlying_mint"
+          "name": "underlying_mint",
+          "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "borrower_account_underlying",
+          "name": "borrower_underlying_token",
           "writable": true
         },
         {
@@ -2530,11 +2964,17 @@
     },
     {
       "name": "enable_pool",
+      "docs": [
+        "Turns on the pool. Before a pool is turned on, the required tranche liquidity must be",
+        "deposited first.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can enable a pool."
+      ],
       "discriminator": [120, 47, 0, 69, 84, 74, 16, 177],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -2588,7 +3028,7 @@
           }
         },
         {
-          "name": "junior_tranche_mint",
+          "name": "junior_mint",
           "pda": {
             "seeds": [
               {
@@ -2607,7 +3047,7 @@
           }
         },
         {
-          "name": "senior_tranche_mint",
+          "name": "senior_mint",
           "optional": true,
           "pda": {
             "seeds": [
@@ -2633,7 +3073,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "junior_tranche_mint"
+                "path": "junior_mint"
               },
               {
                 "kind": "const",
@@ -2652,7 +3092,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "senior_tranche_mint"
+                "path": "senior_mint"
               },
               {
                 "kind": "const",
@@ -2664,17 +3104,17 @@
           }
         },
         {
-          "name": "pool_owner_treasury_account_junior_tranche"
+          "name": "pool_owner_treasury_junior_token"
         },
         {
-          "name": "pool_owner_treasury_account_senior_tranche",
+          "name": "pool_owner_treasury_senior_token",
           "optional": true
         },
         {
-          "name": "ea_account_junior_tranche"
+          "name": "ea_junior_token"
         },
         {
-          "name": "ea_account_senior_tranche",
+          "name": "ea_senior_token",
           "optional": true
         },
         {
@@ -2693,6 +3133,15 @@
     },
     {
       "name": "extend_remaining_periods",
+      "docs": [
+        "Updates the remaining periods of the credit line.",
+        "",
+        "# Arguments",
+        "* `num_of_periods` - The number of periods to add onto the credit line.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [253, 77, 225, 116, 136, 73, 216, 77],
       "accounts": [
         {
@@ -2735,7 +3184,6 @@
         },
         {
           "name": "pool_state",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -2812,6 +3260,12 @@
     },
     {
       "name": "initialize_extra_account_meta_list",
+      "docs": [
+        "Initializes the extra account meta list for transfer hook purposes.",
+        "",
+        "# Access Control",
+        "Only the pool owner can call this instruction."
+      ],
       "discriminator": [92, 197, 174, 197, 41, 124, 19, 3],
       "accounts": [
         {
@@ -2836,7 +3290,6 @@
         },
         {
           "name": "pool_config",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -2869,7 +3322,7 @@
         },
         {
           "name": "hook_program",
-          "address": "6ESgVCpCAQpnaZe6pd6YiqAL4DqTtgLtx2yQ2QzV2Jy6"
+          "address": "Bb31NqmD3LbAbDDnwD8iLfBkRx2T8KGYc3u1py4hTSuh"
         },
         {
           "name": "pool_authority",
@@ -2932,11 +3385,22 @@
     },
     {
       "name": "make_initial_deposit",
+      "docs": [
+        "Allows the pool owner and EA to make initial deposit before the pool goes live.",
+        "",
+        "# Arguments",
+        "* `assets` - The amount of underlyingTokens to be deposited.",
+        "",
+        "# Returns",
+        "The number of tranche token to be minted.",
+        "",
+        "# Access Control",
+        "Only authorized initial depositors can call this instruction."
+      ],
       "discriminator": [141, 233, 75, 102, 37, 93, 94, 79],
       "accounts": [
         {
           "name": "depositor",
-          "writable": true,
           "signer": true
         },
         {
@@ -3022,20 +3486,19 @@
           "writable": true
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "depositor_account_underlying",
+          "name": "depositor_underlying_token",
           "writable": true
         },
         {
-          "name": "depositor_account_tranche",
+          "name": "depositor_tranche_token",
           "writable": true
         },
         {
-          "name": "token_program",
-          "docs": ["Solana ecosystem accounts"]
+          "name": "token_program"
         },
         {
           "name": "associated_token_program",
@@ -3056,6 +3519,25 @@
     },
     {
       "name": "make_payment",
+      "docs": [
+        "Makes one payment for the credit line. This can be initiated by the borrower",
+        "or by Sentinel Service account with the allowance approval from the borrower.",
+        "If this is the final payment, it automatically triggers the payoff process.",
+        "",
+        "Warning: payments should be made by calling this function. No token should be transferred",
+        "directly to the pool.",
+        "",
+        "# Arguments",
+        "* `amount` - The payment amount.",
+        "",
+        "# Returns",
+        "* `amount_to_collect` - The actual amount paid to the pool. When the tendered",
+        "amount is larger than the payoff amount, the contract only accepts the payoff amount.",
+        "* `paid_off` - A flag indicating whether the account has been paid off.",
+        "",
+        "# Access Control",
+        "Only the borrower and the Sentinel Service account can call this instruction."
+      ],
       "discriminator": [19, 128, 153, 121, 221, 192, 91, 53],
       "accounts": [
         {
@@ -3179,14 +3661,15 @@
           }
         },
         {
-          "name": "underlying_mint"
+          "name": "underlying_mint",
+          "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "borrower_account_underlying",
+          "name": "borrower_underlying_token",
           "writable": true
         },
         {
@@ -3215,6 +3698,26 @@
     },
     {
       "name": "make_principal_payment",
+      "docs": [
+        "Makes a payment towards the principal for the credit line. Even if there is additional",
+        "amount remaining after the principal is paid off, this function will only accept the",
+        "amount up to the total principal due. If this is the final payment, it automatically",
+        "triggers the payoff process.",
+        "",
+        "Warning: payments should be made by calling this function. No token should be transferred",
+        "directly to the pool.",
+        "",
+        "# Arguments",
+        "* `amount` - The payment amount.",
+        "",
+        "# Returns",
+        "* `amount_to_collect` - The actual amount paid to the pool. When the tendered",
+        "amount is larger than the payoff amount, the contract only accepts the payoff amount.",
+        "* `paid_off` - A flag indicating whether the account has been paid off.",
+        "",
+        "# Access Control",
+        "Only the borrower can call this instruction."
+      ],
       "discriminator": [40, 73, 75, 138, 45, 96, 135, 66],
       "accounts": [
         {
@@ -3336,14 +3839,15 @@
           }
         },
         {
-          "name": "underlying_mint"
+          "name": "underlying_mint",
+          "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "borrower_account_underlying",
+          "name": "borrower_underlying_token",
           "writable": true
         },
         {
@@ -3375,10 +3879,6 @@
       "discriminator": [121, 176, 53, 209, 206, 21, 121, 161],
       "accounts": [
         {
-          "name": "signer",
-          "signer": true
-        },
-        {
           "name": "huma_config",
           "pda": {
             "seeds": [
@@ -3435,7 +3935,7 @@
       ],
       "args": [
         {
-          "name": "loss",
+          "name": "_loss",
           "type": "u128"
         }
       ]
@@ -3445,10 +3945,6 @@
       "discriminator": [172, 199, 143, 206, 52, 104, 79, 150],
       "accounts": [
         {
-          "name": "signer",
-          "signer": true
-        },
-        {
           "name": "huma_config",
           "pda": {
             "seeds": [
@@ -3505,7 +4001,7 @@
       ],
       "args": [
         {
-          "name": "loss_recovery",
+          "name": "_loss_recovery",
           "type": "u128"
         }
       ]
@@ -3515,10 +4011,6 @@
       "discriminator": [37, 191, 180, 54, 227, 158, 120, 115],
       "accounts": [
         {
-          "name": "signer",
-          "signer": true
-        },
-        {
           "name": "huma_config",
           "pda": {
             "seeds": [
@@ -3575,7 +4067,7 @@
       ],
       "args": [
         {
-          "name": "profit",
+          "name": "_profit",
           "type": "u128"
         }
       ]
@@ -3585,10 +4077,6 @@
       "discriminator": [168, 38, 33, 168, 117, 70, 135, 71],
       "accounts": [
         {
-          "name": "signer",
-          "signer": true
-        },
-        {
           "name": "huma_config",
           "pda": {
             "seeds": [
@@ -3645,7 +4133,7 @@
       ],
       "args": [
         {
-          "name": "profit",
+          "name": "_profit",
           "type": "u128"
         }
       ],
@@ -3656,12 +4144,20 @@
       }
     },
     {
-      "name": "pause",
-      "discriminator": [211, 22, 221, 251, 74, 121, 193, 47],
+      "name": "pause_protocol",
+      "docs": [
+        "Pauses the entire protocol. Used in extreme cases by the pausers.",
+        "",
+        "# Dev Notes",
+        "This function will not be governed by timelock due to its sensitivity to timing.",
+        "",
+        "# Access Control",
+        "Only pausers can call this instruction."
+      ],
+      "discriminator": [144, 95, 0, 107, 119, 39, 248, 141],
       "accounts": [
         {
           "name": "pauser",
-          "writable": true,
           "signer": true
         },
         {
@@ -3705,12 +4201,14 @@
     },
     {
       "name": "refresh_credit",
+      "docs": [
+        "Updates the account and brings its billing status current.",
+        "",
+        "# Access Control",
+        "Anyone can call this instruction."
+      ],
       "discriminator": [251, 178, 39, 243, 183, 35, 101, 109],
       "accounts": [
-        {
-          "name": "signer",
-          "signer": true
-        },
         {
           "name": "huma_config",
           "pda": {
@@ -3816,6 +4314,22 @@
     },
     {
       "name": "remove_approved_lender",
+      "docs": [
+        "Removes a lender. This prevents the lender from making more deposits.",
+        "The capital that the lender has contributed will continue to work as normal.",
+        "",
+        "# Dev Notes",
+        "It is intentional not to delete depositRecord for the lender so that they do not",
+        "lose existing investment. They can request redemption post removal as a lender.",
+        "Because of lockup period and pool liquidity constraints, we cannot automatically",
+        "disburse the investment by this lender.",
+        "",
+        "# Arguments",
+        "* `lender` - The lender address.",
+        "",
+        "# Access Control",
+        "Only pool operators can call this instruction."
+      ],
       "discriminator": [123, 222, 124, 183, 103, 43, 251, 97],
       "accounts": [
         {
@@ -3898,6 +4412,12 @@
     },
     {
       "name": "remove_liquidity_asset",
+      "docs": [
+        "Removes an asset so that it can no longer serve as the underlying asset for the pools.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [220, 212, 17, 131, 95, 186, 135, 81],
       "accounts": [
         {
@@ -3953,6 +4473,15 @@
     },
     {
       "name": "remove_pauser",
+      "docs": [
+        "Removes a pauser.",
+        "",
+        "# Arguments",
+        "* `pauser` - The address to be removed from the pauser list.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [251, 114, 202, 18, 216, 118, 176, 86],
       "accounts": [
         {
@@ -4000,13 +4529,22 @@
       ],
       "args": [
         {
-          "name": "pauser_key",
+          "name": "pauser",
           "type": "pubkey"
         }
       ]
     },
     {
       "name": "remove_pool_operator",
+      "docs": [
+        "Adds an operator from the pool.",
+        "",
+        "# Arguments",
+        "* `operator` - The address of the pool operator.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [70, 188, 152, 173, 117, 213, 144, 195],
       "accounts": [
         {
@@ -4064,11 +4602,19 @@
     },
     {
       "name": "set_admin_rnr",
+      "docs": [
+        "Sets pool admin rewards and responsibility settings.",
+        "",
+        "# Arguments",
+        "* `admin_rnr` - The new admin R&R settings.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [18, 166, 239, 157, 122, 242, 254, 152],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -4119,6 +4665,15 @@
     },
     {
       "name": "set_evaluation_agent",
+      "docs": [
+        "Sets the Evaluation Agent of the pool.",
+        "",
+        "# Arguments",
+        "* `new_ea` - The address of the new Evaluation Agent.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [56, 217, 142, 95, 203, 7, 37, 66],
       "accounts": [
         {
@@ -4177,7 +4732,7 @@
           }
         },
         {
-          "name": "junior_tranche_mint",
+          "name": "junior_mint",
           "pda": {
             "seeds": [
               {
@@ -4196,7 +4751,7 @@
           }
         },
         {
-          "name": "senior_tranche_mint",
+          "name": "senior_mint",
           "optional": true,
           "pda": {
             "seeds": [
@@ -4235,18 +4790,18 @@
           }
         },
         {
-          "name": "new_ea_account_junior_tranche"
+          "name": "new_ea_junior_token"
         },
         {
           "name": "underlying_mint",
           "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "ea_underlying",
+          "name": "ea_underlying_token",
           "writable": true
         },
         {
@@ -4270,11 +4825,19 @@
     },
     {
       "name": "set_fee_structure",
+      "docs": [
+        "Sets the fee structure of the pool.",
+        "",
+        "# Arguments",
+        "* `fees` - The new fee structure.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [177, 185, 185, 94, 80, 253, 137, 255],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -4314,7 +4877,7 @@
       ],
       "args": [
         {
-          "name": "fees",
+          "name": "fee_structure",
           "type": {
             "defined": {
               "name": "FeeStructure"
@@ -4325,11 +4888,19 @@
     },
     {
       "name": "set_lp_config",
+      "docs": [
+        "Sets Liquidity Provider configurations.",
+        "",
+        "# Arguments",
+        "* `configs` - The new configurations.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [243, 188, 179, 176, 217, 83, 174, 65],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -4397,6 +4968,15 @@
     },
     {
       "name": "set_pool_owner_treasury",
+      "docs": [
+        "Sets the pool owner treasury.",
+        "",
+        "# Arguments",
+        "* `new_treasury` - The address of the new pool owner treasury.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [95, 26, 200, 33, 36, 107, 65, 219],
       "accounts": [
         {
@@ -4455,7 +5035,7 @@
           }
         },
         {
-          "name": "junior_tranche_mint",
+          "name": "junior_mint",
           "pda": {
             "seeds": [
               {
@@ -4474,7 +5054,7 @@
           }
         },
         {
-          "name": "senior_tranche_mint",
+          "name": "senior_mint",
           "optional": true,
           "pda": {
             "seeds": [
@@ -4513,10 +5093,10 @@
           }
         },
         {
-          "name": "new_treasury_account_junior_tranche"
+          "name": "new_treasury_junior_token"
         },
         {
-          "name": "new_treasury_account_senior_tranche",
+          "name": "new_treasury_senior_token",
           "optional": true
         },
         {
@@ -4524,11 +5104,11 @@
           "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "pool_owner_treasury_underlying",
+          "name": "pool_owner_treasury_underlying_token",
           "writable": true
         },
         {
@@ -4552,15 +5132,24 @@
     },
     {
       "name": "set_pool_settings",
+      "docs": [
+        "Sets various pool settings.",
+        "",
+        "# Arguments",
+        "* `settings` - The new pool settings.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
       "discriminator": [220, 224, 160, 141, 102, 160, 35, 231],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
-          "name": "underlying_mint"
+          "name": "underlying_mint",
+          "relations": ["pool_config"]
         },
         {
           "name": "huma_config",
@@ -4610,6 +5199,16 @@
     },
     {
       "name": "start_committed_credit",
+      "docs": [
+        "Initiates a credit line with a committed amount on the designated start date.",
+        "",
+        "This function is intended to be used for credit lines where there is a minimum borrowing",
+        "commitment. If the borrower fails to drawdown the committed amount within the set timeframe,",
+        "this function activates the credit line and applies yield based on the committed amount.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Sentinel Service account can call this instruction."
+      ],
       "discriminator": [171, 71, 208, 249, 59, 83, 243, 106],
       "accounts": [
         {
@@ -4721,6 +5320,13 @@
     },
     {
       "name": "submit_receivable",
+      "docs": [
+        "Submits a receivable for auto-approval, if auto-approval is allowed by the pool.",
+        "Adjusts available credit by applying the advance ratio if the receivable is approved.",
+        "",
+        "# Access Control",
+        "Only the borrower can call this instruction."
+      ],
       "discriminator": [18, 122, 4, 159, 218, 186, 88, 119],
       "accounts": [
         {
@@ -4832,17 +5438,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "pool_config.pool_id",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "borrower"
-              },
-              {
-                "kind": "account",
-                "path": "receivable_info.reference_id",
-                "account": "ReceivableInfo"
+                "path": "asset"
               },
               {
                 "kind": "const",
@@ -4892,6 +5488,20 @@
     },
     {
       "name": "trigger_default",
+      "docs": [
+        "Triggers the default process.",
+        "",
+        "# Returns",
+        "* `principal_loss` - The amount of principal loss.",
+        "* `yield_loss` - The amount of yield loss.",
+        "* `fees_loss` - The amount of admin fees loss.",
+        "",
+        "# Dev Notes",
+        "It is possible for the borrower to pay back even after default.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [101, 124, 194, 181, 119, 246, 180, 8],
       "accounts": [
         {
@@ -4951,7 +5561,6 @@
         },
         {
           "name": "credit_config",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -5010,12 +5619,17 @@
       }
     },
     {
-      "name": "unpause",
-      "discriminator": [169, 144, 4, 38, 10, 141, 188, 255],
+      "name": "unpause_protocol",
+      "docs": [
+        "Unpauses the entire protocol.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
+      "discriminator": [183, 154, 5, 183, 105, 76, 87, 18],
       "accounts": [
         {
           "name": "owner",
-          "writable": true,
           "signer": true,
           "relations": ["huma_config"]
         },
@@ -5041,11 +5655,21 @@
     },
     {
       "name": "update_huma_config",
+      "docs": [
+        "Updates various Huma config settings.",
+        "",
+        "# Arguments",
+        "* `treasury` - The new Huma Treasury address.",
+        "* `sentinel` - The new Sentinel Service account address.",
+        "* `protocol_fee_bps` - The new Huma protocol fee in bps.",
+        "",
+        "# Access Control",
+        "Only the Huma owner can call this instruction."
+      ],
       "discriminator": [39, 78, 0, 251, 70, 22, 97, 163],
       "accounts": [
         {
           "name": "owner",
-          "writable": true,
           "signer": true,
           "relations": ["huma_config"]
         },
@@ -5084,6 +5708,17 @@
     },
     {
       "name": "update_limit_and_commitment",
+      "docs": [
+        "Updates the limit and commitment amount for this credit.",
+        "",
+        "# Arguments",
+        "* `new_credit_limit` - The new credit limit to set.",
+        "* `new_committed_amount` - The new committed amount. The borrower will be charged interest for",
+        "this amount even if the daily average borrowing amount in a month is less than this amount.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [129, 148, 70, 223, 27, 194, 55, 48],
       "accounts": [
         {
@@ -5204,12 +5839,21 @@
       ]
     },
     {
-      "name": "update_pool_basic_data",
-      "discriminator": [56, 201, 214, 99, 121, 74, 73, 82],
+      "name": "update_pool_basic_config",
+      "docs": [
+        "Updates basic pool configurations.",
+        "",
+        "# Arguments",
+        "* `pool_name` - The new name of the pool.",
+        "* `tranches_policy_type` - The new tranches policy type.",
+        "",
+        "# Access Control",
+        "Only the pool owner and the Huma owner can call this instruction."
+      ],
+      "discriminator": [37, 141, 152, 211, 142, 207, 32, 108],
       "accounts": [
         {
           "name": "signer",
-          "writable": true,
           "signer": true
         },
         {
@@ -5253,7 +5897,7 @@
           "type": "string"
         },
         {
-          "name": "tranche_policy_type",
+          "name": "tranches_policy_type",
           "type": {
             "defined": {
               "name": "TranchesPolicyType"
@@ -5264,6 +5908,15 @@
     },
     {
       "name": "update_receivable_metadata_uri",
+      "docs": [
+        "Updates the metadata URI of a receivable.",
+        "",
+        "# Arguments",
+        "* `uri` - The new metadata URI of the receivable.",
+        "",
+        "# Access Control",
+        "Only the update authority of the receivable NFT can call this instruction."
+      ],
       "discriminator": [39, 92, 163, 27, 120, 120, 132, 189],
       "accounts": [
         {
@@ -5348,7 +6001,122 @@
       ]
     },
     {
+      "name": "update_to_latest_redemption_record",
+      "discriminator": [73, 99, 253, 48, 195, 111, 208, 184],
+      "accounts": [
+        {
+          "name": "lender",
+          "signer": true
+        },
+        {
+          "name": "huma_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "huma_config.id",
+                "account": "HumaConfig"
+              },
+              {
+                "kind": "const",
+                "value": [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              }
+            ]
+          },
+          "relations": ["pool_config"]
+        },
+        {
+          "name": "pool_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              },
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              },
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tranche_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  116, 114, 97, 110, 99, 104, 101, 95, 115, 116, 97, 116, 101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "lender_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "account",
+                "path": "lender"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  108, 101, 110, 100, 101, 114, 95, 115, 116, 97, 116, 101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tranche_mint"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "update_yield",
+      "docs": [
+        "Updates the yield for the credit.",
+        "",
+        "# Arguments",
+        "* `new_yield_bps` - The new yield expressed in basis points.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [151, 190, 102, 136, 127, 77, 231, 0],
       "accounts": [
         {
@@ -5466,6 +6234,19 @@
     },
     {
       "name": "waive_late_fee",
+      "docs": [
+        "Waives the late fee up to the given limit.",
+        "",
+        "# Arguments",
+        "* `amount` - The amount of late fee to waive. The actual amount waived is the smaller of",
+        "this value and the actual amount of late fee due.",
+        "",
+        "# Returns",
+        "The amount of late fee waived.",
+        "",
+        "# Access Control",
+        "Only the EA can call this instruction."
+      ],
       "discriminator": [23, 155, 232, 53, 244, 25, 93, 38],
       "accounts": [
         {
@@ -5508,7 +6289,6 @@
         },
         {
           "name": "pool_state",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -5586,29 +6366,17 @@
     },
     {
       "name": "withdraw_after_pool_closure",
+      "docs": [
+        "Withdraws all the lender's assets after the pool has been permanently closed.",
+        "",
+        "# Access Control",
+        "Only lenders can call this instruction."
+      ],
       "discriminator": [82, 21, 237, 73, 48, 153, 86, 168],
       "accounts": [
         {
           "name": "lender",
-          "writable": true,
           "signer": true
-        },
-        {
-          "name": "huma_config",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "huma_config.id",
-                "account": "HumaConfig"
-              },
-              {
-                "kind": "const",
-                "value": [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
-              }
-            ]
-          },
-          "relations": ["pool_config"]
         },
         {
           "name": "pool_config",
@@ -5738,6 +6506,16 @@
     },
     {
       "name": "withdraw_ea_fees",
+      "docs": [
+        "Withdraw the Evaluation Agent fees.",
+        "",
+        "# Arguments",
+        "* `amount` - The amount to be withdrawn.",
+        "",
+        "# Access Control",
+        "Either the EA or pool owner can trigger reward withdrawal for EA.",
+        "When it is triggered by the pool owner, the fund still flows to the EA's account."
+      ],
       "discriminator": [184, 186, 55, 154, 161, 200, 129, 250],
       "accounts": [
         {
@@ -5818,11 +6596,11 @@
           "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "ea_account_underlying",
+          "name": "ea_underlying_token",
           "writable": true
         },
         {
@@ -5846,6 +6624,15 @@
     },
     {
       "name": "withdraw_pool_owner_fees",
+      "docs": [
+        "Withdraws the pool fees.",
+        "",
+        "# Arguments",
+        "* `amount` - The amount to be withdrawn.",
+        "",
+        "# Access Control",
+        "Only the pool owner treasury account can call this instruction."
+      ],
       "discriminator": [122, 81, 18, 55, 75, 191, 28, 17],
       "accounts": [
         {
@@ -5926,11 +6713,11 @@
           "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "signer_account_underlying",
+          "name": "signer_underlying_token",
           "writable": true
         },
         {
@@ -5954,6 +6741,15 @@
     },
     {
       "name": "withdraw_protocol_fees",
+      "docs": [
+        "Withdraws the protocol fees.",
+        "",
+        "# Arguments",
+        "* `amount` - The amount to be withdrawn.",
+        "",
+        "# Access Control",
+        "Only the Huma treasury account can call this instruction."
+      ],
       "discriminator": [11, 68, 165, 98, 18, 208, 134, 73],
       "accounts": [
         {
@@ -6034,11 +6830,11 @@
           "relations": ["pool_config"]
         },
         {
-          "name": "pool_account_underlying",
+          "name": "pool_underlying_token",
           "writable": true
         },
         {
-          "name": "signer_account_underlying",
+          "name": "signer_underlying_token",
           "writable": true
         },
         {
@@ -6201,6 +6997,14 @@
       "discriminator": [88, 202, 71, 28, 227, 196, 228, 54]
     },
     {
+      "name": "LenderAccountsClosedEvent",
+      "discriminator": [114, 190, 186, 18, 188, 195, 238, 186]
+    },
+    {
+      "name": "LenderAccountsCreatedEvent",
+      "discriminator": [175, 24, 152, 252, 143, 70, 152, 142]
+    },
+    {
       "name": "LenderAddedEvent",
       "discriminator": [31, 45, 5, 253, 219, 146, 30, 204]
     },
@@ -6265,8 +7069,8 @@
       "discriminator": [127, 206, 225, 205, 163, 244, 34, 254]
     },
     {
-      "name": "PoolBasicDataChangedEvent",
-      "discriminator": [248, 167, 78, 171, 4, 222, 78, 203]
+      "name": "PoolBasicConfigChangedEvent",
+      "discriminator": [156, 251, 67, 67, 95, 41, 255, 137]
     },
     {
       "name": "PoolClosedEvent",
@@ -6375,321 +7179,333 @@
   ],
   "errors": [
     {
-      "code": 6100,
-      "name": "HumaOwnerRequired"
-    },
-    {
-      "code": 6101,
-      "name": "ProtocolFeeHigherThanUpperLimit"
-    },
-    {
-      "code": 6102,
-      "name": "HumaTreasuryRequired"
-    },
-    {
-      "code": 6103,
-      "name": "PoolOwnerTreasuryRequired"
-    },
-    {
-      "code": 6104,
-      "name": "PoolOwnerOrEARequired"
-    },
-    {
-      "code": 6105,
-      "name": "ReceivableUpdateAuthorityRequired"
-    },
-    {
-      "code": 6200,
-      "name": "PoolOwnerRequired"
-    },
-    {
-      "code": 6201,
-      "name": "PoolOwnerOrHumaOwnerRequired"
-    },
-    {
-      "code": 6202,
-      "name": "InvalidHumaConfig"
-    },
-    {
-      "code": 6203,
-      "name": "ProtocolIsPaused"
-    },
-    {
-      "code": 6204,
-      "name": "InvalidUnderlyingMint"
-    },
-    {
-      "code": 6205,
-      "name": "PoolIsNotOn"
-    },
-    {
-      "code": 6206,
-      "name": "HumaConfigAccountRequired"
-    },
-    {
-      "code": 6207,
+      "code": 6001,
       "name": "ZeroAmountProvided"
     },
     {
-      "code": 6208,
-      "name": "UnsupportedFunction"
-    },
-    {
-      "code": 6209,
-      "name": "InvalidTrancheState"
-    },
-    {
-      "code": 6210,
+      "code": 6002,
       "name": "InvalidBasisPointHigherThan10000"
     },
     {
-      "code": 6211,
-      "name": "EpochClosedTooEarly"
-    },
-    {
-      "code": 6212,
+      "code": 6003,
       "name": "InsufficientAmountForRequest"
     },
     {
-      "code": 6213,
-      "name": "PoolIsOff"
-    },
-    {
-      "code": 6214,
-      "name": "MinDepositAmountTooLow"
-    },
-    {
-      "code": 6215,
-      "name": "LatePaymentGracePeriodTooLong"
-    },
-    {
-      "code": 6216,
-      "name": "AdminRewardRateTooHigh"
-    },
-    {
-      "code": 6302,
-      "name": "ZeroPayPeriodsProvided"
-    },
-    {
-      "code": 6303,
-      "name": "CommittedAmountExceedsCreditLimit"
-    },
-    {
-      "code": 6304,
-      "name": "CreditWithoutCommitmentShouldHaveNoDesignatedStartDate"
-    },
-    {
-      "code": 6305,
-      "name": "DesignatedStartDateInThePast"
-    },
-    {
-      "code": 6306,
-      "name": "PayPeriodsTooLowForCreditsWithDesignatedStartDate"
-    },
-    {
-      "code": 6307,
-      "name": "CreditLimitTooHigh"
-    },
-    {
-      "code": 6308,
-      "name": "CreditNotInStateForApproval"
-    },
-    {
-      "code": 6309,
-      "name": "EvaluationAgentRequired"
-    },
-    {
-      "code": 6310,
-      "name": "CommittedCreditCannotBeStarted"
-    },
-    {
-      "code": 6311,
-      "name": "EAOrSentinelRequired"
-    },
-    {
-      "code": 6312,
-      "name": "AttemptedDrawdownOnNonRevolvingCredit"
-    },
-    {
-      "code": 6313,
-      "name": "DrawdownNotAllowedInFinalPeriodAndBeyond"
-    },
-    {
-      "code": 6314,
-      "name": "CreditNotInStateForDrawdown"
-    },
-    {
-      "code": 6315,
-      "name": "CreditLimitExceeded"
-    },
-    {
-      "code": 6316,
-      "name": "InsufficientPoolBalanceForDrawdown"
-    },
-    {
-      "code": 6317,
-      "name": "FirstDrawdownTooEarly"
-    },
-    {
-      "code": 6318,
-      "name": "DrawdownNotAllowedAfterDueDateWithUnpaidDue"
-    },
-    {
-      "code": 6319,
-      "name": "CreditNotInStateForUpdate"
-    },
-    {
-      "code": 6320,
-      "name": "CreditHasOutstandingBalance"
-    },
-    {
-      "code": 6321,
-      "name": "CreditHasUnfulfilledCommitment"
-    },
-    {
-      "code": 6322,
-      "name": "BorrowerOrEARequired"
-    },
-    {
-      "code": 6323,
-      "name": "InvalidEA"
-    },
-    {
-      "code": 6324,
-      "name": "CreditNotInStateForMakingPayment"
-    },
-    {
-      "code": 6325,
-      "name": "BorrowerOrSentinelRequired"
-    },
-    {
-      "code": 6326,
-      "name": "CreditNotInStateForMakingPrincipalPayment"
-    },
-    {
-      "code": 6327,
-      "name": "DefaultHasAlreadyBeenTriggered"
-    },
-    {
-      "code": 6328,
-      "name": "DefaultTriggeredTooEarly"
-    },
-    {
-      "code": 6329,
-      "name": "ZeroReceivableAmount"
-    },
-    {
-      "code": 6330,
-      "name": "ReceivableAlreadyMatured"
-    },
-    {
-      "code": 6331,
-      "name": "InvalidReceivableState"
-    },
-    {
-      "code": 6332,
-      "name": "ReceivableOwnershipMismatch"
-    },
-    {
-      "code": 6333,
-      "name": "ReceivableAutoApprovalNotEnabled"
-    },
-    {
-      "code": 6335,
-      "name": "BorrowerMismatch"
-    },
-    {
-      "code": 9101,
-      "name": "StartDateLaterThanEndDate"
-    },
-    {
-      "code": 6400,
-      "name": "BorrowAmountLessThanPlatformFees"
-    },
-    {
-      "code": 6401,
-      "name": "PoolOperatorRequired"
-    },
-    {
-      "code": 6402,
-      "name": "LenderRequired"
-    },
-    {
-      "code": 6403,
-      "name": "AuthorizedInitialDepositorRequired"
-    },
-    {
-      "code": 6404,
-      "name": "PreviousAssetsNotWithdrawn"
-    },
-    {
-      "code": 6405,
-      "name": "DepositAmountTooLow"
-    },
-    {
-      "code": 6406,
-      "name": "TrancheLiquidityCapExceeded"
-    },
-    {
-      "code": 6407,
-      "name": "ZeroSharesMinted"
-    },
-    {
-      "code": 6408,
+      "code": 6004,
       "name": "InsufficientSharesForRequest"
     },
     {
-      "code": 6409,
-      "name": "WithdrawTooEarly"
+      "code": 6005,
+      "name": "ZeroSharesMinted"
     },
     {
-      "code": 6410,
-      "name": "PoolIsNotClosed"
+      "code": 6006,
+      "name": "UnsupportedFunction"
     },
     {
-      "code": 6412,
+      "code": 6101,
+      "name": "StartDateLaterThanEndDate"
+    },
+    {
+      "code": 6201,
+      "name": "HumaOwnerRequired"
+    },
+    {
+      "code": 6202,
+      "name": "HumaTreasuryRequired"
+    },
+    {
+      "code": 6203,
+      "name": "PoolOwnerRequired"
+    },
+    {
+      "code": 6204,
+      "name": "PoolOwnerOrHumaOwnerRequired"
+    },
+    {
+      "code": 6205,
+      "name": "PoolOwnerOrEARequired"
+    },
+    {
+      "code": 6206,
+      "name": "PoolOwnerTreasuryRequired"
+    },
+    {
+      "code": 6207,
+      "name": "PoolOperatorRequired"
+    },
+    {
+      "code": 6208,
+      "name": "LenderRequired"
+    },
+    {
+      "code": 6209,
+      "name": "BorrowerOrEARequired"
+    },
+    {
+      "code": 6210,
+      "name": "BorrowerOrSentinelRequired"
+    },
+    {
+      "code": 6211,
+      "name": "EvaluationAgentRequired"
+    },
+    {
+      "code": 6212,
+      "name": "EAOrSentinelRequired"
+    },
+    {
+      "code": 6213,
+      "name": "ReceivableUpdateAuthorityRequired"
+    },
+    {
+      "code": 6214,
+      "name": "AuthorizedInitialDepositorRequired"
+    },
+    {
+      "code": 6301,
+      "name": "ProtocolFeeHigherThanUpperLimit"
+    },
+    {
+      "code": 6302,
+      "name": "ProtocolIsPaused"
+    },
+    {
+      "code": 6303,
+      "name": "InvalidHumaConfig"
+    },
+    {
+      "code": 6304,
+      "name": "InvalidUnderlyingMint"
+    },
+    {
+      "code": 6305,
+      "name": "InvalidNumberOfDecimalsForLiquidityAsset"
+    },
+    {
+      "code": 6401,
+      "name": "InvalidTrancheStatePDA"
+    },
+    {
+      "code": 6402,
       "name": "InvalidTrancheMint"
     },
     {
-      "code": 6413,
+      "code": 6403,
       "name": "SeniorMintRequired"
     },
     {
-      "code": 6414,
-      "name": "JuniorMintRequired"
-    },
-    {
-      "code": 6415,
+      "code": 6404,
       "name": "SeniorStateRequired"
     },
     {
-      "code": 6416,
-      "name": "JuniorStateRequired"
-    },
-    {
-      "code": 6417,
+      "code": 6405,
       "name": "InvalidLenderTrancheToken"
     },
     {
-      "code": 6418,
+      "code": 6406,
       "name": "InvalidLenderStateAccount"
     },
     {
-      "code": 6419,
-      "name": "InvalidTrancheTokenTransferHook"
+      "code": 6407,
+      "name": "PoolSeniorTokenRequired"
     },
     {
-      "code": 6602,
+      "code": 6408,
+      "name": "TrancheTokenNotReadyToClose"
+    },
+    {
+      "code": 6409,
+      "name": "LenderStateNotReadyToClose"
+    },
+    {
+      "code": 6410,
+      "name": "AdminRewardRateTooHigh"
+    },
+    {
+      "code": 6411,
       "name": "PoolOwnerInsufficientLiquidity"
     },
     {
-      "code": 6603,
+      "code": 6412,
       "name": "EvaluationAgentInsufficientLiquidity"
+    },
+    {
+      "code": 6413,
+      "name": "MinDepositAmountTooLow"
+    },
+    {
+      "code": 6414,
+      "name": "LatePaymentGracePeriodTooLong"
+    },
+    {
+      "code": 6415,
+      "name": "PoolIsNotOn"
+    },
+    {
+      "code": 6416,
+      "name": "PoolIsOff"
+    },
+    {
+      "code": 6417,
+      "name": "PoolIsNotClosed"
+    },
+    {
+      "code": 6418,
+      "name": "PoolNameTooLong"
+    },
+    {
+      "code": 6501,
+      "name": "PreviousAssetsNotWithdrawn"
+    },
+    {
+      "code": 6502,
+      "name": "TrancheLiquidityCapExceeded"
+    },
+    {
+      "code": 6503,
+      "name": "DepositAmountTooLow"
+    },
+    {
+      "code": 6504,
+      "name": "WithdrawTooEarly"
+    },
+    {
+      "code": 6505,
+      "name": "EpochClosedTooEarly"
+    },
+    {
+      "code": 6601,
+      "name": "ZeroPayPeriodsProvided"
+    },
+    {
+      "code": 6602,
+      "name": "CreditNotInStateForApproval"
+    },
+    {
+      "code": 6603,
+      "name": "CreditLimitTooHigh"
+    },
+    {
+      "code": 6604,
+      "name": "CommittedAmountExceedsCreditLimit"
+    },
+    {
+      "code": 6605,
+      "name": "PayPeriodsTooLowForCreditsWithDesignatedStartDate"
+    },
+    {
+      "code": 6606,
+      "name": "CreditWithoutCommitmentShouldHaveNoDesignatedStartDate"
+    },
+    {
+      "code": 6607,
+      "name": "DesignatedStartDateInThePast"
+    },
+    {
+      "code": 6608,
+      "name": "CommittedCreditCannotBeStarted"
+    },
+    {
+      "code": 6609,
+      "name": "CreditNotInStateForDrawdown"
+    },
+    {
+      "code": 6610,
+      "name": "CreditLimitExceeded"
+    },
+    {
+      "code": 6611,
+      "name": "FirstDrawdownTooEarly"
+    },
+    {
+      "code": 6612,
+      "name": "AttemptedDrawdownOnNonRevolvingCredit"
+    },
+    {
+      "code": 6613,
+      "name": "InsufficientPoolBalanceForDrawdown"
+    },
+    {
+      "code": 6614,
+      "name": "BorrowAmountLessThanPlatformFees"
+    },
+    {
+      "code": 6615,
+      "name": "DrawdownNotAllowedInFinalPeriodAndBeyond"
+    },
+    {
+      "code": 6616,
+      "name": "DrawdownNotAllowedAfterDueDateWithUnpaidDue"
+    },
+    {
+      "code": 6617,
+      "name": "CreditNotInStateForMakingPayment"
+    },
+    {
+      "code": 6618,
+      "name": "CreditNotInStateForMakingPrincipalPayment"
+    },
+    {
+      "code": 6619,
+      "name": "ZeroReceivableAmount"
+    },
+    {
+      "code": 6620,
+      "name": "InvalidReceivableReferencePDA"
+    },
+    {
+      "code": 6621,
+      "name": "ReceivableAlreadyMatured"
+    },
+    {
+      "code": 6622,
+      "name": "InvalidReceivableState"
+    },
+    {
+      "code": 6623,
+      "name": "ReceivableOwnershipMismatch"
+    },
+    {
+      "code": 6624,
+      "name": "ReceivableAutoApprovalNotEnabled"
+    },
+    {
+      "code": 6625,
+      "name": "DefaultHasAlreadyBeenTriggered"
+    },
+    {
+      "code": 6626,
+      "name": "DefaultTriggeredTooEarly"
+    },
+    {
+      "code": 6627,
+      "name": "CreditNotInStateForUpdate"
+    },
+    {
+      "code": 6628,
+      "name": "CreditHasOutstandingBalance"
+    },
+    {
+      "code": 6629,
+      "name": "CreditHasUnfulfilledCommitment"
+    },
+    {
+      "code": 6630,
+      "name": "ReferenceIdTooLong"
     }
   ],
   "types": [
     {
       "name": "AccruedIncomes",
+      "docs": [
+        "The incomes accrued by pool admins.",
+        "",
+        "# Fields",
+        "* `protocol_income` - The cumulative amount of income accrued by the Huma owner.",
+        "* `pool_owner_income` - The cumulative amount of income accrued by the pool owner.",
+        "* `ea_income` - The cumulative amount of income accrued by the Evaluation Agent."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -6713,7 +7529,7 @@
       "docs": [
         "Rewards and Responsibilities for pool admins.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `reward_rate_bps_for_ea` - Percentage (in bps) of pool income allocated to EA.",
         "* `reward_rate_bps_for_pool_owner` - Percentage (in bps) of pool income allocated to the pool owner.",
         "* `liquidity_rate_bps_for_ea` - Percentage (in bps) of the liquidity cap to be contributed by EA in the junior tranche.",
@@ -6743,6 +7559,13 @@
     },
     {
       "name": "AdminRnRChangedEvent",
+      "docs": [
+        "The admin reward and responsibility settings have been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `admin_rnr` - The new admin R&R settings."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -6808,7 +7631,7 @@
       "docs": [
         "Account billing info refreshed with the updated due amount and date.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `new_due_date` - The updated due date of the bill.",
@@ -6846,7 +7669,7 @@
       "docs": [
         "A credit with a committed amount has started.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit."
       ],
@@ -6866,6 +7689,17 @@
     },
     {
       "name": "CreateReceivableArgs",
+      "docs": [
+        "Parameters used for receivable creation.",
+        "",
+        "# Fields",
+        "* `name` - The name of the receivable.",
+        "* `uri` - The URI of the metadata associated with the receivable.",
+        "* `currency_code` - The ISO 4217 currency code that the receivable is denominated in.",
+        "* `receivable_amount` - The total amount of the receivable.",
+        "* `maturity_date` - The date on which the receivable becomes due.",
+        "* `reference_id` - A unique internal reference ID used for de-duplication by the creator."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -6901,7 +7735,7 @@
       "docs": [
         "A credit has been approved.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The address of the borrower.",
         "* `credit_limit` - The maximum amount that can be borrowed.",
@@ -6964,7 +7798,7 @@
       "docs": [
         "An existing credit has been closed.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit."
       ],
@@ -6987,7 +7821,7 @@
       "docs": [
         "An existing credit has been closed by the borrower or EA.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit."
       ],
@@ -7008,9 +7842,10 @@
     {
       "name": "CreditConfig",
       "docs": [
-        "`CreditConfig` keeps track of the static settings of a credit.",
-        "A `CreditConfig` is created after the approval of each credit.",
-        "# Fields:",
+        "Keeps track of the static settings of a credit. It's created after the approval of each credit.",
+        "",
+        "# Fields",
+        "* `bump` - A bump seed of this PDA.",
         "* `credit_limit` - The maximum amount that can be borrowed.",
         "* `committed_amount` - The amount that the borrower has committed to use. If the used credit",
         "is less than this amount, the borrower will be charged yield using this amount.",
@@ -7021,14 +7856,15 @@
         "1. For credit line, it is APR.",
         "2. For factoring, it is factoring fee for the given period.",
         "3. For dynamic yield credit, it is the estimated APY.",
-        "* `advance_rate_bps` - Percentage of receivable nominal amount to be available for drawdown.",
-        "* `revolving` - A flag indicating if repeated borrowing is allowed.",
-        "* `receivable_auto_approval` - Whether receivables will be automatically approved on drawdown. If `false`,",
-        "then the receivable needs to be manually approved before drawdown."
+        "* `revolving` - A flag indicating if repeated borrowing is allowed."
       ],
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "credit_limit",
             "type": "u128"
@@ -7054,15 +7890,7 @@
             "type": "u32"
           },
           {
-            "name": "advance_rate_bps",
-            "type": "u16"
-          },
-          {
             "name": "revolving",
-            "type": "bool"
-          },
-          {
-            "name": "receivable_auto_approval",
             "type": "bool"
           }
         ]
@@ -7071,8 +7899,8 @@
     {
       "name": "CreditRecord",
       "docs": [
-        "`CreditRecord` keeps track of the dynamic stats of a credit that change",
-        "from pay period to pay period, e.g. due info for each bill.",
+        "Keeps track of the dynamic stats of a credit that change from pay period to pay period,",
+        "e.g. due info for each bill.",
         "",
         "# Fields",
         "* `unbilled_principal` - The amount of principal not included in the bill.",
@@ -7129,9 +7957,10 @@
     {
       "name": "CreditState",
       "docs": [
-        "The credit-related data of the borrower.",
+        "The credit-related states of a borrower.",
         "",
         "# Fields",
+        "* `bump` - A bump seed of this PDA.",
         "* `borrower` - The address of the borrower.",
         "* `credit_record` - The `CreditRecord` of the borrower.",
         "* `due_detail` -The `DueDetail` of the borrower.",
@@ -7141,6 +7970,10 @@
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "borrower",
             "type": "pubkey"
@@ -7196,7 +8029,7 @@
       "docs": [
         "The type of credit that the pool supports.",
         "",
-        "Variants:",
+        "# Variants",
         "* `CreditLine` - Regular credit line that does not require collateral.",
         "* `ReceivableBackedCreditLine` - Credit line that requires backing by receivables."
       ],
@@ -7217,7 +8050,7 @@
       "docs": [
         "The credit has been marked as Defaulted.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The address of the borrower.",
         "* `principal_loss` - The principal losses to be written off because of the default.",
@@ -7252,6 +8085,13 @@
     },
     {
       "name": "DepositRecord",
+      "docs": [
+        "The information related to a lender's deposit.",
+        "",
+        "# Fields",
+        "* `principal` - The total amount of underlying assets deposited by the lender.",
+        "* `last_deposit_time` - The time the lender deposited into the pool."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7287,7 +8127,7 @@
       "docs": [
         "A credit has been borrowed from.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `borrow_amount` - The amount the user has borrowed.",
@@ -7318,10 +8158,10 @@
     {
       "name": "DueDetail",
       "docs": [
-        "`DueDetail` records the detailed information about next due and past due.",
+        "The detailed information about next due and past due.",
         "",
-        "`CreditRecord.yield_due` = max(committed, accrued) - paid",
-        "`CreditRecord.total_past_due` = late_fee + principal_past_due + yield_past_due",
+        "`CreditRecord.yield_due = max(committed, accrued) - paid`",
+        "`CreditRecord.total_past_due = late_fee + principal_past_due + yield_past_due`",
         "This struct is necessary since commitment requirement might change within a period.",
         "",
         "# Fields",
@@ -7369,6 +8209,14 @@
     },
     {
       "name": "EAFeesWithdrawalFailedEvent",
+      "docs": [
+        "The Evaluation Agent fee withdrawal has failed.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `receiver` - The recipient account of the fees.",
+        "* `amount` - The amount of fees withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7389,6 +8237,14 @@
     },
     {
       "name": "EAFeesWithdrawnEvent",
+      "docs": [
+        "The Evaluation Agent fees have been withdrawn.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `receiver` - The recipient account of the fees.",
+        "* `amount` - The amount of fees withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7425,6 +8281,13 @@
     },
     {
       "name": "EpochClosedEvent",
+      "docs": [
+        "An epoch has closed.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `epoch_id` - The ID of the epoch that just closed."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7444,7 +8307,7 @@
       "docs": [
         "The current epoch has been processed after the pool is closed.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `epoch_id` - The ID of the epoch that has been processed."
       ],
@@ -7464,6 +8327,17 @@
     },
     {
       "name": "EpochProcessedEvent",
+      "docs": [
+        "An epoch has been processed.",
+        "",
+        "# Fields",
+        "* `tranche` - The ID of the tranche.",
+        "* `epoch_id` - The epoch ID.",
+        "* `price` - The price of the tranche token.",
+        "* `shares_requested` - The number of tranche shares that were requested for redemption.",
+        "* `shares_processed` - The number of tranche shares that have been redeemed.",
+        "* `amount_processed` - The amount of the underlying pool asset token redeemed in this epoch."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7496,6 +8370,18 @@
     },
     {
       "name": "EpochRedemptionSummary",
+      "docs": [
+        "The summary of redemption information of an epoch.",
+        "",
+        "# Fields",
+        "* `epoch_id` - The epoch ID.",
+        "* `total_shares_requested` - The total number of shares requested for redemption in this epoch.",
+        "* `total_shares_processed` - The total number of shares processed for redemption in this epoch.",
+        "* `total_amount_processed` - The total amount redeemed in this epoch.",
+        "",
+        "# Dev Notes",
+        "EpochRedemptionSummary space in bytes: 8 + 16 + 16 + 16 = 56"
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7520,6 +8406,14 @@
     },
     {
       "name": "EvaluationAgentChangedEvent",
+      "docs": [
+        "The Evaluation Agent has been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `old_ea` - The address of the old Evaluation Agent.",
+        "* `new_ea` - The address of the new Evaluation Agent."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7543,7 +8437,7 @@
       "docs": [
         "Fee related settings.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `front_loading_fee_flat` - Part of platform fee, charged as a flat amount when borrowing occurs.",
         "* `front_loading_fee_bps` - Part of platform fee, charged as a % of the borrowing amount when borrowing occurs.",
         "* `yield_bps` - Expected yield in basis points.",
@@ -7574,6 +8468,13 @@
     },
     {
       "name": "FeeStructureChangedEvent",
+      "docs": [
+        "The fee structure of the has been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `fee_structure` - The new fee structure."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7602,8 +8503,11 @@
             "type": "pubkey"
           },
           {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
             "name": "owner",
-            "docs": ["Address of the protocol owner"],
             "type": "pubkey"
           },
           {
@@ -7616,7 +8520,6 @@
           },
           {
             "name": "protocol_fee_bps",
-            "docs": ["The protocol fee"],
             "type": "u16"
           },
           {
@@ -7628,6 +8531,15 @@
     },
     {
       "name": "HumaConfigChangedEvent",
+      "docs": [
+        "Various fields of the Huma config has been updated.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `treasury` - The address of the Huma treasury account.",
+        "* `sentinel` - The address of the Sentinel Service account.",
+        "* `protocol_fee_bps` - The Huma protocol fee in bps."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7652,6 +8564,16 @@
     },
     {
       "name": "HumaConfigCreatedEvent",
+      "docs": [
+        "An instance of Huma protocol config has been created.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the new Huma config.",
+        "* `owner` - The address of the Huma owner account.",
+        "* `treasury` - The address of the Huma treasury account.",
+        "* `sentinel` - The address of the Sentinel Service account.",
+        "* `protocol_fee_bps` - The Huma protocol fee in bps."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7680,6 +8602,13 @@
     },
     {
       "name": "HumaOwnerChangedEvent",
+      "docs": [
+        "The address of the Huma protocol owner has changed.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `owner` - The address of the new owner."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7699,7 +8628,7 @@
       "docs": [
         "Event for the distribution of pool admin incomes.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `protocol_income` - Income distributed to the protocol owner in this transaction.",
         "* `pool_owner_income` - Income distributed to the pool owner in this transaction.",
@@ -7749,6 +8678,14 @@
     },
     {
       "name": "IncomeWithdrawn",
+      "docs": [
+        "The incomes withdrawn by pool admins.",
+        "",
+        "# Fields",
+        "* `protocol_income_withdrawn` - The cumulative amount of income withdrawn by the Huma owner.",
+        "* `pool_owner_income_withdrawn` - The cumulative amount of income withdrawn by the pool owner.",
+        "* `ea_income_withdrawn` - The cumulative amount of income withdrawn by the Evaluation Agent."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7798,12 +8735,12 @@
       "docs": [
         "Lender related configurations.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `liquidity_cap` - The max liquidity allowed for the pool.",
         "* `max_senior_junior_ratio` - The upper bound of senior-to-junior ratio allowed.",
         "* `fixed_senior_yield_bps` - The fixed yield for senior tranche. Either this or tranches_risk_adjustment_bps is non-zero.",
         "* `tranches_risk_adjustment_bps` - Percentage of yield to be shifted from senior to junior. Either this or fixed_senior_yield_bps is non-zero.",
-        "* `withdrawal_lockout_period_days` - How long a lender has to wait after the last deposit before they can withdraw."
+        "* `withdrawal_lockup_period_days` - How long a lender has to wait after the last deposit before they can withdraw."
       ],
       "type": {
         "kind": "struct",
@@ -7825,7 +8762,7 @@
             "type": "u16"
           },
           {
-            "name": "withdrawal_lockout_period_days",
+            "name": "withdrawal_lockup_period_days",
             "type": "u16"
           }
         ]
@@ -7833,6 +8770,13 @@
     },
     {
       "name": "LPConfigChangedEvent",
+      "docs": [
+        "The LP config has been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `lp_config` - The new LP config."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7856,7 +8800,7 @@
       "docs": [
         "Part or all of the late fee due of a credit has been waived.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `old_late_fee` - The amount of late fee before the update.",
@@ -7888,16 +8832,74 @@
       "name": "Lender",
       "type": {
         "kind": "struct",
-        "fields": []
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
       }
     },
     {
-      "name": "LenderAddedEvent",
+      "name": "LenderAccountsClosedEvent",
+      "docs": [
+        "Lender accounts have been permanently closed.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The lender who closed their accounts."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "id",
+            "name": "tranche",
+            "type": "pubkey"
+          },
+          {
+            "name": "lender",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LenderAccountsCreatedEvent",
+      "docs": [
+        "Lender accounts have been created.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The lender who created their accounts."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tranche",
+            "type": "pubkey"
+          },
+          {
+            "name": "lender",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LenderAddedEvent",
+      "docs": [
+        "A lender has been added.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The lender being removed."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tranche",
             "type": "pubkey"
           },
           {
@@ -7909,6 +8911,14 @@
     },
     {
       "name": "LenderFundDisbursedEvent",
+      "docs": [
+        "A disbursement to the lender for a processed redemption.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The lender whose shares have been redeemed.",
+        "* `amount_disbursed` - The amount of the disbursement."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7929,6 +8939,15 @@
     },
     {
       "name": "LenderFundWithdrawnEvent",
+      "docs": [
+        "A lender has withdrawn all their assets after pool closure.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche which the lender has withdrawn from.",
+        "* `lender` - The lender who has withdrawn.",
+        "* `shares` - The number of shares burned.",
+        "* `assets` - The amount that was withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7953,6 +8972,17 @@
     },
     {
       "name": "LenderRedemptionRecord",
+      "docs": [
+        "The information related to a lender's redemption.",
+        "",
+        "# Fields",
+        "* `next_epoch_id_to_process` - The next epoch ID for redemption processing.",
+        "* `num_shares_requested` - The number of shares requested for redemption in this epoch.",
+        "* `principal_requested` - The principal amount included in the redemption request.",
+        "* `total_amount_processed` - The total amount processed for redemption in all epochs.",
+        "* `total_amount_withdrawn` - The total amount withdrawn by the lender. The withdrawable amount",
+        "= `total_amount_processed` - `total_amount_withdrawn`."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -7981,11 +9011,18 @@
     },
     {
       "name": "LenderRemovedEvent",
+      "docs": [
+        "A lender has been removed.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The lender being removed."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "id",
+            "name": "tranche",
             "type": "pubkey"
           },
           {
@@ -8000,6 +9037,10 @@
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "deposit_record",
             "type": {
@@ -8024,7 +9065,7 @@
       "docs": [
         "The credit limit and committed amount of a credit have been updated.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `old_credit_limit` - The old credit limit before the update.",
@@ -8066,11 +9107,23 @@
       "name": "LiquidityAsset",
       "type": {
         "kind": "struct",
-        "fields": []
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
       }
     },
     {
       "name": "LiquidityAssetAddedEvent",
+      "docs": [
+        "New underlying asset supported by the protocol is added.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `mint` - The mint account of the liquidity asset being added."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8087,6 +9140,13 @@
     },
     {
       "name": "LiquidityAssetRemovedEvent",
+      "docs": [
+        "Remove the asset that is no longer supported by the protocol.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `mint` - The mint account of the liquidity asset being removed."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8103,13 +9163,18 @@
     },
     {
       "name": "LiquidityDepositedEvent",
+      "docs": [
+        "A deposit has been made to the tranche.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `depositor` - The account that made the deposit.",
+        "* `assets` - The amount of underlying assets deposited.",
+        "* `shares` - The number of shares minted for this deposit."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "id",
-            "type": "pubkey"
-          },
           {
             "name": "tranche",
             "type": "pubkey"
@@ -8134,7 +9199,7 @@
       "docs": [
         "Event for the distribution of loss in the pool.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `loss` - The amount of loss distributed.",
         "* `senior_total_assets` - The total amount of senior assets post loss distribution.",
@@ -8177,7 +9242,7 @@
       "docs": [
         "Event for the distribution of loss recovery in the pool.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `loss_recovery` - The amount of loss recovery distributed.",
         "* `senior_total_assets` - The total amount of senior assets post loss recovery distribution.",
@@ -8249,6 +9314,14 @@
     },
     {
       "name": "NewEpochStartedEvent",
+      "docs": [
+        "A new epoch has started.",
+        "",
+        "# Fields",
+        "* `pool` - The ID of the pool.",
+        "* `epoch_id` - The ID of the epoch that just started.",
+        "* `end_time` - The time when the current epoch should end."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8271,11 +9344,23 @@
       "name": "Pauser",
       "type": {
         "kind": "struct",
-        "fields": []
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
       }
     },
     {
       "name": "PauserAddedEvent",
+      "docs": [
+        "A pauser has been added. A pauser is someone who can pause the protocol.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `pauser` - The address of the pauser being added."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8292,6 +9377,13 @@
     },
     {
       "name": "PauserRemovedEvent",
+      "docs": [
+        "A pauser has been removed.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `pauser` - The address of the pauser being removed."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8308,6 +9400,12 @@
     },
     {
       "name": "PayPeriodDuration",
+      "docs": [
+        "This library defines functions for date calculation. All inputs and outputs are in UTC.",
+        "We use the 30/360 day count convention in this implementation, which treats every month as",
+        "having 30 days and every year as having 360 days, regardless of the actual number of days in a",
+        "month/year. This is a common practice in corporate finance."
+      ],
       "type": {
         "kind": "enum",
         "variants": [
@@ -8331,7 +9429,7 @@
         "# Fields",
         "* `pool` - The pool ID.",
         "* `authority` - The authority that declared the payment.",
-        "* `reference_id` - The unique reference ID of the receivable token.",
+        "* `asset` - The asset address on which payment was declared.",
         "* `currency_code`-  The ISO 4217 currency code that the receivable is denominated in.",
         "* `amount` - The amount that was declared paid."
       ],
@@ -8347,8 +9445,8 @@
             "type": "pubkey"
           },
           {
-            "name": "reference_id",
-            "type": "string"
+            "name": "asset",
+            "type": "pubkey"
           },
           {
             "name": "currency_code",
@@ -8366,7 +9464,7 @@
       "docs": [
         "A payment has been made against the credit.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `amount` - The payback amount.",
@@ -8436,6 +9534,18 @@
     },
     {
       "name": "PoolAccountsCreatedEvent",
+      "docs": [
+        "The accounts necessary for pool operation have been created.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `junior_mint` - The mint account of the junior tranche token.",
+        "* `senior_mint` - The mint account of the senior tranche token, if the senior tranche exists.",
+        "* `junior_token` - The token account of the junior tranche.",
+        "* `senior_token` - The token account of the senior tranche, if the senior tranche exists.",
+        "* `junior_state` - The junior tranche state.",
+        "* `senior_state` - The senior tranche state, if the senior tranche exists."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8444,42 +9554,48 @@
             "type": "pubkey"
           },
           {
-            "name": "pool_authority",
+            "name": "junior_mint",
             "type": "pubkey"
           },
           {
-            "name": "junior_tranche_mint",
+            "name": "senior_mint",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "junior_token",
             "type": "pubkey"
           },
           {
-            "name": "senior_tranche_mint",
+            "name": "senior_token",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "junior_state",
             "type": "pubkey"
           },
           {
-            "name": "pool_account_underlying",
-            "type": "pubkey"
-          },
-          {
-            "name": "pool_account_junior_tranche",
-            "type": "pubkey"
-          },
-          {
-            "name": "pool_account_senior_tranche",
-            "type": "pubkey"
-          },
-          {
-            "name": "pool_junior_state",
-            "type": "pubkey"
-          },
-          {
-            "name": "pool_senior_state",
-            "type": "pubkey"
+            "name": "senior_state",
+            "type": {
+              "option": "pubkey"
+            }
           }
         ]
       }
     },
     {
-      "name": "PoolBasicDataChangedEvent",
+      "name": "PoolBasicConfigChangedEvent",
+      "docs": [
+        "The basic pool configurations have been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `pool_name` - The new name of the pool.",
+        "* `tranches_policy_type` - The new tranches policy type."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8507,7 +9623,7 @@
       "docs": [
         "The pool has been closed.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `by` - The address that closed the pool."
       ],
@@ -8537,6 +9653,24 @@
           {
             "name": "pool_id",
             "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "pool_authority_bump",
+            "type": "u8"
+          },
+          {
+            "name": "junior_mint_bump",
+            "type": "u8"
+          },
+          {
+            "name": "senior_mint_bump",
+            "type": {
+              "option": "u8"
+            }
           },
           {
             "name": "pool_owner",
@@ -8603,6 +9737,20 @@
     },
     {
       "name": "PoolCreatedEvent",
+      "docs": [
+        "A liquidity pool has been created.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `huma_config` - The ID of the Huma config that the pool is associated with.",
+        "* `pool_owner` - The address of the pool owner.",
+        "* `pool_name` - The name of the pool.",
+        "* `underlying_mint` - The mint account of the underlying asset.",
+        "* `evaluation_agent` - The address of the Evaluation Agent.",
+        "* `tranches_policy_type` - The tranches policy type.",
+        "* `pool_authority` - The address of the pool authority account.",
+        "* `pool_underlying_token` - The underlying asset token account of the pool."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8641,6 +9789,14 @@
                 "name": "TranchesPolicyType"
               }
             }
+          },
+          {
+            "name": "pool_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "pool_underlying_token",
+            "type": "pubkey"
           }
         ]
       }
@@ -8650,9 +9806,9 @@
       "docs": [
         "The pool has been disabled.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
-        "* `by` - The address that disabled the pool."
+        "* `by` - The account that disabled the pool."
       ],
       "type": {
         "kind": "struct",
@@ -8673,9 +9829,9 @@
       "docs": [
         "The pool has been enabled.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
-        "* `by` - The address that enabled the pool."
+        "* `by` - The account that enabled the pool."
       ],
       "type": {
         "kind": "struct",
@@ -8695,11 +9851,23 @@
       "name": "PoolOperator",
       "type": {
         "kind": "struct",
-        "fields": []
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
       }
     },
     {
       "name": "PoolOperatorAddedEvent",
+      "docs": [
+        "A new pool operator has been added.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `operator` - The address of the new operator being added."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8716,6 +9884,13 @@
     },
     {
       "name": "PoolOperatorRemovedEvent",
+      "docs": [
+        "A pool operator has been removed.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `operator` - The address of the operator being removed."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8732,6 +9907,13 @@
     },
     {
       "name": "PoolOwnerChangedEvent",
+      "docs": [
+        "The pool owner has changed.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `owner` - The address of the new owner."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8748,6 +9930,14 @@
     },
     {
       "name": "PoolOwnerFeesWithdrawalFailedEvent",
+      "docs": [
+        "The pool owner fee withdrawal has failed.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `receiver` - The recipient account of the fees.",
+        "* `amount` - The amount of fees withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8768,6 +9958,14 @@
     },
     {
       "name": "PoolOwnerFeesWithdrawnEvent",
+      "docs": [
+        "The pool owner fees have been withdrawn.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `receiver` - The recipient account of the fees.",
+        "* `amount` - The amount of fees withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8788,6 +9986,14 @@
     },
     {
       "name": "PoolOwnerTreasuryChangedEvent",
+      "docs": [
+        "The pool owner treasury has been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `old_treasury` - The address of the old pool owner treasury.",
+        "* `new_treasury` - The address of the new pool owner treasury."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8811,7 +10017,7 @@
       "docs": [
         "Various pool-level settings.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `max_credit_line` - The maximum credit line for a borrower in terms of the amount of the underlying assets.",
         "* `min_deposit_amount` - The minimum amount a lender needs to supply each time they deposit.",
         "This is also the absolute minimum balance the pool owner needs to maintain in tranches to prevent",
@@ -8878,6 +10084,13 @@
     },
     {
       "name": "PoolSettingsChangedEvent",
+      "docs": [
+        "The pool settings have been updated.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `pool_settings` - The new pool settings."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -8901,6 +10114,10 @@
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "status",
             "type": {
@@ -8966,11 +10183,12 @@
             }
           },
           {
-            "name": "withdrawal_reserve",
+            "name": "disbursement_reserve",
             "type": "u128"
           },
           {
             "name": "amount_originated",
+            "docs": ["The following fields are used by the FE only."],
             "type": "u128"
           },
           {
@@ -8986,6 +10204,14 @@
     },
     {
       "name": "PoolStatus",
+      "docs": [
+        "The pool status",
+        "",
+        "# Variants",
+        "* `Off` - The pool is temporarily turned off.",
+        "* `On` - The pool is active.",
+        "* `Closed` - The pool is closed after maturity."
+      ],
       "type": {
         "kind": "enum",
         "variants": [
@@ -9006,7 +10232,7 @@
       "docs": [
         "A principal payment has been made against the credit.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The address of the borrower.",
         "* `payer` - The address from which the money is coming.",
@@ -9060,7 +10286,7 @@
       "docs": [
         "Event for the distribution of profit in the pool.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `profit` - The amount of profit distributed.",
         "* `senior_total_assets` - The total amount of senior assets post profit distribution.",
@@ -9090,6 +10316,14 @@
     },
     {
       "name": "ProtocolFeesWithdrawalFailedEvent",
+      "docs": [
+        "The protocol fee withdrawal has failed.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `receiver` - The recipient account of the fees.",
+        "* `amount` - The amount of fees withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9110,6 +10344,14 @@
     },
     {
       "name": "ProtocolFeesWithdrawnEvent",
+      "docs": [
+        "The protocol fees have been withdrawn.",
+        "",
+        "# Fields",
+        "* `pool` - The pool ID.",
+        "* `receiver` - The recipient account of the fees.",
+        "* `amount` - The amount of fees withdrawn."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9130,6 +10372,13 @@
     },
     {
       "name": "ProtocolPausedEvent",
+      "docs": [
+        "The Huma protocol has been paused.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `pauser` - The pauser that paused the protocol."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9146,6 +10395,13 @@
     },
     {
       "name": "ProtocolUnpausedEvent",
+      "docs": [
+        "The Huma protocol has been unpaused.",
+        "",
+        "# Fields",
+        "* `id` - The ID of the Huma config being modified.",
+        "* `owner` - The address of the Huma owner."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9229,6 +10485,10 @@
             "type": "pubkey"
           },
           {
+            "name": "asset",
+            "type": "pubkey"
+          },
+          {
             "name": "reference_id",
             "type": "string"
           },
@@ -9253,8 +10513,7 @@
         "Information of a receivable.",
         "",
         "# Fields",
-        "* `reference_id` - A unique internal ID attached to the receivable provided by the creator,",
-        "which can be used for de-duping purposes.",
+        "* `bump` - The canonical bump of this PDA.",
         "* `currency_code` - The ISO 4217 currency code that the receivable is denominated in.",
         "* `receivable_amount` - The total expected payment amount of the receivable.",
         "* `amount_paid` - The amount of the receivable that has been paid so far.",
@@ -9267,8 +10526,8 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "reference_id",
-            "type": "string"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "currency_code",
@@ -9377,6 +10636,15 @@
     },
     {
       "name": "RedemptionRequestAddedEvent",
+      "docs": [
+        "A redemption request has been added.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `epoch_id` - The epoch ID.",
+        "* `lender` - The lender who requested redemption.",
+        "* `shares` - The number of shares to be redeemed."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9401,6 +10669,15 @@
     },
     {
       "name": "RedemptionRequestCanceledEvent",
+      "docs": [
+        "A redemption request has been canceled.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `epoch_id` - The epoch ID.",
+        "* `lender` - The lender who requested cancellation.",
+        "* `shares` - The number of shares to be included in the cancellation."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9425,6 +10702,15 @@
     },
     {
       "name": "RedemptionRequestsProcessedEvent",
+      "docs": [
+        "Pending redemption requests have been processed.",
+        "",
+        "# Fields",
+        "* `pool` - The ID of the pool.",
+        "* `senior_tranche_assets` - The total amount of assets in the senior tranche.",
+        "* `junior_tranche_assets` - The total amount of assets in the junior tranche.",
+        "* `amount_unprocessed` - The amount of assets requested for redemption but not fulfilled."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -9452,7 +10738,7 @@
       "docs": [
         "The expiration (maturity) date of a credit has been extended.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `old_remaining_periods` - The number of remaining pay periods before the extension.",
@@ -9485,7 +10771,7 @@
       "docs": [
         "Tracks the amount of assets and unpaid yield for the senior tranche.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `total_assets` - The total assets in the senior tranche.",
         "* `unpaid_yield` - The amount of unpaid yield to the senior tranche.",
         "* `last_updated_date` - The last time the tracker was updated."
@@ -9554,9 +10840,21 @@
     },
     {
       "name": "TrancheState",
+      "docs": [
+        "The state of the tranche.",
+        "",
+        "# Dev Notes",
+        "1. `TrancheState` space in bytes: 8 + 4 + 36 * 56 = 2032",
+        "2. The maximum number of `EpochRedemptionSummary` is 36, which means we can store at least",
+        "3 years worth of redemption history with a monthly pay period duration."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "epoch_redemption_summaries",
             "type": {
@@ -9628,7 +10926,7 @@
       "docs": [
         "The senior yield tracker has been refreshed.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `total_assets` - The total assets in the senior tranche after the refresh.",
         "* `unpaid_yield` - The amount of unpaid yield to the senior tranche after the refresh.",
         "* `last_updated_date` - The last time the tracker was updated after the refresh."
@@ -9656,7 +10954,7 @@
       "docs": [
         "The yield of a credit has been updated.",
         "",
-        "# Fields:",
+        "# Fields",
         "* `pool` - The pool ID.",
         "* `borrower` - The borrower of the credit.",
         "* `old_yield_bps` - The old yield in basis points before the update.",
@@ -9767,6 +11065,14 @@
       "value": "[108, 105, 113, 117, 105, 100, 105, 116, 121, 95, 97, 115, 115, 101, 116]"
     },
     {
+      "name": "MAX_TOKEN_DECIMALS",
+      "docs": [
+        "The maximum number of decimals the liquidity asset token may have."
+      ],
+      "type": "u8",
+      "value": "9"
+    },
+    {
       "name": "MIN_DEPOSIT_AMOUNT_THRESHOLD",
       "docs": [
         "The smallest value that `PoolConfig.min_deposit_amount` can be set to. Note that this value is \"pre-decimals\",",
@@ -9774,6 +11080,14 @@
       ],
       "type": "u64",
       "value": "10"
+    },
+    {
+      "name": "MIN_TOKEN_DECIMALS",
+      "docs": [
+        "The minimum number of decimals the liquidity asset token may have."
+      ],
+      "type": "u8",
+      "value": "6"
     },
     {
       "name": "PAUSER_SEED",
@@ -9809,6 +11123,11 @@
       "name": "RECEIVABLE_INFO_SEED",
       "type": "bytes",
       "value": "[114, 101, 99, 101, 105, 118, 97, 98, 108, 101, 95, 105, 110, 102, 111]"
+    },
+    {
+      "name": "RECEIVABLE_REFERENCE_SEED",
+      "type": "bytes",
+      "value": "[114, 101, 99, 101, 105, 118, 97, 98, 108, 101, 95, 114, 101, 102, 101, 114, 101, 110, 99, 101]"
     },
     {
       "name": "SECONDS_IN_A_DAY",

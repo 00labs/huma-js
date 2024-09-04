@@ -1,6 +1,10 @@
 import { SolanaChainEnum } from '../../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../../utils/pool'
-import { SolanaPoolsInfo } from '../../utils'
+import { SolanaChainInfo, SolanaPoolsInfo } from '../../utils'
+
+export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
+  sentinel: '8GQMZVEvYsssewqu2EvoAtVeBMWEkns7vGiUMQ6V7KDo',
+}
 
 export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
   HumaCreditLine: {
@@ -10,14 +14,14 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
     chainId: SolanaChainEnum.SolanaDevnet,
     industry: 'Remittance Financing',
     desc: 'This is a test pool for Huma creditline on Solana',
-    pool: '9Tx5QCUZcXkqAD4SFW8ZYfwPhTTXoDzZRQAiAksXzi5E',
-    poolId: 'DswJJJQnXjH7oY1itX9Gn9t9G8V1npDuRGTekBwpA2NP',
-    poolConfig: 'BK24fDq8oqMzZjdWDkEghoRyVzMLbLzTEpK9XUmeJQnN',
-    poolState: '4p1DpTozDtUuEfu8EsKTz6HHpyjFryTmkQFDGfuKMsft',
-    juniorTrancheMint: '9kBSPD1kRoZUqnTEFEY2Nr7zpVzCnmC4M3dCTr5iwCyT',
-    seniorTrancheMint: 'zg7LwnRh6YoSx1onA7XE93HWzZa16M6S92eMUeQ2oXH',
+    pool: '6VsBVe7dhKyEGoihwUtGwU9MeS6suKDSuZEMC4LHZyka',
+    poolId: 'C6RwLt8ByHX4bT6arBg6kvCemZdCWhQTc6Qia3BXDFMU',
+    poolConfig: '2JWWfRh9zeqqL1etwx6tYpXaug7oS1SGaKeg8odz2AU3',
+    poolState: '4E1soDme3RGFnEDzb1npDQY33T9auCJDmZY7RxeBAdTx',
+    juniorTrancheMint: '6PhLVQ3WLZ8n1K1QdGCLojxH7SFk48rXhAofYUFZZ8aq',
+    seniorTrancheMint: 'HFpg8Vqranm6rwvFwzDPCyH6nyQjUkRq8Nk9BpuRKXBQ',
     underlyingMint: {
-      pubkey: '98q2EGESBVyu1Cu5RYeejCP54tMh5SQxJFTQqNRHJ715',
+      address: 'BuobkQeuoRmR8RSs4W1ooKvj4QpiVoXfiudcGqNE6zk7',
       symbol: 'USDC',
       decimals: 6,
       icon: 'USDC',
