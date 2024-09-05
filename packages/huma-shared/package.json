@@ -1,7 +1,7 @@
 {
   "name": "@huma-finance/shared",
   "version": "0.0.60",
-  "types": "./dist/cjs/index.d.ts",
+  "types": "./dist/index.d.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "files": [
