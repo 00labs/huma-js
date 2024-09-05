@@ -430,6 +430,7 @@ export type V2PoolData = {
     fixedSeniorYieldInBps: number
     tranchesRiskAdjustmentInBps: number
     withdrawalLockoutInDays: number
+    minDepositAmount: string
   }[]
   tranches: {
     pool: {
@@ -480,6 +481,7 @@ function fetchAllPoolsData(
         fixedSeniorYieldInBps
         tranchesRiskAdjustmentInBps
         withdrawalLockoutInDays
+        minDepositAmount
       }
       tranches {
         type

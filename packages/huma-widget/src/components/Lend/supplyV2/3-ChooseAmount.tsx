@@ -56,7 +56,7 @@ export function ChooseAmount({
       : seniorAvailableCapBN
 
     return {
-      juniorAvailableCapBN: totalAvailableCapBN.sub(seniorAvailableCapBN),
+      juniorAvailableCapBN: totalAvailableCapBN,
       seniorAvailableCapBN,
     }
   }, [juniorAssetsBN, lpConfig, seniorAssetsBN])

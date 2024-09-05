@@ -268,7 +268,7 @@ export function PersonaEvaluation({
       ) {
         checkVerificationStatus()
       }
-    }, 10 * 1000)
+    }, 3 * 1000)
     // eslint-disable-next-line consistent-return
     return () => clearInterval(interval)
   }, [checkVerificationStatus, verificationStatus?.status])

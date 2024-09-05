@@ -38,7 +38,7 @@ const JiaPoolCopies = {
   },
   verifyIdentity: {
     title: 'Verify Identity',
-    description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYCProvider}.`,
+    description: `This pool is only available to professional/accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYCProvider}.`,
     buttonText: 'VERIFY MY IDENTITY',
   },
   emailSignatureLink: {

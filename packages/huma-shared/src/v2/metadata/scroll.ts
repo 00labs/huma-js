@@ -9,7 +9,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     poolVersion: 'v2',
     industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPool3Months,
-    poolType: POOL_TYPE.CreditLine,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x5227254a6aCa397e95F310b52f6D3143A5A9Ee14',
     poolConfig: '0xebf8D31C5492Dc93FC73a6AD136d47c45AB2C7a5',
     poolCredit: '0xc6F10af4746784a0DD095f4E5718d53ff94eB4a0',
@@ -18,6 +18,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0x4cdCedcF50266aD9ed809048BC9874320EC902bC',
     juniorTrancheVault: '0x483D02C11f8F1E31C267040A6C86AaB80c428BaB',
     epochManager: '0x1a2C87Be5e785493310526faA7739Bbe4E10c0F6',
+    receivable: '0x89B599dCc82c42Ef2f17ae39c44e4F6764003518',
     poolUnderlyingToken: {
       address: '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4',
       symbol: 'USDC',
@@ -42,7 +43,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     poolVersion: 'v2',
     industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPool6Months,
-    poolType: POOL_TYPE.CreditLine,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x1900e417869691277cfd20f4001b768B03375272',
     poolConfig: '0xE9D7893B52BE6D81C540f2E81f3A65FAbF8A0fa4',
     poolCredit: '0x2e3A03C8Bd31300C2c027C9C9d1b762677F6FaA6',
@@ -51,6 +52,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     seniorTrancheVault: '0xDe5eD603A376B93817b9656AF6E373218fD9b2bd',
     juniorTrancheVault: '0x8413a7345cD8bF8Afe8c2EfE866a764A93B305e2',
     epochManager: '0x648186Cf2a78AB9356C82ec29EDA42798453C8d6',
+    receivable: '0x89B599dCc82c42Ef2f17ae39c44e4F6764003518',
     poolUnderlyingToken: {
       address: '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4',
       symbol: 'USDC',

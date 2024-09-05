@@ -244,7 +244,9 @@ describe('fetchMetadataFromUrl', () => {
 
     const data = await ARWeaveService.fetchMetadataFromUrl('https://test.url')
 
-    expect(axios.get).toHaveBeenCalledWith('https://test.url')
+    expect(axios.get).toHaveBeenCalledWith('https://test.url', {
+      withCredentials: false,
+    })
     expect(data).toEqual(mockData)
   })
 
@@ -255,7 +257,9 @@ describe('fetchMetadataFromUrl', () => {
 
     const data = await ARWeaveService.fetchMetadataFromUrl('https://test.url')
 
-    expect(axios.get).toHaveBeenCalledWith('https://test.url')
+    expect(axios.get).toHaveBeenCalledWith('https://test.url', {
+      withCredentials: false,
+    })
     expect(console.error).toHaveBeenCalledWith(
       'Error fetching data:',
       mockError,

@@ -1,9 +1,14 @@
-import { TrancheType, UnderlyingTokenInfo } from '@huma-finance/shared'
+import {
+  configUtil,
+  TrancheType,
+  UnderlyingTokenInfo,
+} from '@huma-finance/shared'
 import {
   css,
   FormControl,
   FormControlLabel,
   FormLabel,
+  Link,
   Radio,
   RadioGroup,
   useTheme,
@@ -78,7 +83,13 @@ export function ChooseTranche({
   return (
     <WrapperModal title={`Supply ${poolUnderlyingToken.symbol}`}>
       <FormControl>
-        <FormLabel css={styles.subTitle}>Select Tranche Type</FormLabel>
+        <FormLabel css={styles.subTitle}>
+          Select Tranche Type (Read more{' '}
+          <Link href={configUtil.trancheLink} target='_blank' color='inherit'>
+            here
+          </Link>
+          )
+        </FormLabel>
         <RadioGroup
           aria-labelledby='buttons-group-label'
           name='radio-buttons-group'
