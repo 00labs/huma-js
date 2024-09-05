@@ -1,14 +1,17 @@
 import { txAtom } from '@huma-finance/web-shared'
 import { Box, css, TextField, Typography, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import {
+  FtuStage,
   useNotifiFrontendClientContext,
   useNotifiTargetContext,
   useNotifiTenantConfigContext,
   useNotifiTopicContext,
+  useNotifiUserSettingContext,
 } from '@notifi-network/notifi-react'
+import { NotifiFrontendClient } from '@notifi-network/notifi-frontend-client'
 import { useAppDispatch } from '../../hooks/useRedux'
 import { resetState } from '../../store/widgets.reducers'
 import { BottomButton } from '../BottomButton'
@@ -18,6 +21,16 @@ import { WrapperModal } from '../WrapperModal'
 
 type Props = {
   handleSuccess: () => void
+}
+
+const validateDefaultTargetGroup = async (
+  frontendClient: NotifiFrontendClient,
+) => {
+  // NOTE: this extra request is necessary as the targetGroupId state in NotifiTargetContext will not be updated constantly right after login
+  const targetGroup = (
+    await frontendClient?.fetchFusionData()
+  )?.targetGroup?.find((group) => group?.name === 'Default')
+  return !!targetGroup
 }
 
 export function NotifiSubscriptionModal({
@@ -31,13 +44,22 @@ export function NotifiSubscriptionModal({
   const [emailAddress, setEmailAddress] = useState<string>('')
   const [emailValid, setEmailValid] = useState<boolean>()
   const {
-    frontendClientStatus: { isInitialized, isAuthenticated },
+    frontendClientStatus: { isInitialized, isAuthenticated, isExpired },
     frontendClient,
     login,
   } = useNotifiFrontendClientContext()
   const { fusionEventTopics } = useNotifiTenantConfigContext()
   const { subscribeAlertsDefault } = useNotifiTopicContext()
-  const { renewTargetGroup } = useNotifiTargetContext()
+  const {
+    targetDocument: { targetGroupId },
+    updateTargetInputs,
+    renewTargetGroup,
+  } = useNotifiTargetContext()
+  const {
+    ftuStage,
+    isLoading: isLoadingFtuStage,
+    updateFtuStage,
+  } = useNotifiUserSettingContext()
 
   const handleEmailAddressChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -47,6 +69,60 @@ export function NotifiSubscriptionModal({
     setEmailAddress(event.target.value)
   }
 
+  useEffect(() => {
+    async function subscribe() {
+      if (
+        !isInitialized ||
+        !isAuthenticated ||
+        !targetGroupId ||
+        isLoadingFtuStage
+      ) {
+        return
+      }
+
+      // If a user is authenticated but already finished with the FTU (First Time User) setup
+      // (AKA their login expired and they logged back in), then we can skip the subscription step.
+      if (ftuStage !== FtuStage.Done) {
+        await updateTargetInputs('email', { value: emailAddress! })
+        // Authorize this email address for this wallet
+
+        if (!targetGroupId) {
+          setIsLoading(false)
+          return
+        }
+
+        await subscribeAlertsDefault(fusionEventTopics, targetGroupId)
+        await updateFtuStage(FtuStage.Done)
+      }
+
+      setShowSuccessScreen(true)
+      setIsLoading(false)
+    }
+
+    subscribe()
+  }, [
+    isInitialized,
+    isAuthenticated,
+    targetGroupId,
+    updateTargetInputs,
+    emailAddress,
+    subscribeAlertsDefault,
+    fusionEventTopics,
+    updateFtuStage,
+    isLoadingFtuStage,
+    ftuStage,
+  ])
+
+  useEffect(() => {
+    const loginIfExpired = async () => {
+      if (isExpired) {
+        await login()
+      }
+    }
+
+    loginIfExpired()
+  }, [isExpired, login])
+
   const logInAndSubscribe = async (): Promise<void> => {
     if (!isAuthenticated) {
       setIsLoading(true)
@@ -54,33 +130,17 @@ export function NotifiSubscriptionModal({
       // Ask user to sign a message to authenticate
       try {
         await login()
+
+        const isDefaultTargetExist = await validateDefaultTargetGroup(
+          frontendClient,
+        )
+
+        if (!isDefaultTargetExist) {
+          await renewTargetGroup()
+        }
       } catch (e) {
         setIsLoading(false)
-        return
       }
-
-      // Authorize this email address for this wallet
-      await frontendClient.ensureTargetGroup({
-        name: 'Default',
-        emailAddress: emailAddress!,
-      })
-
-      await renewTargetGroup()
-      const targetGroups = await frontendClient.getTargetGroups()
-      const targetGroupId = targetGroups.find(
-        (targetGroup) => targetGroup.name === 'Default',
-      )?.id
-
-      if (!targetGroupId) {
-        console.error("Could not find targetGroupId for 'Default' target group")
-        setIsLoading(false)
-        return
-      }
-
-      await subscribeAlertsDefault(fusionEventTopics, targetGroupId)
-
-      setShowSuccessScreen(true)
-      setIsLoading(false)
     }
   }
 
