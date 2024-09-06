@@ -69,6 +69,7 @@ export const configUtil = {
   youtubeLink: 'https://www.youtube.com/@humafinance',
   twitterLink: 'https://twitter.com/humafinance',
   githubLink: 'https://github.com/00labs',
+  telegramLink: 'https://t.me/HumaFinanceCommunity',
   whitepaperLink: 'https://docs.huma.finance/',
   lendingPoolLink: 'https://docs.huma.finance/#4.0-lending-protocol',
   devGuideLink:
