@@ -159,10 +159,13 @@ export type SolanaPoolInfo = {
   desc: string
   pool: string
   poolId: string
+  poolAuthority: string
+  poolUnderlyingTokenAccount: string
   poolConfig: string
   poolState: string
   juniorTrancheMint: string
   seniorTrancheMint: string
+  humaConfig: string
   underlyingMint: {
     address: string
     symbol: string

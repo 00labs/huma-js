@@ -5,9 +5,18 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useMemo } from 'react'
 
-import { Account, createApproveCheckedInstruction } from '@solana/spl-token'
+import {
+  Account,
+  createApproveCheckedInstruction,
+  TOKEN_2022_PROGRAM_ID,
+} from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import {
+  PublicKey,
+  SimulateTransactionConfig,
+  Transaction,
+  VersionedTransaction,
+} from '@solana/web3.js'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError, setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -23,7 +32,7 @@ export function ApproveAllowance({
   tokenAccount,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { wallet, publicKey, sendTransaction } = useWallet()
+  const { wallet, publicKey, sendTransaction, signTransaction } = useWallet()
   const sentinel = useMemo(
     () => SOLANA_CHAIN_INFO[poolInfo.chainId].sentinel,
     [poolInfo.chainId],
@@ -36,11 +45,15 @@ export function ApproveAllowance({
 
   useEffect(() => {
     async function approveDelegate() {
-      if (!wallet || !publicKey || !connection) {
+      if (!wallet || !publicKey || !connection || !signTransaction) {
         return
       }
 
       try {
+        console.log(tokenAccount.address.toString())
+        console.log(poolInfo.underlyingMint.address)
+        console.log(sentinel)
+        console.log(publicKey.toString())
         const tx = new Transaction().add(
           createApproveCheckedInstruction(
             tokenAccount.address,
@@ -52,12 +65,27 @@ export function ApproveAllowance({
               poolInfo.underlyingMint.decimals,
             ), // amount
             poolInfo.underlyingMint.decimals,
+            undefined, // multiSigners
+            TOKEN_2022_PROGRAM_ID,
           ),
         )
-
+        tx.feePayer = publicKey
         const latestBlockHash = await connection.getLatestBlockhash()
+        tx.recentBlockhash = latestBlockHash.blockhash
+        signTransaction(tx)
 
-        const simulationResult = await connection.simulateTransaction(tx)
+        const versionedTx = new VersionedTransaction(tx.compileMessage())
+
+        // Set up simulation configuration
+        const simulateConfig: SimulateTransactionConfig = {
+          sigVerify: false, // Don't verify signatures during simulation
+          replaceRecentBlockhash: true, // Replace the blockhash with the latest one
+        }
+
+        const simulationResult = await connection.simulateTransaction(
+          versionedTx,
+          simulateConfig,
+        )
 
         if (simulationResult.value.err) {
           console.error(

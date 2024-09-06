@@ -32,6 +32,7 @@ export const widgetSlice = createSlice({
       state.withdrawShares = undefined
       state.redeemAmount = undefined
       state.redeemShares = undefined
+      state.solanaSignature = undefined
     },
     setStep: (state, { payload }: PayloadAction<WIDGET_STEP>) => {
       state.step = payload
@@ -102,6 +103,9 @@ export const widgetSlice = createSlice({
     setMultisend: (state, { payload }: PayloadAction<MultisendPayload>) => {
       state.multisend = payload
     },
+    setSolanaSignature: (state, { payload }: PayloadAction<string>) => {
+      state.solanaSignature = payload
+    },
     setError: (
       state,
       {
@@ -130,6 +134,7 @@ export const {
   setWithdrawShares,
   setRedeemAmount,
   setRedeemShares,
+  setSolanaSignature,
 } = widgetSlice.actions
 
 export default widgetSlice.reducer

@@ -8,9 +8,11 @@ import { SolanaChainEnum } from '../utils'
 export const getHumaProgram = (
   chainId: SolanaChainEnum,
   connection: Connection,
-  wallet: AnchorWallet,
+  wallet?: AnchorWallet,
 ): Program<HumaSolanaDevnet> => {
-  const provider = new AnchorProvider(connection, wallet, {})
+  const provider = wallet
+    ? new AnchorProvider(connection, wallet, {})
+    : undefined
 
   if (chainId === SolanaChainEnum.SolanaDevnet) {
     return new Program<HumaSolanaDevnet>(

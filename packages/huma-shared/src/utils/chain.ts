@@ -251,6 +251,27 @@ export function findChainIdByName(chainName: string) {
   return chainId ? Number(chainId) : undefined
 }
 
+export function getSolanaExplorerUrl(
+  chainId: SolanaChainEnum,
+  signature: string,
+  type: 'tx' | 'address',
+): string | null {
+  let cluster = ''
+  switch (chainId) {
+    case SolanaChainEnum.SolanaDevnet:
+      cluster = '?cluster=devnet'
+      break
+    default:
+      break
+  }
+
+  if (!signature) {
+    return null
+  }
+
+  return `https://explorer.solana.com/${type}/${signature}${cluster}`
+}
+
 export function getExplorerUrl(
   chainId: number | undefined,
   hash: string,

@@ -20,6 +20,7 @@ type Props = {
   tokenSymbol: string
   suffix?: string
   currentAmount: number | string
+  minimumAmount?: number
   maxAmount: number | string
   maxAmountText?: string
   maxAmountTitle?: string
@@ -35,6 +36,7 @@ export function InputAmountModal({
   tokenSymbol,
   suffix: defaultSuffix,
   currentAmount,
+  minimumAmount,
   maxAmount,
   maxAmountText = 'MAX',
   maxAmountTitle,
@@ -125,6 +127,9 @@ export function InputAmountModal({
     if (!isEmpty(maxAmount) && Number(currentAmount) > Number(maxAmount)) {
       return true
     }
+    if (!isEmpty(minimumAmount) && Number(currentAmount) < minimumAmount!) {
+      return true
+    }
     return false
   }
 
@@ -157,7 +162,6 @@ export function InputAmountModal({
           />
         </Box>
       </Box>
-
       {infos && (
         <Box>
           {infos.map((info) => (
@@ -167,7 +171,13 @@ export function InputAmountModal({
           ))}
         </Box>
       )}
-
+      {!!minimumAmount && minimumAmount > 0 && (
+        <Box>
+          <Typography css={styles.info} key='minDeposit'>
+            Minimum deposit: {minimumAmount} {tokenSymbol}
+          </Typography>
+        </Box>
+      )}
       <BottomButton
         variant='contained'
         onClick={handleAction}

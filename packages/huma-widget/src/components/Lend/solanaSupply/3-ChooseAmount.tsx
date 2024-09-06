@@ -74,16 +74,16 @@ export function ChooseAmount({
   }
 
   const handleAction = () => {
-    const currentAmountBN = SolanaTokenUtils.parseUnits(
-      String(currentAmount),
-      decimals,
-    )
-    const step =
-      currentAmountBN.gt(delegatedAmount) ||
-      tokenAccount.delegate?.toString() !== sentinel
-        ? WIDGET_STEP.ApproveAllowance
-        : WIDGET_STEP.Transfer
-    dispatch(setStep(step))
+    // const currentAmountBN = SolanaTokenUtils.parseUnits(
+    //   String(currentAmount),
+    //   decimals,
+    // )
+    // const step =
+    //   currentAmountBN.gt(delegatedAmount) ||
+    //   tokenAccount.delegate?.toString() !== sentinel
+    //     ? WIDGET_STEP.ApproveAllowance
+    //     : WIDGET_STEP.Transfer
+    dispatch(setStep(WIDGET_STEP.Transfer))
   }
 
   const getTrancheCap = () => {
@@ -91,6 +91,16 @@ export function ChooseAmount({
       return juniorAvailableCapBN
     }
     return seniorAvailableCapBN
+  }
+
+  const getMinAmount = (): number => {
+    const minAmount = poolState.minDepositAmount
+      ? SolanaTokenUtils.formatUnits(
+          new BN(poolState.minDepositAmount),
+          decimals,
+        )
+      : 0
+    return Math.max(0, Math.ceil(Number(minAmount)))
   }
 
   const getMaxAmount = (): BN => {
@@ -125,6 +135,7 @@ export function ChooseAmount({
       tokenSymbol={symbol}
       currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
+      minimumAmount={getMinAmount()}
       maxAmount={Number(SolanaTokenUtils.formatUnits(getMaxAmount(), decimals))}
       maxAmountTitle={`${formatNumber(
         SolanaTokenUtils.formatUnits(balance, decimals),

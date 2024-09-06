@@ -8,5 +8,6 @@ export type SolanaPoolState = {
   maxSeniorJuniorRatio?: number
   withdrawalLockoutPeriodDays?: number
   lockupMonthsText?: string
+  minDepositAmount?: string
   status?: 'on' | 'off' | 'closed'
 }

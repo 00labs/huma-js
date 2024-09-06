@@ -15,7 +15,8 @@ import { ChooseTranche } from './1-ChooseTranche'
 import { ChooseAmount } from './3-ChooseAmount'
 import { setStep } from '../../../store/widgets.reducers'
 import { ErrorModal } from '../../ErrorModal'
-import { ApproveAllowance } from './4-ApproveAllowance'
+import { Transfer } from './4-Transfer'
+import { Success } from './5-Success'
 
 /**
  * Lend pool supply props
@@ -120,8 +121,15 @@ export function SolanaLendSupply({
           isUniTranche={isUniTranche}
         />
       )}
-      {step === WIDGET_STEP.ApproveAllowance && (
-        <ApproveAllowance poolInfo={poolInfo} tokenAccount={tokenAccount!} />
+      {step === WIDGET_STEP.Transfer && selectedTranche && (
+        <Transfer poolInfo={poolInfo} selectedTranche={selectedTranche} />
+      )}
+      {step === WIDGET_STEP.Done && (
+        <Success
+          poolInfo={poolInfo}
+          poolState={poolState}
+          handleAction={handleClose}
+        />
       )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
