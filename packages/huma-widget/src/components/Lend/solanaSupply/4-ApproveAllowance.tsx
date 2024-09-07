@@ -3,7 +3,7 @@ import {
   SolanaPoolInfo,
   SolanaTokenUtils,
 } from '@huma-finance/shared'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import {
   Account,
@@ -18,8 +18,7 @@ import {
   VersionedTransaction,
 } from '@solana/web3.js'
 import { useAppDispatch } from '../../../hooks/useRedux'
-import { setError, setStep } from '../../../store/widgets.reducers'
-import { WIDGET_STEP } from '../../../store/widgets.store'
+import { setError } from '../../../store/widgets.reducers'
 import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
@@ -38,10 +37,6 @@ export function ApproveAllowance({
     [poolInfo.chainId],
   )
   const { connection } = useConnection()
-
-  const handleSuccess = useCallback(() => {
-    dispatch(setStep(WIDGET_STEP.Transfer))
-  }, [dispatch])
 
   useEffect(() => {
     async function approveDelegate() {
@@ -117,6 +112,7 @@ export function ApproveAllowance({
     publicKey,
     sendTransaction,
     sentinel,
+    signTransaction,
     tokenAccount.address,
     wallet,
   ])

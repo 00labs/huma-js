@@ -77,6 +77,14 @@ import {
   SolanaLendSupply,
   SolanaLendSupplyProps,
 } from './components/Lend/solanaSupply'
+import {
+  SolanaLendAddRedemption,
+  SolanaLendAddRedemptionProps,
+} from './components/Lend/solanaAddRedemption'
+import {
+  SolanaLendCancelRedemption,
+  SolanaLendCancelRedemptionProps,
+} from './components/Lend/solanaCancelRedemption'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -568,6 +576,54 @@ export function SolanaLendSupplyWidget(props: SolanaLendSupplyWidgetProps) {
   return (
     <SolanaWidget {...props}>
       <SolanaLendSupply {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaLendAddRedemptionWidgetProps
+ * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
+ * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
+ */
+type SolanaLendAddRedemptionWidgetProps = SolanaLendAddRedemptionProps &
+  SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaLendAddRedemptionWidgetProps} props - Widget props
+ */
+export function SolanaLendAddRedemptionWidget(
+  props: SolanaLendAddRedemptionWidgetProps,
+) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaLendAddRedemption {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaLendCancelRedemptionWidgetProps
+ * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
+ * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
+ */
+type SolanaLendCancelRedemptionWidgetProps = SolanaLendCancelRedemptionProps &
+  SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaLendCancelRedemptionWidgetProps} props - Widget props
+ */
+export function SolanaLendCancelRedemptionWidget(
+  props: SolanaLendCancelRedemptionWidgetProps,
+) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaLendCancelRedemption {...props} />
     </SolanaWidget>
   )
 }

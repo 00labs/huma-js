@@ -164,7 +164,9 @@ export type SolanaPoolInfo = {
   poolConfig: string
   poolState: string
   juniorTrancheMint: string
+  juniorTrancheState: string
   seniorTrancheMint: string
+  seniorTrancheState: string
   humaConfig: string
   underlyingMint: {
     address: string

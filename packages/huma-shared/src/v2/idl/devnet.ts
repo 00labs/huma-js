@@ -2,12 +2,12 @@
  * Program IDL in camelCase format in order to be used in JS/TS.
  *
  * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/huma_solana.json`.
+ * IDL can be found at `target/idl/huma.json`.
  */
-export type HumaSolana = {
-  address: '6VsBVe7dhKyEGoihwUtGwU9MeS6suKDSuZEMC4LHZyka'
+export type Huma = {
+  address: '69yTuBwRm8KPkXYmasxZQAzgyHs93KBaijNv5Jum71fv'
   metadata: {
-    name: 'humaSolana'
+    name: 'huma'
     version: '0.1.0'
     spec: '0.1.0'
     description: 'Created with Anchor'
@@ -40,13 +40,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -56,13 +56,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -78,14 +77,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'arg'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -105,6 +96,14 @@ export type HumaSolana = {
                   101,
                   114,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'arg'
+                path: 'lender'
               },
             ]
           }
@@ -149,13 +148,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -168,14 +167,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'humaConfig'
-              },
-              {
-                kind: 'account'
-                path: 'mint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -195,6 +186,14 @@ export type HumaSolana = {
                   101,
                   116,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'humaConfig'
+              },
+              {
+                kind: 'account'
+                path: 'mint'
               },
             ]
           }
@@ -230,13 +229,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -247,16 +246,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 97, 117, 115, 101, 114]
+              },
+              {
                 kind: 'account'
                 path: 'humaConfig'
               },
               {
                 kind: 'arg'
                 path: 'pauser'
-              },
-              {
-                kind: 'const'
-                value: [112, 97, 117, 115, 101, 114]
               },
             ]
           }
@@ -297,13 +296,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -313,15 +312,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'arg'
-                path: 'operator'
-              },
               {
                 kind: 'const'
                 value: [
@@ -339,6 +329,14 @@ export type HumaSolana = {
                   111,
                   114,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'arg'
+                path: 'operator'
               },
             ]
           }
@@ -377,13 +375,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -394,13 +392,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -410,13 +408,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -426,10 +423,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -448,6 +441,10 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
             ]
           }
         },
@@ -456,14 +453,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -481,6 +470,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
+              },
             ]
           }
         },
@@ -491,11 +488,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -514,6 +506,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -567,7 +563,7 @@ export type HumaSolana = {
         },
         {
           name: 'hookProgram'
-          address: 'Bb31NqmD3LbAbDDnwD8iLfBkRx2T8KGYc3u1py4hTSuh'
+          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
         },
         {
           name: 'tokenProgram'
@@ -620,13 +616,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -637,13 +633,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -653,13 +649,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -669,15 +664,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'arg'
-                path: 'borrower'
-              },
               {
                 kind: 'const'
                 value: [
@@ -696,6 +682,14 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'arg'
+                path: 'borrower'
+              },
             ]
           }
         },
@@ -705,17 +699,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'arg'
                 path: 'borrower'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -815,13 +808,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -832,13 +825,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -848,13 +841,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -863,16 +855,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -891,6 +873,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -900,18 +891,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -920,10 +910,6 @@ export type HumaSolana = {
           name: 'receivableInfo'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'asset'
-              },
               {
                 kind: 'const'
                 value: [
@@ -944,6 +930,10 @@ export type HumaSolana = {
                   111,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'asset'
+              },
             ]
           }
         },
@@ -951,11 +941,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -974,6 +959,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1017,13 +1006,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1034,13 +1023,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1050,13 +1039,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1069,10 +1057,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1091,6 +1075,10 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
             ]
           }
         },
@@ -1099,14 +1087,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1124,6 +1104,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
+              },
             ]
           }
         },
@@ -1131,11 +1119,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1154,6 +1137,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1207,7 +1194,7 @@ export type HumaSolana = {
         },
         {
           name: 'hookProgram'
-          address: 'Bb31NqmD3LbAbDDnwD8iLfBkRx2T8KGYc3u1py4hTSuh'
+          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
         },
         {
           name: 'tokenProgram'
@@ -1252,13 +1239,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1293,13 +1280,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1311,13 +1298,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1349,13 +1336,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1366,13 +1353,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1382,13 +1369,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1398,16 +1384,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1426,6 +1402,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -1435,18 +1420,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -1483,13 +1467,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1500,13 +1484,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1517,13 +1501,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1536,11 +1519,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1560,6 +1538,10 @@ export type HumaSolana = {
                   121,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -1571,11 +1553,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1600,6 +1577,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -1609,11 +1590,6 @@ export type HumaSolana = {
           optional: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1638,6 +1614,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -1646,10 +1626,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'juniorMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1667,6 +1643,10 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'juniorMint'
               },
             ]
           }
@@ -1678,10 +1658,6 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'seniorMint'
-              },
-              {
                 kind: 'const'
                 value: [
                   116,
@@ -1698,6 +1674,10 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'seniorMint'
               },
             ]
           }
@@ -1745,13 +1725,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1761,13 +1741,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1780,14 +1759,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1804,6 +1775,14 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
               },
             ]
           }
@@ -1846,13 +1825,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1864,13 +1843,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -1881,13 +1860,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -1900,11 +1878,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1924,6 +1897,10 @@ export type HumaSolana = {
                   121,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -1935,11 +1912,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -1964,6 +1936,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -1973,11 +1949,6 @@ export type HumaSolana = {
           optional: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2002,6 +1973,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -2010,10 +1985,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'juniorMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2031,6 +2002,10 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'juniorMint'
               },
             ]
           }
@@ -2042,10 +2017,6 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'seniorMint'
-              },
-              {
                 kind: 'const'
                 value: [
                   116,
@@ -2062,6 +2033,10 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'seniorMint'
               },
             ]
           }
@@ -2121,12 +2096,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'arg'
-                path: 'id'
-              },
-              {
                 kind: 'const'
                 value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'arg'
+                path: 'id'
               },
             ]
           }
@@ -2175,13 +2150,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2192,13 +2167,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2208,13 +2183,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2231,14 +2205,6 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
-              {
                 kind: 'const'
                 value: [
                   108,
@@ -2254,6 +2220,14 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
               },
             ]
           }
@@ -2306,13 +2280,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2324,14 +2298,6 @@ export type HumaSolana = {
           name: 'liquidityAsset'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'humaConfig'
-              },
-              {
-                kind: 'account'
-                path: 'underlyingMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2352,6 +2318,14 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'humaConfig'
+              },
+              {
+                kind: 'account'
+                path: 'underlyingMint'
+              },
             ]
           }
         },
@@ -2361,12 +2335,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'arg'
-                path: 'poolId'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'arg'
+                path: 'poolId'
               },
             ]
           }
@@ -2377,12 +2351,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'arg'
-                path: 'poolId'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2391,10 +2365,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'arg'
-                path: 'poolId'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2413,6 +2383,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2486,13 +2460,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2503,13 +2477,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2518,11 +2491,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2542,6 +2510,10 @@ export type HumaSolana = {
                   121,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -2550,11 +2522,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2579,6 +2546,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -2588,11 +2559,6 @@ export type HumaSolana = {
           optional: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2616,6 +2582,10 @@ export type HumaSolana = {
                   110,
                   116,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2703,13 +2673,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2720,13 +2690,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2736,13 +2706,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2752,10 +2721,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'asset'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2775,6 +2740,10 @@ export type HumaSolana = {
                   102,
                   111,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'asset'
               },
             ]
           }
@@ -2838,13 +2807,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2855,13 +2824,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2871,13 +2840,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -2887,10 +2855,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'asset'
-              },
               {
                 kind: 'const'
                 value: [
@@ -2910,6 +2874,10 @@ export type HumaSolana = {
                   102,
                   111,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'asset'
               },
             ]
           }
@@ -2967,13 +2935,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -2984,13 +2952,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3001,13 +2969,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3017,14 +2984,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'depositor'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3042,6 +3001,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'depositor'
+              },
             ]
           }
         },
@@ -3049,11 +3016,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3072,6 +3034,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3136,13 +3102,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3153,13 +3119,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3189,13 +3154,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3206,13 +3171,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3223,13 +3188,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3238,10 +3202,6 @@ export type HumaSolana = {
           name: 'trancheState'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3260,6 +3220,10 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
             ]
           }
         },
@@ -3268,14 +3232,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3293,6 +3249,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
+              },
             ]
           }
         },
@@ -3307,11 +3271,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3330,6 +3289,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3378,13 +3341,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3395,13 +3358,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3412,13 +3375,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3427,15 +3389,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'borrower'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3454,6 +3407,14 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'borrower'
+              },
             ]
           }
         },
@@ -3463,17 +3424,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'borrower'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -3482,11 +3442,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3505,6 +3460,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3561,13 +3520,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3578,13 +3537,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3595,13 +3554,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3610,11 +3568,6 @@ export type HumaSolana = {
           name: 'juniorMint'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3639,6 +3592,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -3647,11 +3604,6 @@ export type HumaSolana = {
           optional: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3676,6 +3628,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -3684,10 +3640,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'juniorMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3705,6 +3657,10 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'juniorMint'
               },
             ]
           }
@@ -3716,10 +3672,6 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'seniorMint'
-              },
-              {
                 kind: 'const'
                 value: [
                   116,
@@ -3736,6 +3688,10 @@ export type HumaSolana = {
                   116,
                   101,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'seniorMint'
               },
             ]
           }
@@ -3791,13 +3747,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3808,13 +3764,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3824,13 +3780,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -3840,16 +3795,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -3868,6 +3813,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -3877,18 +3831,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -3960,13 +3913,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -3976,30 +3929,24 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
         },
         {
           name: 'hookProgram'
-          address: 'Bb31NqmD3LbAbDDnwD8iLfBkRx2T8KGYc3u1py4hTSuh'
+          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
         },
         {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4018,6 +3965,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4104,13 +4055,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4121,13 +4072,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4137,14 +4087,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'depositor'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4162,6 +4104,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'depositor'
+              },
             ]
           }
         },
@@ -4169,11 +4119,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4192,6 +4137,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4268,13 +4217,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4285,13 +4234,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4302,13 +4251,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4317,16 +4265,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4345,6 +4283,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -4354,18 +4301,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -4374,11 +4320,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4397,6 +4338,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4470,13 +4415,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4487,13 +4432,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4504,13 +4449,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4519,15 +4463,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'borrower'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4546,6 +4481,14 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'borrower'
+              },
             ]
           }
         },
@@ -4555,17 +4498,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'borrower'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -4574,11 +4516,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -4597,6 +4534,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4646,13 +4587,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4663,13 +4604,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4680,13 +4621,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4712,13 +4652,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4729,13 +4669,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4746,13 +4686,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4778,13 +4717,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4795,13 +4734,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4812,13 +4751,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4844,13 +4782,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4861,13 +4799,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4878,13 +4816,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -4929,13 +4866,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4945,16 +4882,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 97, 117, 115, 101, 114]
+              },
+              {
                 kind: 'account'
                 path: 'humaConfig'
               },
               {
                 kind: 'account'
                 path: 'pauser'
-              },
-              {
-                kind: 'const'
-                value: [112, 97, 117, 115, 101, 114]
               },
             ]
           }
@@ -4977,13 +4914,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -4994,13 +4931,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5010,13 +4947,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -5025,16 +4961,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5053,6 +4979,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -5062,18 +4997,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -5115,13 +5049,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5131,13 +5065,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -5153,14 +5086,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'arg'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5180,6 +5105,14 @@ export type HumaSolana = {
                   101,
                   114,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'arg'
+                path: 'lender'
               },
             ]
           }
@@ -5217,13 +5150,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5236,14 +5169,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'humaConfig'
-              },
-              {
-                kind: 'account'
-                path: 'mint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5263,6 +5188,14 @@ export type HumaSolana = {
                   101,
                   116,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'humaConfig'
+              },
+              {
+                kind: 'account'
+                path: 'mint'
               },
             ]
           }
@@ -5294,13 +5227,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5311,16 +5244,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 97, 117, 115, 101, 114]
+              },
+              {
                 kind: 'account'
                 path: 'humaConfig'
               },
               {
                 kind: 'arg'
                 path: 'pauserKey'
-              },
-              {
-                kind: 'const'
-                value: [112, 97, 117, 115, 101, 114]
               },
             ]
           }
@@ -5357,13 +5290,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5373,15 +5306,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'arg'
-                path: 'operator'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5399,6 +5323,14 @@ export type HumaSolana = {
                   111,
                   114,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'arg'
+                path: 'operator'
               },
             ]
           }
@@ -5433,13 +5365,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5451,13 +5383,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5496,13 +5428,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5514,13 +5446,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5531,13 +5463,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -5546,11 +5477,6 @@ export type HumaSolana = {
           name: 'juniorMint'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5575,6 +5501,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -5583,11 +5513,6 @@ export type HumaSolana = {
           optional: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5612,6 +5537,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -5619,11 +5548,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5642,6 +5566,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -5702,13 +5630,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5720,13 +5648,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5765,13 +5693,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5783,13 +5711,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5800,13 +5728,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -5845,13 +5772,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5863,13 +5790,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -5880,13 +5807,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -5895,11 +5821,6 @@ export type HumaSolana = {
           name: 'juniorMint'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5924,6 +5845,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -5932,11 +5857,6 @@ export type HumaSolana = {
           optional: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5961,6 +5881,10 @@ export type HumaSolana = {
                   116,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
             ]
           }
         },
@@ -5968,11 +5892,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -5991,6 +5910,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6059,13 +5982,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6077,13 +6000,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6123,13 +6046,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6140,13 +6063,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6156,13 +6079,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6171,16 +6093,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -6199,6 +6111,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -6208,18 +6129,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -6256,13 +6176,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6273,13 +6193,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6289,13 +6209,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6304,15 +6223,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'borrower'
-              },
               {
                 kind: 'const'
                 value: [
@@ -6331,6 +6241,14 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'borrower'
+              },
             ]
           }
         },
@@ -6340,17 +6258,16 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'borrower'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -6359,10 +6276,6 @@ export type HumaSolana = {
           name: 'receivableInfo'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'asset'
-              },
               {
                 kind: 'const'
                 value: [
@@ -6383,6 +6296,10 @@ export type HumaSolana = {
                   111,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'asset'
+              },
             ]
           }
         },
@@ -6390,11 +6307,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -6413,6 +6325,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6462,13 +6378,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6479,13 +6395,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6496,13 +6412,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6511,16 +6426,6 @@ export type HumaSolana = {
           name: 'creditConfig'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -6539,6 +6444,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -6548,18 +6462,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -6597,13 +6510,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6637,13 +6550,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6689,13 +6602,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6706,13 +6619,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6722,13 +6635,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6738,16 +6650,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -6766,6 +6668,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -6774,18 +6685,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -6829,13 +6739,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6847,13 +6757,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6902,13 +6812,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6919,13 +6829,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6935,13 +6845,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -6973,21 +6882,17 @@ export type HumaSolana = {
       discriminator: [73, 99, 253, 48, 195, 111, 208, 184]
       accounts: [
         {
-          name: 'lender'
-          signer: true
-        },
-        {
           name: 'humaConfig'
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -6998,13 +6903,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7014,13 +6919,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7029,10 +6933,6 @@ export type HumaSolana = {
           name: 'trancheState'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7051,6 +6951,10 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
             ]
           }
         },
@@ -7059,14 +6963,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7084,6 +6980,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'arg'
+                path: 'lender'
+              },
             ]
           }
         },
@@ -7095,7 +6999,12 @@ export type HumaSolana = {
           address: '11111111111111111111111111111111'
         },
       ]
-      args: []
+      args: [
+        {
+          name: 'lender'
+          type: 'pubkey'
+        },
+      ]
     },
     {
       name: 'updateYield'
@@ -7120,13 +7029,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7137,13 +7046,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7153,13 +7062,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7169,16 +7077,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7197,6 +7095,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -7205,18 +7112,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -7260,13 +7166,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7277,13 +7183,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7293,13 +7199,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7309,16 +7214,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
-                kind: 'account'
-                path: 'credit_state.borrower'
-                account: 'creditState'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7337,6 +7232,15 @@ export type HumaSolana = {
                   103,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+              {
+                kind: 'account'
+                path: 'credit_state.borrower'
+                account: 'creditState'
+              },
             ]
           }
         },
@@ -7346,18 +7250,17 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
                 kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
+                path: 'poolConfig'
               },
               {
                 kind: 'account'
                 path: 'credit_state.borrower'
                 account: 'creditState'
-              },
-              {
-                kind: 'const'
-                value: [99, 114, 101, 100, 105, 116, 95, 115, 116, 97, 116, 101]
               },
             ]
           }
@@ -7394,13 +7297,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7411,13 +7314,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7426,10 +7328,6 @@ export type HumaSolana = {
           name: 'trancheState'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7448,6 +7346,10 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
             ]
           }
         },
@@ -7456,14 +7358,6 @@ export type HumaSolana = {
           writable: true
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'trancheMint'
-              },
-              {
-                kind: 'account'
-                path: 'lender'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7481,6 +7375,14 @@ export type HumaSolana = {
                   101,
                 ]
               },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
+              },
             ]
           }
         },
@@ -7496,11 +7398,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7519,6 +7416,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7573,13 +7474,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7590,13 +7491,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7607,13 +7508,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7622,11 +7522,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7645,6 +7540,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7702,13 +7601,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7719,13 +7618,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7736,13 +7635,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7751,11 +7649,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7774,6 +7667,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7831,13 +7728,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'huma_config.id'
                 account: 'humaConfig'
-              },
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7848,13 +7745,13 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
                 kind: 'account'
                 path: 'pool_config.pool_id'
                 account: 'poolConfig'
-              },
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
               },
             ]
           }
@@ -7865,13 +7762,12 @@ export type HumaSolana = {
           pda: {
             seeds: [
               {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-              {
                 kind: 'const'
                 value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }
@@ -7880,11 +7776,6 @@ export type HumaSolana = {
           name: 'poolAuthority'
           pda: {
             seeds: [
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
               {
                 kind: 'const'
                 value: [
@@ -7903,6 +7794,10 @@ export type HumaSolana = {
                   116,
                   121,
                 ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
               },
             ]
           }

@@ -6,8 +6,9 @@ export type SolanaPoolState = {
   poolApr?: string
   liquidityCap?: string
   maxSeniorJuniorRatio?: number
-  withdrawalLockoutPeriodDays?: number
+  withdrawalLockupPeriodDays?: number
   lockupMonthsText?: string
   minDepositAmount?: string
   status?: 'on' | 'off' | 'closed'
+  epochEndTime?: number
 }

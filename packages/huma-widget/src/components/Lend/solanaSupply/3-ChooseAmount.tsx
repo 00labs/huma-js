@@ -1,6 +1,5 @@
 import {
   formatNumber,
-  SOLANA_CHAIN_INFO,
   SolanaPoolInfo,
   SolanaTokenUtils,
   TrancheType,
@@ -35,14 +34,6 @@ export function ChooseAmount({
   const balance = useMemo(
     () => new BN(tokenAccount.amount),
     [tokenAccount.amount],
-  )
-  const delegatedAmount = useMemo(
-    () => new BN(tokenAccount.delegatedAmount),
-    [tokenAccount.delegatedAmount],
-  )
-  const sentinel = useMemo(
-    () => SOLANA_CHAIN_INFO[poolInfo.chainId].sentinel,
-    [poolInfo.chainId],
   )
 
   const { juniorAvailableCapBN, seniorAvailableCapBN } = useMemo(() => {

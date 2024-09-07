@@ -4,11 +4,14 @@ import {
   SolanaTokenUtils,
   TrancheType,
 } from '@huma-finance/shared'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useHumaProgram } from '@huma-finance/web-shared'
+import {
+  useHumaProgram,
+  useTrancheMintAccounts,
+} from '@huma-finance/web-shared'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
@@ -27,14 +30,19 @@ export function Transfer({
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()
-  const { supplyAmount } = useAppSelector(selectWidgetState)
-  const { decimals } = poolInfo.underlyingMint
-  const supplyBigNumber = SolanaTokenUtils.parseUnits(
-    String(supplyAmount),
-    decimals,
-  )
+  const { redeemShares } = useAppSelector(selectWidgetState)
+  const { mintAccount } = useTrancheMintAccounts(poolInfo, selectedTranche)
   const [transaction, setTransaction] = useState<Transaction>()
   const program = useHumaProgram(poolInfo.chainId)
+  const redeemBN = useMemo(() => {
+    if (!mintAccount) {
+      return null
+    }
+    return SolanaTokenUtils.parseUnits(
+      String(redeemShares),
+      mintAccount?.decimals,
+    )
+  }, [mintAccount, redeemShares])
 
   const handleSuccess = useCallback(() => {
     dispatch(setStep(WIDGET_STEP.Done))
@@ -42,27 +50,32 @@ export function Transfer({
 
   useEffect(() => {
     async function getTx() {
-      if (!publicKey || transaction) {
+      if (!publicKey || !redeemBN || transaction) {
         return
       }
 
-      const { underlyingTokenATA, seniorTrancheATA, juniorTrancheATA } =
-        getTokenAccounts(poolInfo, publicKey)
+      const {
+        seniorTrancheATA,
+        juniorTrancheATA,
+        poolSeniorTrancheATA,
+        poolJuniorTrancheATA,
+      } = getTokenAccounts(poolInfo, publicKey)
       const tx = await program.methods
-        .deposit(supplyBigNumber)
+        .addRedemptionRequest(redeemBN)
         .accountsPartial({
-          depositor: publicKey,
+          lender: publicKey,
+          humaConfig: poolInfo.humaConfig,
           poolConfig: poolInfo.poolConfig,
-          underlyingMint: poolInfo.underlyingMint.address,
           trancheMint:
             selectedTranche === 'senior'
               ? poolInfo.seniorTrancheMint
               : poolInfo.juniorTrancheMint,
-          poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
-          depositorUnderlyingToken: underlyingTokenATA,
-          depositorTrancheToken:
+          poolTrancheToken:
+            selectedTranche === 'senior'
+              ? poolSeniorTrancheATA
+              : poolJuniorTrancheATA,
+          lenderTrancheToken:
             selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
-          humaConfig: poolInfo.humaConfig,
           tokenProgram: TOKEN_2022_PROGRAM_ID,
         })
         .transaction()
@@ -74,8 +87,8 @@ export function Transfer({
     poolInfo,
     program.methods,
     publicKey,
+    redeemBN,
     selectedTranche,
-    supplyBigNumber,
     transaction,
   ])
 

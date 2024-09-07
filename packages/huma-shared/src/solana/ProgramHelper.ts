@@ -1,7 +1,7 @@
 import { AnchorProvider, Program } from '@coral-xyz/anchor'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { Connection } from '@solana/web3.js'
-import { HumaSolana as HumaSolanaDevnet } from '../v2/idl/devnet'
+import { Huma as HumaSolanaDevnet } from '../v2/idl/devnet'
 import HumaDevnetIDL from '../v2/idl/devnet.json'
 import { SolanaChainEnum } from '../utils'
 

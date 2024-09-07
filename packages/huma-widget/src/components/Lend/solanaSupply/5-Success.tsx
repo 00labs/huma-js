@@ -27,7 +27,7 @@ export function Success({
 
   const getSubContent = () => {
     const currentTime = moment().add(
-      poolState.withdrawalLockoutPeriodDays,
+      poolState.withdrawalLockupPeriodDays,
       'days',
     )
     return [
