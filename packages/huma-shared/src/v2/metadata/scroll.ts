@@ -37,6 +37,9 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     KYC: {
       Persona: ARF_PERSONA_KYC_COPY,
     },
+    extra: {
+      borrower: '0x08534d9b632a7A35d7af4aAe5d487A15FC247691',
+    },
   },
   ArfCreditPool6Months: {
     chainId: ChainEnum.Scroll,
@@ -70,6 +73,9 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     KYC: {
       Persona: ARF_PERSONA_KYC_COPY,
+    },
+    extra: {
+      borrower: '0x08534d9b632a7A35d7af4aAe5d487A15FC247691',
     },
   },
 }
