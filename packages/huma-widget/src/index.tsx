@@ -85,6 +85,10 @@ import {
   SolanaLendCancelRedemption,
   SolanaLendCancelRedemptionProps,
 } from './components/Lend/solanaCancelRedemption'
+import {
+  SolanaBorrow,
+  SolanaBorrowProps,
+} from './components/CreditLine/solanaBorrow'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -624,6 +628,27 @@ export function SolanaLendCancelRedemptionWidget(
   return (
     <SolanaWidget {...props}>
       <SolanaLendCancelRedemption {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaBorrowWidgetProps
+ * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
+ * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
+ */
+type SolanaBorrowWidgetProps = SolanaBorrowProps & SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaBorrowWidgetProps} props - Widget props
+ */
+export function SolanaBorrowWidget(props: SolanaBorrowWidgetProps) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaBorrow {...props} />
     </SolanaWidget>
   )
 }

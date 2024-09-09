@@ -65,15 +65,6 @@ export function ChooseAmount({
   }
 
   const handleAction = () => {
-    // const currentAmountBN = SolanaTokenUtils.parseUnits(
-    //   String(currentAmount),
-    //   decimals,
-    // )
-    // const step =
-    //   currentAmountBN.gt(delegatedAmount) ||
-    //   tokenAccount.delegate?.toString() !== sentinel
-    //     ? WIDGET_STEP.ApproveAllowance
-    //     : WIDGET_STEP.Transfer
     dispatch(setStep(WIDGET_STEP.Transfer))
   }
 

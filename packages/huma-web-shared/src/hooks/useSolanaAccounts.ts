@@ -16,13 +16,14 @@ import {
   TOKEN_2022_PROGRAM_ID,
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
+import lodash from 'lodash'
 import {
   useAnchorWallet,
   useConnection,
   useWallet,
 } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForceRefresh } from './useForceRefresh'
 
 export const getPoolMetadata = (
@@ -217,6 +218,265 @@ export const useTokenAccount = (
   }, [publicKey, connection, wallet, poolInfo.underlyingMint.address])
 
   return [account, loading]
+}
+
+export const usePoolUnderlyingTokenAccount = (
+  poolInfo: SolanaPoolInfo | undefined,
+): { account: Account | undefined; loading: boolean; refresh: () => void } => {
+  const { publicKey } = useWallet()
+  const wallet = useAnchorWallet()
+  const { connection } = useConnection()
+  const [loading, setLoading] = useState<boolean>(true)
+  const [account, setAccount] = useState<Account>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    async function fetchTokenBalance() {
+      setLoading(true)
+      if (!connection || !wallet || !poolInfo) {
+        return
+      }
+
+      try {
+        const tokenAccount = await getAccount(
+          connection,
+          new PublicKey(poolInfo.poolUnderlyingTokenAccount),
+          undefined,
+          TOKEN_2022_PROGRAM_ID,
+        )
+        setAccount(tokenAccount)
+      } catch (error) {
+        if (error instanceof TokenAccountNotFoundError) {
+          setAccount(undefined)
+        }
+
+        console.warn(error)
+      }
+
+      setLoading(false)
+    }
+
+    fetchTokenBalance()
+  }, [refreshCount, publicKey, connection, wallet, poolInfo])
+
+  return { account, loading, refresh }
+}
+
+export type SolanaCreditStatus =
+  | 'deleted'
+  | 'approved'
+  | 'goodStanding'
+  | 'delayed'
+  | 'defaulted'
+export type CreditStateAccount = {
+  creditRecord: {
+    status: SolanaCreditStatus
+    nextDue: BN
+    yieldDue: BN
+    nextDueDate: BN
+    totalPastDue: BN
+    missedPeriods: number
+    remainingPeriods: number
+    unbilledPrincipal: BN
+  }
+  dueDetail: {
+    paid: BN
+    accrued: BN
+    lateFee: BN
+    committed: BN
+    yieldPastDue: BN
+    principalPastDue: BN
+    lateFeeUpdatedDate: BN
+  }
+  receivableAvailableCredits: BN
+}
+
+export type CreditConfigAccount = {
+  creditLimit: BN
+  committedAmount: BN
+  numPeriods: BN
+  yieldBps: BN
+  creditAvailable: BN
+}
+
+export const useBorrowerAccounts = (
+  chainId: SolanaChainEnum,
+  poolName: POOL_NAME,
+): {
+  creditStateAccountPDA: string | null | undefined
+  creditStateAccount: CreditStateAccount | null | undefined
+  creditConfigAccountPDA: string | null | undefined
+  creditConfigAccount: CreditConfigAccount | null | undefined
+  loading: boolean
+  refresh: () => void
+} => {
+  const { publicKey } = useWallet()
+  const wallet = useAnchorWallet()
+  const { connection } = useConnection()
+  const [loading, setLoading] = useState<boolean>(true)
+  const [creditStateAccountPDA, setCreditStateAccountPDA] = useState<string>()
+  const [creditConfigAccountPDA, setCreditConfigAccountPDA] = useState<string>()
+  const [creditStateAccount, setCreditStateAccount] =
+    useState<CreditStateAccount | null>()
+  const [creditConfigAccount, setCreditConfigAccount] =
+    useState<CreditConfigAccount | null>()
+  const metadata = useMemo(
+    () => getPoolMetadata(chainId, poolName),
+    [chainId, poolName],
+  )
+  const {
+    account: poolUnderlyingTokenAccount,
+    refresh: refreshPoolUnderlyingTokenAccount,
+  } = usePoolUnderlyingTokenAccount(metadata)
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    async function fetchBorrowerAccount() {
+      setLoading(true)
+      if (
+        !metadata ||
+        !publicKey ||
+        !connection ||
+        !wallet ||
+        !poolUnderlyingTokenAccount
+      ) {
+        return
+      }
+      const poolProgram = new PublicKey(metadata.pool)
+      const [creditStateAccountPDACalc] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from('credit_state'),
+          new PublicKey(metadata.poolConfig).toBuffer(),
+          publicKey.toBuffer(),
+        ],
+        poolProgram,
+      )
+      setCreditStateAccountPDA(creditStateAccountPDACalc.toString())
+      const [creditConfigAccountPDACalc] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from('credit_config'),
+          new PublicKey(metadata.poolConfig).toBuffer(),
+          publicKey.toBuffer(),
+        ],
+        poolProgram,
+      )
+      setCreditConfigAccountPDA(creditConfigAccountPDACalc.toString())
+
+      const program = getHumaProgram(chainId, connection, wallet)
+      // fetchMultiple will gracefully handle account not found exceptions
+      const [creditStateAccountResult, creditConfigAccountResult] =
+        await Promise.all([
+          program.account.creditState.fetchMultiple([
+            creditStateAccountPDACalc,
+          ]),
+          program.account.creditConfig.fetchMultiple([
+            creditConfigAccountPDACalc,
+          ]),
+        ])
+
+      const result = creditStateAccountResult[0]
+      const creditConfig = creditConfigAccountResult[0]
+      if (result && creditConfig) {
+        let status: SolanaCreditStatus
+        if (lodash.isEqual(result.creditRecord.status, { deleted: {} })) {
+          status = 'deleted'
+        } else if (
+          lodash.isEqual(result.creditRecord.status, { approved: {} })
+        ) {
+          status = 'approved'
+        } else if (
+          lodash.isEqual(result.creditRecord.status, { goodStanding: {} })
+        ) {
+          status = 'goodStanding'
+        } else if (
+          lodash.isEqual(result.creditRecord.status, { delayed: {} })
+        ) {
+          status = 'delayed'
+        } else {
+          status = 'defaulted'
+        }
+
+        const unbilledPrincipalBN = new BN(
+          result.creditRecord.unbilledPrincipal,
+        )
+        const nextDueBN = new BN(result.creditRecord.nextDue)
+        const yieldDueBN = new BN(result.creditRecord.yieldDue)
+        const principalPastDueBN = new BN(result.dueDetail.principalPastDue)
+        setCreditStateAccount({
+          creditRecord: {
+            status,
+            nextDue: nextDueBN,
+            yieldDue: yieldDueBN,
+            nextDueDate: new BN(result.creditRecord.nextDueDate),
+            totalPastDue: new BN(result.creditRecord.totalPastDue),
+            missedPeriods: result.creditRecord.missedPeriods,
+            remainingPeriods: result.creditRecord.remainingPeriods,
+            unbilledPrincipal: unbilledPrincipalBN,
+          },
+          dueDetail: {
+            paid: new BN(result.dueDetail.paid),
+            accrued: new BN(result.dueDetail.accrued),
+            lateFee: new BN(result.dueDetail.lateFee),
+            committed: new BN(result.dueDetail.committed),
+            yieldPastDue: new BN(result.dueDetail.yieldPastDue),
+            principalPastDue: principalPastDueBN,
+            lateFeeUpdatedDate: new BN(result.dueDetail.lateFeeUpdatedDate),
+          },
+          receivableAvailableCredits: new BN(result.receivableAvailableCredits),
+        })
+
+        const creditLimitBN = new BN(creditConfig.creditLimit)
+        const principalAmount = unbilledPrincipalBN
+          .add(nextDueBN)
+          .sub(yieldDueBN)
+          .add(principalPastDueBN)
+        const unusedCredit = creditLimitBN.sub(principalAmount)
+        const poolTokenBalanceBN = new BN(poolUnderlyingTokenAccount?.amount)
+        // Set available credit to the minimum of the pool balance or the credit available amount,
+        // since both are upper bounds on the amount of credit that can be borrowed.
+        // If either is negative, cap the available credit to 0.
+        let creditAvailable = unusedCredit.lt(poolTokenBalanceBN)
+          ? unusedCredit
+          : poolTokenBalanceBN
+        creditAvailable = creditAvailable.ltn(0) ? new BN(0) : creditAvailable
+        setCreditConfigAccount({
+          creditLimit: creditLimitBN,
+          committedAmount: new BN(creditConfig.committedAmount),
+          numPeriods: new BN(creditConfig.numPeriods),
+          yieldBps: new BN(creditConfig.yieldBps),
+          creditAvailable,
+        })
+      } else {
+        setCreditStateAccount(null)
+        setCreditConfigAccount(null)
+      }
+
+      setLoading(false)
+    }
+
+    fetchBorrowerAccount()
+  }, [
+    chainId,
+    poolName,
+    publicKey,
+    connection,
+    wallet,
+    refreshCount,
+    metadata,
+    poolUnderlyingTokenAccount,
+  ])
+
+  return {
+    creditStateAccountPDA,
+    creditStateAccount,
+    creditConfigAccountPDA,
+    creditConfigAccount,
+    loading,
+    refresh: () => {
+      refresh()
+      refreshPoolUnderlyingTokenAccount()
+    },
+  }
 }
 
 export type LenderStateAccount = {
