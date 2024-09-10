@@ -569,7 +569,7 @@ export const useLenderAccounts = (
         )
       setSeniorLenderStateAccountPDA(seniorLenderStateAccountPDACalc.toString())
 
-      const program = getHumaProgram(chainId, connection, wallet)
+      const program = getHumaProgram(chainId, connection, wallet as Wallet)
       const [lenderApprovedAccounts, lenderStateAccounts] = await Promise.all([
         program.account.lender.fetchMultiple([
           seniorLenderAccountPDA,
