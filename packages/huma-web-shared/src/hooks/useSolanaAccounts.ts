@@ -1,4 +1,4 @@
-import { BN } from '@coral-xyz/anchor'
+import { BN, Wallet } from '@coral-xyz/anchor'
 import {
   POOL_NAME,
   SolanaChainEnum,
@@ -358,7 +358,7 @@ export const useBorrowerAccounts = (
       )
       setCreditConfigAccountPDA(creditConfigAccountPDACalc.toString())
 
-      const program = getHumaProgram(chainId, connection, wallet)
+      const program = getHumaProgram(chainId, connection, wallet as Wallet)
       // fetchMultiple will gracefully handle account not found exceptions
       const [creditStateAccountResult, creditConfigAccountResult] =
         await Promise.all([

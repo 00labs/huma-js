@@ -1,5 +1,4 @@
-import { AnchorProvider, Program } from '@coral-xyz/anchor'
-import { AnchorWallet } from '@solana/wallet-adapter-react'
+import { AnchorProvider, Program, Wallet } from '@coral-xyz/anchor'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Huma as HumaSolanaDevnet } from '../v2/idl/devnet'
 import HumaDevnetIDL from '../v2/idl/devnet.json'
@@ -27,7 +26,7 @@ export const getSolanaPoolInfo = (
 export const getHumaProgram = (
   chainId: SolanaChainEnum,
   connection: Connection,
-  wallet?: AnchorWallet,
+  wallet?: Wallet,
 ): Program<HumaSolanaDevnet> => {
   const provider = wallet
     ? new AnchorProvider(connection, wallet, {})
