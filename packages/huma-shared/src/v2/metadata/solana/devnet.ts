@@ -3,6 +3,8 @@ import { POOL_NAME, POOL_TYPE } from '../../../utils/pool'
 import { SolanaChainInfo, SolanaPoolsInfo } from '../../utils'
 
 export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
+  humaProgramAuthority: 'FE2Np6Mwt8oMXVHuJnNqtV5Gojc9Y2tFyBsQfJ2y2ZPz',
+  poolProgram: '69yTuBwRm8KPkXYmasxZQAzgyHs93KBaijNv5Jum71fv',
   sentinel: '8GQMZVEvYsssewqu2EvoAtVeBMWEkns7vGiUMQ6V7KDo',
 }
 
@@ -14,7 +16,6 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
     chainId: SolanaChainEnum.SolanaDevnet,
     industry: 'Remittance Financing',
     desc: 'This is a test pool for Huma creditline on Solana',
-    pool: '69yTuBwRm8KPkXYmasxZQAzgyHs93KBaijNv5Jum71fv',
     poolId: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
     poolAuthority: 'rawZV3C2THDqgwAaWJTBu4yhZzqrkqkBqV4abYA3zW3',
     poolUnderlyingTokenAccount: 'DLcZV7oAL4KQFHxMi7sptuiHAdxGpFFBGLUn2XJwAW69',

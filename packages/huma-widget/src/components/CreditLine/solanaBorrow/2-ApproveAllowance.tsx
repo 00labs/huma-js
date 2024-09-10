@@ -1,5 +1,5 @@
 import {
-  SOLANA_CHAIN_INFO,
+  getSentinelAddress,
   SolanaPoolInfo,
   SolanaTokenUtils,
 } from '@huma-finance/shared'
@@ -29,7 +29,7 @@ export function ApproveAllowance({
   const dispatch = useAppDispatch()
   const { wallet, publicKey, sendTransaction, signTransaction } = useWallet()
   const sentinel = useMemo(
-    () => SOLANA_CHAIN_INFO[poolInfo.chainId].sentinel,
+    () => getSentinelAddress(poolInfo.chainId),
     [poolInfo.chainId],
   )
   const { connection } = useConnection()

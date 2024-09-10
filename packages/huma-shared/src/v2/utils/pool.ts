@@ -157,7 +157,6 @@ export type SolanaPoolInfo = {
   poolType: POOL_TYPE
   industry: IndustryType
   desc: string
-  pool: string
   poolId: string
   poolAuthority: string
   poolUnderlyingTokenAccount: string
@@ -189,6 +188,8 @@ export const SOLANA_CHAIN_POOLS_INFO = {
 } as SolanaChainPoolsInfo
 
 export type SolanaChainInfo = {
+  poolProgram: string
+  humaProgramAuthority: string
   sentinel: string
 }
 

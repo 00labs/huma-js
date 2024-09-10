@@ -1,5 +1,5 @@
 export type SolanaPoolState = {
-  pool?: string
+  poolId?: string
   seniorTrancheAssets?: string
   juniorTrancheAssets?: string
   poolAprInBps?: number

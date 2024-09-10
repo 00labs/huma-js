@@ -20,12 +20,25 @@
     "startLoadRWR": "ts-node src/loadReceivablesOfOwnerWithMetadata.ts",
     "startGetPoolBalanceCreditV2": "ts-node src/getPoolBalanceAndCreditV2.ts",
     "startBurnReceivableV2": "ts-node src/burnReceivableV2.ts",
+    "solanaCreateReceivable": "ts-node src/solana/createReceivable.ts",
+    "solanaDeclarePayment": "ts-node src/solana/declarePayment.ts",
+    "solanaSubmitReceivable": "ts-node src/solana/submitReceivable.ts",
+    "solanaFetchReceivable": "ts-node src/solana/fetchReceivable.ts",
+    "solanaFetchBorrowerDetails": "ts-node src/solana/fetchBorrowerDetails.ts",
+    "solanaDrawdown": "ts-node src/solana/drawdown.ts",
+    "solanaPayback": "ts-node src/solana/payback.ts",
     "lint-staged": "lint-staged"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "ts-node": "^10.9.1"
+  },
+  "peerDependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.3",
+    "@coral-xyz/borsh": "^0.30.1"
   },
   "lint-staged": {
     "src/**/*.{js,ts,tsx,css,sass,less,graphql}": []

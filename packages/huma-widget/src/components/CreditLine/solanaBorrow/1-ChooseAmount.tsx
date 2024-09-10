@@ -1,6 +1,6 @@
 import {
   formatNumber,
-  SOLANA_CHAIN_INFO,
+  getSentinelAddress,
   SolanaPoolInfo,
   SolanaTokenUtils,
 } from '@huma-finance/shared'
@@ -28,7 +28,7 @@ export function ChooseAmount({
   const dispatch = useAppDispatch()
   const { symbol, decimals } = poolInfo.underlyingMint
   const sentinel = useMemo(
-    () => SOLANA_CHAIN_INFO[poolInfo.chainId].sentinel,
+    () => getSentinelAddress(poolInfo.chainId),
     [poolInfo.chainId],
   )
   const [currentAmount, setCurrentAmount] = useState<number>(0)

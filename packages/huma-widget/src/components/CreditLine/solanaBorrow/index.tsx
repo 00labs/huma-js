@@ -1,15 +1,11 @@
-import { SolanaPoolInfo, TrancheType } from '@huma-finance/shared'
+import { SolanaPoolInfo } from '@huma-finance/shared'
 import {
-  SolanaPoolState,
   useBorrowerAccounts,
-  useLenderAccounts,
   usePoolUnderlyingTokenAccount,
-  useTrancheTokenAccounts,
 } from '@huma-finance/web-shared'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { BN } from '@coral-xyz/anchor'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WidgetWrapper } from '../../WidgetWrapper'
@@ -28,23 +24,18 @@ import { ApproveAllowance } from './2-ApproveAllowance'
  */
 export interface SolanaBorrowProps {
   poolInfo: SolanaPoolInfo
-  poolState: SolanaPoolState
   handleClose: () => void
   handleSuccess?: () => void
 }
 
 export function SolanaBorrow({
   poolInfo,
-  poolState,
   handleClose,
   handleSuccess,
 }: SolanaBorrowProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const {
-    creditStateAccount,
-    creditConfigAccount,
-    loading: isLoadingBorrowerAccounts,
-  } = useBorrowerAccounts(poolInfo.chainId, poolInfo.poolName)
+  const { creditConfigAccount, loading: isLoadingBorrowerAccounts } =
+    useBorrowerAccounts(poolInfo.chainId, poolInfo.poolName)
   const { account: tokenAccount, loading: isLoadingTokenAccounts } =
     usePoolUnderlyingTokenAccount(poolInfo)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
@@ -86,12 +77,12 @@ export function SolanaBorrow({
       {step === WIDGET_STEP.ApproveAllowance && tokenAccount && (
         <ApproveAllowance poolInfo={poolInfo} tokenAccount={tokenAccount} />
       )}
-      {step === WIDGET_STEP.Transfer && selectedTranche && (
+      {/* {step === WIDGET_STEP.Transfer && selectedTranche && (
         <Transfer poolInfo={poolInfo} selectedTranche={selectedTranche} />
       )}
       {step === WIDGET_STEP.Done && (
         <Done poolInfo={poolInfo} handleAction={handleClose} />
-      )}
+      )} */}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
           title={title}

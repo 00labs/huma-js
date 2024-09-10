@@ -290,7 +290,7 @@ async function uploadOrFetchMetadataURI(
     signerAddress,
     referenceId,
   )
-  const config = ARWeaveService.getBundlrNetworkConfig(chainId)
+  const config = ARWeaveService.getIrysNetworkConfig(chainId)
 
   let arweaveId
   if (dataId != null) {

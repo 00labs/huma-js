@@ -1,11 +1,12 @@
 import { BN } from '@coral-xyz/anchor'
 import {
   POOL_NAME,
-  SOLANA_CHAIN_POOLS_INFO,
   SolanaChainEnum,
   SolanaPoolInfo,
   TrancheType,
   getHumaProgram,
+  getPoolProgramAddress,
+  getSolanaPoolInfo,
 } from '@huma-finance/shared'
 import {
   Account,
@@ -25,11 +26,6 @@ import {
 import { PublicKey } from '@solana/web3.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useForceRefresh } from './useForceRefresh'
-
-export const getPoolMetadata = (
-  chainId: SolanaChainEnum,
-  poolName: POOL_NAME,
-) => SOLANA_CHAIN_POOLS_INFO[chainId][poolName]
 
 export const useTrancheMintAccounts = (
   poolInfo: SolanaPoolInfo,
@@ -320,21 +316,21 @@ export const useBorrowerAccounts = (
     useState<CreditStateAccount | null>()
   const [creditConfigAccount, setCreditConfigAccount] =
     useState<CreditConfigAccount | null>()
-  const metadata = useMemo(
-    () => getPoolMetadata(chainId, poolName),
+  const poolInfo = useMemo(
+    () => getSolanaPoolInfo(chainId, poolName),
     [chainId, poolName],
   )
   const {
     account: poolUnderlyingTokenAccount,
     refresh: refreshPoolUnderlyingTokenAccount,
-  } = usePoolUnderlyingTokenAccount(metadata)
+  } = usePoolUnderlyingTokenAccount(poolInfo)
   const [refreshCount, refresh] = useForceRefresh()
 
   useEffect(() => {
     async function fetchBorrowerAccount() {
       setLoading(true)
       if (
-        !metadata ||
+        !poolInfo ||
         !publicKey ||
         !connection ||
         !wallet ||
@@ -342,11 +338,11 @@ export const useBorrowerAccounts = (
       ) {
         return
       }
-      const poolProgram = new PublicKey(metadata.pool)
+      const poolProgram = new PublicKey(getPoolProgramAddress(chainId))
       const [creditStateAccountPDACalc] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('credit_state'),
-          new PublicKey(metadata.poolConfig).toBuffer(),
+          new PublicKey(poolInfo.poolConfig).toBuffer(),
           publicKey.toBuffer(),
         ],
         poolProgram,
@@ -355,7 +351,7 @@ export const useBorrowerAccounts = (
       const [creditConfigAccountPDACalc] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('credit_config'),
-          new PublicKey(metadata.poolConfig).toBuffer(),
+          new PublicKey(poolInfo.poolConfig).toBuffer(),
           publicKey.toBuffer(),
         ],
         poolProgram,
@@ -462,8 +458,8 @@ export const useBorrowerAccounts = (
     connection,
     wallet,
     refreshCount,
-    metadata,
     poolUnderlyingTokenAccount,
+    poolInfo,
   ])
 
   return {
@@ -531,15 +527,15 @@ export const useLenderAccounts = (
   useEffect(() => {
     async function fetchLenderAccount() {
       setLoading(true)
-      const metadata = getPoolMetadata(chainId, poolName)
-      if (!metadata || !publicKey || !connection || !wallet) {
+      const poolInfo = getSolanaPoolInfo(chainId, poolName)
+      if (!poolInfo || !publicKey || !connection || !wallet) {
         return
       }
-      const poolProgram = new PublicKey(metadata.pool)
+      const poolProgram = new PublicKey(getPoolProgramAddress(chainId))
       const [seniorLenderAccountPDA] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('approved_lender'),
-          new PublicKey(metadata.seniorTrancheMint).toBuffer(),
+          new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
           publicKey.toBuffer(),
         ],
         poolProgram,
@@ -547,7 +543,7 @@ export const useLenderAccounts = (
       const [juniorLenderAccountPDA] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('approved_lender'),
-          new PublicKey(metadata.juniorTrancheMint).toBuffer(),
+          new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
           publicKey.toBuffer(),
         ],
         poolProgram,
@@ -556,7 +552,7 @@ export const useLenderAccounts = (
         PublicKey.findProgramAddressSync(
           [
             Buffer.from('lender_state'),
-            new PublicKey(metadata.juniorTrancheMint).toBuffer(),
+            new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
             publicKey.toBuffer(),
           ],
           poolProgram,
@@ -566,7 +562,7 @@ export const useLenderAccounts = (
         PublicKey.findProgramAddressSync(
           [
             Buffer.from('lender_state'),
-            new PublicKey(metadata.seniorTrancheMint).toBuffer(),
+            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
             publicKey.toBuffer(),
           ],
           poolProgram,
