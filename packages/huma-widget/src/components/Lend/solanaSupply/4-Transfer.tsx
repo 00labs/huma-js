@@ -8,13 +8,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useHumaProgram } from '@huma-finance/web-shared'
+import { useHumaProgram, useLenderAccounts } from '@huma-finance/web-shared'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { SolanaTxSendModal } from '../../SolanaTxSendModal'
+import { LoadingModal } from '../../LoadingModal'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -34,6 +35,13 @@ export function Transfer({
     decimals,
   )
   const [transaction, setTransaction] = useState<Transaction>()
+  const {
+    juniorLenderApprovedAccountPDA,
+    seniorLenderApprovedAccountPDA,
+    seniorLenderStateAccount,
+    juniorLenderStateAccount,
+    loading: isLoadingLenderAccounts,
+  } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const program = useHumaProgram(poolInfo.chainId)
 
   const handleSuccess = useCallback(() => {
@@ -42,13 +50,43 @@ export function Transfer({
 
   useEffect(() => {
     async function getTx() {
-      if (!publicKey || transaction) {
+      if (!publicKey || transaction || isLoadingLenderAccounts) {
         return
       }
 
+      const tx = new Transaction()
+
       const { underlyingTokenATA, seniorTrancheATA, juniorTrancheATA } =
         getTokenAccounts(poolInfo, publicKey)
-      const tx = await program.methods
+      if (
+        (selectedTranche === 'senior' && !seniorLenderStateAccount) ||
+        (selectedTranche === 'junior' && !juniorLenderStateAccount)
+      ) {
+        const createLenderAccountsTx = await program.methods
+          .createLenderAccounts()
+          .accountsPartial({
+            lender: publicKey,
+            humaConfig: poolInfo.humaConfig,
+            poolConfig: poolInfo.poolConfig,
+            approvedLender:
+              selectedTranche === 'senior'
+                ? seniorLenderApprovedAccountPDA!
+                : juniorLenderApprovedAccountPDA!,
+            trancheMint:
+              selectedTranche === 'senior'
+                ? poolInfo.seniorTrancheMint
+                : poolInfo.juniorTrancheMint,
+            lenderTrancheToken:
+              selectedTranche === 'senior'
+                ? seniorTrancheATA
+                : juniorTrancheATA,
+            tokenProgram: TOKEN_2022_PROGRAM_ID,
+          })
+          .transaction()
+        tx.add(createLenderAccountsTx)
+      }
+
+      const depositTx = await program.methods
         .deposit(supplyBigNumber)
         .accountsPartial({
           depositor: publicKey,
@@ -66,18 +104,28 @@ export function Transfer({
           tokenProgram: TOKEN_2022_PROGRAM_ID,
         })
         .transaction()
+      tx.add(depositTx)
 
       setTransaction(tx)
     }
     getTx()
   }, [
+    isLoadingLenderAccounts,
+    juniorLenderApprovedAccountPDA,
+    juniorLenderStateAccount,
     poolInfo,
     program.methods,
     publicKey,
     selectedTranche,
+    seniorLenderApprovedAccountPDA,
+    seniorLenderStateAccount,
     supplyBigNumber,
     transaction,
   ])
+
+  if (isLoadingLenderAccounts) {
+    return <LoadingModal title='Supply' />
+  }
 
   return (
     <SolanaTxSendModal

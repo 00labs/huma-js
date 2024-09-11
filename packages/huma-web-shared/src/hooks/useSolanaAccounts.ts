@@ -493,8 +493,10 @@ export const useLenderAccounts = (
   chainId: SolanaChainEnum,
   poolName: POOL_NAME,
 ): {
-  seniorLenderApproved: boolean | undefined
+  juniorLenderApprovedAccountPDA: string | null | undefined
   juniorLenderApproved: boolean | undefined
+  seniorLenderApprovedAccountPDA: string | null | undefined
+  seniorLenderApproved: boolean | undefined
   juniorLenderStateAccountPDA: string | null | undefined
   juniorLenderStateAccount: LenderStateAccount | null | undefined
   seniorLenderStateAccountPDA: string | null | undefined
@@ -508,6 +510,10 @@ export const useLenderAccounts = (
   const wallet = useAnchorWallet()
   const { connection } = useConnection()
   const [loading, setLoading] = useState<boolean>(true)
+  const [juniorLenderApprovedAccountPDA, setJuniorLenderApprovedAccountPDA] =
+    useState<string>()
+  const [seniorLenderApprovedAccountPDA, setSeniorLenderApprovedAccountPDA] =
+    useState<string>()
   const [seniorLenderApproved, setSeniorLenderApproved] = useState<boolean>()
   const [juniorLenderApproved, setJuniorLenderApproved] = useState<boolean>()
   const [seniorLenderStateAccountPDA, setSeniorLenderStateAccountPDA] =
@@ -540,6 +546,7 @@ export const useLenderAccounts = (
         ],
         poolProgram,
       )
+      setSeniorLenderApprovedAccountPDA(seniorLenderAccountPDA.toString())
       const [juniorLenderAccountPDA] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('approved_lender'),
@@ -548,6 +555,7 @@ export const useLenderAccounts = (
         ],
         poolProgram,
       )
+      setJuniorLenderApprovedAccountPDA(juniorLenderAccountPDA.toString())
       const [juniorLenderStateAccountPDACalc] =
         PublicKey.findProgramAddressSync(
           [
@@ -615,8 +623,10 @@ export const useLenderAccounts = (
   }, [chainId, poolName, publicKey, connection, wallet, refreshCount])
 
   return {
-    seniorLenderApproved,
+    juniorLenderApprovedAccountPDA,
     juniorLenderApproved,
+    seniorLenderApprovedAccountPDA,
+    seniorLenderApproved,
     juniorLenderStateAccountPDA,
     seniorLenderStateAccountPDA,
     seniorLenderStateAccount,

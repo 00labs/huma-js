@@ -1,13 +1,13 @@
 import { BN } from '@coral-xyz/anchor'
 import { getHumaProgram, getSolanaPoolInfo } from '@huma-finance/shared'
 import { Transaction, Keypair, PublicKey } from '@solana/web3.js'
-import { MPL_CORE_PROGRAM_ID } from '@metaplex-foundation/mpl-core'
 import lodash from 'lodash'
 import { HumaSolanaContext } from './HumaSolanaContext'
 import {
   getReceivableReferenceAccount,
   getReceivableReferenceData,
 } from '../../utils/solana/getReceivableReferenceAccount'
+import { MPL_CORE_PROGRAM_ID } from './HumaSolanaProgramHelper'
 
 export type ReceivableState =
   | 'deleted'

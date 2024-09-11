@@ -8,7 +8,6 @@ import {
   getTokenAccounts,
   SolanaTokenUtils,
 } from '@huma-finance/shared'
-import { MPL_CORE_PROGRAM_ID } from '@metaplex-foundation/mpl-core'
 import {
   createApproveCheckedInstruction,
   createAssociatedTokenAccountInstruction,
@@ -18,6 +17,9 @@ import {
 } from '@solana/spl-token'
 import { HumaSolanaContext } from './HumaSolanaContext'
 import { getReceivableReferenceData } from '../../utils/solana/getReceivableReferenceAccount'
+
+export const MPL_CORE_PROGRAM_ID =
+  'CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d'
 
 export class HumaSolanaProgramHelper {
   #solanaContext: HumaSolanaContext
