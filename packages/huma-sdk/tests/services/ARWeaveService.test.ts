@@ -6,28 +6,33 @@ import { BigNumber } from 'ethers'
 import { request } from 'graphql-request'
 import BN from 'bignumber.js'
 
-import { ARWeaveService, BundlrConfig } from '../../src/services/ARWeaveService'
+import {
+  ARWeaveService,
+  IrysConstructorArgs,
+} from '../../src/services/ARWeaveService'
 
-jest.mock('@bundlr-network/client', () => {
-  class Bundlr {
-    nodeUrl: string
+jest.mock('@irys/sdk', () => {
+  class Irys {
+    network: string
 
-    currency: string
+    token: string
 
-    signer: any
+    key: any
 
     providerUrl?: string
 
-    constructor(
-      nodeUrl: string,
-      currency: string,
-      signer: any,
-      providerUrl?: string,
-    ) {
-      this.nodeUrl = nodeUrl
-      this.currency = currency
-      this.signer = signer
-      this.providerUrl = providerUrl
+    constructor(data: {
+      network: string
+      token: string
+      key: any
+      config?: {
+        providerUrl?: string
+      }
+    }) {
+      this.network = data.network
+      this.token = data.token
+      this.key = data.key
+      this.providerUrl = data?.config?.providerUrl
     }
 
     public get utils() {
@@ -55,7 +60,7 @@ jest.mock('@bundlr-network/client', () => {
       return Promise.resolve(new BN(size))
     }
   }
-  return Bundlr
+  return Irys
 })
 
 jest.mock('graphql-request')
@@ -65,111 +70,66 @@ jest.mock('axios', () => ({
   get: jest.fn(),
 }))
 
-describe('getBundlrNetworkConfig', () => {
-  it('should return Goerli config for chainId 5', () => {
-    const config = ARWeaveService.getBundlrNetworkConfig(5)
-    expect(config).toEqual({
-      nodeUrl: 'https://devnet.bundlr.network',
-      currency: 'ethereum',
-      providerUrl:
-        'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-    })
-  })
-
+describe('getIrysNetworkConfig', () => {
   it('should return Mumbai config for chainId 80001', () => {
-    const config = ARWeaveService.getBundlrNetworkConfig(80001)
+    const config = ARWeaveService.getIrysNetworkConfig(80002)
     expect(config).toEqual({
-      nodeUrl: 'https://devnet.bundlr.network',
-      currency: 'matic',
-      providerUrl: 'https://rpc.ankr.com/polygon_mumbai',
+      network: 'devnet',
+      token: 'matic',
+      config: {
+        providerUrl: 'https://rpc.ankr.com/polygon_amoy',
+      },
     })
   })
 
   it('should return Matic config for chainId 137', () => {
-    const config = ARWeaveService.getBundlrNetworkConfig(137)
+    const config = ARWeaveService.getIrysNetworkConfig(137)
     expect(config).toEqual({
-      nodeUrl: 'https://node1.bundlr.network',
-      currency: 'matic',
+      network: 'mainnet',
+      token: 'matic',
     })
   })
 
   it('should return default config for any other chainId', () => {
-    const config = ARWeaveService.getBundlrNetworkConfig(999)
+    const config = ARWeaveService.getIrysNetworkConfig(999)
     expect(config).toEqual({
-      nodeUrl: '',
-      currency: '',
+      network: '',
+      token: '',
     })
   })
 })
 
-describe('getBundlrInstance', () => {
-  it('should create a Bundlr instance with the provided config and signer', async () => {
+describe('getIrysInstance', () => {
+  it('should create a Irys instance with the provided config and signer', async () => {
     const config = {
-      nodeUrl: 'https://devnet.bundlr.network',
-      currency: 'ethereum',
-      providerUrl:
-        'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+      network: 'mainnet',
+      token: 'matic',
     }
     const signer =
       '0000000000000000000000000000000000000000000000000000000000000000'
 
-    const bundlrInstance = await ARWeaveService.getBundlrInstance(
-      config,
-      signer,
-    )
+    const irysInstance = await ARWeaveService.getIrysInstance(config, signer)
 
-    expect(bundlrInstance).toBeDefined()
-    expect(bundlrInstance.currency).toBe(config.currency)
-    expect(bundlrInstance.signer).toBe(signer)
-  })
-
-  it('should create a Bundlr instance without a providerUrl if not provided in the config', async () => {
-    const config = {
-      nodeUrl: 'https://bundlr.network',
-      currency: 'ethereum',
-    }
-    const signer =
-      '0000000000000000000000000000000000000000000000000000000000000000'
-
-    const bundlrInstance = await ARWeaveService.getBundlrInstance(
-      config,
-      signer,
-    )
-
-    expect(bundlrInstance).toBeDefined()
-    expect(bundlrInstance.currency).toBe(config.currency)
-    expect(bundlrInstance.signer).toBe(signer)
+    expect(irysInstance).toBeDefined()
+    expect(irysInstance.token).toBe(config.token)
   })
 })
 
-describe('prefundBundlr', () => {
-  it('should prefund the Bundlr network if providerUrl is present', async () => {
-    const config: BundlrConfig = {
-      nodeUrl: 'https://devnet.bundlr.network',
-      currency: 'ethereum',
-      providerUrl:
-        'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+describe('prefundIrys', () => {
+  it('should prefund the Irys network if providerUrl is present', async () => {
+    const config: IrysConstructorArgs = {
+      network: 'devnet',
+      token: 'matic',
+      config: {
+        providerUrl: 'https://rpc.ankr.com/polygon_amoy',
+      },
     }
     const signer =
       '0000000000000000000000000000000000000000000000000000000000000000'
     const amount = 10
 
-    const result = await ARWeaveService.prefundBundlr(config, signer, amount)
+    const result = await ARWeaveService.prefundIrys(config, signer, amount)
 
-    expect(result).toEqual(BigNumber.from(String(amount * amount ** 18)))
-  })
-
-  it('should not prefund the Bundlr network if providerUrl is empty', async () => {
-    const config: BundlrConfig = {
-      nodeUrl: 'https://devnet.bundlr.network',
-      currency: 'ethereum',
-      providerUrl: '',
-    }
-    const signer =
-      '0000000000000000000000000000000000000000000000000000000000000000'
-    const amount = 10
-
-    const result = await ARWeaveService.prefundBundlr(config, signer, amount)
     expect(result).toEqual(BigNumber.from(String(amount * amount ** 18)))
   })
 })
@@ -178,11 +138,9 @@ describe('storeData', () => {
   it('should store data on the Bundlr network', async () => {
     console.log = jest.fn()
 
-    const config: BundlrConfig = {
-      nodeUrl: 'https://devnet.bundlr.network',
-      currency: 'ethereum',
-      providerUrl:
-        'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    const config: IrysConstructorArgs = {
+      network: 'mainnet',
+      token: 'matic',
     }
     const signer =
       '0000000000000000000000000000000000000000000000000000000000000000'
@@ -201,7 +159,7 @@ describe('storeData', () => {
 
     const priceWithBuffer = new BN(15).multipliedBy(1.2).integerValue()
     expect(console.log).toHaveBeenCalledWith(
-      `Funding bundlr with ${priceWithBuffer} ethereum to upload data`,
+      `Funding irys with ${priceWithBuffer} matic to upload data`,
     )
     expect(result).toEqual({ success: true })
   })
