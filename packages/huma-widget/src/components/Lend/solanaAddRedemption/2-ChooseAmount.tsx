@@ -58,8 +58,8 @@ export function ChooseAmount({
 
     return SolanaTokenUtils.formatUnits(
       selectedTranche === 'senior'
-        ? new BN(seniorTokenAccount?.amount)
-        : new BN(juniorTokenAccount?.amount),
+        ? new BN(seniorTokenAccount?.amount?.toString() ?? 0)
+        : new BN(juniorTokenAccount?.amount?.toString() ?? 0),
       mintAccount.decimals,
     )
   }, [
@@ -76,7 +76,7 @@ export function ChooseAmount({
 
     const mintSupplyFormatted = Number(
       SolanaTokenUtils.formatUnits(
-        new BN(mintAccount.supply),
+        new BN(mintAccount.supply.toString()),
         mintAccount.decimals,
       ),
     )
@@ -87,7 +87,7 @@ export function ChooseAmount({
 
     const seniorTrancheAssetsFormatted = Number(
       SolanaTokenUtils.formatUnits(
-        new BN(poolState?.seniorTrancheAssets),
+        new BN(poolState?.seniorTrancheAssets ?? 0),
         mintAccount.decimals,
       ),
     )
@@ -98,7 +98,7 @@ export function ChooseAmount({
 
     const juniorTrancheAssetsFormatted = Number(
       SolanaTokenUtils.formatUnits(
-        new BN(poolState?.juniorTrancheAssets),
+        new BN(poolState?.juniorTrancheAssets ?? 0),
         mintAccount.decimals,
       ),
     )

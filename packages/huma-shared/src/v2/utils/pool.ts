@@ -1,10 +1,6 @@
 import { BigNumber } from 'ethers'
 
 import {
-  SOLANA_DEVNET_INFO,
-  SOLANA_DEVNET_METADATA,
-} from '../metadata/solana/devnet'
-import {
   ChainEnum,
   isChainEnum,
   LenderApprovalProvider,
@@ -12,7 +8,6 @@ import {
   POOL_TYPE,
   PoolVersion,
   REDIRECTS,
-  SolanaChainEnum,
 } from '../../utils'
 import CALENDAR_ABI from '../abis/Calendar.json'
 import POOL_CREDIT_ABI from '../abis/Credit.json'
@@ -149,57 +144,6 @@ export const CHAIN_POOLS_INFO_V2 = {
   [ChainEnum.Scroll]: SCROLL_METADATA,
   [ChainEnum.ScrollSepolia]: SCROLL_SEPOLIA_METADATA,
 } as ChainPoolsInfoV2
-
-export type SolanaPoolInfo = {
-  title: string
-  chainId: SolanaChainEnum
-  poolName: POOL_NAME
-  poolType: POOL_TYPE
-  industry: IndustryType
-  desc: string
-  poolId: string
-  poolAuthority: string
-  poolUnderlyingTokenAccount: string
-  poolConfig: string
-  poolState: string
-  juniorTrancheMint: string
-  juniorTrancheState: string
-  seniorTrancheMint: string
-  seniorTrancheState: string
-  humaConfig: string
-  underlyingMint: {
-    address: string
-    symbol: string
-    decimals: number
-    icon: string
-  }
-}
-
-export type SolanaPoolsInfo = {
-  [poolName in POOL_NAME]?: SolanaPoolInfo
-}
-
-export type SolanaChainPoolsInfo = {
-  [chainId in SolanaChainEnum]: SolanaPoolsInfo
-}
-
-export const SOLANA_CHAIN_POOLS_INFO = {
-  [SolanaChainEnum.SolanaDevnet]: SOLANA_DEVNET_METADATA,
-} as SolanaChainPoolsInfo
-
-export type SolanaChainInfo = {
-  poolProgram: string
-  humaProgramAuthority: string
-  sentinel: string
-}
-
-export type SolanaChainsInfo = {
-  [chainId in SolanaChainEnum]: SolanaChainInfo
-}
-
-export const SOLANA_CHAIN_INFO = {
-  [SolanaChainEnum.SolanaDevnet]: SOLANA_DEVNET_INFO,
-} as SolanaChainsInfo
 
 export const getChainPoolNamesV2 = (
   chainId: number | undefined,

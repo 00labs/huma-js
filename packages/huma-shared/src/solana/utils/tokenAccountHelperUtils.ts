@@ -3,7 +3,8 @@ import {
   TOKEN_2022_PROGRAM_ID,
 } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
-import { SolanaPoolInfo } from '../v2'
+
+import { SolanaPoolInfo } from '../pool'
 
 export const getTokenAccounts = (
   poolInfo: SolanaPoolInfo,

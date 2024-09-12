@@ -1,5 +1,5 @@
 import { POOL_NAME } from '../../utils'
-import { SolanaPoolInfo, SolanaPoolsInfo } from './pool'
+import { SolanaPoolInfo, SolanaPoolsInfo } from '../pool'
 
 export const findSolanaPoolByPDA = (
   metadata: SolanaPoolsInfo,

@@ -51,9 +51,11 @@ export function ApproveAllowance({
           new PublicKey(poolInfo.underlyingMint.address),
           new PublicKey(sentinel), // delegate
           publicKey, // owner of the wallet
-          SolanaTokenUtils.parseUnits(
-            '100000000000', // 100 billion
-            poolInfo.underlyingMint.decimals,
+          BigInt(
+            SolanaTokenUtils.parseUnits(
+              '100000000000', // 100 billion
+              poolInfo.underlyingMint.decimals,
+            ).toString(),
           ), // amount
           poolInfo.underlyingMint.decimals,
           undefined, // multiSigners

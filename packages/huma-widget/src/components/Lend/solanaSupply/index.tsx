@@ -40,6 +40,7 @@ export function SolanaLendSupply({
   handleSuccess,
 }: SolanaLendSupplyProps): React.ReactElement | null {
   const dispatch = useDispatch()
+  const { isUniTranche } = poolState
   const {
     seniorLenderApproved,
     juniorLenderApproved,
@@ -47,7 +48,6 @@ export function SolanaLendSupply({
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const [tokenAccount, isLoadingTokenAccount] = useTokenAccount(poolInfo)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const isUniTranche = poolState.maxSeniorJuniorRatio === 0
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
 
   useEffect(() => {

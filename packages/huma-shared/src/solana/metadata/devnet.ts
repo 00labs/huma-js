@@ -1,6 +1,6 @@
-import { SolanaChainEnum } from '../../../utils/chain'
-import { POOL_NAME, POOL_TYPE } from '../../../utils/pool'
-import { SolanaChainInfo, SolanaPoolsInfo } from '../../utils'
+import { SolanaChainEnum } from '../../utils/chain'
+import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
+import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 
 export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
   humaProgramAuthority: 'FE2Np6Mwt8oMXVHuJnNqtV5Gojc9Y2tFyBsQfJ2y2ZPz',

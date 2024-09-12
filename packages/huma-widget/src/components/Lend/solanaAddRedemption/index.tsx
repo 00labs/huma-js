@@ -55,8 +55,12 @@ export function SolanaLendAddRedemption({
 
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts && !isLoadingTokenAccounts) {
-      const seniorTrancheShares = new BN(seniorTokenAccount?.amount)
-      const juniorTrancheShares = new BN(juniorTokenAccount?.amount)
+      const seniorTrancheShares = new BN(
+        seniorTokenAccount?.amount?.toString() ?? 0,
+      )
+      const juniorTrancheShares = new BN(
+        juniorTokenAccount?.amount?.toString() ?? 0,
+      )
 
       if (juniorTrancheShares.gtn(0) && seniorTrancheShares.lten(0)) {
         setSelectedTranche('junior')
