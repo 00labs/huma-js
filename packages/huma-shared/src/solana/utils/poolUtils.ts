@@ -1,5 +1,7 @@
 import { BN } from '@coral-xyz/anchor'
 
+import { SOLANA_BP_FACTOR } from '../const'
+
 export const getSolanaPoolApy = (
   protocolFeeInBps: number,
   yieldInBps: number,
@@ -16,7 +18,7 @@ export const getSolanaPoolApy = (
   seniorTrancheApy: number
   juniorTrancheApy: number
 } => {
-  const BP_FACTOR_NUMBER = BP_FACTOR.toNumber()
+  const BP_FACTOR_NUMBER = SOLANA_BP_FACTOR.toNumber()
   const APY = yieldInBps / BP_FACTOR_NUMBER
 
   const totalDeployedAssets = seniorDeployedAssets.add(juniorDeployedAssets)
@@ -50,10 +52,10 @@ export const getSolanaPoolApy = (
     BP_FACTOR_NUMBER
 
   let seniorTrancheApy = 0
-  let seniorPostProfit = BN.from(0)
+  let juniorProfit = BN.from(0)
   if (fixedSeniorYieldInBps > 0) {
     seniorTrancheApy = fixedSeniorYieldInBps / BP_FACTOR_NUMBER
-    seniorPostProfit = poolPostProfit.sub(
+    juniorProfit = poolPostProfit.sub(
       seniorAssets
         .mul(Math.round(seniorTrancheApy * BP_FACTOR_NUMBER))
         .div(BP_FACTOR_NUMBER),
@@ -68,44 +70,12 @@ export const getSolanaPoolApy = (
       )
       .div(BP_FACTOR_NUMBER)
     seniorTrancheApy = postPoolProfitRatio * (1 - riskAdjustment) * APY
-    seniorPostProfit = poolPostProfit.sub(seniorProfit)
+    juniorProfit = poolPostProfit.sub(seniorProfit)
   }
 
-  const flcTotalAssetsAfterRisk = getFlcTotalAssetsAfterRisk(flcConfigs)
-  const weight = juniorAssets.add(flcTotalAssetsAfterRisk)
-
-  const juniorProfit = juniorAssets.mul(seniorPostProfit).div(weight)
   const juniorTrancheApy =
     juniorProfit.mul(BP_FACTOR_NUMBER).div(juniorAssets).toNumber() /
     BP_FACTOR_NUMBER
-  const flcTotalProfit = flcTotalAssetsAfterRisk
-    .mul(seniorPostProfit)
-    .div(weight)
-  const flcConfigsWithApy = flcConfigs.map((flcConfig) => {
-    const flcAssetsAfterRisk = flcConfig.minLiquidity
-      .mul(flcConfig.riskYieldMultiplierInBps)
-      .div(BP_FACTOR)
-
-    let apy = 0
-    if (flcConfig.minLiquidity.gt(0) && flcAssetsAfterRisk.gt(0)) {
-      const flcProfit = flcAssetsAfterRisk
-        .mul(flcTotalProfit)
-        .div(flcTotalAssetsAfterRisk)
-      apy =
-        flcProfit.mul(BP_FACTOR_NUMBER).div(flcConfig.minLiquidity).toNumber() /
-        BP_FACTOR_NUMBER
-    }
-
-    return {
-      firstLossCoverIndex: Number(
-        Object.keys(FirstLossCoverIndex)[flcConfig.flcIndex],
-      ),
-      maxLiquidity: flcConfig.maxLiquidity,
-      minLiquidity: flcConfig.minLiquidity,
-      riskYieldMultiplierInBps: flcConfig.riskYieldMultiplierInBps,
-      apy,
-    }
-  })
 
   return {
     blendedApy,

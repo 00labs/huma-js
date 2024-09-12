@@ -1,13 +1,14 @@
 import { AnchorProvider, Program, Wallet } from '@coral-xyz/anchor'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { Huma as HumaSolanaDevnet } from '../v2/idl/devnet'
-import HumaDevnetIDL from '../v2/idl/devnet.json'
-import { POOL_NAME, SolanaChainEnum } from '../utils'
+
+import { POOL_NAME, SolanaChainEnum } from '../../utils'
+import { Huma as HumaSolanaDevnet } from '../idl/devnet'
+import HumaDevnetIDL from '../idl/devnet.json'
 import {
   SOLANA_CHAIN_INFO,
   SOLANA_CHAIN_POOLS_INFO,
   SolanaPoolInfo,
-} from '../v2/utils/pool'
+} from '../pool'
 
 export const getPoolProgramAddress = (chainId: SolanaChainEnum) =>
   SOLANA_CHAIN_INFO[chainId].poolProgram
