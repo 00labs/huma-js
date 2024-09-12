@@ -46,10 +46,10 @@ export function SolanaLendCancelRedemption({
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts) {
       const seniorTrancheSharesRequested = new BN(
-        seniorLenderStateAccount?.redemptionRecord.numSharesRequested,
+        seniorLenderStateAccount?.redemptionRecord.numSharesRequested ?? 0,
       )
       const juniorTrancheSharesRequested = new BN(
-        juniorLenderStateAccount?.redemptionRecord.numSharesRequested,
+        juniorLenderStateAccount?.redemptionRecord.numSharesRequested ?? 0,
       )
 
       if (

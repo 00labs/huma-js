@@ -1,12 +1,12 @@
 import { BN, Wallet } from '@coral-xyz/anchor'
 import {
+  getHumaProgram,
+  getPoolProgramAddress,
+  getSolanaPoolInfo,
   POOL_NAME,
   SolanaChainEnum,
   SolanaPoolInfo,
   TrancheType,
-  getHumaProgram,
-  getPoolProgramAddress,
-  getSolanaPoolInfo,
 } from '@huma-finance/shared'
 import {
   Account,
@@ -17,14 +17,15 @@ import {
   TOKEN_2022_PROGRAM_ID,
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
-import lodash from 'lodash'
 import {
   useAnchorWallet,
   useConnection,
   useWallet,
 } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
+import lodash from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
+
 import { useForceRefresh } from './useForceRefresh'
 
 export const useTrancheMintAccounts = (
@@ -427,7 +428,9 @@ export const useBorrowerAccounts = (
           .sub(yieldDueBN)
           .add(principalPastDueBN)
         const unusedCredit = creditLimitBN.sub(principalAmount)
-        const poolTokenBalanceBN = new BN(poolUnderlyingTokenAccount?.amount)
+        const poolTokenBalanceBN = new BN(
+          poolUnderlyingTokenAccount?.amount?.toString(),
+        )
         // Set available credit to the minimum of the pool balance or the credit available amount,
         // since both are upper bounds on the amount of credit that can be borrowed.
         // If either is negative, cap the available credit to 0.
@@ -476,16 +479,17 @@ export const useBorrowerAccounts = (
 }
 
 export type LenderStateAccount = {
+  bump: number
   depositRecord: {
-    principal: string
-    lastDepositTime: string
+    principal: BN
+    lastDepositTime: BN
   }
   redemptionRecord: {
-    numSharesRequested: string
-    principalRequested: string
-    nextEpochIdToProcess: string
-    totalAmountProcessed: string
-    totalAmountWithdrawn: string
+    numSharesRequested: BN
+    principalRequested: BN
+    nextEpochIdToProcess: BN
+    totalAmountProcessed: BN
+    totalAmountWithdrawn: BN
   }
 }
 
@@ -501,8 +505,8 @@ export const useLenderAccounts = (
   juniorLenderStateAccount: LenderStateAccount | null | undefined
   seniorLenderStateAccountPDA: string | null | undefined
   seniorLenderStateAccount: LenderStateAccount | null | undefined
-  juniorTrancheWithdrawable: BN | undefined
-  seniorTrancheWithdrawable: BN | undefined
+  juniorTrancheWithdrawable: BN | null | undefined
+  seniorTrancheWithdrawable: BN | null | undefined
   loading: boolean
   refresh: () => void
 } => {

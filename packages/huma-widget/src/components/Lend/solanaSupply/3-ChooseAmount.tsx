@@ -32,7 +32,7 @@ export function ChooseAmount({
   const { symbol, decimals } = poolInfo.underlyingMint
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
   const balance = useMemo(
-    () => new BN(tokenAccount.amount),
+    () => new BN(tokenAccount.amount.toString()),
     [tokenAccount.amount],
   )
 
@@ -43,11 +43,13 @@ export function ChooseAmount({
       seniorTrancheAssets,
       juniorTrancheAssets,
     } = poolState
-    const juniorTrancheAssetsBN = new BN(juniorTrancheAssets)
-    const seniorTrancheAssetsBN = new BN(seniorTrancheAssets)
+    const juniorTrancheAssetsBN = new BN(juniorTrancheAssets ?? 0)
+    const seniorTrancheAssetsBN = new BN(seniorTrancheAssets ?? 0)
     const totalDeployedBN = seniorTrancheAssetsBN.add(juniorTrancheAssetsBN)
-    const totalAvailableCapBN = new BN(liquidityCap).sub(totalDeployedBN)
-    const maxSeniorAssetsBN = juniorTrancheAssetsBN.muln(maxSeniorJuniorRatio)
+    const totalAvailableCapBN = new BN(liquidityCap ?? 0).sub(totalDeployedBN)
+    const maxSeniorAssetsBN = juniorTrancheAssetsBN.muln(
+      maxSeniorJuniorRatio ?? 0,
+    )
     let seniorAvailableCapBN = maxSeniorAssetsBN.sub(seniorTrancheAssetsBN)
     seniorAvailableCapBN = seniorAvailableCapBN.gt(totalAvailableCapBN)
       ? totalAvailableCapBN

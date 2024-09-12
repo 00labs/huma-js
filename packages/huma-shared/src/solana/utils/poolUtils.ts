@@ -29,7 +29,7 @@ export const getSolanaPoolApy = (
     .div(juniorDeployedAssets)
     .toNumber()
 
-  let juniorAssets = liquidityCap.div(defaultMaxSeniorJuniorRatio + 1)
+  let juniorAssets = liquidityCap.div(new BN(defaultMaxSeniorJuniorRatio + 1))
   let seniorAssets = liquidityCap.sub(juniorAssets)
   if (currentMaxSeniorJuniorRatio < defaultMaxSeniorJuniorRatio) {
     juniorAssets = juniorDeployedAssets
@@ -37,44 +37,46 @@ export const getSolanaPoolApy = (
   }
 
   const totalProfit = liquidityCap
-    .mul(Math.round(APY * BP_FACTOR_NUMBER))
-    .div(BP_FACTOR_NUMBER)
+    .mul(new BN(Math.round(APY * BP_FACTOR_NUMBER)))
+    .div(SOLANA_BP_FACTOR)
   const postPoolProfitRatio =
     (1 - protocolFeeInBps / BP_FACTOR_NUMBER) *
     (1 -
       rewardRateInBpsForPoolOwner / BP_FACTOR_NUMBER -
       rewardRateInBpsForEA / BP_FACTOR_NUMBER)
   const poolPostProfit = totalProfit
-    .mul(Math.round(postPoolProfitRatio * BP_FACTOR_NUMBER))
-    .div(BP_FACTOR_NUMBER)
+    .mul(new BN(Math.round(postPoolProfitRatio * BP_FACTOR_NUMBER)))
+    .div(SOLANA_BP_FACTOR)
   const blendedApy =
-    poolPostProfit.mul(BP_FACTOR_NUMBER).div(liquidityCap).toNumber() /
+    poolPostProfit.mul(SOLANA_BP_FACTOR).div(liquidityCap).toNumber() /
     BP_FACTOR_NUMBER
 
   let seniorTrancheApy = 0
-  let juniorProfit = BN.from(0)
+  let juniorProfit = new BN(0)
   if (fixedSeniorYieldInBps > 0) {
     seniorTrancheApy = fixedSeniorYieldInBps / BP_FACTOR_NUMBER
     juniorProfit = poolPostProfit.sub(
       seniorAssets
-        .mul(Math.round(seniorTrancheApy * BP_FACTOR_NUMBER))
-        .div(BP_FACTOR_NUMBER),
+        .mul(new BN(Math.round(seniorTrancheApy * BP_FACTOR_NUMBER)))
+        .div(SOLANA_BP_FACTOR),
     )
   } else {
     const riskAdjustment = tranchesRiskAdjustmentInBps / BP_FACTOR_NUMBER
     const seniorProfit = seniorAssets
       .mul(
-        Math.round(
-          postPoolProfitRatio * (1 - riskAdjustment) * APY * BP_FACTOR_NUMBER,
+        new BN(
+          Math.round(
+            postPoolProfitRatio * (1 - riskAdjustment) * APY * BP_FACTOR_NUMBER,
+          ),
         ),
       )
-      .div(BP_FACTOR_NUMBER)
+      .div(SOLANA_BP_FACTOR)
     seniorTrancheApy = postPoolProfitRatio * (1 - riskAdjustment) * APY
     juniorProfit = poolPostProfit.sub(seniorProfit)
   }
 
   const juniorTrancheApy =
-    juniorProfit.mul(BP_FACTOR_NUMBER).div(juniorAssets).toNumber() /
+    juniorProfit.mul(SOLANA_BP_FACTOR).div(juniorAssets).toNumber() /
     BP_FACTOR_NUMBER
 
   return {

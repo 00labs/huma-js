@@ -19,6 +19,17 @@ export type ReceivableState =
   | 'delayed'
   | 'defaulted'
 
+type ReceivableInfo = {
+  bump: number
+  currencyCode: string
+  receivableAmount: BN
+  amountPaid: BN
+  creationDate: BN
+  maturityDate: BN
+  creator: PublicKey
+  state: ReceivableState
+}
+
 export class HumaSolanaReceivableHelper {
   #solanaContext: HumaSolanaContext
 
@@ -122,16 +133,7 @@ export class HumaSolanaReceivableHelper {
     return tx
   }
 
-  async getReceivableInfo(referenceId: string): Promise<{
-    bump: number
-    currencyCode: string
-    receivableAmount: BN
-    amountPaid: BN
-    creationDate: BN
-    maturityDate: BN
-    creator: PublicKey
-    state: ReceivableState
-  } | null> {
+  async getReceivableInfo(referenceId: string): Promise<ReceivableInfo | null> {
     const { publicKey, connection, chainId, poolName } = this.#solanaContext
     const program = getHumaProgram(chainId, connection)
     const poolInfo = getSolanaPoolInfo(chainId, poolName)
@@ -157,7 +159,7 @@ export class HumaSolanaReceivableHelper {
     const data = await program.account.receivableInfo.fetchMultiple([
       receivableInfoPDA,
     ])
-    const receivableInfo = data[0]
+    const receivableInfo = data[0] as unknown as ReceivableInfo
 
     if (!receivableInfo) {
       return null

@@ -55,7 +55,7 @@ export function ChooseAmount({
       decimals,
     )
     const nextStep =
-      borrowAmountBN.gt(new BN(tokenAccount.delegatedAmount)) ||
+      borrowAmountBN.gt(new BN(tokenAccount.delegatedAmount.toString())) ||
       tokenAccount.delegate?.toString() !== sentinel
         ? WIDGET_STEP.ApproveAllowance
         : WIDGET_STEP.Transfer
@@ -63,7 +63,7 @@ export function ChooseAmount({
     dispatch(
       setBorrowInfo({
         borrowAmount: currentAmount,
-        borrowAmountBN,
+        borrowAmountBN: JSON.parse(borrowAmountBN.toString()),
         chargedFees: 0,
         nextStep,
       }),

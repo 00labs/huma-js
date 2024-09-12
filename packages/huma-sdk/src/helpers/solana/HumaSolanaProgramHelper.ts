@@ -103,9 +103,9 @@ export class HumaSolanaProgramHelper {
       )
 
       if (
-        new BN(borrowerUnderlyingTokenAccountInfo.delegatedAmount).lt(
-          amount.muln(2),
-        ) ||
+        new BN(
+          borrowerUnderlyingTokenAccountInfo.delegatedAmount.toString(),
+        ).lt(amount.muln(2)) ||
         borrowerUnderlyingTokenAccountInfo.delegate?.toString() !==
           sentinelAddress
       ) {
@@ -132,7 +132,7 @@ export class HumaSolanaProgramHelper {
         new PublicKey(poolInfo.underlyingMint.address),
         new PublicKey(sentinelAddress), // delegate
         publicKey, // owner of the wallet
-        amount.muln(2), // amount
+        BigInt(amount.muln(2).toString()), // amount
         poolInfo.underlyingMint.decimals,
         undefined, // multiSigners
         TOKEN_2022_PROGRAM_ID,
@@ -217,18 +217,20 @@ export class HumaSolanaProgramHelper {
       throw new Error('Could not find pool')
     }
 
-    const { underlyingTokenATA: borrowerUnderlyingTokenAcccount } =
+    const { underlyingTokenATA: borrowerUnderlyingTokenAccount } =
       getTokenAccounts(poolInfo, publicKey)
 
     return new Transaction().add(
       createApproveCheckedInstruction(
-        borrowerUnderlyingTokenAcccount,
+        borrowerUnderlyingTokenAccount,
         new PublicKey(poolInfo.underlyingMint.address),
         new PublicKey(getSentinelAddress(chainId)),
         publicKey,
-        SolanaTokenUtils.parseUnits(
-          '100000000000',
-          poolInfo.underlyingMint.decimals,
+        BigInt(
+          SolanaTokenUtils.parseUnits(
+            '100000000000',
+            poolInfo.underlyingMint.decimals,
+          ).toString(),
         ),
         poolInfo.underlyingMint.decimals,
         undefined,
