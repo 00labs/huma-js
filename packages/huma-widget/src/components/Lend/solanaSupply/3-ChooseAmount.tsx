@@ -18,7 +18,7 @@ type Props = {
   poolState: SolanaPoolState
   tokenAccount: Account
   selectedTranche: TrancheType | undefined
-  isUniTranche: boolean
+  isUniTranche?: boolean
 }
 
 export function ChooseAmount({
