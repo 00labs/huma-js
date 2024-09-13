@@ -1,10 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { isSolanaTestnet, SolanaChainEnum } from '../solana/chain'
 import { CHAINS } from './chain'
 
 const getDevPrefix = (isDev = false) => (isDev ? 'dev.' : '')
 
-const getNetworkType = (chainId: number) =>
-  CHAINS[chainId].isTestnet ? 'testnet' : 'mainnet'
+const getNetworkType = (chainId: number) => {
+  if (CHAINS[chainId]) {
+    return CHAINS[chainId].isTestnet ? 'testnet' : 'mainnet'
+  }
+  if (SolanaChainEnum[chainId]) {
+    return isSolanaTestnet(chainId) ? 'testnet' : 'mainnet'
+  }
+
+  return 'testnet'
+}
 
 const getNetworkAgnosticServiceUrlPrefix = (chainId: number, isDev: boolean) =>
   `${getDevPrefix(isDev)}${getNetworkType(chainId)}`

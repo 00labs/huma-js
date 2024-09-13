@@ -1,7 +1,8 @@
 import { AnchorProvider, Program, Wallet } from '@coral-xyz/anchor'
 import { Connection, PublicKey } from '@solana/web3.js'
 
-import { POOL_NAME, SolanaChainEnum } from '../../utils'
+import { POOL_NAME } from '../../utils'
+import { SolanaChainEnum } from '../chain'
 import { Huma as HumaSolanaDevnet } from '../idl/devnet'
 import HumaDevnetIDL from '../idl/devnet.json'
 import {
