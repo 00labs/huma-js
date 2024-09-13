@@ -16,4 +16,7 @@ export type SolanaPoolState = {
   blendedApy?: number
   seniorTrancheApy?: number
   juniorTrancheApy?: number
+  amountDefaulted?: number
+  amountOriginated?: number
+  amountRepaid?: number
 }
