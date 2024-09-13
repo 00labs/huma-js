@@ -127,7 +127,7 @@ export function SolanaLendSupply({
         <ChooseAmount
           poolInfo={poolInfo}
           poolState={poolState}
-          tokenAccount={tokenAccount!}
+          tokenAccount={tokenAccount}
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
         />

@@ -54,6 +54,7 @@ export function Evaluation({
   const approveLender = async () => {
     if (publicKey) {
       try {
+        setLoading(true)
         await IdentityServiceV2.approveSolanaLender(
           publicKey.toString(),
           poolInfo.chainId,
