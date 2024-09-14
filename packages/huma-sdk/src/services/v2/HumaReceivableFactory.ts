@@ -117,7 +117,7 @@ export class HumaReceivableFactory {
     }
 
     const signerAddress = await this.#humaContext.signer.getAddress()
-    const config = ARWeaveService.getBundlrNetworkConfig(
+    const config = ARWeaveService.getIrysNetworkConfig(
       this.#arWeavePaymentChainId !== undefined
         ? this.#arWeavePaymentChainId
         : this.#humaContext.chainId,

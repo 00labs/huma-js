@@ -62,6 +62,11 @@ const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
 const DEFAULT_CHAIN_ID = 137
 
+const getEthereumDappUrl = (isDev = false) =>
+  `https://${getDevPrefix(isDev)}app.huma.finance`
+const getSolanaDappUrl = (isDev = false) =>
+  `https://${getDevPrefix(isDev)}solapp.huma.finance`
+
 export const configUtil = {
   dappLink: 'https://app.huma.finance/#',
   linkedInLink: 'https://www.linkedin.com/company/huma-finance',
@@ -96,4 +101,6 @@ export const configUtil = {
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,
   DEFAULT_CHAIN_ID,
+  getEthereumDappUrl,
+  getSolanaDappUrl,
 }

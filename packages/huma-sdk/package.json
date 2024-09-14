@@ -23,18 +23,20 @@
   },
   "dependencies": {
     "@bundlr-network/client": "0.11.17",
+    "@coral-xyz/borsh": "^0.30.1",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.6.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.6.0",
     "@huma-finance/shared": "^0.0.61",
+    "@irys/sdk": "^0.2.11",
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.1",
     "ethers": "^5.7.2",
     "graphql-request": "5.1.0",
     "tslib": "^2.5.0",
-    "typescript": "^4.8.4"
+    "typescript": "^5.0.0"
   },
   "husky": {
     "hooks": {
@@ -102,7 +104,11 @@
     "ts-jest": "^29.1.1"
   },
   "peerDependencies": {
-    "ethers": "^5.6.1"
+    "@coral-xyz/anchor": "^0.30.1",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.3",
+    "ethers": "^5.6.1",
+    "lodash": "^4.17.21"
   },
   "optionalDependencies": {
     "encoding": "^0.1.13"

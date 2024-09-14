@@ -77,6 +77,8 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 ## Typedefs
 
 <dl>
+<dt><a href="#IrysConstructorArgs">IrysConstructorArgs</a> : <code>Object</code></dt>
+<dd><p>Represents the constructor arguments for the Irys service.</p></dd>
 <dt><a href="#ApprovalResult">ApprovalResult</a> : <code>Object</code></dt>
 <dd><p>Object representing the response to the underwriting approval request.</p></dd>
 <dt><a href="#EAPayload">EAPayload</a> : <code>Object</code></dt>
@@ -95,33 +97,33 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 **Kind**: global namespace  
 
 * [ARWeaveService](#ARWeaveService) : <code>object</code>
-    * [.getBundlrNetworkConfig(chainId)](#ARWeaveService.getBundlrNetworkConfig) ⇒ <code>BundlrConfig</code>
-    * [.getBundlrInstance(config, privateKey)](#ARWeaveService.getBundlrInstance) ⇒
-    * [.prefundBundlr(config, privateKey, amount)](#ARWeaveService.prefundBundlr) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
+    * [.getIrysNetworkConfig(chainId)](#ARWeaveService.getIrysNetworkConfig) ⇒ [<code>IrysConstructorArgs</code>](#IrysConstructorArgs)
+    * [.getIrysInstance(config, privateKey)](#ARWeaveService.getIrysInstance) ⇒
+    * [.prefundIrys(config, privateKey, amount)](#ARWeaveService.prefundIrys) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
     * [.storeData(config, privateKey, data, tags, [lazyFund])](#ARWeaveService.storeData) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
     * [.queryForMetadata(chainId, sender, referenceId)](#ARWeaveService.queryForMetadata) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.fetchMetadataFromUrl(url)](#ARWeaveService.fetchMetadataFromUrl) ⇒ <code>Promise.&lt;JSON&gt;</code>
     * [.getURIFromARWeaveId(arweaveId)](#ARWeaveService.getURIFromARWeaveId) ⇒ <code>string</code>
     * [.BundlrConfig](#ARWeaveService.BundlrConfig) : <code>Object</code>
 
-<a name="ARWeaveService.getBundlrNetworkConfig"></a>
+<a name="ARWeaveService.getIrysNetworkConfig"></a>
 
-### ARWeaveService.getBundlrNetworkConfig(chainId) ⇒ <code>BundlrConfig</code>
-<p>Get the configuration for Bundlr network given a chain ID</p>
+### ARWeaveService.getIrysNetworkConfig(chainId) ⇒ [<code>IrysConstructorArgs</code>](#IrysConstructorArgs)
+<p>Get the configuration for the Irys network given a chain ID</p>
 
 **Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
-**Returns**: <code>BundlrConfig</code> - <ul>
-<li>The configuration for the Bundlr network.</li>
+**Returns**: [<code>IrysConstructorArgs</code>](#IrysConstructorArgs) - <ul>
+<li>The configuration for the Irys network.</li>
 </ul>  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | chainId | <code>number</code> | <p>The chain ID.</p> |
 
-<a name="ARWeaveService.getBundlrInstance"></a>
+<a name="ARWeaveService.getIrysInstance"></a>
 
-### ARWeaveService.getBundlrInstance(config, privateKey) ⇒
-<p>Get a Bundlr instance for a specific network</p>
+### ARWeaveService.getIrysInstance(config, privateKey) ⇒
+<p>Get an Irys instance for a specific network</p>
 
 **Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
 **Returns**: <p>The Bundlr instance</p>  
@@ -131,12 +133,12 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 | config | <code>BundlrConfig</code> | <p>The configuration for the Bundlr network.</p> |
 | privateKey | <code>string</code> | <p>The private key of the wallet to use Bundlr with.</p> |
 
-<a name="ARWeaveService.prefundBundlr"></a>
+<a name="ARWeaveService.prefundIrys"></a>
 
-### ARWeaveService.prefundBundlr(config, privateKey, amount) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
-<p>Prefund the Bundlr network with the specified amount. Required if not lazy funding.
+### ARWeaveService.prefundIrys(config, privateKey, amount) ⇒ <code>Promise.&lt;FundResponse&gt;</code>
+<p>Prefund the Irys network with the specified amount. Required if not lazy funding.
 Important note: The amount is denominated in the base unit of currency for that network.
-If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
+If you want to upload 5 Matic to the Irys node, pass in an amount of 5.</p>
 
 **Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
 **Returns**: <code>Promise.&lt;FundResponse&gt;</code> - <ul>
@@ -145,25 +147,25 @@ If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.</p>
 
 | Param | Type | Description |
 | --- | --- | --- |
-| config | <code>BundlrConfig</code> | <p>The configuration for the Bundlr network.</p> |
+| config | [<code>IrysConstructorArgs</code>](#IrysConstructorArgs) | <p>The configuration for the Bundlr network.</p> |
 | privateKey | <code>string</code> | <p>The private key of the wallet to send funds from.</p> |
 | amount | <code>number</code> | <p>The amount to fund, denoted in whatever currency specified by the config (e.g. MATIC, ETH)</p> |
 
 <a name="ARWeaveService.storeData"></a>
 
 ### ARWeaveService.storeData(config, privateKey, data, tags, [lazyFund]) ⇒ <code>Promise.&lt;UploadResponse&gt;</code>
-<p>Store data on ARWeave using the Bundlr Network.</p>
+<p>Store data on ARWeave using the Irys Network.</p>
 
 **Kind**: static method of [<code>ARWeaveService</code>](#ARWeaveService)  
 **Returns**: <code>Promise.&lt;UploadResponse&gt;</code> - <p>Promise resolving with the upload response.</p>  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| config | <code>BundlrConfig</code> |  | <p>Configuration object for the Bundlr instance.</p> |
-| privateKey | <code>string</code> |  | <p>Private key used for interacting with the Bundlr instance.</p> |
-| data | <code>Record.&lt;string, unknown&gt;</code> |  | <p>The data to store in the Bundlr instance.</p> |
+| config | [<code>IrysConstructorArgs</code>](#IrysConstructorArgs) |  | <p>Configuration object for the Irys instance.</p> |
+| privateKey | <code>string</code> |  | <p>Private key used for interacting with the Irys instance.</p> |
+| data | <code>Record.&lt;string, unknown&gt;</code> |  | <p>The data to store in the Irys instance.</p> |
 | tags | <code>Array.&lt;{name: string, value: string}&gt;</code> |  | <p>Array of tag objects with <code>name</code> and <code>value</code> properties.</p> |
-| [lazyFund] | <code>boolean</code> | <code>true</code> | <p>Optional flag to fund the Bundlr instance lazily. If set to <code>false</code>, the Bundlr node should already be funded or else uploads will fail.</p> |
+| [lazyFund] | <code>boolean</code> | <code>true</code> | <p>Optional flag to fund the Irys instance lazily. If set to <code>false</code>, the Irys node should already be funded or else uploads will fail.</p> |
 
 <a name="ARWeaveService.queryForMetadata"></a>
 
@@ -916,6 +918,22 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
+
+<a name="IrysConstructorArgs"></a>
+
+## IrysConstructorArgs : <code>Object</code>
+<p>Represents the constructor arguments for the Irys service.</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [url] | <code>string</code> | <p>The URL of the Irys service.</p> |
+| [network] | <code>Network</code> | <p>The network configuration for the Irys service. Can be mainnet or devnet.</p> |
+| token | <code>string</code> | <p>The token for authentication.</p> |
+| [key] | <code>string</code> | <p>The key for encryption.</p> |
+| [config] | <code>IrysConfig</code> | <p>Additional configuration options for the Irys service.</p> |
 
 <a name="ApprovalResult"></a>
 

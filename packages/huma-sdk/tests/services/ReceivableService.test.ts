@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jest/no-conditional-expect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -8,6 +9,10 @@ import {
   PoolContractMap,
 } from '@huma-finance/shared'
 import { request } from 'graphql-request'
+
+import { TextEncoder, TextDecoder } from 'util'
+
+Object.assign(global, { TextDecoder, TextEncoder })
 
 import { BigNumber, ethers } from 'ethers'
 import { ReceivableService } from '../../src/services/ReceivableService'
@@ -23,7 +28,7 @@ jest.mock('../../src/utils/chain', () => ({
 jest.mock('../../src/services/ARWeaveService', () => ({
   ARWeaveService: {
     queryForMetadata: jest.fn(),
-    getBundlrNetworkConfig: jest.fn(),
+    getIrysNetworkConfig: jest.fn(),
     storeData: jest.fn(),
     fetchMetadataFromUrl: jest.fn(),
     getURIFromARWeaveId: jest.fn(),
@@ -641,7 +646,7 @@ describe('createReceivableWithMetadata', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
       ChainEnum.Polygon,
     )
-    ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
+    ;(ARWeaveService.getIrysNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
     )
@@ -691,7 +696,7 @@ describe('createReceivableWithMetadata', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
       ChainEnum.Polygon,
     )
-    ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
+    ;(ARWeaveService.getIrysNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave id',
     )
@@ -742,7 +747,7 @@ describe('createReceivableWithMetadata', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
       ChainEnum.Polygon,
     )
-    ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
+    ;(ARWeaveService.getIrysNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(
       'ARWeave-id',
     )
@@ -808,7 +813,7 @@ describe('createReceivableWithMetadata', () => {
     ;(getChainIdFromSignerOrProvider as jest.Mock).mockResolvedValue(
       ChainEnum.Polygon,
     )
-    ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({})
+    ;(ARWeaveService.getIrysNetworkConfig as jest.Mock).mockReturnValue({})
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockResolvedValue(null)
     ;(ARWeaveService.storeData as jest.Mock).mockReturnValue({ id: 'id' })
     ;(getRealWorldReceivableContract as jest.Mock).mockReturnValue({
@@ -1026,7 +1031,7 @@ describe('uploadOrFetchMetadataURI', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     ;(ARWeaveService.queryForMetadata as jest.Mock).mockReset()
-    ;(ARWeaveService.getBundlrNetworkConfig as jest.Mock).mockReturnValue({
+    ;(ARWeaveService.getIrysNetworkConfig as jest.Mock).mockReturnValue({
       /* mock config object here */
     })
     ;(ARWeaveService.storeData as jest.Mock).mockResolvedValue({

@@ -2,7 +2,7 @@ name: Huma Monorepo CI
 on:
   pull_request:
     types: [opened, synchronize]
-    branches: ["develop", "master", "v2"]
+    branches: ['develop', 'master', 'v2']
 
 jobs:
   ci:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.13.0
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Cache Yarn dependencies
         uses: actions/cache@v3

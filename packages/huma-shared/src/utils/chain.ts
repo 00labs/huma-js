@@ -50,6 +50,11 @@ export enum ChainEnum {
   ScrollSepolia = 534351,
 }
 
+export enum SolanaChainEnum {
+  SolanaDevnet = 103,
+  SolanaMainnet = 101,
+}
+
 export const CHAINS: {
   [chainId: number]: BasicChainInformation | ExtendedChainInformation
 } = {
@@ -172,6 +177,10 @@ export function isTestnet(chainId: number): boolean {
   return CHAINS[chainId].isTestnet ?? false
 }
 
+export function isSolanaTestnet(chainId: SolanaChainEnum): boolean {
+  return chainId !== SolanaChainEnum.SolanaMainnet
+}
+
 export function isChainEnum(
   chainId: number | string | undefined,
 ): chainId is keyof typeof ChainEnum {
@@ -240,6 +249,27 @@ export function findChainIdByName(chainName: string) {
     (key) => CHAINS[Number(key)].name === chainName,
   )
   return chainId ? Number(chainId) : undefined
+}
+
+export function getSolanaExplorerUrl(
+  chainId: SolanaChainEnum,
+  signature: string,
+  type: 'tx' | 'address',
+): string | null {
+  let cluster = ''
+  switch (chainId) {
+    case SolanaChainEnum.SolanaDevnet:
+      cluster = '?cluster=devnet'
+      break
+    default:
+      break
+  }
+
+  if (!signature) {
+    return null
+  }
+
+  return `https://explorer.solana.com/${type}/${signature}${cluster}`
 }
 
 export function getExplorerUrl(
