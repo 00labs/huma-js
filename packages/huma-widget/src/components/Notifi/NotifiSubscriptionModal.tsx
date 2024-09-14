@@ -20,6 +20,7 @@ import { LoadingModal } from '../LoadingModal'
 import { WrapperModal } from '../WrapperModal'
 
 type Props = {
+  successText?: string
   handleSuccess: () => void
 }
 
@@ -34,6 +35,7 @@ const validateDefaultTargetGroup = async (
 }
 
 export function NotifiSubscriptionModal({
+  successText,
   handleSuccess,
 }: Props): React.ReactElement {
   const theme = useTheme()
@@ -93,6 +95,16 @@ export function NotifiSubscriptionModal({
 
         await subscribeAlertsDefault(fusionEventTopics, targetGroupId)
         await updateFtuStage(FtuStage.Done)
+
+        const targetGroup = (
+          await frontendClient?.fetchFusionData()
+        )?.targetGroup?.find((group) => group?.name === 'Default')
+        const emailTarget = targetGroup?.emailTargets?.[0]
+        if (emailTarget && !emailTarget.isConfirmed) {
+          await frontendClient.sendEmailTargetVerification({
+            targetId: emailTarget.id,
+          })
+        }
       }
 
       setShowSuccessScreen(true)
@@ -111,6 +123,7 @@ export function NotifiSubscriptionModal({
     updateFtuStage,
     isLoadingFtuStage,
     ftuStage,
+    frontendClient,
   ])
 
   useEffect(() => {
@@ -190,7 +203,7 @@ export function NotifiSubscriptionModal({
           <CheckIcon />
         </Box>
         <BottomButton variant='contained' onClick={handleCloseModal}>
-          DONE
+          {successText ?? 'DONE'}
         </BottomButton>
       </WrapperModal>
     )

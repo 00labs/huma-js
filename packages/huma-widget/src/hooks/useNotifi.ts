@@ -77,7 +77,7 @@ export const useIsFirstTimeNotifiUser = (
 
   useEffect(() => {
     const checkIsFirstTimeNotifiUser = async () => {
-      if (isInitialized && notifiChainSupported && !isLoadingFtu) {
+      if (isInitialized && notifiChainSupported) {
         // If the user is not authenticated or expired, they are possibly a first time user.
         if (!isAuthenticated || isExpired) {
           setIsFirstTimeNotifiUser(true)

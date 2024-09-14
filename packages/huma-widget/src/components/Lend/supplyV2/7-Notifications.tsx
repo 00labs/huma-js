@@ -25,5 +25,10 @@ export function Notifications({
     }
   }, [campaign, dispatch, handleAction])
 
-  return <NotifiSubscriptionModal handleSuccess={handleUserAction} />
+  return (
+    <NotifiSubscriptionModal
+      successText={campaign ? 'VIEW POINTS' : undefined}
+      handleSuccess={handleUserAction}
+    />
+  )
 }
