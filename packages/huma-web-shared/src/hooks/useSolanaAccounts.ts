@@ -24,7 +24,7 @@ import {
 } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
 import lodash from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useForceRefresh } from './useForceRefresh'
 
@@ -465,16 +465,18 @@ export const useBorrowerAccounts = (
     poolInfo,
   ])
 
+  const refreshAll = useCallback(() => {
+    refresh()
+    refreshPoolUnderlyingTokenAccount()
+  }, [refresh, refreshPoolUnderlyingTokenAccount])
+
   return {
     creditStateAccountPDA,
     creditStateAccount,
     creditConfigAccountPDA,
     creditConfigAccount,
     loading,
-    refresh: () => {
-      refresh()
-      refreshPoolUnderlyingTokenAccount()
-    },
+    refresh: refreshAll,
   }
 }
 
