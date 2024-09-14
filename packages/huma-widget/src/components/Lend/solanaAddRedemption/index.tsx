@@ -24,11 +24,13 @@ import { Transfer } from './3-Transfer'
  * @typedef {Object} SolanaLendAddRedemptionProps
  * @property {SolanaPoolInfo} poolInfo The metadata of the pool.
  * @property {SolanaPoolState} poolState The current state config of the pool. * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {POOL_NTrancheTypeAME} tranche The tranche type.
  * @property {function():void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface SolanaLendAddRedemptionProps {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
+  tranche?: TrancheType
   handleClose: () => void
   handleSuccess?: () => void
 }
@@ -36,6 +38,7 @@ export interface SolanaLendAddRedemptionProps {
 export function SolanaLendAddRedemption({
   poolInfo,
   poolState,
+  tranche,
   handleClose,
   handleSuccess,
 }: SolanaLendAddRedemptionProps): React.ReactElement | null {
@@ -51,7 +54,9 @@ export function SolanaLendAddRedemption({
     loading: isLoadingTokenAccounts,
   } = useTrancheTokenAccounts(poolInfo)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [selectedTranche, setSelectedTranche] = useState<
+    TrancheType | undefined
+  >(tranche)
 
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts && !isLoadingTokenAccounts) {
@@ -61,6 +66,11 @@ export function SolanaLendAddRedemption({
       const juniorTrancheShares = new BN(
         juniorTokenAccount?.amount?.toString() ?? 0,
       )
+
+      if (selectedTranche) {
+        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+        return
+      }
 
       if (juniorTrancheShares.gtn(0) && seniorTrancheShares.lten(0)) {
         setSelectedTranche('junior')
@@ -85,6 +95,7 @@ export function SolanaLendAddRedemption({
     isLoadingTokenAccounts,
     seniorTokenAccount?.amount,
     juniorTokenAccount?.amount,
+    selectedTranche,
   ])
 
   const title = 'Redemption'

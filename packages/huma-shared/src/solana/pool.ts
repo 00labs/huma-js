@@ -26,6 +26,7 @@ export type SolanaPoolInfo = {
     decimals: number
     icon: string
   }
+  isClosed?: boolean
 }
 
 export type SolanaPoolsInfo = {

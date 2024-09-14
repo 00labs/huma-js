@@ -594,6 +594,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
 | poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool. * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| tranche | <code>POOL\_NTrancheTypeAME</code> | <p>The tranche type.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
 <a name="SolanaLendCancelRedemptionProps"></a>
