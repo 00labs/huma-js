@@ -68,13 +68,18 @@ export function ChooseAmount({
         lpConfig.withdrawalLockoutPeriodInDays * SECONDS_IN_A_DAY
       if (nextEpochStartTime < lockupEndTime) {
         const lockupEndTimeDayjs = dayjs.unix(lockupEndTime).date(1)
+        const withdrawTime = lockupEndTimeDayjs.add(1, 'month')
         dispatch(setStep(WIDGET_STEP.Error))
         dispatch(
           setError({
             errorReason: 'Redemption too soon',
             errorMessage: `Your last deposit was on ${timestampToLL(
               depositRecord!.lastDepositTime.toNumber(),
-            )}. You can redeem on ${timestampToLL(lockupEndTimeDayjs.unix())}.`,
+            )}. You can begin submitting redemption requests on ${timestampToLL(
+              lockupEndTimeDayjs.unix(),
+            )}, which can be redeemed starting ${timestampToLL(
+              withdrawTime.unix(),
+            )}.`,
           }),
         )
       }
