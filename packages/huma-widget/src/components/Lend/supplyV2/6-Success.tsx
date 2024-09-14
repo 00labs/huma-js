@@ -9,10 +9,10 @@ import {
 import { sendTxAtom } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { useAtom } from 'jotai'
-import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import dayjs from 'dayjs'
 import { Campaign } from '.'
 import {
   useDoesChainSupportNotifi,
@@ -90,14 +90,16 @@ export function Success({
   ]
 
   const getSubContent = () => {
-    const currentTime = moment().add(
-      lpConfig.withdrawalLockoutPeriodInDays,
-      'days',
-    )
+    const redemptionTime = dayjs()
+      .add(lpConfig.withdrawalLockoutPeriodInDays, 'day')
+      .date(1)
+    const withdrawTime = redemptionTime.add(1, 'month')
     return [
-      `First redemption date: ${timeUtil.timestampToLL(
-        currentTime.unix(),
-      )}. You can redeem end of each month after.`,
+      `You can begin submitting redemption requests on ${timeUtil.timestampToLL(
+        redemptionTime.unix(),
+      )}, which can be redeemed starting ${timeUtil.timestampToLL(
+        withdrawTime.unix(),
+      )}.`,
     ]
   }
 
