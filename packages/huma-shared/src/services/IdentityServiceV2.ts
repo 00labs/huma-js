@@ -205,6 +205,28 @@ const approveLender = async (
     )}/wallets/${walletAddress}/approve-lender?chainId=${chainId}&contractAddress=${contractAddress}`,
   )
 
+/**
+ * Approve wallet as solana lender.
+ *
+ * @param {string} walletAddress The solana wallet address.
+ * @param {number} chainId Solana Chain ID.
+ * @param {string} contractAddress The tranche vault contract address.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const approveSolanaLender = async (
+  walletAddress: string,
+  chainId: number,
+  contractAddress: string,
+  isDev = false,
+): Promise<void> =>
+  requestPost<void>(
+    `${configUtil.getIdentityAPIUrl(
+      chainId,
+      isDev,
+    )}/wallets/${walletAddress}/approve-lender-solana-tmp?chainId=${chainId}&contractAddress=${contractAddress}`,
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -212,4 +234,5 @@ export const IdentityServiceV2 = {
   resumeVerification,
   consentToSubscription,
   approveLender,
+  approveSolanaLender,
 }

@@ -4,17 +4,18 @@ import {
   useLenderAccounts,
   useTokenAccount,
 } from '@huma-finance/web-shared'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useAppSelector } from '../../../hooks/useRedux'
-import { selectWidgetState } from '../../../store/widgets.selectors'
-import { WidgetWrapper } from '../../WidgetWrapper'
-import { WIDGET_STEP } from '../../../store/widgets.store'
-import { ChooseTranche } from './1-ChooseTranche'
-import { ChooseAmount } from './3-ChooseAmount'
 import { setStep } from '../../../store/widgets.reducers'
+import { selectWidgetState } from '../../../store/widgets.selectors'
+import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
+import { WidgetWrapper } from '../../WidgetWrapper'
+import { Evaluation } from './1-Evaluation'
+import { ChooseTranche } from './2-ChooseTranche'
+import { ChooseAmount } from './3-ChooseAmount'
 import { Transfer } from './4-Transfer'
 import { Success } from './5-Success'
 
@@ -45,6 +46,7 @@ export function SolanaLendSupply({
     seniorLenderApproved,
     juniorLenderApproved,
     loading: isLoadingLenderAccounts,
+    refresh: refreshLenderAccounts,
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const [tokenAccount, isLoadingTokenAccount] = useTokenAccount(poolInfo)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
@@ -52,6 +54,11 @@ export function SolanaLendSupply({
 
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts && !isLoadingTokenAccount) {
+      if (!juniorLenderApproved && !seniorLenderApproved) {
+        dispatch(setStep(WIDGET_STEP.Evaluation))
+        return
+      }
+
       if (juniorLenderApproved && !seniorLenderApproved) {
         setSelectedTranche('junior')
         dispatch(setStep(WIDGET_STEP.ChooseAmount))
@@ -66,13 +73,7 @@ export function SolanaLendSupply({
 
       if (juniorLenderApproved && seniorLenderApproved) {
         dispatch(setStep(WIDGET_STEP.ChooseTranche))
-        // return
       }
-
-      //   if (poolInfo.supplyLink) {
-      //     openInNewTab(poolInfo.supplyLink)
-      //     handleClose()
-      //   }
     }
   }, [
     dispatch,
@@ -84,6 +85,10 @@ export function SolanaLendSupply({
     seniorLenderApproved,
     isLoadingTokenAccount,
   ])
+
+  const handleApproveSuccess = useCallback(() => {
+    refreshLenderAccounts()
+  }, [refreshLenderAccounts])
 
   if (isLoadingLenderAccounts || isLoadingTokenAccount) {
     return (
@@ -104,6 +109,13 @@ export function SolanaLendSupply({
       handleClose={handleClose}
       handleSuccess={handleSuccess}
     >
+      {step === WIDGET_STEP.Evaluation && (
+        <Evaluation
+          poolInfo={poolInfo}
+          isUniTranche={isUniTranche}
+          handleApproveSuccess={handleApproveSuccess}
+        />
+      )}
       {step === WIDGET_STEP.ChooseTranche && (
         <ChooseTranche
           poolUnderlyingToken={poolInfo.underlyingMint}
@@ -115,7 +127,7 @@ export function SolanaLendSupply({
         <ChooseAmount
           poolInfo={poolInfo}
           poolState={poolState}
-          tokenAccount={tokenAccount!}
+          tokenAccount={tokenAccount}
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
         />

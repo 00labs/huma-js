@@ -22,7 +22,7 @@ export function SolanaViewOnExplorer({
   }
 
   return (
-    <Button fullWidth variant='outlined' onClick={() => openInNewTab(link)}>
+    <Button fullWidth variant='contained' onClick={() => openInNewTab(link)}>
       <Box component='span'>VIEW ON EXPLORER</Box>
     </Button>
   )

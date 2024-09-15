@@ -16,7 +16,7 @@ import { InputAmountModal } from '../../InputAmountModal'
 type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
-  tokenAccount: Account
+  tokenAccount?: Account
   selectedTranche: TrancheType | undefined
   isUniTranche?: boolean
 }
@@ -31,10 +31,9 @@ export function ChooseAmount({
   const dispatch = useAppDispatch()
   const { symbol, decimals } = poolInfo.underlyingMint
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
-  const balance = useMemo(
-    () => new BN(tokenAccount.amount.toString()),
-    [tokenAccount.amount],
-  )
+  const balance = tokenAccount
+    ? new BN(tokenAccount.amount.toString())
+    : new BN(0)
 
   const { juniorAvailableCapBN, seniorAvailableCapBN } = useMemo(() => {
     const {

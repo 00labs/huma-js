@@ -1,5 +1,5 @@
-import { SolanaChainEnum } from '../../utils/chain'
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
+import { SolanaChainEnum } from '../chain'
 import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 
 export const SOLANA_DEVNET_INFO: SolanaChainInfo = {

@@ -61,9 +61,14 @@ export function SolanaTxDoneModal({
       width: 100%;
       position: absolute;
       bottom: 0;
-    `,
-    bottomButton: css`
-      margin-top: ${theme.spacing(1)};
+      display: flex;
+      row-gap: ${theme.spacing(1)};
+      column-gap: ${theme.spacing(1)};
+
+      button {
+        height: 40px;
+        margin-top: ${theme.spacing(1)};
+      }
     `,
   }
 
@@ -104,7 +109,6 @@ export function SolanaTxDoneModal({
           className='transaction-done-modal-close-btn'
           variant='contained'
           fullWidth
-          css={styles.bottomButton}
           onClick={handleCloseModal}
         >
           {!buttonText ? 'DONE' : buttonText}
