@@ -438,7 +438,7 @@ async function checkAndCreateWallet(
 
 /**
  * An object that contains functions to interact with Huma's campaign service.
- * @namespace SubgraphService
+ * @namespace CampaignService
  */
 export const CampaignService = {
   checkWalletOwnership,
