@@ -32,5 +32,6 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
       decimals: 6,
       icon: 'USDC',
     },
+    receivable: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
   },
 }

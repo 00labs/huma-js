@@ -26,6 +26,7 @@ export type SolanaPoolInfo = {
     decimals: number
     icon: string
   }
+  receivable?: string
   isClosed?: boolean
 }
 
