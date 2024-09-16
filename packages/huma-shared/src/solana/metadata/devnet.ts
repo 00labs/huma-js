@@ -28,7 +28,7 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
     seniorTrancheState: '4CYWGuuyaCTV9Zhbba5dbK5ovnRzch7f9im2y1eao2AE',
     underlyingMint: {
       address: 'BpexACtnRKfeWLQQJY39zr8dyfDACtP4GCFDVCbVwcdF',
-      symbol: 'USDC',
+      symbol: 'PYUSDC',
       decimals: 6,
       icon: 'USDC',
     },

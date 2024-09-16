@@ -1,5 +1,5 @@
 import { SolanaPoolInfo } from '@huma-finance/shared'
-import { SolanaPoolState, useBorrowerAccounts } from '@huma-finance/web-shared'
+import { useBorrowerAccounts } from '@huma-finance/web-shared'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -15,26 +15,23 @@ import { Done } from './3-Done'
 
 /**
  * Lend pool supply props
- * @typedef {Object} SolanaBorrowProps
+ * @typedef {Object} SolanaPaymentProps
  * @property {SolanaPoolInfo} poolInfo The metadata of the pool.
- * @property {SolanaPoolState} poolState The current state config of the pool. * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function():void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
-export interface SolanaBorrowProps {
+export interface SolanaPaymentProps {
   poolInfo: SolanaPoolInfo
-  poolState: SolanaPoolState
   handleClose: () => void
   handleSuccess?: () => void
 }
 
-export function SolanaBorrow({
+export function SolanaPayment({
   poolInfo,
-  poolState,
   handleClose,
   handleSuccess,
-}: SolanaBorrowProps): React.ReactElement | null {
+}: SolanaPaymentProps): React.ReactElement | null {
   const dispatch = useDispatch()
-  const { creditConfigAccount, loading: isLoadingBorrowerAccounts } =
+  const { creditStateAccount, loading: isLoadingBorrowerAccounts } =
     useBorrowerAccounts(poolInfo.chainId, poolInfo.poolName)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   useEffect(() => {
@@ -43,7 +40,7 @@ export function SolanaBorrow({
     }
   }, [dispatch, step])
 
-  const title = 'Borrow'
+  const title = 'Make Payment'
   if (isLoadingBorrowerAccounts) {
     return (
       <WidgetWrapper
@@ -63,19 +60,15 @@ export function SolanaBorrow({
       handleClose={handleClose}
       handleSuccess={handleSuccess}
     >
-      {step === WIDGET_STEP.ChooseAmount && creditConfigAccount && (
+      {step === WIDGET_STEP.ChooseAmount && creditStateAccount && (
         <ChooseAmount
           poolInfo={poolInfo}
-          creditConfigAccount={creditConfigAccount}
+          creditStateAccount={creditStateAccount}
         />
       )}
       {step === WIDGET_STEP.Transfer && <Transfer poolInfo={poolInfo} />}
       {step === WIDGET_STEP.Done && (
-        <Done
-          poolInfo={poolInfo}
-          poolState={poolState}
-          handleAction={handleClose}
-        />
+        <Done poolInfo={poolInfo} handleAction={handleClose} />
       )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
