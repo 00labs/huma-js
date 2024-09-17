@@ -2,7 +2,7 @@ name: Update parent repo
 
 on:
   push:
-    branches: 
+    branches:
       - develop
 
 jobs:
@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with: 
+        with:
           repository: 00labs/huma-dapp
-          ref: 'develop'
-          token: ${{ secrets.GH_TOKEN }}
+          ref: "develop"
+          token: ${{ secrets.CI_TOKEN }}
           submodules: true
 
       - name: Pull & update submodules recursively
