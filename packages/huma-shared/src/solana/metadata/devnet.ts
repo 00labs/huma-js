@@ -29,7 +29,7 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
     receivable: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
     underlyingMint: {
       address: 'BpexACtnRKfeWLQQJY39zr8dyfDACtP4GCFDVCbVwcdF',
-      symbol: 'PYUSDC',
+      symbol: 'PYUSD',
       decimals: 6,
       icon: 'PYUSD',
     },
