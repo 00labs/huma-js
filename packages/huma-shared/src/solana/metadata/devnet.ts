@@ -9,13 +9,13 @@ export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
 }
 
 export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
-  HumaCreditLine: {
-    title: 'Test Creditline Pool',
-    poolName: POOL_NAME.HumaCreditLine,
+  ArfPoolPYUSD: {
+    title: 'Arf - Cross Border Payment Financing',
+    poolName: POOL_NAME.ArfPoolPYUSD,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaDevnet,
     industry: 'Remittance Financing',
-    desc: 'This is a test pool for Huma creditline on Solana',
+    desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     poolId: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
     poolAuthority: 'rawZV3C2THDqgwAaWJTBu4yhZzqrkqkBqV4abYA3zW3',
     poolUnderlyingTokenAccount: 'DLcZV7oAL4KQFHxMi7sptuiHAdxGpFFBGLUn2XJwAW69',
@@ -30,7 +30,7 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
       address: 'BpexACtnRKfeWLQQJY39zr8dyfDACtP4GCFDVCbVwcdF',
       symbol: 'USDC',
       decimals: 6,
-      icon: 'USDC',
+      icon: 'PYUSD',
     },
     receivable: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
   },
