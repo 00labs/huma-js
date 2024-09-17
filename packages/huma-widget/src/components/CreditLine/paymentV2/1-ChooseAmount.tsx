@@ -45,6 +45,7 @@ export function ChooseAmount({
     ethers.utils.formatUnits(payoffAmountBN, decimals),
   )
 
+  // TODO: Remove redundant useEffect
   useEffect(() => {
     setCurrentAmount(totalDueAmount)
   }, [totalDueAmount])

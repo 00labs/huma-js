@@ -89,6 +89,10 @@ import {
   SolanaBorrow,
   SolanaBorrowProps,
 } from './components/CreditLine/solanaBorrow'
+import {
+  SolanaPayment,
+  SolanaPaymentProps,
+} from './components/CreditLine/solanaPayment'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -566,8 +570,6 @@ function SolanaWidget(props: WCProps<SolanaWidgetProps>) {
 /**
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaLendSupplyWidgetProps
- * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
- * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
  */
 type SolanaLendSupplyWidgetProps = SolanaLendSupplyProps & SolanaWidgetProps
 
@@ -587,8 +589,6 @@ export function SolanaLendSupplyWidget(props: SolanaLendSupplyWidgetProps) {
 /**
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaLendAddRedemptionWidgetProps
- * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
- * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
  */
 type SolanaLendAddRedemptionWidgetProps = SolanaLendAddRedemptionProps &
   SolanaWidgetProps
@@ -611,8 +611,6 @@ export function SolanaLendAddRedemptionWidget(
 /**
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaLendCancelRedemptionWidgetProps
- * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
- * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
  */
 type SolanaLendCancelRedemptionWidgetProps = SolanaLendCancelRedemptionProps &
   SolanaWidgetProps
@@ -635,8 +633,6 @@ export function SolanaLendCancelRedemptionWidget(
 /**
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaBorrowWidgetProps
- * @property {SolanaLendSupplyProps} SolanaLendSupplyProps - Specific widget props
- * @property {SolanaWidgetProps} SolanaWidgetProps - Widget general props.
  */
 type SolanaBorrowWidgetProps = SolanaBorrowProps & SolanaWidgetProps
 
@@ -649,6 +645,25 @@ export function SolanaBorrowWidget(props: SolanaBorrowWidgetProps) {
   return (
     <SolanaWidget {...props}>
       <SolanaBorrow {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaPaymentWidgetProps
+ */
+type SolanaPaymentWidgetProps = SolanaPaymentProps & SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaPaymentWidgetProps} props - Widget props
+ */
+export function SolanaPaymentWidget(props: SolanaPaymentWidgetProps) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaPayment {...props} />
     </SolanaWidget>
   )
 }

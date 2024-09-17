@@ -93,6 +93,7 @@ export function InputAmountModal({
       font-size: 13px;
       line-height: 22px;
       letter-spacing: 0.46px;
+      white-space: nowrap;
     `,
     info: css`
       color: ${theme.palette.text.secondary};
