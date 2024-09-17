@@ -5,7 +5,7 @@ import {
   SolanaPoolInfo,
   SolanaTokenUtils,
 } from '@huma-finance/shared'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -33,10 +33,7 @@ type Props = {
 export function Transfer({ poolInfo }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
   const { wallet, publicKey } = useWallet()
-  const sentinel = useMemo(
-    () => getSentinelAddress(poolInfo.chainId),
-    [poolInfo.chainId],
-  )
+  const sentinel = getSentinelAddress(poolInfo.chainId)
   const { connection } = useConnection()
   const [transaction, setTransaction] = useState<Transaction>()
   const program = useHumaProgram(poolInfo.chainId)
