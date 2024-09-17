@@ -32,6 +32,7 @@ function getRecentActivities(
   skip: number,
   isDev: boolean,
   isTestnet: boolean,
+  owner?: string,
 ): Promise<
   | {
       totalCount: number
@@ -41,7 +42,7 @@ function getRecentActivities(
 > {
   const url = configUtil.getCampaignAPIUrl(isDev, isTestnet)
 
-  const query = gql`
+  let query = gql`
     query {
         poolActivityEvents(
         poolId: "${poolId}", 
@@ -62,6 +63,29 @@ function getRecentActivities(
       }
     }
   `
+  if (owner) {
+    query = gql`
+      query {
+          poolActivityEvents(
+          poolId: "${poolId}", 
+          owner: "${owner}",
+          first: ${first}, 
+          skip: ${skip}, 
+          orderBy: "timestamp", 
+          orderDirection: "desc"
+        ) {
+          totalCount
+          events {
+            name
+            blockNumber
+            timestamp
+            transactionHash
+            owner
+            amount
+          }
+        }
+      }`
+  }
 
   return requestPost<{
     data?: {
