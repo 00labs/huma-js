@@ -20,14 +20,16 @@ export type SolanaPoolInfo = {
   seniorTrancheMint: string
   seniorTrancheState: string
   humaConfig: string
+  receivable?: string
   underlyingMint: {
     address: string
     symbol: string
     decimals: number
     icon: string
   }
-  receivable?: string
-  isClosed?: boolean
+  extra?: {
+    isClosed?: boolean
+  }
 }
 
 export type SolanaPoolsInfo = {

@@ -26,12 +26,12 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
     juniorTrancheState: 'DKiVJPHwDxjaSbLXHZh4m3hTs19xbvFArXYd8xEs1mee',
     seniorTrancheMint: '6nCWnzocemref4C92TV2XkTZwnHRADkbaCkT6fXUVQ8d',
     seniorTrancheState: '4CYWGuuyaCTV9Zhbba5dbK5ovnRzch7f9im2y1eao2AE',
+    receivable: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
     underlyingMint: {
       address: 'BpexACtnRKfeWLQQJY39zr8dyfDACtP4GCFDVCbVwcdF',
       symbol: 'USDC',
       decimals: 6,
       icon: 'PYUSD',
     },
-    receivable: '5o7qiQZeCbTowg75xgB5xMnYRHpXx43c6CnFbnC3MXkJ',
   },
 }
