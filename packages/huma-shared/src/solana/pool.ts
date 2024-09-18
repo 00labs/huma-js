@@ -19,6 +19,7 @@ export type SolanaPoolInfo = {
   juniorTrancheState: string
   seniorTrancheMint: string
   seniorTrancheState: string
+  trancheDecimals: number
   humaConfig: string
   receivable?: string
   underlyingMint: {

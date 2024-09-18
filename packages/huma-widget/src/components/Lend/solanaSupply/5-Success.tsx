@@ -1,8 +1,8 @@
 import { formatMoney, SolanaPoolInfo, timeUtil } from '@huma-finance/shared'
 import { SolanaPoolState } from '@huma-finance/web-shared'
-import moment from 'moment'
 import React from 'react'
 
+import dayjs from 'dayjs'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { SolanaTxDoneModal } from '../../SolanaTxDoneModal'
@@ -26,14 +26,16 @@ export function Success({
   ]
 
   const getSubContent = () => {
-    const currentTime = moment().add(
-      poolState.withdrawalLockupPeriodDays,
-      'days',
-    )
+    const lockupEndTime = dayjs()
+      .add(poolState.withdrawalLockupPeriodDays ?? 0, 'day')
+      .date(1)
+    const withdrawTime = lockupEndTime.add(1, 'month')
     return [
-      `First redemption date: ${timeUtil.timestampToLL(
-        currentTime.unix(),
-      )}. You can redeem end of each month after.`,
+      `You can begin submitting redemption requests on ${timeUtil.timestampToLL(
+        lockupEndTime.unix(),
+      )}, which can be redeemed starting ${timeUtil.timestampToLL(
+        withdrawTime.unix(),
+      )}.`,
     ]
   }
 

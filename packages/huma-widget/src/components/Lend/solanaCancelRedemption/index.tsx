@@ -23,12 +23,14 @@ import { Done } from './3-Done'
  */
 export interface SolanaLendCancelRedemptionProps {
   poolInfo: SolanaPoolInfo
+  tranche?: TrancheType
   handleClose: () => void
   handleSuccess?: () => void
 }
 
 export function SolanaLendCancelRedemption({
   poolInfo,
+  tranche,
   handleClose,
   handleSuccess,
 }: SolanaLendCancelRedemptionProps): React.ReactElement | null {
@@ -41,7 +43,9 @@ export function SolanaLendCancelRedemption({
     loading: isLoadingLenderAccounts,
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
-  const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [selectedTranche, setSelectedTranche] = useState<
+    TrancheType | undefined
+  >(tranche)
 
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts) {
@@ -51,6 +55,11 @@ export function SolanaLendCancelRedemption({
       const juniorTrancheSharesRequested = new BN(
         juniorLenderStateAccount?.redemptionRecord.numSharesRequested ?? 0,
       )
+
+      if (selectedTranche) {
+        dispatch(setStep(WIDGET_STEP.Transfer))
+        return
+      }
 
       if (
         juniorTrancheSharesRequested.gtn(0) &&
@@ -83,6 +92,7 @@ export function SolanaLendCancelRedemption({
     isLoadingLenderAccounts,
     seniorLenderStateAccount?.redemptionRecord.numSharesRequested,
     juniorLenderStateAccount?.redemptionRecord.numSharesRequested,
+    selectedTranche,
   ])
 
   const title = 'Cancel Redemption'

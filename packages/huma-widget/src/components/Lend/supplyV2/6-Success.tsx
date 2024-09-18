@@ -90,13 +90,13 @@ export function Success({
   ]
 
   const getSubContent = () => {
-    const redemptionTime = dayjs()
+    const lockupEndTime = dayjs()
       .add(lpConfig.withdrawalLockoutPeriodInDays, 'day')
       .date(1)
-    const withdrawTime = redemptionTime.add(1, 'month')
+    const withdrawTime = lockupEndTime.add(1, 'month')
     return [
       `You can begin submitting redemption requests on ${timeUtil.timestampToLL(
-        redemptionTime.unix(),
+        lockupEndTime.unix(),
       )}, which can be redeemed starting ${timeUtil.timestampToLL(
         withdrawTime.unix(),
       )}.`,
