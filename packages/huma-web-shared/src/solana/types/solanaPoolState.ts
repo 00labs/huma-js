@@ -19,4 +19,15 @@ export type SolanaPoolState = {
   amountDefaulted?: number
   amountOriginated?: number
   amountRepaid?: number
+  disbursementReserve?: number
+  accruedIncomes?: {
+    eaIncome: string
+    protocolIncome: string
+    poolOwnerIncome: string
+  }
+  incomeWithdrawn?: {
+    eaIncomeWithdrawn: string
+    protocolIncomeWithdrawn: string
+    poolOwnerIncomeWithdrawn: string
+  }
 }

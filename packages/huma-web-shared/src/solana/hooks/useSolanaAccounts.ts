@@ -26,7 +26,67 @@ import { PublicKey } from '@solana/web3.js'
 import lodash from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { useForceRefresh } from './useForceRefresh'
+import { useForceRefresh } from '../../hooks/useForceRefresh'
+
+export type PoolStateAccount = {
+  accruedIncomes: { protocolIncome: BN; poolOwnerIncome: BN; eaIncome: BN }
+  incomeWithdrawn: {
+    eaIncomeWithdrawn: BN
+    poolOwnerIncomeWithdrawn: BN
+    protocolIncomeWithdrawn: BN
+  }
+  disbursementReserve: BN
+  trancheAssets: BN[]
+}
+
+export const usePoolStateAccount = (
+  chainId: SolanaChainEnum,
+  poolName: POOL_NAME,
+): {
+  poolStateAccount: PoolStateAccount | undefined
+  loading: boolean
+  refresh: () => void
+} => {
+  const wallet = useAnchorWallet()
+  const { connection } = useConnection()
+  const [loading, setLoading] = useState<boolean>(true)
+  const poolInfo = useMemo(
+    () => getSolanaPoolInfo(chainId, poolName),
+    [chainId, poolName],
+  )
+  const [poolStateAccount, setPoolStateAccount] = useState<PoolStateAccount>()
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    async function fetchPoolStateAccount() {
+      setLoading(true)
+      if (!poolInfo || !connection || !wallet) {
+        setLoading(false)
+        return
+      }
+      const program = getHumaProgram(chainId, connection, wallet as Wallet)
+      const poolStateAccountResult = await program.account.poolState.fetch(
+        new PublicKey(poolInfo.poolState),
+      )
+
+      setPoolStateAccount({
+        accruedIncomes: poolStateAccountResult.accruedIncomes,
+        incomeWithdrawn: poolStateAccountResult.incomeWithdrawn,
+        disbursementReserve: poolStateAccountResult.disbursementReserve,
+        trancheAssets: poolStateAccountResult.trancheAssets.assets,
+      })
+      setLoading(false)
+    }
+
+    fetchPoolStateAccount()
+  }, [chainId, connection, poolInfo, wallet, refreshCount])
+
+  return {
+    poolStateAccount,
+    loading,
+    refresh,
+  }
+}
 
 export const useTrancheMintAccounts = (
   poolInfo: SolanaPoolInfo,
@@ -45,6 +105,7 @@ export const useTrancheMintAccounts = (
     async function fetchTokenAccount() {
       setLoading(true)
       if (!publicKey || !connection || !wallet) {
+        setLoading(false)
         return
       }
 
@@ -102,6 +163,7 @@ export const useTrancheTokenAccounts = (
     async function fetchTokenAccount() {
       setLoading(true)
       if (!publicKey || !connection || !wallet) {
+        setLoading(false)
         return
       }
 
@@ -182,6 +244,7 @@ export const useTokenAccount = (
     async function fetchTokenAccount() {
       setLoading(true)
       if (!publicKey || !connection || !wallet) {
+        setLoading(false)
         return
       }
 
@@ -221,7 +284,6 @@ export const usePoolUnderlyingTokenAccount = (
   poolInfo: SolanaPoolInfo | undefined,
 ): { account: Account | undefined; loading: boolean; refresh: () => void } => {
   const { publicKey } = useWallet()
-  const wallet = useAnchorWallet()
   const { connection } = useConnection()
   const [loading, setLoading] = useState<boolean>(true)
   const [account, setAccount] = useState<Account>()
@@ -230,7 +292,8 @@ export const usePoolUnderlyingTokenAccount = (
   useEffect(() => {
     async function fetchTokenBalance() {
       setLoading(true)
-      if (!connection || !wallet || !poolInfo) {
+      if (!connection || !poolInfo) {
+        setLoading(false)
         return
       }
 
@@ -254,7 +317,7 @@ export const usePoolUnderlyingTokenAccount = (
     }
 
     fetchTokenBalance()
-  }, [refreshCount, publicKey, connection, wallet, poolInfo])
+  }, [refreshCount, publicKey, connection, poolInfo])
 
   return { account, loading, refresh }
 }
@@ -339,6 +402,7 @@ export const useBorrowerAccounts = (
         !wallet ||
         !poolUnderlyingTokenAccount
       ) {
+        setLoading(false)
         return
       }
       const poolProgram = new PublicKey(getPoolProgramAddress(chainId))
@@ -548,6 +612,7 @@ export const useLenderAccounts = (
       setLoading(true)
       const poolInfo = getSolanaPoolInfo(chainId, poolName)
       if (!poolInfo || !publicKey || !connection || !wallet) {
+        setLoading(false)
         return
       }
       const poolProgram = new PublicKey(getPoolProgramAddress(chainId))

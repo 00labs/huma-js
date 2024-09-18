@@ -85,3 +85,23 @@ export const getSolanaPoolApy = (
     juniorTrancheApy,
   }
 }
+
+export const getSolanaUtilizationRate = (
+  seniorTrancheAssets: BN | undefined,
+  juniorTrancheAssets: BN | undefined,
+  availableBalance: BN | undefined,
+): number | undefined => {
+  if (!seniorTrancheAssets || !juniorTrancheAssets || !availableBalance) {
+    return undefined
+  }
+
+  const totalSupply = seniorTrancheAssets.add(juniorTrancheAssets)
+  const borrowedBalance = totalSupply.sub(availableBalance)
+  if (borrowedBalance.gt(new BN(0)) && totalSupply.gt(new BN(0))) {
+    return (
+      borrowedBalance.mul(SOLANA_BP_FACTOR).div(totalSupply).toNumber() /
+      SOLANA_BP_FACTOR.toNumber()
+    )
+  }
+  return 0
+}
