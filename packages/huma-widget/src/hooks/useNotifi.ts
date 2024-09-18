@@ -8,6 +8,11 @@ import {
   NotifiFrontendClient,
   newFrontendClient,
 } from '@notifi-network/notifi-frontend-client'
+import {
+  FtuStage,
+  useNotifiFrontendClientContext,
+  useNotifiUserSettingContext,
+} from '@notifi-network/notifi-react'
 
 export const useDoesChainSupportNotifi = (chainId: number | undefined) => {
   const [notifiChainSupported, setNotifiChainSupported] = useState(false)
@@ -54,32 +59,31 @@ export const useNotifiClient = (
   return { notifiClient }
 }
 
+// Check if user is authenticated
+// If not authenticated or expired, have user login
+// After login, check FTU stage
+// If FTU stage is not Done, go to signup flow. Otherwise, skip to next step
+
 export const useIsFirstTimeNotifiUser = (
   account: string | undefined,
   chainId: number | undefined,
 ) => {
   const [isFirstTimeNotifiUser, setIsFirstTimeNotifiUser] = useState(false)
-  const { notifiClient } = useNotifiClient(account, chainId)
+  const {
+    frontendClientStatus: { isInitialized, isAuthenticated, isExpired },
+  } = useNotifiFrontendClientContext()
+  const { ftuStage, isLoading: isLoadingFtu } = useNotifiUserSettingContext()
   const { notifiChainSupported } = useDoesChainSupportNotifi(chainId)
 
   useEffect(() => {
     const checkIsFirstTimeNotifiUser = async () => {
-      if (notifiClient != null && notifiChainSupported) {
-        const { userState } = notifiClient
-        // If the user is not authenticated or expired, they are a first time user
-        if (
-          userState == null ||
-          (userState.status !== 'authenticated' &&
-            userState.status !== 'expired')
-        ) {
+      if (isInitialized && notifiChainSupported) {
+        // If the user is not authenticated or expired, they are possibly a first time user.
+        if (!isAuthenticated || isExpired) {
           setIsFirstTimeNotifiUser(true)
-        } else if (userState.status === 'authenticated') {
-          // If a user is authenticated, check if they have a target group (AKA email)
-          // associated with their wallet. If they do not, show them the notifi onboarding flow.
-          const targetGroups = await notifiClient.getTargetGroups()
-          const emailTargets = targetGroups[0]?.emailTargets?.[0]
-
-          if (emailTargets == null || emailTargets.emailAddress == null) {
+        } else if (isAuthenticated) {
+          // If a user is authenticated, check if they've completed all the FTU (First Time User) stages.
+          if (ftuStage !== FtuStage.Done) {
             setIsFirstTimeNotifiUser(true)
           }
         }
@@ -87,7 +91,14 @@ export const useIsFirstTimeNotifiUser = (
     }
 
     checkIsFirstTimeNotifiUser()
-  }, [notifiChainSupported, notifiClient])
+  }, [
+    ftuStage,
+    isAuthenticated,
+    isExpired,
+    isInitialized,
+    isLoadingFtu,
+    notifiChainSupported,
+  ])
 
   return { isFirstTimeNotifiUser }
 }
