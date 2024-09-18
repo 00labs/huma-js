@@ -283,7 +283,6 @@ export const useTokenAccount = (
 export const usePoolUnderlyingTokenAccount = (
   poolInfo: SolanaPoolInfo | undefined,
 ): { account: Account | undefined; loading: boolean; refresh: () => void } => {
-  const { publicKey } = useWallet()
   const { connection } = useConnection()
   const [loading, setLoading] = useState<boolean>(true)
   const [account, setAccount] = useState<Account>()
@@ -317,7 +316,7 @@ export const usePoolUnderlyingTokenAccount = (
     }
 
     fetchTokenBalance()
-  }, [refreshCount, publicKey, connection, poolInfo])
+  }, [refreshCount, connection, poolInfo])
 
   return { account, loading, refresh }
 }
