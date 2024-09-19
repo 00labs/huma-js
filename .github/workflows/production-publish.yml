@@ -3,7 +3,7 @@ name: Production NPM Packages Publishing
 on:
   pull_request:
     types: [closed]
-    branches: ['master']
+    branches: ["master"]
 
 jobs:
   deploy-prod:
@@ -15,14 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.CI_TOKEN }}
 
       - name: Use Node.js 18.13.0
         uses: actions/setup-node@v3
         with:
           node-version: 18.13.0
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
+          registry-url: "https://registry.npmjs.org"
+          cache: "yarn"
 
       - name: Cache Yarn dependencies
         uses: actions/cache@v3

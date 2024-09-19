@@ -93,6 +93,7 @@ import {
   SolanaPayment,
   SolanaPaymentProps,
 } from './components/CreditLine/solanaPayment'
+import { NotifiContextWrapper } from './components/Notifi/NotifiContextWrapper'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -136,7 +137,11 @@ function Widget(props: WCProps<WidgetProps>) {
       <ReduxProvider store={store}>
         <Web3Provider {...(props as Web3Props)} defaultChainId={chainId}>
           <AtomProvider>
-            <ChainSupportProvider>{children}</ChainSupportProvider>
+            <ChainSupportProvider>
+              <NotifiContextWrapper chainId={chainId}>
+                {children}
+              </NotifiContextWrapper>
+            </ChainSupportProvider>
           </AtomProvider>
         </Web3Provider>
       </ReduxProvider>
@@ -667,3 +672,5 @@ export function SolanaPaymentWidget(props: SolanaPaymentWidgetProps) {
     </SolanaWidget>
   )
 }
+
+export * from './components/Notifi/NotifiContextWrapper'

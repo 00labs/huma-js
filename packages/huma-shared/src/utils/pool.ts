@@ -286,6 +286,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           order: 1,
           borrower: '0xd4F254006d486688cE7515199C55266C581B949A',
+          rwrUploader: '0x8Ddf4bE03d535A57D8b3D942941BDF65E96D994e',
           disableBorrow: true,
           lenderApprovalProvider: {
             type: 'KYC',
@@ -606,6 +607,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
           borrower: '0xD3CCe1eC5a3981B27bD998f33A7eafdD27Ad2dF4',
+          rwrUploader: '0x8Ddf4bE03d535A57D8b3D942941BDF65E96D994e',
         },
       },
       [POOL_NAME.JiaUSDC]: {

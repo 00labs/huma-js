@@ -3,7 +3,7 @@ export const coreThemeConstants = {
     md: 4,
   },
   fontFamily: [
-    'Roboto',
+    'Red-Hat-Display',
     '-apple-system',
     'BlinkMacSystemFont',
     '"Segoe UI"',
