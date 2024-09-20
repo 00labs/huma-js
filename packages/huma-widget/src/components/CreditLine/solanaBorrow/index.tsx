@@ -33,18 +33,21 @@ export function SolanaBorrow({
   handleClose,
   handleSuccess,
 }: SolanaBorrowProps): React.ReactElement | null {
+  const title = 'Borrow'
   const dispatch = useDispatch()
-  const { creditConfigAccount, loading: isLoadingBorrowerAccounts } =
-    useBorrowerAccounts(poolInfo.chainId, poolInfo.poolName)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
+  const { creditConfigAccount } = useBorrowerAccounts(
+    poolInfo.chainId,
+    poolInfo.poolName,
+  )
+
   useEffect(() => {
-    if (!step) {
+    if (!step && creditConfigAccount) {
       dispatch(setStep(WIDGET_STEP.ChooseAmount))
     }
-  }, [dispatch, step])
+  }, [creditConfigAccount, dispatch, step])
 
-  const title = 'Borrow'
-  if (isLoadingBorrowerAccounts) {
+  if (!creditConfigAccount) {
     return (
       <WidgetWrapper
         isOpen

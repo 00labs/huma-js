@@ -337,6 +337,7 @@ export type CreditStateAccount = {
     missedPeriods: number
     remainingPeriods: number
     unbilledPrincipal: BN
+    principal: BN
     totalDueAmount: BN
     payoffAmount: BN
   }
@@ -465,6 +466,11 @@ export const useBorrowerAccounts = (
         const yieldDueBN = new BN(result.creditRecord.yieldDue)
         const principalPastDueBN = new BN(result.dueDetail.principalPastDue)
         const totalPastDueBN = new BN(result.creditRecord.totalPastDue)
+        const principalBN = unbilledPrincipalBN
+          .add(nextDueBN)
+          .sub(yieldDueBN)
+          .add(principalPastDueBN)
+
         setCreditStateAccount({
           creditRecord: {
             status,
@@ -475,6 +481,7 @@ export const useBorrowerAccounts = (
             missedPeriods: result.creditRecord.missedPeriods,
             remainingPeriods: result.creditRecord.remainingPeriods,
             unbilledPrincipal: unbilledPrincipalBN,
+            principal: principalBN,
             totalDueAmount: nextDueBN.add(totalPastDueBN),
             payoffAmount: unbilledPrincipalBN
               .add(nextDueBN)
