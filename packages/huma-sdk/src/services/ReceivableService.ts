@@ -418,6 +418,7 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
   poolType: POOL_TYPE,
   poolVersion: PoolVersion,
   pagination?: Pagination,
+  apiKey?: string,
 ): Promise<RealWorldReceivableInfo<T>[]> {
   if (!ethers.utils.isAddress(owner)) {
     throw new Error('Invalid owner address')
@@ -439,6 +440,7 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
       poolName,
       poolType,
       pagination,
+      apiKey,
     )
   }
 
