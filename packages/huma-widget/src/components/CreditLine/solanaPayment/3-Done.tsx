@@ -28,9 +28,10 @@ export function Done({ poolInfo, handleAction }: Props): React.ReactElement {
       })
 
       const preTokenBalance =
-        txData?.meta?.preTokenBalances?.[1]?.uiTokenAmount?.uiAmount
+        txData?.meta?.preTokenBalances?.[0]?.uiTokenAmount?.uiAmount
       const postTokenBalance =
-        txData?.meta?.postTokenBalances?.[1]?.uiTokenAmount?.uiAmount
+        txData?.meta?.postTokenBalances?.[0]?.uiTokenAmount?.uiAmount
+
       if (preTokenBalance && postTokenBalance) {
         setTokensPaid(preTokenBalance - postTokenBalance)
       }

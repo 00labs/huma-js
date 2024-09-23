@@ -30,18 +30,21 @@ export function SolanaPayment({
   handleClose,
   handleSuccess,
 }: SolanaPaymentProps): React.ReactElement | null {
+  const title = 'Make Payment'
   const dispatch = useDispatch()
-  const { creditStateAccount, loading: isLoadingBorrowerAccounts } =
-    useBorrowerAccounts(poolInfo.chainId, poolInfo.poolName)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
+  const { creditStateAccount } = useBorrowerAccounts(
+    poolInfo.chainId,
+    poolInfo.poolName,
+  )
+
   useEffect(() => {
-    if (!step) {
+    if (!step && creditStateAccount) {
       dispatch(setStep(WIDGET_STEP.ChooseAmount))
     }
-  }, [dispatch, step])
+  }, [creditStateAccount, dispatch, step])
 
-  const title = 'Make Payment'
-  if (isLoadingBorrowerAccounts) {
+  if (!creditStateAccount) {
     return (
       <WidgetWrapper
         isOpen

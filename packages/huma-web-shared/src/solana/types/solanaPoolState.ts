@@ -10,6 +10,7 @@ export type SolanaPoolState = {
   withdrawalLockupPeriodDays?: number
   lockupMonthsText?: string
   minDepositAmount?: string
+  defaultGracePeriodDays?: number
   status?: 'on' | 'off' | 'closed'
   epochEndTime?: number
   isUniTranche?: boolean
