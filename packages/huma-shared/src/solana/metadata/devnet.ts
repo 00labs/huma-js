@@ -1,4 +1,5 @@
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
+import { ARF_PERSONA_KYC_COPY } from '../../v2'
 import { SolanaChainEnum } from '../chain'
 import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 
@@ -33,6 +34,9 @@ export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
       symbol: 'PYUSD',
       decimals: 6,
       icon: 'PYUSD',
+    },
+    KYC: {
+      Persona: ARF_PERSONA_KYC_COPY,
     },
   },
 }
