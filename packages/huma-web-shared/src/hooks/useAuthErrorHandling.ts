@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AuthService, CHAIN_TYPE, SolanaChainEnum } from '@huma-finance/shared'
+import {
+  AuthService,
+  CHAIN_TYPE,
+  SOLANA_CHAINS,
+  SolanaChainEnum,
+} from '@huma-finance/shared'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWeb3React } from '@web3-react/core'
 import axios, { HttpStatusCode } from 'axios'
@@ -16,6 +21,18 @@ import type {
 import { useAsyncError } from './useAsyncError'
 
 type ErrorType = 'NotSignedIn' | 'UserRejected' | 'Other'
+
+const getCurrentDateTime = () => {
+  let currentDateTime: string = ''
+  let currentDateTimeValid = false
+  while (!currentDateTimeValid) {
+    currentDateTime = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSSSSS+00:00')
+    if (!currentDateTime.endsWith('000000+00:00')) {
+      currentDateTimeValid = true
+    }
+  }
+  return currentDateTime
+}
 
 const createSiweMessage = (
   address: string,
@@ -39,13 +56,11 @@ const createSiweMessage = (
 
 const createSiwsMessage = (
   address: string,
-  chainId: number,
+  chainId: SolanaChainEnum,
   nonce: string,
   expiresAt: string,
 ) => {
-  const currentDateTime = moment()
-    .utc()
-    .format('YYYY-MM-DDTHH:mm:ss.SSSSSS+00:00')
+  const currentDateTime = getCurrentDateTime()
   const uri = window.location.href
   const currentUrl = new URL(uri)
   const domain = currentUrl.host
@@ -55,7 +70,7 @@ const createSiwsMessage = (
     statement: 'Please sign in to verify your ownership of this wallet',
     uri: window.location.origin,
     version: '1',
-    chainId: chainId === SolanaChainEnum.SolanaDevnet ? 'devnet' : 'mainnet',
+    chainId: SOLANA_CHAINS[chainId].name,
     issuedAt: currentDateTime,
     nonce,
     expirationTime: expiresAt,
@@ -93,12 +108,12 @@ const verifySolanaOwnership = async (
   const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
   const input = createSiwsMessage(address, chainId, nonce, expiresAt)
   const { signedMessage, signature } = await solanaSignIn(input)
-  const signedMessageEncoded = new TextDecoder().decode(signedMessage)
-  const signatureEncoded = bs58.encode(signature)
+  const signedMessageDecoded = new TextDecoder().decode(signedMessage)
+  const signatureDecoded = bs58.encode(signature)
 
   await AuthService.verifySignature(
-    signedMessageEncoded,
-    signatureEncoded,
+    signedMessageDecoded,
+    signatureDecoded,
     chainId,
     isDev,
   )
