@@ -31,7 +31,7 @@ const getCurrentDateTime = () => {
       currentDateTimeValid = true
     }
   }
-  return currentDateTime
+  return `${currentDateTime.split('+')[0]}Z`
 }
 
 const createSiweMessage = (
