@@ -3,6 +3,19 @@ export enum SolanaChainEnum {
   SolanaMainnet = 900,
 }
 
+export const SOLANA_CHAINS = {
+  [SolanaChainEnum.SolanaDevnet]: {
+    id: SolanaChainEnum.SolanaDevnet,
+    name: 'devnet',
+    isTestnet: true,
+  },
+  [SolanaChainEnum.SolanaMainnet]: {
+    id: SolanaChainEnum.SolanaMainnet,
+    name: 'mainnet',
+    isTestnet: false,
+  },
+}
+
 export function isSolanaTestnet(chainId: SolanaChainEnum): boolean {
   return chainId !== SolanaChainEnum.SolanaMainnet
 }

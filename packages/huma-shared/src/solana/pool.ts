@@ -1,5 +1,5 @@
 import { POOL_NAME, POOL_TYPE } from '../utils'
-import { IndustryType } from '../v2'
+import { IndustryType, KYCType } from '../v2'
 import { SolanaChainEnum } from './chain'
 import { SOLANA_DEVNET_INFO, SOLANA_DEVNET_METADATA } from './metadata/devnet'
 
@@ -28,6 +28,7 @@ export type SolanaPoolInfo = {
     decimals: number
     icon: string
   }
+  KYC?: KYCType
   extra?: {
     isClosed?: boolean
   }
