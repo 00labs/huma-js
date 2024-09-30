@@ -23,15 +23,13 @@ import { useAsyncError } from './useAsyncError'
 type ErrorType = 'NotSignedIn' | 'UserRejected' | 'Other'
 
 const getCurrentDateTime = () => {
-  let currentDateTime: string = ''
-  let currentDateTimeValid = false
-  while (!currentDateTimeValid) {
-    currentDateTime = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSSSSS+00:00')
-    if (!currentDateTime.endsWith('000000+00:00')) {
-      currentDateTimeValid = true
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const currentDateTime = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSSSSS')
+    if (!currentDateTime.endsWith('000000')) {
+      return `${currentDateTime}Z`
     }
   }
-  return `${currentDateTime.split('+')[0]}Z`
 }
 
 const createSiweMessage = (
@@ -109,11 +107,11 @@ const verifySolanaOwnership = async (
   const input = createSiwsMessage(address, chainId, nonce, expiresAt)
   const { signedMessage, signature } = await solanaSignIn(input)
   const signedMessageDecoded = new TextDecoder().decode(signedMessage)
-  const signatureDecoded = bs58.encode(signature)
+  const signatureEncoded = bs58.encode(signature)
 
   await AuthService.verifySignature(
     signedMessageDecoded,
-    signatureDecoded,
+    signatureEncoded,
     chainId,
     isDev,
   )
