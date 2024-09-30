@@ -1,3 +1,5 @@
+import { Campaign } from '@huma-finance/shared'
+
 export type SolanaPoolState = {
   poolId?: string
   seniorTrancheAssets?: string
@@ -31,4 +33,5 @@ export type SolanaPoolState = {
     protocolIncomeWithdrawn: string
     poolOwnerIncomeWithdrawn: string
   }
+  campaign?: Campaign
 }

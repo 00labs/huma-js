@@ -1,9 +1,9 @@
-import { PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import { CHAIN_TYPE, PoolInfoV2, TrancheType } from '@huma-finance/shared'
 import React from 'react'
 
 import { Campaign } from '.'
-import { PersonaEvaluation } from './components/PersonaEvaluation'
-import { SecuritizeEvaluation } from './components/SecuritizeEvaluation'
+import { PersonaEvaluation } from '../components/PersonaEvaluation'
+import { SecuritizeEvaluation } from '../components/SecuritizeEvaluation'
 
 type Props = {
   poolInfo: PoolInfoV2
@@ -35,6 +35,7 @@ export function Evaluation({
         isUniTranche={isUniTranche}
         pointsTestnetExperience={pointsTestnetExperience}
         campaign={campaign}
+        chainType={CHAIN_TYPE.EVM}
         changeTranche={changeTranche}
       />
     )
