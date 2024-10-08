@@ -4,7 +4,7 @@ import {
   useLenderAccounts,
   useTokenAccount,
 } from '@huma-finance/web-shared'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useAppSelector } from '../../../hooks/useRedux'
@@ -24,12 +24,14 @@ import { Success } from './5-Success'
  * @typedef {Object} SolanaLendSupplyProps
  * @property {SolanaPoolInfo} poolInfo The metadata of the pool.
  * @property {SolanaPoolState} poolState The current state config of the pool.
+ * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function():void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface SolanaLendSupplyProps {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
+  pointsTestnetExperience: boolean
   handleClose: () => void
   handleSuccess?: () => void
 }
@@ -37,6 +39,7 @@ export interface SolanaLendSupplyProps {
 export function SolanaLendSupply({
   poolInfo,
   poolState,
+  pointsTestnetExperience,
   handleClose,
   handleSuccess,
 }: SolanaLendSupplyProps): React.ReactElement | null {
@@ -46,7 +49,6 @@ export function SolanaLendSupply({
     seniorLenderApproved,
     juniorLenderApproved,
     loading: isLoadingLenderAccounts,
-    refresh: refreshLenderAccounts,
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const [tokenAccount, isLoadingTokenAccount] = useTokenAccount(poolInfo)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
@@ -86,10 +88,6 @@ export function SolanaLendSupply({
     isLoadingTokenAccount,
   ])
 
-  const handleApproveSuccess = useCallback(() => {
-    refreshLenderAccounts()
-  }, [refreshLenderAccounts])
-
   if (isLoadingLenderAccounts || isLoadingTokenAccount) {
     return (
       <WidgetWrapper
@@ -112,8 +110,10 @@ export function SolanaLendSupply({
       {step === WIDGET_STEP.Evaluation && (
         <Evaluation
           poolInfo={poolInfo}
-          isUniTranche={isUniTranche}
-          handleApproveSuccess={handleApproveSuccess}
+          isUniTranche={!!isUniTranche}
+          pointsTestnetExperience={pointsTestnetExperience}
+          handleClose={handleClose}
+          changeTranche={setSelectedTranche}
         />
       )}
       {step === WIDGET_STEP.ChooseTranche && (

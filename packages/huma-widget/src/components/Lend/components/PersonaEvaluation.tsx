@@ -1,33 +1,38 @@
 import {
   CAMPAIGN_REFERENCE_CODE,
   CampaignService,
+  CHAIN_TYPE,
   checkIsDev,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
-  PoolInfoV2,
+  KYCType,
   TrancheType,
   VerificationStatusResultV2,
 } from '@huma-finance/shared'
-import { useAuthErrorHandling } from '@huma-finance/web-shared'
+import { useAuthErrorHandling, useChainInfo } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
-import { useWeb3React } from '@web3-react/core'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { Campaign } from '..'
-import { useAppDispatch } from '../../../../hooks/useRedux'
-import { setError, setStep } from '../../../../store/widgets.reducers'
-import { WIDGET_STEP } from '../../../../store/widgets.store'
-import { BottomButton } from '../../../BottomButton'
-import { ApproveLenderImg } from '../../../images'
-import { LoadingModal } from '../../../LoadingModal'
-import { WrapperModal } from '../../../WrapperModal'
+import { useAppDispatch } from '../../../hooks/useRedux'
+import { setError, setStep } from '../../../store/widgets.reducers'
+import { WIDGET_STEP } from '../../../store/widgets.store'
+import { BottomButton } from '../../BottomButton'
+import { ApproveLenderImg } from '../../images'
+import { LoadingModal } from '../../LoadingModal'
+import { WrapperModal } from '../../WrapperModal'
+import { Campaign } from '../supplyV2'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
 type Props = {
-  poolInfo: PoolInfoV2
+  poolInfo: {
+    KYC?: KYCType
+    juniorTrancheVault: string
+    seniorTrancheVault: string
+  }
+  chainType: CHAIN_TYPE
   isUniTranche: boolean
   pointsTestnetExperience: boolean
   campaign?: Campaign
@@ -40,13 +45,14 @@ export function PersonaEvaluation({
   isUniTranche,
   campaign,
   pointsTestnetExperience,
+  chainType,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useChainInfo(isDev, chainType)
   const {
     errorType,
     setError: setAuthError,

@@ -1,3 +1,4 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { CHAIN_TYPE, SolanaChainEnum } from '@huma-finance/shared'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWeb3React } from '@web3-react/core'
@@ -9,30 +10,34 @@ export const useChainInfo = (
 ) => {
   const [account, setAccount] = useState<string>()
   const [chainId, setChainId] = useState<number>()
+  const [provider, setProvider] = useState<Web3Provider>()
 
-  const { account: evmAccount, chainId: evmChainId } = useWeb3React()
+  const {
+    account: evmAccount,
+    chainId: evmChainId,
+    provider: evmProvider,
+  } = useWeb3React()
   const { publicKey: solanaPublicKey } = useWallet()
 
   useEffect(() => {
-    const setChainInfo = async () => {
-      if (chainType === CHAIN_TYPE.EVM) {
-        setAccount(evmAccount)
-        setChainId(evmChainId)
-        return
-      }
-
-      if (chainType === CHAIN_TYPE.SOLANA) {
-        setAccount(solanaPublicKey?.toString())
-        setChainId(
-          isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
-        )
-      }
+    if (chainType === CHAIN_TYPE.EVM) {
+      setAccount(evmAccount)
+      setChainId(evmChainId)
+      setProvider(evmProvider)
+      return
     }
-    setChainInfo()
-  }, [chainType, evmAccount, evmChainId, isDev, solanaPublicKey])
+
+    if (chainType === CHAIN_TYPE.SOLANA) {
+      setAccount(solanaPublicKey?.toString())
+      setChainId(
+        isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
+      )
+    }
+  }, [chainType, evmAccount, evmChainId, evmProvider, isDev, solanaPublicKey])
 
   return {
     account,
     chainId,
+    provider,
   }
 }
