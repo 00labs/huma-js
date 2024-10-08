@@ -18,6 +18,12 @@ import { ChooseTranche } from './2-ChooseTranche'
 import { ChooseAmount } from './3-ChooseAmount'
 import { Transfer } from './4-Transfer'
 import { Success } from './5-Success'
+import { PointsEarned } from './6-PointsEarned'
+
+export interface Campaign {
+  id: string
+  campaignGroupId: string
+}
 
 /**
  * Lend pool supply props
@@ -53,6 +59,7 @@ export function SolanaLendSupply({
   const [tokenAccount, isLoadingTokenAccount] = useTokenAccount(poolInfo)
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [transactionHash, setTransactionHash] = useState<string | undefined>()
 
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts && !isLoadingTokenAccount) {
@@ -112,6 +119,7 @@ export function SolanaLendSupply({
           poolInfo={poolInfo}
           isUniTranche={!!isUniTranche}
           pointsTestnetExperience={pointsTestnetExperience}
+          campaign={poolState.campaign}
           handleClose={handleClose}
           changeTranche={setSelectedTranche}
         />
@@ -139,6 +147,16 @@ export function SolanaLendSupply({
         <Success
           poolInfo={poolInfo}
           poolState={poolState}
+          campaign={poolState.campaign}
+          updateTransactionHash={setTransactionHash}
+          handleAction={handleClose}
+        />
+      )}
+      {step === WIDGET_STEP.PointsEarned && transactionHash && (
+        <PointsEarned
+          transactionHash={transactionHash}
+          poolState={poolState}
+          pointsTestnetExperience={pointsTestnetExperience}
           handleAction={handleClose}
         />
       )}

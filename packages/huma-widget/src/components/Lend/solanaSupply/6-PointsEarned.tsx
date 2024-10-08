@@ -1,12 +1,17 @@
 import {
   CampaignService,
+  CHAIN_TYPE,
   checkIsDev,
   formatNumber,
   isEmpty,
 } from '@huma-finance/shared'
-import { txAtom, useAuthErrorHandling } from '@huma-finance/web-shared'
+import {
+  SolanaPoolState,
+  txAtom,
+  useAuthErrorHandling,
+  useChainInfo,
+} from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
-import { useWeb3React } from '@web3-react/core'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -28,14 +33,14 @@ const ERROR_MESSAGE =
 
 type Props = {
   transactionHash: string
-  lpConfig: { withdrawalLockoutPeriodInDays: number }
+  poolState: SolanaPoolState
   pointsTestnetExperience: boolean
   handleAction: () => void
 }
 
 export function PointsEarned({
   transactionHash,
-  lpConfig,
+  poolState,
   pointsTestnetExperience,
   handleAction,
 }: Props): React.ReactElement {
@@ -43,13 +48,15 @@ export function PointsEarned({
   const isDev = checkIsDev()
   const dispatch = useDispatch()
   const reset = useResetAtom(txAtom)
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useChainInfo(isDev, CHAIN_TYPE.SOLANA)
   const [pointsAccumulated, setPointsAccumulated] = useState<
     number | undefined
   >()
   const hasPointsAccumulated =
     !isEmpty(pointsAccumulated) && pointsAccumulated! > 0
-  const lockupMonths = Math.round(lpConfig.withdrawalLockoutPeriodInDays / 30)
+  const lockupMonths = Math.round(
+    poolState.withdrawalLockupPeriodDays ?? 0 / 30,
+  )
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
 
