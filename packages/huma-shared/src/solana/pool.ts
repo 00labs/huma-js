@@ -31,6 +31,7 @@ export type SolanaPoolInfo = {
   KYC?: KYCType
   extra?: {
     isClosed?: boolean
+    hidden?: boolean
   }
 }
 

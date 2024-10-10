@@ -1,25 +1,39 @@
 import { formatMoney, SolanaPoolInfo, timeUtil } from '@huma-finance/shared'
 import { SolanaPoolState } from '@huma-finance/web-shared'
-import React from 'react'
-
 import dayjs from 'dayjs'
-import { selectWidgetState } from '../../../store/widgets.selectors'
+import React, { useCallback, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { Campaign } from '.'
 import { useAppSelector } from '../../../hooks/useRedux'
+import { setStep } from '../../../store/widgets.reducers'
+import { selectWidgetState } from '../../../store/widgets.selectors'
+import { WIDGET_STEP } from '../../../store/widgets.store'
 import { SolanaTxDoneModal } from '../../SolanaTxDoneModal'
 
 type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
+  campaign?: Campaign
+  updateTransactionHash: (hash: string) => void
   handleAction: () => void
 }
 
 export function Success({
   poolInfo,
   poolState,
+  campaign,
+  updateTransactionHash,
   handleAction,
 }: Props): React.ReactElement {
+  const dispatch = useDispatch()
   const { supplyAmount, solanaSignature } = useAppSelector(selectWidgetState)
   const { symbol } = poolInfo.underlyingMint
+
+  useEffect(() => {
+    if (solanaSignature) {
+      updateTransactionHash(solanaSignature)
+    }
+  }, [solanaSignature, updateTransactionHash])
 
   const content = [
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,
@@ -39,14 +53,22 @@ export function Success({
     ]
   }
 
+  const handleUserAction = useCallback(() => {
+    if (campaign) {
+      dispatch(setStep(WIDGET_STEP.PointsEarned))
+    } else {
+      handleAction()
+    }
+  }, [campaign, dispatch, handleAction])
+
   return (
     <SolanaTxDoneModal
-      handleAction={handleAction}
+      handleAction={handleUserAction}
       content={content}
       subContent={getSubContent()}
       chainId={poolInfo.chainId}
       solanaSignature={solanaSignature}
-      buttonText='DONE'
+      buttonText={campaign ? 'VIEW POINTS' : 'DONE'}
     />
   )
 }
