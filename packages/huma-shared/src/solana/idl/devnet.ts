@@ -109,15 +109,12 @@ export type Huma = {
           }
         },
         {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
-        },
-        {
-          name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
         },
       ]
       args: [
@@ -281,7 +278,7 @@ export type Huma = {
         '* `operator` - The address of the pool operator.',
         '',
         '# Access Control',
-        'Only the pool owner and the Huma owner can call this instruction.',
+        'Only the pool owner can call this instruction.',
       ]
       discriminator: [87, 245, 32, 78, 182, 157, 163, 249]
       accounts: [
@@ -567,14 +564,7 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: [
@@ -1198,14 +1188,7 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: [
@@ -1440,10 +1423,6 @@ export type Huma = {
           docs: ['The recipient of the rent refunds.', '`has_one` constraint.']
           writable: true
           relations: ['poolConfig']
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: []
@@ -1692,15 +1671,11 @@ export type Huma = {
           optional: true
         },
         {
-          name: 'tokenProgram'
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: []
@@ -1794,14 +1769,6 @@ export type Huma = {
         {
           name: 'tokenProgram'
           address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: []
@@ -2051,15 +2018,11 @@ export type Huma = {
           optional: true
         },
         {
-          name: 'tokenProgram'
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: []
@@ -2073,7 +2036,7 @@ export type Huma = {
         '* `id` - The ID of the config.',
         '* `treasury` - The Huma Treasury address.',
         '* `sentinel` - The Sentinel Service account address. This is the account that handles',
-        'various tasks, such as Autopay and starting a committed credit.',
+        'various tasks, such as AutoPay and starting a committed credit.',
         '* `protocol_fee_bps` - The Huma protocol fee in bps.',
         '',
         '# Access Control',
@@ -2255,6 +2218,7 @@ export type Huma = {
       name: 'createPool'
       docs: [
         'Creates a new liquidity pool.',
+        '',
         '# Arguments',
         '* `pool_id` - The ID of the pool.',
         '* `pool_name` - The name of the pool.',
@@ -2669,54 +2633,6 @@ export type Huma = {
           }
         },
         {
-          name: 'humaConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
-              },
-              {
-                kind: 'account'
-                path: 'huma_config.id'
-                account: 'humaConfig'
-              },
-            ]
-          }
-          relations: ['poolConfig']
-        },
-        {
-          name: 'poolConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
-              },
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
-          name: 'poolState'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
-              },
-              {
-                kind: 'account'
-                path: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
           name: 'receivableInfo'
           writable: true
           pda: {
@@ -2803,54 +2719,6 @@ export type Huma = {
           name: 'asset'
         },
         {
-          name: 'humaConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
-              },
-              {
-                kind: 'account'
-                path: 'huma_config.id'
-                account: 'humaConfig'
-              },
-            ]
-          }
-          relations: ['poolConfig']
-        },
-        {
-          name: 'poolConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
-              },
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
-          name: 'poolState'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
-              },
-              {
-                kind: 'account'
-                path: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
           name: 'receivableInfo'
           writable: true
           pda: {
@@ -2891,10 +2759,6 @@ export type Huma = {
           name: 'logWrapper'
           docs: ['The SPL Noop program.']
           optional: true
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -2980,6 +2844,9 @@ export type Huma = {
           }
         },
         {
+          name: 'approvedLender'
+        },
+        {
           name: 'lenderState'
           writable: true
           pda: {
@@ -3063,15 +2930,11 @@ export type Huma = {
           writable: true
         },
         {
-          name: 'tokenProgram'
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: [
@@ -3308,14 +3171,6 @@ export type Huma = {
         {
           name: 'tokenProgram'
         },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: []
     },
@@ -3482,14 +3337,6 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -3712,14 +3559,7 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: []
@@ -3845,10 +3685,6 @@ export type Huma = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -4017,13 +3853,6 @@ export type Huma = {
           name: 'trancheMint'
         },
         {
-          name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
         },
@@ -4049,6 +3878,23 @@ export type Huma = {
         {
           name: 'depositor'
           signer: true
+        },
+        {
+          name: 'humaConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'huma_config.id'
+                account: 'humaConfig'
+              },
+            ]
+          }
+          relations: ['poolConfig']
         },
         {
           name: 'poolConfig'
@@ -4166,15 +4012,11 @@ export type Huma = {
           writable: true
         },
         {
-          name: 'tokenProgram'
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: [
@@ -4360,14 +4202,6 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -4557,14 +4391,6 @@ export type Huma = {
         {
           name: 'tokenProgram'
         },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: [
         {
@@ -4631,10 +4457,6 @@ export type Huma = {
             ]
           }
         },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: [
         {
@@ -4695,10 +4517,6 @@ export type Huma = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -4761,10 +4579,6 @@ export type Huma = {
             ]
           }
         },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: [
         {
@@ -4825,10 +4639,6 @@ export type Huma = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -5012,10 +4822,6 @@ export type Huma = {
             ]
           }
         },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: []
     },
@@ -5116,10 +4922,6 @@ export type Huma = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -5275,7 +5077,7 @@ export type Huma = {
         '* `operator` - The address of the pool operator.',
         '',
         '# Access Control',
-        'Only the pool owner and the Huma owner can call this instruction.',
+        'Only the pool owner can call this instruction.',
       ]
       discriminator: [70, 188, 152, 173, 117, 213, 144, 195]
       accounts: [
@@ -5509,42 +5311,6 @@ export type Huma = {
           }
         },
         {
-          name: 'seniorMint'
-          optional: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [
-                  115,
-                  101,
-                  110,
-                  105,
-                  111,
-                  114,
-                  95,
-                  116,
-                  114,
-                  97,
-                  110,
-                  99,
-                  104,
-                  101,
-                  95,
-                  109,
-                  105,
-                  110,
-                  116,
-                ]
-              },
-              {
-                kind: 'account'
-                path: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
           name: 'poolAuthority'
           pda: {
             seeds: [
@@ -5590,15 +5356,11 @@ export type Huma = {
           writable: true
         },
         {
-          name: 'tokenProgram'
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: [
@@ -5938,15 +5700,11 @@ export type Huma = {
           writable: true
         },
         {
-          name: 'tokenProgram'
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: [
@@ -6033,7 +5791,7 @@ export type Huma = {
         'this function activates the credit line and applies yield based on the committed amount.',
         '',
         '# Access Control',
-        'Only the pool owner and the Sentinel Service account can call this instruction.',
+        'Only the EA and the Sentinel Service account can call this instruction.',
       ]
       discriminator: [171, 71, 208, 249, 59, 83, 243, 106]
       accounts: [
@@ -6143,10 +5901,6 @@ export type Huma = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: []
@@ -6477,10 +6231,6 @@ export type Huma = {
             ]
           }
         },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: []
       returns: {
@@ -6700,10 +6450,6 @@ export type Huma = {
             ]
           }
         },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: [
         {
@@ -6808,54 +6554,6 @@ export type Huma = {
           writable: true
         },
         {
-          name: 'humaConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
-              },
-              {
-                kind: 'account'
-                path: 'huma_config.id'
-                account: 'humaConfig'
-              },
-            ]
-          }
-          relations: ['poolConfig']
-        },
-        {
-          name: 'poolConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
-              },
-              {
-                kind: 'account'
-                path: 'pool_config.pool_id'
-                account: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
-          name: 'poolState'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
-              },
-              {
-                kind: 'account'
-                path: 'poolConfig'
-              },
-            ]
-          }
-        },
-        {
           name: 'mplCore'
           docs: ['The MPL Core program.']
           address: 'CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d'
@@ -6879,6 +6577,12 @@ export type Huma = {
     },
     {
       name: 'updateToLatestRedemptionRecord'
+      docs: [
+        "Updates the lender's redemption record up-to-date.",
+        '',
+        '# Access Control',
+        'Anyone can call this instruction.',
+      ]
       discriminator: [73, 99, 253, 48, 195, 111, 208, 184]
       accounts: [
         {
@@ -6993,10 +6697,6 @@ export type Huma = {
         },
         {
           name: 'trancheMint'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -7126,10 +6826,6 @@ export type Huma = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -7265,10 +6961,6 @@ export type Huma = {
             ]
           }
         },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: [
         {
@@ -7291,6 +6983,23 @@ export type Huma = {
         {
           name: 'lender'
           signer: true
+        },
+        {
+          name: 'humaConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'huma_config.id'
+                account: 'humaConfig'
+              },
+            ]
+          }
+          relations: ['poolConfig']
         },
         {
           name: 'poolConfig'
@@ -7437,16 +7146,11 @@ export type Huma = {
           writable: true
         },
         {
-          name: 'tokenProgram'
-          docs: ['Solana ecosystem accounts']
+          name: 'underlyingTokenProgram'
         },
         {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
       ]
       args: []
@@ -7562,14 +7266,6 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -7690,14 +7386,6 @@ export type Huma = {
         {
           name: 'tokenProgram'
         },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
       ]
       args: [
         {
@@ -7816,14 +7504,6 @@ export type Huma = {
         },
         {
           name: 'tokenProgram'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
         },
       ]
       args: [
@@ -8260,6 +7940,10 @@ export type Huma = {
       name: 'invalidNumberOfDecimalsForLiquidityAsset'
     },
     {
+      code: 6306
+      name: 'unsupportedTokenExtension'
+    },
+    {
       code: 6401
       name: 'invalidTrancheStatePda'
     },
@@ -8471,6 +8155,10 @@ export type Huma = {
       code: 6630
       name: 'referenceIdTooLong'
     },
+    {
+      code: 6631
+      name: 'currencyCodeTooLong'
+    },
   ]
   types: [
     {
@@ -8672,7 +8360,8 @@ export type Huma = {
         '# Fields',
         '* `name` - The name of the receivable.',
         '* `uri` - The URI of the metadata associated with the receivable.',
-        '* `currency_code` - The ISO 4217 currency code that the receivable is denominated in.',
+        '* `currency_code` - The currency code that the receivable is denominated in.',
+        'This could be either the ISO 4217 code for fiat currencies or crypto currency code.',
         '* `receivable_amount` - The total amount of the receivable.',
         '* `maturity_date` - The date on which the receivable becomes due.',
         '* `reference_id` - A unique internal reference ID used for de-duplication by the creator.',
@@ -10404,19 +10093,15 @@ export type Huma = {
         'The update authority of a receivable declares that a payment has been made to the receivable.',
         '',
         '# Fields',
-        '* `pool` - The pool ID.',
         '* `authority` - The authority that declared the payment.',
         '* `asset` - The asset address on which payment was declared.',
-        '* `currency_code`-  The ISO 4217 currency code that the receivable is denominated in.',
+        '* `currency_code` - The currency code that the receivable is denominated in.',
+        'This could be either the ISO 4217 code for fiat currencies or crypto currency code.',
         '* `amount` - The amount that was declared paid.',
       ]
       type: {
         kind: 'struct'
         fields: [
-          {
-            name: 'pool'
-            type: 'pubkey'
-          },
           {
             name: 'authority'
             type: 'pubkey'
@@ -11443,20 +11128,17 @@ export type Huma = {
         'A receivable has been created.',
         '',
         '# Fields',
-        '* `pool` - The pool ID.',
         '* `owner` - The address of the owner of the receivable.',
+        '* `asset` - The receivable asset address.',
         '* `reference_id` - The creator assigned unique ID of the receivable token.',
         '* `receivable_amount` - The total expected payment amount of the receivable.',
         '* `maturity_date` - The date at which the receivable becomes due.',
-        '* `currency_code` - The ISO 4217 currency code that the receivable is denominated in.',
+        '* `currency_code` - The currency code that the receivable is denominated in.',
+        'This could be either the ISO 4217 code for fiat currencies or crypto currency code.',
       ]
       type: {
         kind: 'struct'
         fields: [
-          {
-            name: 'pool'
-            type: 'pubkey'
-          },
           {
             name: 'owner'
             type: 'pubkey'
@@ -11491,7 +11173,8 @@ export type Huma = {
         '',
         '# Fields',
         '* `bump` - The canonical bump of this PDA.',
-        '* `currency_code` - The ISO 4217 currency code that the receivable is denominated in.',
+        '* `currency_code` - The currency code that the receivable is denominated in.',
+        'This could be either the ISO 4217 code for fiat currencies or crypto currency code.',
         '* `receivable_amount` - The total expected payment amount of the receivable.',
         '* `amount_paid` - The amount of the receivable that has been paid so far.',
         '* `creation_date` - The date on which the receivable was created.',
@@ -11547,7 +11230,6 @@ export type Huma = {
         'The metadata URI of the receivable has been updated.',
         '',
         '# Fields',
-        '* `pool` - The pool ID.',
         '* `authority` - The authority that performed the update.',
         '* `asset` - The asset address that was updated.',
         '* `old_uri` - The old metadata URI of the receivable.',
@@ -11556,10 +11238,6 @@ export type Huma = {
       type: {
         kind: 'struct'
         fields: [
-          {
-            name: 'pool'
-            type: 'pubkey'
-          },
           {
             name: 'authority'
             type: 'pubkey'
