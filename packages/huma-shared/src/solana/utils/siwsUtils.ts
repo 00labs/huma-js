@@ -41,7 +41,7 @@ export class SiwsMessage {
     this.version = param.version
     this.chainId = param.chainId
     this.nonce = param.nonce
-    this.issuedAt = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSSSSS')
+    this.issuedAt = moment().utc().format('YYYY-MM-DDTHH:mm:ss')
     this.expirationTime = param.expirationTime
   }
 
