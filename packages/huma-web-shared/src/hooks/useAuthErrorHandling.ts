@@ -3,6 +3,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import {
   AuthService,
   CHAIN_TYPE,
+  SiwsMessage,
   SOLANA_CHAINS,
   SolanaChainEnum,
 } from '@huma-finance/shared'
@@ -10,27 +11,11 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { useWeb3React } from '@web3-react/core'
 import axios, { HttpStatusCode } from 'axios'
 import bs58 from 'bs58'
-import moment from 'moment'
 import { useCallback, useEffect, useState } from 'react'
 import { SiweMessage } from 'siwe'
-
-import type {
-  SolanaSignInInput,
-  SolanaSignInOutput,
-} from '@solana/wallet-standard-features'
 import { useAsyncError } from './useAsyncError'
 
 type ErrorType = 'NotSignedIn' | 'UserRejected' | 'Other'
-
-const getCurrentDateTime = () => {
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const currentDateTime = moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSSSSS')
-    if (!currentDateTime.endsWith('000000')) {
-      return `${currentDateTime}Z`
-    }
-  }
-}
 
 const createSiweMessage = (
   address: string,
@@ -58,22 +43,18 @@ const createSiwsMessage = (
   nonce: string,
   expiresAt: string,
 ) => {
-  const currentDateTime = getCurrentDateTime()
-  const uri = window.location.href
-  const currentUrl = new URL(uri)
-  const domain = currentUrl.host
-  const message: SolanaSignInInput = {
+  const domain = window.location.hostname
+  const message = new SiwsMessage({
     domain,
     address,
     statement: 'Please sign in to verify your ownership of this wallet',
     uri: window.location.origin,
     version: '1',
     chainId: SOLANA_CHAINS[chainId].name,
-    issuedAt: currentDateTime,
     nonce,
     expirationTime: expiresAt,
-  }
-  return message
+  })
+  return message.prepareMessage()
 }
 
 const verifyEvmOwnership = async (
@@ -100,22 +81,21 @@ const verifySolanaOwnership = async (
   address: string,
   chainId: number,
   isDev: boolean,
-  solanaSignIn: (input?: SolanaSignInInput) => Promise<SolanaSignInOutput>,
+  solanaSignMessage: (message: Uint8Array) => Promise<Uint8Array>,
   onVerificationComplete: () => void,
 ) => {
-  const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
-  const input = createSiwsMessage(address, chainId, nonce, expiresAt)
-  const { signedMessage, signature } = await solanaSignIn(input)
-  const signedMessageDecoded = new TextDecoder().decode(signedMessage)
-  const signatureEncoded = bs58.encode(signature)
+  try {
+    const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
+    const message = createSiwsMessage(address, chainId, nonce, expiresAt)
+    const encodedMessage = new TextEncoder().encode(message)
+    const signedMessage = await solanaSignMessage(encodedMessage)
+    const signatureEncoded = bs58.encode(signedMessage as Uint8Array)
 
-  await AuthService.verifySignature(
-    signedMessageDecoded,
-    signatureEncoded,
-    chainId,
-    isDev,
-  )
-  onVerificationComplete()
+    await AuthService.verifySignature(message, signatureEncoded, chainId, isDev)
+    onVerificationComplete()
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export type AuthState = {
@@ -146,7 +126,8 @@ export const useAuthErrorHandling = (
     chainId: evmChainId,
     provider: evmProvider,
   } = useWeb3React()
-  const { publicKey: solanaPublicKey, signIn: solanaSignIn } = useWallet()
+  const { publicKey: solanaPublicKey, signMessage: solanaSignMessage } =
+    useWallet()
   const solanaAccount = solanaPublicKey?.toString() ?? ''
 
   const getErrorInfo = useCallback((error: any) => {
@@ -216,7 +197,7 @@ export const useAuthErrorHandling = (
 
   useEffect(() => {
     if (chainType === CHAIN_TYPE.SOLANA) {
-      if (!solanaAccount || !error || !solanaSignIn) {
+      if (!solanaAccount || !error || !solanaSignMessage) {
         return
       }
 
@@ -237,7 +218,7 @@ export const useAuthErrorHandling = (
           solanaAccount,
           isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
           isDev,
-          solanaSignIn,
+          solanaSignMessage,
           handleVerificationCompletion,
         ).catch((e) => setError(e))
       } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
@@ -253,7 +234,7 @@ export const useAuthErrorHandling = (
     chainType,
     solanaAccount,
     getErrorInfo,
-    solanaSignIn,
+    solanaSignMessage,
   ])
 
   const reset = useCallback(() => {
