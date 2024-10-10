@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/huma.json`.
  */
 export type Huma = {
-  address: '69yTuBwRm8KPkXYmasxZQAzgyHs93KBaijNv5Jum71fv'
+  address: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9'
   metadata: {
     name: 'huma'
     version: '0.1.0'

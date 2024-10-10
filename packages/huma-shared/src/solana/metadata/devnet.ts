@@ -5,7 +5,7 @@ import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 
 export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
   humaProgramAuthority: 'FE2Np6Mwt8oMXVHuJnNqtV5Gojc9Y2tFyBsQfJ2y2ZPz',
-  poolProgram: '69yTuBwRm8KPkXYmasxZQAzgyHs93KBaijNv5Jum71fv',
+  poolProgram: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9',
   sentinel: '8GQMZVEvYsssewqu2EvoAtVeBMWEkns7vGiUMQ6V7KDo',
 }
 
