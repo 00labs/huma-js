@@ -25,6 +25,27 @@ export const getSolanaPoolInfo = (
   poolName: POOL_NAME,
 ) => SOLANA_CHAIN_POOLS_INFO[chainId][poolName]
 
+export function getSolanaPoolInfoForPoolAddress(
+  chainId: SolanaChainEnum,
+  poolAddress: string,
+) {
+  const poolsInfo = SOLANA_CHAIN_POOLS_INFO[chainId]
+  if (!poolsInfo) {
+    return null
+  }
+
+  let foundPoolInfo = null
+
+  for (const poolInfo of Object.values(poolsInfo)) {
+    if (poolInfo.poolId.toLowerCase() === poolAddress.toLowerCase()) {
+      foundPoolInfo = poolInfo
+      break
+    }
+  }
+
+  return foundPoolInfo
+}
+
 export const getHumaProgram = (
   chainId: SolanaChainEnum,
   connection: Connection,

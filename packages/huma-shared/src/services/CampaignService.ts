@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request'
 
+import { SolanaPoolInfo } from '../solana'
 import { ChainEnum } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
@@ -17,7 +18,7 @@ export type CampaignPartner = {
   multiplier: number
 }
 
-export type Campaign = {
+interface BaseCampaign {
   id: string
   name: string
   chainId: string
@@ -26,15 +27,29 @@ export type Campaign = {
   lockupPeriodMonths: number
   poolAddress: string
   campaignGroupId: string
-  poolInfo: PoolInfoV2
   partner?: CampaignPartner | null
   multiplierRange?: string
+}
+
+export interface Campaign extends BaseCampaign {
+  poolInfo: PoolInfoV2
+}
+
+export interface SolanaCampaign extends BaseCampaign {
+  solanaPoolInfo: SolanaPoolInfo
 }
 
 export type CampaignGroup = {
   id: string
   name: string
   campaigns: Campaign[]
+  partners: CampaignPartner[]
+}
+
+export type SolanaCampaignGroup = {
+  id: string
+  name: string
+  campaigns: SolanaCampaign[]
   partners: CampaignPartner[]
 }
 
