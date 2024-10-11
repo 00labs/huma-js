@@ -6,17 +6,17 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { useWallet } from '@solana/wallet-adapter-react'
 import {
   useHumaProgram,
   useTrancheMintAccounts,
 } from '@huma-finance/web-shared'
+import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
-import { WIDGET_STEP } from '../../../store/widgets.store'
 import { selectWidgetState } from '../../../store/widgets.selectors'
+import { WIDGET_STEP } from '../../../store/widgets.store'
 import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 
 type Props = {

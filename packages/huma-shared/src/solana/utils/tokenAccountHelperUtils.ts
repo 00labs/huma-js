@@ -1,6 +1,7 @@
 import {
   getAssociatedTokenAddressSync,
   TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 
@@ -20,7 +21,7 @@ export const getTokenAccounts = (
     new PublicKey(poolInfo.underlyingMint.address),
     account,
     false, // allowOwnerOffCurve
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_PROGRAM_ID,
   )
   const juniorTrancheATA = getAssociatedTokenAddressSync(
     new PublicKey(poolInfo.juniorTrancheMint),

@@ -6,16 +6,16 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useHumaProgram, useLenderAccounts } from '@huma-finance/web-shared'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useHumaProgram, useLenderAccounts } from '@huma-finance/web-shared'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
-import { WIDGET_STEP } from '../../../store/widgets.store'
 import { selectWidgetState } from '../../../store/widgets.selectors'
-import { SolanaTxSendModal } from '../../SolanaTxSendModal'
+import { WIDGET_STEP } from '../../../store/widgets.store'
 import { LoadingModal } from '../../LoadingModal'
+import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -101,7 +101,6 @@ export function Transfer({
           depositorTrancheToken:
             selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
           humaConfig: poolInfo.humaConfig,
-          tokenProgram: TOKEN_2022_PROGRAM_ID,
         })
         .transaction()
       tx.add(depositTx)

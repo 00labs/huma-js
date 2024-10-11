@@ -4,7 +4,7 @@ import { SolanaChainEnum } from '../chain'
 import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 
 export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
-  humaProgramAuthority: 'FE2Np6Mwt8oMXVHuJnNqtV5Gojc9Y2tFyBsQfJ2y2ZPz',
+  humaProgramAuthority: 'DMEiNSUMjXUXh2XX6gUydSt7Uan5Q4BhAjLJwYxaZUEm',
   poolProgram: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9',
   sentinel: '8GQMZVEvYsssewqu2EvoAtVeBMWEkns7vGiUMQ6V7KDo',
 }
