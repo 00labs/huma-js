@@ -36,6 +36,7 @@ type Props = {
   isUniTranche: boolean
   pointsTestnetExperience: boolean
   campaign?: Campaign
+  chainSpecificData?: Record<string, unknown>
   changeTranche: (tranche: TrancheType) => void
   handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
 }
@@ -46,6 +47,7 @@ export function PersonaEvaluation({
   campaign,
   pointsTestnetExperience,
   chainType,
+  chainSpecificData,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -101,6 +103,7 @@ export function PersonaEvaluation({
         chainId!,
         poolInfo.juniorTrancheVault,
         isDev,
+        chainSpecificData,
       )
       if (!isUniTranche) {
         await IdentityServiceV2.approveLender(
@@ -108,6 +111,7 @@ export function PersonaEvaluation({
           chainId!,
           poolInfo.seniorTrancheVault,
           isDev,
+          chainSpecificData,
         )
       }
       if (isUniTranche) {
@@ -123,6 +127,7 @@ export function PersonaEvaluation({
   }, [
     account,
     chainId,
+    chainSpecificData,
     changeTranche,
     dispatch,
     isDev,
