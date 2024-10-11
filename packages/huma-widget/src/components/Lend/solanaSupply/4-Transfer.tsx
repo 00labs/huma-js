@@ -7,7 +7,7 @@ import {
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { useHumaProgram, useLenderAccounts } from '@huma-finance/web-shared'
-import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -58,6 +58,12 @@ export function Transfer({
 
       const { underlyingTokenATA, seniorTrancheATA, juniorTrancheATA } =
         getTokenAccounts(poolInfo, publicKey)
+
+      const approvedLender =
+        selectedTranche === 'senior'
+          ? seniorLenderApprovedAccountPDA!
+          : juniorLenderApprovedAccountPDA!
+
       if (
         (selectedTranche === 'senior' && !seniorLenderStateAccount) ||
         (selectedTranche === 'junior' && !juniorLenderStateAccount)
@@ -68,10 +74,7 @@ export function Transfer({
             lender: publicKey,
             humaConfig: poolInfo.humaConfig,
             poolConfig: poolInfo.poolConfig,
-            approvedLender:
-              selectedTranche === 'senior'
-                ? seniorLenderApprovedAccountPDA!
-                : juniorLenderApprovedAccountPDA!,
+            approvedLender,
             trancheMint:
               selectedTranche === 'senior'
                 ? poolInfo.seniorTrancheMint
@@ -86,9 +89,12 @@ export function Transfer({
         tx.add(createLenderAccountsTx)
       }
 
+      console.log('poolInfo', poolInfo)
+
       const depositTx = await program.methods
         .deposit(supplyBigNumber)
         .accountsPartial({
+          approvedLender,
           depositor: publicKey,
           poolConfig: poolInfo.poolConfig,
           underlyingMint: poolInfo.underlyingMint.address,
@@ -101,6 +107,7 @@ export function Transfer({
           depositorTrancheToken:
             selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
           humaConfig: poolInfo.humaConfig,
+          underlyingTokenProgram: TOKEN_PROGRAM_ID,
         })
         .transaction()
       tx.add(depositTx)
