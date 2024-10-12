@@ -15,6 +15,7 @@ import {
   getMint,
   Mint,
   TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
 import {
@@ -252,7 +253,7 @@ export const useTokenAccount = (
         new PublicKey(poolInfo.underlyingMint.address),
         publicKey,
         false, // allowOwnerOffCurve
-        TOKEN_2022_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
       )
 
       try {
@@ -260,7 +261,7 @@ export const useTokenAccount = (
           connection,
           associatedTokenAddress,
           undefined,
-          TOKEN_2022_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
         )
         setAccount(tokenAccount)
       } catch (error) {
@@ -301,7 +302,7 @@ export const usePoolUnderlyingTokenAccount = (
           connection,
           new PublicKey(poolInfo.poolUnderlyingTokenAccount),
           undefined,
-          TOKEN_2022_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
         )
         setAccount(tokenAccount)
       } catch (error) {

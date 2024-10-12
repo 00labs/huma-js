@@ -5,9 +5,9 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { LenderStateAccount, useHumaProgram } from '@huma-finance/web-shared'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { LenderStateAccount, useHumaProgram } from '@huma-finance/web-shared'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
