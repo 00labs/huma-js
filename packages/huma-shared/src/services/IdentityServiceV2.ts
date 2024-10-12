@@ -190,6 +190,7 @@ const consentToSubscription = async (
  * @param {number} chainId Chain ID.
  * @param {string} contractAddress The tranche vault contract address.
  * @param {boolean} isDev Is dev environment or not.
+ * @param {Record<string, unknown>} chainSpecificData Chain specific data.
  * @returns {Promise<void>} Promise that returns void.
  */
 const approveLender = async (
@@ -197,34 +198,14 @@ const approveLender = async (
   chainId: number,
   contractAddress: string,
   isDev = false,
+  chainSpecificData?: Record<string, unknown>,
 ): Promise<void> =>
   requestPost<void>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
     )}/wallets/${walletAddress}/approve-lender?chainId=${chainId}&contractAddress=${contractAddress}`,
-  )
-
-/**
- * Approve wallet as solana lender.
- *
- * @param {string} walletAddress The solana wallet address.
- * @param {number} chainId Solana Chain ID.
- * @param {string} contractAddress The tranche vault contract address.
- * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<void>} Promise that returns void.
- */
-const approveSolanaLender = async (
-  walletAddress: string,
-  chainId: number,
-  contractAddress: string,
-  isDev = false,
-): Promise<void> =>
-  requestPost<void>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
-      isDev,
-    )}/wallets/${walletAddress}/approve-lender-solana-tmp?chainId=${chainId}&contractAddress=${contractAddress}`,
+    { chain_specific_data: chainSpecificData },
   )
 
 export const IdentityServiceV2 = {
@@ -234,5 +215,4 @@ export const IdentityServiceV2 = {
   resumeVerification,
   consentToSubscription,
   approveLender,
-  approveSolanaLender,
 }

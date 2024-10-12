@@ -7,24 +7,24 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { BN } from '@coral-xyz/anchor'
+import { useHumaProgram } from '@huma-finance/web-shared'
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createApproveCheckedInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
   TokenInvalidAccountOwnerError,
 } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { useHumaProgram } from '@huma-finance/web-shared'
-import { BN } from '@coral-xyz/anchor'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 import { setStep } from '../../../store/widgets.reducers'
-import { WIDGET_STEP } from '../../../store/widgets.store'
 import { selectWidgetState } from '../../../store/widgets.selectors'
+import { WIDGET_STEP } from '../../../store/widgets.store'
+import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -60,7 +60,7 @@ export function Transfer({ poolInfo }: Props): React.ReactElement | null {
           connection,
           underlyingTokenATA,
           undefined,
-          TOKEN_2022_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
         )
       } catch (error: unknown) {
         // TokenAccountNotFoundError can be possible if the associated address has already received some lamports,
@@ -77,7 +77,7 @@ export function Transfer({ poolInfo }: Props): React.ReactElement | null {
               underlyingTokenATA,
               publicKey,
               new PublicKey(poolInfo.underlyingMint.address),
-              TOKEN_2022_PROGRAM_ID,
+              TOKEN_PROGRAM_ID,
               ASSOCIATED_TOKEN_PROGRAM_ID,
             ),
           )
@@ -105,7 +105,7 @@ export function Transfer({ poolInfo }: Props): React.ReactElement | null {
             ), // amount
             poolInfo.underlyingMint.decimals,
             undefined, // multiSigners
-            TOKEN_2022_PROGRAM_ID,
+            TOKEN_PROGRAM_ID,
           ),
         )
       }
@@ -128,7 +128,7 @@ export function Transfer({ poolInfo }: Props): React.ReactElement | null {
           underlyingMint: poolInfo.underlyingMint.address,
           poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
           borrowerUnderlyingToken: underlyingTokenATA,
-          tokenProgram: TOKEN_2022_PROGRAM_ID,
+          tokenProgram: TOKEN_PROGRAM_ID,
         })
         .transaction()
       tx.add(programTx)

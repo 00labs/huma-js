@@ -1,4 +1,3 @@
-import { PublicKey, Transaction } from '@solana/web3.js'
 import { BN } from '@coral-xyz/anchor'
 import {
   getCreditAccounts,
@@ -12,11 +11,12 @@ import {
   createApproveCheckedInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
-import { HumaSolanaContext } from './HumaSolanaContext'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import { getReceivableReferenceData } from '../../utils/solana/getReceivableReferenceAccount'
+import { HumaSolanaContext } from './HumaSolanaContext'
 
 export const MPL_CORE_PROGRAM_ID =
   'CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d'
@@ -99,7 +99,7 @@ export class HumaSolanaProgramHelper {
         connection,
         borrowerUnderlyingTokenAccountAddress,
         undefined,
-        TOKEN_2022_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
       )
 
       if (
@@ -119,7 +119,7 @@ export class HumaSolanaProgramHelper {
             borrowerUnderlyingTokenAccountAddress,
             publicKey,
             new PublicKey(poolInfo.underlyingMint.address),
-            TOKEN_2022_PROGRAM_ID,
+            TOKEN_PROGRAM_ID,
           )
         tx.add(createAccountInstruction)
         addApproveInstruction = true
@@ -135,7 +135,7 @@ export class HumaSolanaProgramHelper {
         BigInt(amount.muln(2).toString()), // amount
         poolInfo.underlyingMint.decimals,
         undefined, // multiSigners
-        TOKEN_2022_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
       )
       tx.add(approveInstruction)
     }
@@ -153,7 +153,7 @@ export class HumaSolanaProgramHelper {
         underlyingMint: poolInfo.underlyingMint.address,
         poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
         borrowerUnderlyingToken: borrowerUnderlyingTokenAccountAddress,
-        tokenProgram: TOKEN_2022_PROGRAM_ID,
+        tokenProgram: TOKEN_PROGRAM_ID,
       })
       .transaction()
     tx.add(programTx)
@@ -190,7 +190,7 @@ export class HumaSolanaProgramHelper {
       underlyingMint: poolInfo.underlyingMint.address,
       poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
       borrowerUnderlyingToken: borrowerUnderlyingTokenAcccount,
-      tokenProgram: TOKEN_2022_PROGRAM_ID,
+      tokenProgram: TOKEN_PROGRAM_ID,
     }
 
     let tx: Transaction
@@ -234,7 +234,7 @@ export class HumaSolanaProgramHelper {
         ),
         poolInfo.underlyingMint.decimals,
         undefined,
-        TOKEN_2022_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
       ),
     )
   }

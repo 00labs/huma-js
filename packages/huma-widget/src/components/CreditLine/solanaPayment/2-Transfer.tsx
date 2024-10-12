@@ -6,15 +6,15 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { useHumaProgram } from '@huma-finance/web-shared'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
-import { useHumaProgram } from '@huma-finance/web-shared'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 import { setStep } from '../../../store/widgets.reducers'
-import { WIDGET_STEP } from '../../../store/widgets.store'
 import { selectWidgetState } from '../../../store/widgets.selectors'
+import { WIDGET_STEP } from '../../../store/widgets.store'
+import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -62,7 +62,7 @@ export function Transfer({ poolInfo }: Props): React.ReactElement | null {
           underlyingMint: poolInfo.underlyingMint.address,
           poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
           borrowerUnderlyingToken: underlyingTokenATA,
-          tokenProgram: TOKEN_2022_PROGRAM_ID,
+          tokenProgram: TOKEN_PROGRAM_ID,
         })
         .transaction()
 

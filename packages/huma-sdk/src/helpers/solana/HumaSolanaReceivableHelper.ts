@@ -1,12 +1,12 @@
 import { BN } from '@coral-xyz/anchor'
 import { getHumaProgram, getSolanaPoolInfo } from '@huma-finance/shared'
-import { Transaction, Keypair, PublicKey } from '@solana/web3.js'
+import { Keypair, PublicKey, Transaction } from '@solana/web3.js'
 import lodash from 'lodash'
-import { HumaSolanaContext } from './HumaSolanaContext'
 import {
   getReceivableReferenceAccount,
   getReceivableReferenceData,
 } from '../../utils/solana/getReceivableReferenceAccount'
+import { HumaSolanaContext } from './HumaSolanaContext'
 import { MPL_CORE_PROGRAM_ID } from './HumaSolanaProgramHelper'
 
 export type ReceivableState =
@@ -80,9 +80,6 @@ export class HumaSolanaReceivableHelper {
       .accountsPartial({
         asset: newAsset.publicKey,
         owner: publicKey,
-        humaConfig: poolInfo.humaConfig,
-        poolConfig: poolInfo.poolConfig,
-        poolState: poolInfo.poolState,
         mplCore: MPL_CORE_PROGRAM_ID,
         logWrapper: null,
       })
@@ -120,9 +117,6 @@ export class HumaSolanaReceivableHelper {
       .accountsPartial({
         authority: publicKey,
         asset: receivableReferenceData.asset,
-        humaConfig: poolInfo.humaConfig,
-        poolConfig: poolInfo.poolConfig,
-        poolState: poolInfo.poolState,
         mplCore: MPL_CORE_PROGRAM_ID,
         logWrapper: null,
       })
