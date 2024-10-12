@@ -89,8 +89,6 @@ export function Transfer({
         tx.add(createLenderAccountsTx)
       }
 
-      console.log('poolInfo', poolInfo)
-
       const depositTx = await program.methods
         .deposit(supplyBigNumber)
         .accountsPartial({
