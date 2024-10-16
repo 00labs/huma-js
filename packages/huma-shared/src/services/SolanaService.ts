@@ -27,7 +27,7 @@ export type SolanaReceivableEvent = {
 }
 
 function getRecentActivities(
-  poolId: string,
+  poolConfig: string,
   first: number,
   skip: number,
   isDev: boolean,
@@ -47,7 +47,7 @@ function getRecentActivities(
   const url = configUtil.getCampaignAPIUrl(isDev, isTestnet)
 
   let options = `
-        poolId: "${poolId}", 
+        poolConfigPDA: "${poolConfig}", 
         first: ${first}, 
         skip: ${skip}, 
         orderBy: "timestamp", 
@@ -101,7 +101,7 @@ function getRecentActivities(
 }
 
 function getReceivableLivestream(
-  poolId: string,
+  poolConfig: string,
   first: number,
   skip: number,
   isDev: boolean,
@@ -117,8 +117,8 @@ function getReceivableLivestream(
 
   const query = gql`
     query {
-      receivableCreatedEvents(
-        poolId: "${poolId}", 
+      receivableEvents(
+        poolConfigPDA: "${poolConfig}", 
         first: ${first}, 
         skip: ${skip}, 
         orderBy: "timestamp", 
@@ -129,7 +129,7 @@ function getReceivableLivestream(
           blockNumber
           timestamp
           transactionHash
-          pool
+          poolConfigPDA
           owner
           asset
           receivableAmount

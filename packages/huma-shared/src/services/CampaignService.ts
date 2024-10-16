@@ -156,6 +156,7 @@ function getWalletInfo(
 }
 
 function getWalletRankList(
+  seasonId: string,
   first: number,
   skip: number,
   isDev: boolean,
@@ -165,7 +166,11 @@ function getWalletRankList(
 
   const query = gql`
     query {
-        walletPoints(first: ${first}, skip: ${skip}){
+        walletPoints(
+          seasonId: "${seasonId}",
+           first: ${first}, 
+           skip: ${skip}
+           ){
           totalCount
           walletPoints {
             id
