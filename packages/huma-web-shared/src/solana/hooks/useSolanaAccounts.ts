@@ -29,66 +29,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useForceRefresh } from '../../hooks/useForceRefresh'
 
-export type PoolStateAccount = {
-  accruedIncomes: { protocolIncome: BN; poolOwnerIncome: BN; eaIncome: BN }
-  incomeWithdrawn: {
-    eaIncomeWithdrawn: BN
-    poolOwnerIncomeWithdrawn: BN
-    protocolIncomeWithdrawn: BN
-  }
-  disbursementReserve: BN
-  trancheAssets: BN[]
-}
-
-export const usePoolStateAccount = (
-  chainId: SolanaChainEnum,
-  poolName: POOL_NAME,
-): {
-  poolStateAccount: PoolStateAccount | undefined
-  loading: boolean
-  refresh: () => void
-} => {
-  const wallet = useAnchorWallet()
-  const { connection } = useConnection()
-  const [loading, setLoading] = useState<boolean>(true)
-  const poolInfo = useMemo(
-    () => getSolanaPoolInfo(chainId, poolName),
-    [chainId, poolName],
-  )
-  const [poolStateAccount, setPoolStateAccount] = useState<PoolStateAccount>()
-  const [refreshCount, refresh] = useForceRefresh()
-
-  useEffect(() => {
-    async function fetchPoolStateAccount() {
-      setLoading(true)
-      if (!poolInfo || !connection || !wallet) {
-        setLoading(false)
-        return
-      }
-      const program = getHumaProgram(chainId, connection, wallet as Wallet)
-      const poolStateAccountResult = await program.account.poolState.fetch(
-        new PublicKey(poolInfo.poolState),
-      )
-
-      setPoolStateAccount({
-        accruedIncomes: poolStateAccountResult.accruedIncomes,
-        incomeWithdrawn: poolStateAccountResult.incomeWithdrawn,
-        disbursementReserve: poolStateAccountResult.disbursementReserve,
-        trancheAssets: poolStateAccountResult.trancheAssets.assets,
-      })
-      setLoading(false)
-    }
-
-    fetchPoolStateAccount()
-  }, [chainId, connection, poolInfo, wallet, refreshCount])
-
-  return {
-    poolStateAccount,
-    loading,
-    refresh,
-  }
-}
-
 export const useTrancheMintAccounts = (
   poolInfo: SolanaPoolInfo,
   tranche: TrancheType,
