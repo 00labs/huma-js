@@ -205,6 +205,26 @@ const approveLender = async (
     )}/wallets/${walletAddress}/approve-lender?chainId=${chainId}&contractAddress=${contractAddress}`,
   )
 
+/**
+ * Authenticate wallet account.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const authenticate = async (
+  walletAddress: string,
+  chainId: number,
+  isDev = false,
+): Promise<void> =>
+  requestPost<void>(
+    `${configUtil.getIdentityAPIUrl(
+      chainId,
+      isDev,
+    )}/wallets/${walletAddress}/authenticate?chainId=${chainId}`,
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -212,4 +232,5 @@ export const IdentityServiceV2 = {
   resumeVerification,
   consentToSubscription,
   approveLender,
+  authenticate,
 }
