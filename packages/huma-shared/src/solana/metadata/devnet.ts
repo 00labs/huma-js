@@ -10,9 +10,9 @@ export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
 }
 
 export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
-  ArfPoolUSDC: {
+  ArfCreditPool3Months: {
     title: 'Arf - Cross Border Payment Financing',
-    poolName: POOL_NAME.ArfPoolUSDC,
+    poolName: POOL_NAME.ArfCreditPool3Months,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaDevnet,
     industry: 'Remittance Financing',

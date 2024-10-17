@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request'
 
-import { configUtil } from '../utils/config'
-import { requestPost } from '../utils/request'
+import { configUtil } from '../../utils/config'
+import { requestPost } from '../../utils/request'
 
 export type SolanaEvent = {
   name: string
@@ -44,7 +44,7 @@ function getRecentActivities(
   | undefined
 > {
   const { owner, events } = filters || {}
-  const url = configUtil.getCampaignAPIUrl(isDev, isTestnet)
+  const url = configUtil.getSolanaGraphAPIUrl(isDev, isTestnet)
 
   let options = `
         poolConfigPDA: "${poolConfig}", 
@@ -113,7 +113,7 @@ function getReceivableLivestream(
     }
   | undefined
 > {
-  const url = configUtil.getCampaignAPIUrl(isDev, isTestnet)
+  const url = configUtil.getSolanaGraphAPIUrl(isDev, isTestnet)
 
   const query = gql`
     query {
@@ -132,6 +132,7 @@ function getReceivableLivestream(
           poolConfigPDA
           owner
           asset
+          paidAmount
           receivableAmount
           referenceId
           currencyCode
@@ -143,7 +144,7 @@ function getReceivableLivestream(
 
   return requestPost<{
     data?: {
-      receivableCreatedEvents: {
+      receivableEvents: {
         totalCount: number
         events: SolanaReceivableEvent[]
       }
@@ -155,7 +156,7 @@ function getReceivableLivestream(
         console.error(res.errors)
         return undefined
       }
-      return res.data?.receivableCreatedEvents
+      return res.data?.receivableEvents
     })
     .catch((err) => {
       console.error(err)
