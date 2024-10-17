@@ -67,6 +67,14 @@ const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
     pointsTestnetExperience ? 'testnet.' : 'mainnet.'
   }campaign-points.huma.finance/graphql`
 
+const getSolanaGraphAPIUrl = (
+  isDev: boolean,
+  pointsTestnetExperience: boolean,
+) =>
+  `https://${getDevPrefix(isDev)}${
+    pointsTestnetExperience ? 'devnet.' : 'mainnet.'
+  }sol-graph.huma.finance/graphql`
+
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
 const DEFAULT_CHAIN_ID = 137
 
@@ -108,6 +116,7 @@ export const configUtil = {
   getAuthServiceUrl,
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,
+  getSolanaGraphAPIUrl,
   DEFAULT_CHAIN_ID,
   getEthereumDappUrl,
   getSolanaDappUrl,
