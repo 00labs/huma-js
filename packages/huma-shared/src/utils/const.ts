@@ -8,3 +8,5 @@ export enum CURRENCY_CODE {
 }
 
 export const CAMPAIGN_REFERENCE_CODE = 'CAMPAIGN_REFERENCE_CODE'
+
+export const BP_FACTOR_NUMBER = 10000
