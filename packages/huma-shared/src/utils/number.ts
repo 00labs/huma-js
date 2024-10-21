@@ -72,7 +72,7 @@ export const formatAmountWithSymbol = (
 }
 
 export const downScale = <T = string>(
-  num: string | number | BigNumber,
+  num: string | number | BigNumber | bigint,
   decimals?: number,
 ): T => {
   if (isEmpty(num) || isEmpty(decimals)) {

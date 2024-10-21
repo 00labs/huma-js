@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 export enum CHAIN_TYPE {
   EVM = 'ethereum',
   SOLANA = 'solana',
+  STELLAR = 'stellar',
 }
 
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {

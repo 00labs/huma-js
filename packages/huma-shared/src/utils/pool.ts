@@ -25,6 +25,7 @@ export enum POOL_NAME {
   ImpactMarket = 'ImpactMarket',
   Raincards = 'Raincards',
   Quipu = 'Quipu',
+  Roam = 'Roam',
 }
 
 export enum POOL_TYPE {
