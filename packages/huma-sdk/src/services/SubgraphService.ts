@@ -246,8 +246,9 @@ function getReceivableV2Info(
     orderBy: 'tokenId',
     orderDirection: 'desc',
   },
+  apiKey?: string,
 ): Promise<RealWorldReceivableInfoBase[]> {
-  const url = getSubgraphUrlForChainId(chainId)
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
   if (!url) {
     return Promise.resolve([])
   }
