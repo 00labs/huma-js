@@ -21,7 +21,6 @@ export enum IdentityVerificationStatusV2 {
 /**
  * Object representing the response to the identity verification status request.
  * @typedef {Object} VerificationStatusResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  * @property {string} personaInquiryId The persona inquiry id.
  */
@@ -33,7 +32,6 @@ export type VerificationStatusResultV2 = {
 /**
  * Object representing the response to the identity accreditation request.
  * @typedef {Object} AccreditationResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
  * @property {string} accreditedAt The accreditation passed time.
  */
 export type AccreditationResultV2 = {
@@ -43,7 +41,6 @@ export type AccreditationResultV2 = {
 /**
  * Object representing the response to the identity start verification request.
  * @typedef {Object} StartVerificationResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  * @property {string} personaInquiryId The persona inquiry id.
  */
@@ -55,7 +52,6 @@ export type StartVerificationResultV2 = {
 /**
  * Object representing the response to the identity verification resume request.
  * @typedef {Object} ResumeVerificationResultV2
- * @property {string} walletAddress The wallet address to resume the verification.
  * @property {string} sessionToken The session token.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  */
@@ -68,7 +64,6 @@ export type ResumeVerificationResultV2 = {
  * Object representing the Huma account.
  * @typedef {Object} HumaAccount
  * @property {string} accountId The account id.
- * @property {string} walletAddress The wallet address.
  * @property {string} chainId The chain id.
  */
 export type HumaAccount = {
