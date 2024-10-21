@@ -26,7 +26,6 @@ export enum IdentityVerificationStatusV2 {
  * @property {string} personaInquiryId The persona inquiry id.
  */
 export type VerificationStatusResultV2 = {
-  walletAddress: string
   status: IdentityVerificationStatusV2
   personaInquiryId: string
 }
@@ -38,7 +37,6 @@ export type VerificationStatusResultV2 = {
  * @property {string} accreditedAt The accreditation passed time.
  */
 export type AccreditationResultV2 = {
-  walletAddress: string
   accreditedAt: string
 }
 
@@ -50,7 +48,6 @@ export type AccreditationResultV2 = {
  * @property {string} personaInquiryId The persona inquiry id.
  */
 export type StartVerificationResultV2 = {
-  walletAddress: string
   status: IdentityVerificationStatusV2
   personaInquiryId: string
 }
@@ -63,9 +60,20 @@ export type StartVerificationResultV2 = {
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  */
 export type ResumeVerificationResultV2 = {
-  walletAddress: string
   sessionToken: string
   status: IdentityVerificationStatusV2
+}
+
+/**
+ * Object representing the Huma account.
+ * @typedef {Object} HumaAccount
+ * @property {string} accountId The account id.
+ * @property {string} walletAddress The wallet address.
+ * @property {string} chainId The chain id.
+ */
+export type HumaAccount = {
+  accountId: string
+  chainId: string
 }
 
 /**
@@ -228,6 +236,26 @@ const authenticate = async (
     )}/wallets/${walletAddress}/authenticate?chainId=${chainId}`,
   )
 
+/**
+ * Get Huma account.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const getHumaAccount = async (
+  walletAddress: string,
+  chainId: number,
+  isDev = false,
+): Promise<HumaAccount> =>
+  requestGet<HumaAccount>(
+    `${configUtil.getIdentityAPIUrl(
+      chainId,
+      isDev,
+    )}/wallets/${walletAddress}/account?chainId=${chainId}`,
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -236,4 +264,5 @@ export const IdentityServiceV2 = {
   consentToSubscription,
   approveLender,
   authenticate,
+  getHumaAccount,
 }
