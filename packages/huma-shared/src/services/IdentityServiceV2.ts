@@ -21,12 +21,10 @@ export enum IdentityVerificationStatusV2 {
 /**
  * Object representing the response to the identity verification status request.
  * @typedef {Object} VerificationStatusResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  * @property {string} personaInquiryId The persona inquiry id.
  */
 export type VerificationStatusResultV2 = {
-  walletAddress: string
   status: IdentityVerificationStatusV2
   personaInquiryId: string
 }
@@ -34,23 +32,19 @@ export type VerificationStatusResultV2 = {
 /**
  * Object representing the response to the identity accreditation request.
  * @typedef {Object} AccreditationResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
  * @property {string} accreditedAt The accreditation passed time.
  */
 export type AccreditationResultV2 = {
-  walletAddress: string
   accreditedAt: string
 }
 
 /**
  * Object representing the response to the identity start verification request.
  * @typedef {Object} StartVerificationResultV2
- * @property {string} walletAddress the wallet address to get the verification status.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  * @property {string} personaInquiryId The persona inquiry id.
  */
 export type StartVerificationResultV2 = {
-  walletAddress: string
   status: IdentityVerificationStatusV2
   personaInquiryId: string
 }
@@ -58,14 +52,23 @@ export type StartVerificationResultV2 = {
 /**
  * Object representing the response to the identity verification resume request.
  * @typedef {Object} ResumeVerificationResultV2
- * @property {string} walletAddress The wallet address to resume the verification.
  * @property {string} sessionToken The session token.
  * @property {IdentityVerificationStatusV2} status The wallet's identity verification status.
  */
 export type ResumeVerificationResultV2 = {
-  walletAddress: string
   sessionToken: string
   status: IdentityVerificationStatusV2
+}
+
+/**
+ * Object representing the Huma account.
+ * @typedef {Object} HumaAccount
+ * @property {string} accountId The account id.
+ * @property {string} chainId The chain id.
+ */
+export type HumaAccount = {
+  accountId: string
+  chainId: string
 }
 
 /**
@@ -228,6 +231,26 @@ const authenticate = async (
     )}/wallets/${walletAddress}/authenticate?chainId=${chainId}`,
   )
 
+/**
+ * Get Huma account.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const getHumaAccount = async (
+  walletAddress: string,
+  chainId: number,
+  isDev = false,
+): Promise<HumaAccount> =>
+  requestGet<HumaAccount>(
+    `${configUtil.getIdentityAPIUrl(
+      chainId,
+      isDev,
+    )}/wallets/${walletAddress}/account?chainId=${chainId}`,
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -236,4 +259,5 @@ export const IdentityServiceV2 = {
   consentToSubscription,
   approveLender,
   authenticate,
+  getHumaAccount,
 }
