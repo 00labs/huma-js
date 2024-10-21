@@ -14,14 +14,13 @@ import { useAuthErrorHandling, useParamsSearch } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-
-import { useAppDispatch } from '../../../../hooks/useRedux'
-import { setError } from '../../../../store/widgets.reducers'
-import { BottomButton } from '../../../BottomButton'
-import { HumaSnackBar } from '../../../HumaSnackBar'
-import { ApproveLenderImg } from '../../../images'
-import { LoadingModal } from '../../../LoadingModal'
-import { WrapperModal } from '../../../WrapperModal'
+import { useAppDispatch } from '../../../hooks/useRedux'
+import { setError } from '../../../store/widgets.reducers'
+import { HumaSnackBar } from '../../HumaSnackBar'
+import { WrapperModal } from '../../WrapperModal'
+import { ApproveLenderImg } from '../../images'
+import { BottomButton } from '../../BottomButton'
+import { LoadingModal } from '../../LoadingModal'
 
 const LoadingCopiesByType: {
   [key: string]: {

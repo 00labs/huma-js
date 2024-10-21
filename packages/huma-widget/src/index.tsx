@@ -73,6 +73,26 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  SolanaLendSupply,
+  SolanaLendSupplyProps,
+} from './components/Lend/solanaSupply'
+import {
+  SolanaLendAddRedemption,
+  SolanaLendAddRedemptionProps,
+} from './components/Lend/solanaAddRedemption'
+import {
+  SolanaLendCancelRedemption,
+  SolanaLendCancelRedemptionProps,
+} from './components/Lend/solanaCancelRedemption'
+import {
+  SolanaBorrow,
+  SolanaBorrowProps,
+} from './components/CreditLine/solanaBorrow'
+import {
+  SolanaPayment,
+  SolanaPaymentProps,
+} from './components/CreditLine/solanaPayment'
 import { NotifiContextWrapper } from './components/Notifi/NotifiContextWrapper'
 
 /**
@@ -531,6 +551,125 @@ export function ReceivableBackedCreditLinePaymentWidgetV2(
     <Widget {...props}>
       <ReceivableBackedCreditLinePaymentV2 {...props} />
     </Widget>
+  )
+}
+
+/**
+ * Object representing the props passed to Solana widgets
+ * @typedef {Object} SolanaWidgetProps
+ */
+type SolanaWidgetProps = {
+  handleClose?: () => void
+}
+
+function SolanaWidget(props: WCProps<SolanaWidgetProps>) {
+  const { children } = props
+
+  return (
+    <ThemeProvider theme={themeHuma}>
+      <ReduxProvider store={store}>{children}</ReduxProvider>
+    </ThemeProvider>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaLendSupplyWidgetProps
+ */
+type SolanaLendSupplyWidgetProps = SolanaLendSupplyProps & SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaLendSupplyWidgetProps} props - Widget props
+ */
+export function SolanaLendSupplyWidget(props: SolanaLendSupplyWidgetProps) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaLendSupply {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaLendAddRedemptionWidgetProps
+ */
+type SolanaLendAddRedemptionWidgetProps = SolanaLendAddRedemptionProps &
+  SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaLendAddRedemptionWidgetProps} props - Widget props
+ */
+export function SolanaLendAddRedemptionWidget(
+  props: SolanaLendAddRedemptionWidgetProps,
+) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaLendAddRedemption {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaLendCancelRedemptionWidgetProps
+ */
+type SolanaLendCancelRedemptionWidgetProps = SolanaLendCancelRedemptionProps &
+  SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaLendCancelRedemptionWidgetProps} props - Widget props
+ */
+export function SolanaLendCancelRedemptionWidget(
+  props: SolanaLendCancelRedemptionWidgetProps,
+) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaLendCancelRedemption {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaBorrowWidgetProps
+ */
+type SolanaBorrowWidgetProps = SolanaBorrowProps & SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaBorrowWidgetProps} props - Widget props
+ */
+export function SolanaBorrowWidget(props: SolanaBorrowWidgetProps) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaBorrow {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaPaymentWidgetProps
+ */
+type SolanaPaymentWidgetProps = SolanaPaymentProps & SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaPaymentWidgetProps} props - Widget props
+ */
+export function SolanaPaymentWidget(props: SolanaPaymentWidgetProps) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaPayment {...props} />
+    </SolanaWidget>
   )
 }
 

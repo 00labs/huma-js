@@ -76,14 +76,16 @@ export function PointsEarned({
 
   useEffect(() => {
     const checkWalletOwnership = async () => {
-      const ownership = await CampaignService.checkWalletOwnership(
-        account!,
-        isDev,
-        pointsTestnetExperience,
-      )
-      setWalletOwnership(ownership)
-      if (!ownership) {
-        setAuthError('WalletNotSignInException')
+      if (account) {
+        const ownership = await CampaignService.checkWalletOwnership(
+          account,
+          isDev,
+          pointsTestnetExperience,
+        )
+        setWalletOwnership(ownership)
+        if (!ownership) {
+          setAuthError('WalletNotSignInException')
+        }
       }
     }
     checkWalletOwnership()

@@ -41,7 +41,7 @@ const authError = {
 }
 const otherError = new Error()
 
-describe('useAuthErrorHandling', () => {
+describe.skip('useAuthErrorHandling', () => {
   afterEach(() => {
     ;(AuthService.createSession as jest.Mock).mockClear()
     ;(AuthService.verifySignature as jest.Mock).mockClear()

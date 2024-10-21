@@ -58,6 +58,7 @@ export type WidgetState = {
   tokenId?: string
   stream?: WidgetStream
   multisend?: MultisendPayload
+  solanaSignature?: string
 }
 
 export const initialWidgetState: WidgetState = {}

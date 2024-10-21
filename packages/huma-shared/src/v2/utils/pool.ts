@@ -56,6 +56,24 @@ export type PoolAbis = {
   calendarAbi: unknown
 }
 
+export type KYCType = {
+  Securitize?: {
+    signInRequired: KYCCopy
+    verifyIdentity: KYCCopy
+    emailSignatureLink: KYCCopy
+    resendSignatureLink: KYCCopy
+    docUnderReview: KYCCopy
+  }
+  Persona?: {
+    signInRequired: KYCCopy
+    verifyIdentity: KYCCopy
+    verificationDeclined: KYCCopy
+    verificationNeedsReview: KYCCopy
+    verificationApproved: KYCCopy
+    verificationBypassed: KYCCopy
+  }
+}
+
 export type PoolInfoV2 = {
   chainId: ChainEnum
   poolVersion: PoolVersion
@@ -79,23 +97,7 @@ export type PoolInfoV2 = {
   desc: string
   lenderApprovalProvider?: LenderApprovalProvider
   industry: IndustryType
-  KYC?: {
-    Securitize?: {
-      signInRequired: KYCCopy
-      verifyIdentity: KYCCopy
-      emailSignatureLink: KYCCopy
-      resendSignatureLink: KYCCopy
-      docUnderReview: KYCCopy
-    }
-    Persona?: {
-      signInRequired: KYCCopy
-      verifyIdentity: KYCCopy
-      verificationDeclined: KYCCopy
-      verificationNeedsReview: KYCCopy
-      verificationApproved: KYCCopy
-      verificationBypassed: KYCCopy
-    }
-  }
+  KYC?: KYCType
   supplyLink?: string
   poolUnderlyingToken: {
     address: string
