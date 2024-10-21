@@ -82,6 +82,8 @@ const getEthereumDappUrl = (isDev = false) =>
   `https://${getDevPrefix(isDev)}app.huma.finance`
 const getSolanaDappUrl = (isDev = false) =>
   `https://${getDevPrefix(isDev)}solapp.huma.finance`
+const getStellarDappUrl = (isDev = false) =>
+  `https://${getDevPrefix(isDev)}stellarapp.huma.finance`
 
 export const configUtil = {
   dappLink: 'https://app.huma.finance/#',
@@ -120,4 +122,5 @@ export const configUtil = {
   DEFAULT_CHAIN_ID,
   getEthereumDappUrl,
   getSolanaDappUrl,
+  getStellarDappUrl,
 }
