@@ -1,2 +1,2 @@
-export * as HumaSolanaDevnet from './devnet'
+export * as HumaSolana from './huma'
 export * from './localhost'

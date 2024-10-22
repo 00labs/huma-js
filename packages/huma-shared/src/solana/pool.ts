@@ -21,7 +21,6 @@ export type SolanaPoolInfo = {
   seniorTrancheState: string
   trancheDecimals: number
   humaConfig: string
-  receivable?: string
   underlyingMint: {
     address: string
     symbol: string
@@ -32,6 +31,7 @@ export type SolanaPoolInfo = {
   extra?: {
     isClosed?: boolean
     hidden?: boolean
+    hasReceivables?: boolean
   }
 }
 
@@ -49,7 +49,6 @@ export const SOLANA_CHAIN_POOLS_INFO = {
 
 export type SolanaChainInfo = {
   poolProgram: string
-  humaProgramAuthority: string
   sentinel: string
 }
 
