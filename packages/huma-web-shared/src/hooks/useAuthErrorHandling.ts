@@ -68,12 +68,7 @@ const verifyEvmOwnership = async (
   const message = createSiweMessage(address, chainId, nonce, expiresAt)
   const signer = await provider.getSigner()
   const signature = await signer.signMessage(message)
-  await AuthService.verifySignature(
-    JSON.stringify(message),
-    signature,
-    chainId,
-    isDev,
-  )
+  await AuthService.verifySignature(message, signature, chainId, isDev)
   onVerificationComplete()
 }
 
