@@ -3,8 +3,8 @@ import { Connection, PublicKey } from '@solana/web3.js'
 
 import { POOL_NAME } from '../../utils'
 import { SolanaChainEnum } from '../chain'
-import { Huma as HumaSolanaDevnet } from '../idl/devnet'
-import HumaDevnetIDL from '../idl/devnet.json'
+import { Huma as HumaProgram } from '../idl/huma'
+import HumaIDL from '../idl/huma.json'
 import {
   SOLANA_CHAIN_INFO,
   SOLANA_CHAIN_POOLS_INFO,
@@ -16,9 +16,6 @@ export const getPoolProgramAddress = (chainId: SolanaChainEnum) =>
 
 export const getSentinelAddress = (chainId: SolanaChainEnum) =>
   SOLANA_CHAIN_INFO[chainId].sentinel
-
-export const getHumaProgramAuthorityAddress = (chainId: SolanaChainEnum) =>
-  SOLANA_CHAIN_INFO[chainId].humaProgramAuthority
 
 export const getSolanaPoolInfo = (
   chainId: SolanaChainEnum,
@@ -47,22 +44,15 @@ export function getSolanaPoolInfoForPoolAddress(
 }
 
 export const getHumaProgram = (
-  chainId: SolanaChainEnum,
+  _chainId: SolanaChainEnum,
   connection: Connection,
   wallet?: Wallet,
-): Program<HumaSolanaDevnet> => {
+): Program<HumaProgram> => {
   const provider = wallet
     ? new AnchorProvider(connection, wallet, {})
     : undefined
 
-  if (chainId === SolanaChainEnum.SolanaDevnet) {
-    return new Program<HumaSolanaDevnet>(
-      HumaDevnetIDL as HumaSolanaDevnet,
-      provider,
-    )
-  }
-
-  throw new Error('Chain not supported')
+  return new Program<HumaProgram>(HumaIDL as HumaProgram, provider)
 }
 
 export const getCreditAccounts = (

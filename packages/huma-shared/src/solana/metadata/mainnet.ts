@@ -5,30 +5,30 @@ import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 
 export const SOLANA_DEVNET_INFO: SolanaChainInfo = {
   poolProgram: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9',
-  sentinel: '8GQMZVEvYsssewqu2EvoAtVeBMWEkns7vGiUMQ6V7KDo',
+  sentinel: 'Huma3jh5pZd1WKKEApB66W5c75vzHfFdRUHM7oMLwdQV', //
 }
 
 export const SOLANA_DEVNET_METADATA: SolanaPoolsInfo = {
-  ArfCreditPool3Months: {
+  ArfCreditPool6Months: {
     title: 'Arf - Cross Border Payment Financing',
-    poolName: POOL_NAME.ArfCreditPool3Months,
+    poolName: POOL_NAME.ArfCreditPool6Months,
     poolType: POOL_TYPE.CreditLine,
-    chainId: SolanaChainEnum.SolanaDevnet,
+    chainId: SolanaChainEnum.SolanaMainnet,
     industry: 'Remittance Financing',
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
-    poolId: '76d8rK4YdHd5qxqqZ4KaJgUtCM8KkqMC3znbD9mutHgN',
-    poolAuthority: 'CzQhXCdfcB53ExZCcrHKhZxf22utjGANMYMrtCBgBmJc',
-    poolUnderlyingTokenAccount: 'DxgGcBC87cL4rVkYiqRdQo2Q4mV9bHuCarDH1tnnVxvv',
-    poolConfig: 'GWs8KUxRaKhepYzUER4v1CWBqwjr4TmqSGYFJKz9DECG',
-    humaConfig: 'F2it2fBcdjeX9KCaEAWcQ1H8LnMB2zPn3nrPpHc7J8vL',
-    poolState: 'EWhyXxA9SWvTTgfH4T6ED7DYeBiojUibA2xJ74Rv2q3D',
-    juniorTrancheMint: 'D8NkRC2kszBdSqVATbjsJmUhVZs8vtim7EQTm8Ac3thn',
-    juniorTrancheState: 'BXccmYxW4USBk69ns6GwucfTMsjPz9GGWaHi99tC9Ywu',
-    seniorTrancheMint: 'AAZ5cHWkG9XbmQBkKfeFJG1kEsxzFFhonsAinx2K2w9',
-    seniorTrancheState: '4GKihfFhjGRLn3Bi7PCPzjuaJHPznDB7CioDjMZ7reZP',
+    poolId: '6oAuPDYheeDBrmRgY5z1iXvmFwbmtpEGdGBtMCWgAHwb',
+    poolAuthority: 'FyBd4A7VzeTBP1dyfmmi1rqZYx6wpLT63xKKzngDKu5p',
+    poolUnderlyingTokenAccount: 'FwZoHpBs1cwHRZzQ9XAzd2Jai4okVVAsNTZbAoEysRpV',
+    poolConfig: '4beixqv1temogHLmJU98SLpQvGyxkgTyn2AK7dWTr3k8',
+    humaConfig: 'Fh2WKYCJfota6k76gDGnhTELUuhPa7FHQvVza4cE11ja',
+    poolState: 'BA1nPxHMnaWiuXeqHSGQntNnx7hobXhHNtiK1PWhrS6E',
+    juniorTrancheMint: 'EabTCfsZytPd8PRAsSVxcPpMn9hPARLFgvNx6eRjFz1i',
+    juniorTrancheState: '78Jz2ne15ahye3iC2vVmWF4kDQba7xFFcVE3nT9nE1q6',
+    seniorTrancheMint: '9J7t9Lnd3bwmACix1Xiw9W3crdtzx6q5Y18LGt25UYco',
+    seniorTrancheState: 'GGsYvQW5Xw4VLwJAzRA36NHFc146XBQJ6DveR2qBAUgS',
     trancheDecimals: 6,
     underlyingMint: {
-      address: '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU',
+      address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
       symbol: 'USDC',
       decimals: 6,
       icon: 'USDC',
