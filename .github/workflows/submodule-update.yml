@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: 00labs/huma-dapp
-          ref: "develop"
-          token: ${{ secrets.CI_TOKEN }}
+          ref: 'develop'
+          token: ${{ secrets.CI_TOKEN_PUBLIC }}
           submodules: true
 
       - name: Pull & update submodules recursively
