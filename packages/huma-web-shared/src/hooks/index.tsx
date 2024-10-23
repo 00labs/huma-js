@@ -1,5 +1,4 @@
 export * from './useERC2612Permit'
-export * from './web3'
 export * from './useActiveRoute'
 export * from './useAsyncError'
 export * from './useAuthErrorHandling'
