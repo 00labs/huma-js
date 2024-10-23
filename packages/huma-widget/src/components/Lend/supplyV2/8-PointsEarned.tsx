@@ -229,8 +229,7 @@ export function PointsEarned({
         </Box>
         <Box css={styles.entirePointsDetails}>
           You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
-          {monthText} straight. Plus, If you keep your investment till after{' '}
-          {monthText}, you’ll gain extra points daily.
+          {monthText} straight.
         </Box>
         <BottomButton variant='contained' onClick={handleCloseModal}>
           GREAT
