@@ -1,8 +1,4 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import {
-  Provider as Web3Provider,
-  ProviderProps as Web3Props,
-} from '@huma-finance/web-shared'
 import { ThemeProvider } from '@mui/material'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { Provider as AtomProvider } from 'jotai'
@@ -135,15 +131,13 @@ function Widget(props: WCProps<WidgetProps>) {
   return (
     <ThemeProvider theme={themeHuma}>
       <ReduxProvider store={store}>
-        <Web3Provider {...(props as Web3Props)} defaultChainId={chainId}>
-          <AtomProvider>
-            <ChainSupportProvider>
-              <NotifiContextWrapper chainId={chainId}>
-                {children}
-              </NotifiContextWrapper>
-            </ChainSupportProvider>
-          </AtomProvider>
-        </Web3Provider>
+        <AtomProvider>
+          <ChainSupportProvider>
+            <NotifiContextWrapper chainId={chainId}>
+              {children}
+            </NotifiContextWrapper>
+          </ChainSupportProvider>
+        </AtomProvider>
       </ReduxProvider>
     </ThemeProvider>
   )

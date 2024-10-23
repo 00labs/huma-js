@@ -1,5 +1,4 @@
 export * from './JsonRpcConnector'
-export * from './WalletConnect'
 export * from './chain'
 export * from './common'
 export * from './config'
