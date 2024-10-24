@@ -16,6 +16,7 @@ import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { CloseModalOptions } from '.'
 import { resetState, setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
@@ -35,7 +36,7 @@ type Props = {
   transactionHash: string
   poolState: SolanaPoolState
   pointsTestnetExperience: boolean
-  handleAction: () => void
+  handleAction: (options?: CloseModalOptions) => void
 }
 
 export function PointsEarned({
@@ -148,7 +149,7 @@ export function PointsEarned({
   const handleCloseModal = useCallback(() => {
     reset()
     dispatch(resetState())
-    handleAction()
+    handleAction({ isSuccess: true })
   }, [dispatch, handleAction, reset])
 
   const styles = {
