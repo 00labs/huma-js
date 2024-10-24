@@ -19,10 +19,10 @@ type Props = {
 export function SolanaTxDoneModal({
   content,
   subContent,
-  handleAction,
   solanaSignature,
   chainId,
   buttonText,
+  handleAction,
 }: Props): React.ReactElement {
   const theme = useTheme()
   const dispatch = useAppDispatch()

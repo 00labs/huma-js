@@ -3,7 +3,7 @@ import { SolanaPoolState } from '@huma-finance/web-shared'
 import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Campaign } from '.'
+import { Campaign, CloseModalOptions } from '.'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -14,7 +14,8 @@ type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   campaign?: Campaign
-  handleAction: () => void
+  updateTransactionHash: (hash: string) => void
+  handleAction: (options?: CloseModalOptions) => void
 }
 
 export function Success({
@@ -49,7 +50,7 @@ export function Success({
     if (campaign) {
       dispatch(setStep(WIDGET_STEP.PointsEarned))
     } else {
-      handleAction()
+      handleAction({ isSuccess: true })
     }
   }, [campaign, dispatch, handleAction])
 

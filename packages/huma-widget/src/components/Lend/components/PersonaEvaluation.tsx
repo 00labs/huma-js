@@ -22,7 +22,7 @@ import { BottomButton } from '../../BottomButton'
 import { ApproveLenderImg } from '../../images'
 import { LoadingModal } from '../../LoadingModal'
 import { WrapperModal } from '../../WrapperModal'
-import { Campaign } from '../supplyV2'
+import { Campaign, CloseModalOptions } from '../supplyV2'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 
@@ -38,7 +38,7 @@ type Props = {
   campaign?: Campaign
   chainSpecificData?: Record<string, unknown>
   changeTranche: (tranche: TrancheType) => void
-  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
+  handleClose: (options?: CloseModalOptions) => void
 }
 
 export function PersonaEvaluation({
@@ -377,11 +377,11 @@ export function PersonaEvaluation({
         case IdentityVerificationStatusV2.DECLINED:
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
         case IdentityVerificationStatusV2.APPROVED:
-          handleClose(verificationStatus.status)
+          handleClose({ identityStatus: verificationStatus.status })
           break
 
         case IdentityVerificationStatusV2.BYPASSED:
-          handleClose(IdentityVerificationStatusV2.APPROVED)
+          handleClose({ identityStatus: IdentityVerificationStatusV2.APPROVED })
           break
 
         default:
