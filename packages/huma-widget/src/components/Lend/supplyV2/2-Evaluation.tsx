@@ -1,7 +1,7 @@
 import { CHAIN_TYPE, PoolInfoV2, TrancheType } from '@huma-finance/shared'
 import React from 'react'
 
-import { Campaign } from '.'
+import { Campaign, CloseModalOptions } from '.'
 import { PersonaEvaluation } from '../components/PersonaEvaluation'
 import { SecuritizeEvaluation } from '../components/SecuritizeEvaluation'
 
@@ -11,7 +11,7 @@ type Props = {
   pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
-  handleClose: () => void
+  handleClose: (options?: CloseModalOptions) => void
 }
 
 export function Evaluation({
