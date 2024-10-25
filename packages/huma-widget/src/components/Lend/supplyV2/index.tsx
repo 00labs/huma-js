@@ -19,6 +19,7 @@ import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
+import { PointsEarned } from '../../PointsEarned'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseTranche } from './1-ChooseTranche'
 import { Evaluation } from './2-Evaluation'
@@ -27,7 +28,6 @@ import { ApproveAllowance } from './4-ApproveAllowance'
 import { Transfer } from './5-Transfer'
 import { Success } from './6-Success'
 import { Notifications } from './7-Notifications'
-import { PointsEarned } from './8-PointsEarned'
 
 export interface Campaign {
   id: string
@@ -65,7 +65,6 @@ export function LendSupplyV2({
   const { poolUnderlyingToken } = poolInfo || {}
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
-  const [transactionHash, setTransactionHash] = useState<string | undefined>()
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -199,25 +198,29 @@ export function LendSupplyV2({
         <ApproveAllowance poolInfo={poolInfo} />
       )}
       {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
+        <Transfer
+          poolInfo={poolInfo}
+          trancheType={selectedTranche}
+          pointsTestnetExperience={pointsTestnetExperience}
+          campaign={campaign}
+        />
       )}
       {step === WIDGET_STEP.Done && (
         <Success
           poolInfo={poolInfo}
           lpConfig={lpConfig}
           campaign={campaign}
-          updateTransactionHash={setTransactionHash}
           handleAction={handleClose}
         />
       )}
       {step === WIDGET_STEP.Notifications && (
         <Notifications campaign={campaign} handleAction={handleClose} />
       )}
-      {step === WIDGET_STEP.PointsEarned && transactionHash && (
+      {step === WIDGET_STEP.PointsEarned && (
         <PointsEarned
-          transactionHash={transactionHash}
-          lpConfig={lpConfig}
-          pointsTestnetExperience={pointsTestnetExperience}
+          lpConfig={{
+            withdrawalLockupPeriodDays: lpConfig.withdrawalLockoutPeriodInDays,
+          }}
           handleAction={handleClose}
         />
       )}

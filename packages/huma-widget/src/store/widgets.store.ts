@@ -59,6 +59,7 @@ export type WidgetState = {
   stream?: WidgetStream
   multisend?: MultisendPayload
   solanaSignature?: string
+  pointsAccumulated?: number
 }
 
 export const initialWidgetState: WidgetState = {}

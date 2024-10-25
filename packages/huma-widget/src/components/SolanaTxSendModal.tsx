@@ -3,15 +3,15 @@ import React, { useEffect, useState } from 'react'
 
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
+import { useAppDispatch } from '../hooks/useRedux'
 import { setError, setSolanaSignature } from '../store/widgets.reducers'
 import { LoadingModal } from './LoadingModal'
 import { SolanaViewOnExplorer } from './SolanaViewOnExplorer'
-import { useAppDispatch } from '../hooks/useRedux'
 
 type Props = {
   chainId: SolanaChainEnum
   tx?: Transaction
-  handleSuccess: () => void
+  handleSuccess: (options?: { signature: string }) => void
 }
 
 export function SolanaTxSendModal({
@@ -41,7 +41,7 @@ export function SolanaTxSendModal({
           lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
           signature,
         })
-        handleSuccess()
+        handleSuccess({ signature })
       } catch (error: unknown) {
         const err = error as Error
         dispatch(setError({ errorMessage: err?.message || '' }))

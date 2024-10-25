@@ -26,7 +26,6 @@ type Props = {
   poolInfo: PoolInfoV2
   lpConfig: { withdrawalLockoutPeriodInDays: number }
   campaign?: Campaign
-  updateTransactionHash: (hash: string) => void
   handleAction: () => void
 }
 
@@ -34,12 +33,11 @@ export function Success({
   poolInfo,
   lpConfig,
   campaign,
-  updateTransactionHash,
   handleAction,
 }: Props): React.ReactElement {
   const dispatch = useDispatch()
   const { account, chainId } = useWeb3React()
-  const [{ txReceipt, txHash }] = useAtom(sendTxAtom)
+  const [{ txReceipt }] = useAtom(sendTxAtom)
   const { symbol, decimals, address } = poolInfo.poolUnderlyingToken
   const [supplyAmount, setSupplyAmount] = useState<string | undefined>()
   const { isFirstTimeNotifiUser } = useIsFirstTimeNotifiUser(account, chainId)
@@ -62,12 +60,6 @@ export function Success({
       }
     }
   }, [account, address, decimals, poolInfo.poolSafe, txReceipt])
-
-  useEffect(() => {
-    if (txHash) {
-      updateTransactionHash(txHash)
-    }
-  }, [txHash, updateTransactionHash])
 
   const handleUserAction = useCallback(() => {
     if (isFirstTimeNotifiUser && notifiChainSupported) {
