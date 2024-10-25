@@ -1,4 +1,6 @@
 import {
+  CampaignService,
+  checkIsDev,
   getTokenAccounts,
   SolanaPoolInfo,
   SolanaTokenUtils,
@@ -6,12 +8,16 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { useHumaProgram, useLenderAccounts } from '@huma-finance/web-shared'
+import {
+  SolanaPoolState,
+  useHumaProgram,
+  useLenderAccounts,
+} from '@huma-finance/web-shared'
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { setStep } from '../../../store/widgets.reducers'
+import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { LoadingModal } from '../../LoadingModal'
@@ -19,13 +25,18 @@ import { SolanaTxSendModal } from '../../SolanaTxSendModal'
 
 type Props = {
   poolInfo: SolanaPoolInfo
+  poolState: SolanaPoolState
   selectedTranche: TrancheType
+  pointsTestnetExperience: boolean
 }
 
 export function Transfer({
   poolInfo,
+  poolState,
   selectedTranche,
+  pointsTestnetExperience,
 }: Props): React.ReactElement | null {
+  const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()
   const { supplyAmount } = useAppSelector(selectWidgetState)
@@ -44,9 +55,33 @@ export function Transfer({
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const program = useHumaProgram(poolInfo.chainId)
 
-  const handleSuccess = useCallback(() => {
-    dispatch(setStep(WIDGET_STEP.Done))
-  }, [dispatch])
+  const handleSuccess = useCallback(
+    async (options?: { signature: string }) => {
+      if (publicKey && poolState.campaign && options?.signature) {
+        try {
+          const result = await CampaignService.updateWalletPoints(
+            publicKey.toString(),
+            options.signature,
+            poolInfo.chainId,
+            isDev,
+            pointsTestnetExperience,
+          )
+          dispatch(setPointsAccumulated(result.pointsAccumulated))
+        } catch (error) {
+          console.error('Failed to update wallet points', error)
+        }
+      }
+      dispatch(setStep(WIDGET_STEP.Done))
+    },
+    [
+      dispatch,
+      isDev,
+      pointsTestnetExperience,
+      poolInfo.chainId,
+      poolState.campaign,
+      publicKey,
+    ],
+  )
 
   useEffect(() => {
     async function getTx() {

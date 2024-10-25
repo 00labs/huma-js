@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
 
-import { SolanaPoolInfo } from '../solana'
+import { SolanaChainEnum, SolanaPoolInfo } from '../solana'
 import { ChainEnum } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
@@ -394,7 +394,7 @@ function createNewWallet(
 function updateWalletPoints(
   account: string,
   hash: string,
-  chainId: ChainEnum,
+  chainId: ChainEnum | SolanaChainEnum,
   isDev: boolean,
   pointsTestnetExperience: boolean,
 ): Promise<{ pointsAccumulated?: number }> {

@@ -1,7 +1,7 @@
 import { formatMoney, SolanaPoolInfo, timeUtil } from '@huma-finance/shared'
 import { SolanaPoolState } from '@huma-finance/web-shared'
 import dayjs from 'dayjs'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Campaign } from '.'
 import { useAppSelector } from '../../../hooks/useRedux'
@@ -14,7 +14,6 @@ type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   campaign?: Campaign
-  updateTransactionHash: (hash: string) => void
   handleAction: () => void
 }
 
@@ -22,18 +21,11 @@ export function Success({
   poolInfo,
   poolState,
   campaign,
-  updateTransactionHash,
   handleAction,
 }: Props): React.ReactElement {
   const dispatch = useDispatch()
   const { supplyAmount, solanaSignature } = useAppSelector(selectWidgetState)
   const { symbol } = poolInfo.underlyingMint
-
-  useEffect(() => {
-    if (solanaSignature) {
-      updateTransactionHash(solanaSignature)
-    }
-  }, [solanaSignature, updateTransactionHash])
 
   const content = [
     `You successfully supplied ${formatMoney(supplyAmount)} ${symbol}.`,

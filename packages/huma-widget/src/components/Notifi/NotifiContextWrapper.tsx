@@ -39,6 +39,10 @@ export function NotifiContextWrapper({
     cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_SCROLL ?? ''
   }
 
+  if (!cardId) {
+    return children
+  }
+
   return (
     <NotifiContextProvider
       tenantId='humafinanceprod'

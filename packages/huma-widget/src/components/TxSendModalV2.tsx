@@ -14,7 +14,7 @@ type Props = {
   params: unknown[]
   title?: string
   contract: Contract
-  handleSuccess?: () => void
+  handleSuccess?: (options?: { txHash: string }) => void
 }
 
 export function TxSendModalV2({
@@ -30,12 +30,12 @@ export function TxSendModalV2({
   const [{ state, txHash }, send] = useAtom(sendTxAtom)
 
   useEffect(() => {
-    if (state === TxStateType.Success) {
+    if (state === TxStateType.Success && txHash) {
       if (handleSuccess) {
-        handleSuccess()
+        handleSuccess({ txHash })
       }
     }
-  }, [dispatch, handleSuccess, state])
+  }, [dispatch, handleSuccess, state, txHash])
 
   useMount(() => {
     send({ contract, method, params, provider })
