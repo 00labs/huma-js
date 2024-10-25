@@ -1,4 +1,8 @@
-import { SolanaPoolInfo, TrancheType } from '@huma-finance/shared'
+import {
+  CloseModalOptions,
+  SolanaPoolInfo,
+  TrancheType,
+} from '@huma-finance/shared'
 import {
   SolanaPoolState,
   useLenderAccounts,
@@ -23,10 +27,6 @@ import { Success } from './5-Success'
 export interface Campaign {
   id: string
   campaignGroupId: string
-}
-
-export interface CloseModalOptions {
-  isSuccess?: boolean
 }
 
 /**

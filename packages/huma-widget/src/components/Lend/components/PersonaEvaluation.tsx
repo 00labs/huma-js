@@ -3,6 +3,7 @@ import {
   CampaignService,
   CHAIN_TYPE,
   checkIsDev,
+  CloseModalOptions,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
@@ -22,7 +23,7 @@ import { BottomButton } from '../../BottomButton'
 import { ApproveLenderImg } from '../../images'
 import { LoadingModal } from '../../LoadingModal'
 import { WrapperModal } from '../../WrapperModal'
-import { Campaign, CloseModalOptions } from '../supplyV2'
+import { Campaign } from '../supplyV2'
 
 type LoadingType = 'verificationStatus' | 'startKYC' | 'approveLender'
 

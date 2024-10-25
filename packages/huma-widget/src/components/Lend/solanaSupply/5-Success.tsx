@@ -1,9 +1,14 @@
-import { formatMoney, SolanaPoolInfo, timeUtil } from '@huma-finance/shared'
+import {
+  CloseModalOptions,
+  formatMoney,
+  SolanaPoolInfo,
+  timeUtil,
+} from '@huma-finance/shared'
 import { SolanaPoolState } from '@huma-finance/web-shared'
 import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Campaign, CloseModalOptions } from '.'
+import { Campaign } from '.'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'

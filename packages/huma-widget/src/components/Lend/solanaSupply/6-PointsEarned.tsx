@@ -2,6 +2,7 @@ import {
   CampaignService,
   CHAIN_TYPE,
   checkIsDev,
+  CloseModalOptions,
   formatNumber,
   isEmpty,
 } from '@huma-finance/shared'
@@ -16,7 +17,6 @@ import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { CloseModalOptions } from '.'
 import { resetState, setError } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'

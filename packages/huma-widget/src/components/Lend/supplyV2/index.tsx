@@ -1,5 +1,5 @@
 import {
-  IdentityVerificationStatusV2,
+  CloseModalOptions,
   openInNewTab,
   POOL_NAME,
   TrancheType,
@@ -32,11 +32,6 @@ import { Notifications } from './7-Notifications'
 export interface Campaign {
   id: string
   campaignGroupId: string
-}
-
-export interface CloseModalOptions {
-  identityStatus?: IdentityVerificationStatusV2
-  isSuccess?: boolean
 }
 
 /**
