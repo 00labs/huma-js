@@ -1,4 +1,9 @@
-import { CHAIN_TYPE, PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import {
+  CHAIN_TYPE,
+  CloseModalOptions,
+  PoolInfoV2,
+  TrancheType,
+} from '@huma-finance/shared'
 import React from 'react'
 
 import { Campaign } from '.'
@@ -11,7 +16,7 @@ type Props = {
   pointsTestnetExperience: boolean
   campaign?: Campaign
   changeTranche: (tranche: TrancheType) => void
-  handleClose: () => void
+  handleClose: (options?: CloseModalOptions) => void
 }
 
 export function Evaluation({

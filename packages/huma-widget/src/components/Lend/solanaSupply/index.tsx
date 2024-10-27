@@ -1,4 +1,8 @@
-import { SolanaPoolInfo, TrancheType } from '@huma-finance/shared'
+import {
+  CloseModalOptions,
+  SolanaPoolInfo,
+  TrancheType,
+} from '@huma-finance/shared'
 import {
   SolanaPoolState,
   useLenderAccounts,
@@ -31,14 +35,14 @@ export interface Campaign {
  * @property {SolanaPoolInfo} poolInfo The metadata of the pool.
  * @property {SolanaPoolState} poolState The current state config of the pool.
  * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
- * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {function((CloseModalOptions|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function():void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface SolanaLendSupplyProps {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   pointsTestnetExperience: boolean
-  handleClose: () => void
+  handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: () => void
 }
 

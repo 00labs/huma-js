@@ -3,6 +3,7 @@ import {
   CampaignService,
   CHAIN_TYPE,
   checkIsDev,
+  CloseModalOptions,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
   KYCCopy,
@@ -38,7 +39,7 @@ type Props = {
   campaign?: Campaign
   chainSpecificData?: Record<string, unknown>
   changeTranche: (tranche: TrancheType) => void
-  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
+  handleClose: (options?: CloseModalOptions) => void
 }
 
 export function PersonaEvaluation({
@@ -377,11 +378,11 @@ export function PersonaEvaluation({
         case IdentityVerificationStatusV2.DECLINED:
         case IdentityVerificationStatusV2.NEEDS_REVIEW:
         case IdentityVerificationStatusV2.APPROVED:
-          handleClose(verificationStatus.status)
+          handleClose({ identityStatus: verificationStatus.status })
           break
 
         case IdentityVerificationStatusV2.BYPASSED:
-          handleClose(IdentityVerificationStatusV2.APPROVED)
+          handleClose({ identityStatus: IdentityVerificationStatusV2.APPROVED })
           break
 
         default:

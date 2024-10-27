@@ -1,4 +1,9 @@
-import { formatMoney, SolanaPoolInfo, timeUtil } from '@huma-finance/shared'
+import {
+  CloseModalOptions,
+  formatMoney,
+  SolanaPoolInfo,
+  timeUtil,
+} from '@huma-finance/shared'
 import { SolanaPoolState } from '@huma-finance/web-shared'
 import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
@@ -14,7 +19,7 @@ type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   campaign?: Campaign
-  handleAction: () => void
+  handleAction: (options?: CloseModalOptions) => void
 }
 
 export function Success({
@@ -49,7 +54,7 @@ export function Success({
     if (campaign) {
       dispatch(setStep(WIDGET_STEP.PointsEarned))
     } else {
-      handleAction()
+      handleAction({ isSuccess: true })
     }
   }, [campaign, dispatch, handleAction])
 
