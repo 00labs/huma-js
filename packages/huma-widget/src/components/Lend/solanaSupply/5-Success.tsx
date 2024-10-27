@@ -19,7 +19,6 @@ type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   campaign?: Campaign
-  updateTransactionHash: (hash: string) => void
   handleAction: (options?: CloseModalOptions) => void
 }
 
