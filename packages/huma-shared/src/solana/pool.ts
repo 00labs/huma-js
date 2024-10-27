@@ -2,6 +2,10 @@ import { POOL_NAME, POOL_TYPE } from '../utils'
 import { IndustryType, KYCType } from '../v2'
 import { SolanaChainEnum } from './chain'
 import { SOLANA_DEVNET_INFO, SOLANA_DEVNET_METADATA } from './metadata/devnet'
+import {
+  SOLANA_MAINNET_INFO,
+  SOLANA_MAINNET_METADATA,
+} from './metadata/mainnet'
 
 export type SolanaPoolInfo = {
   title: string
@@ -45,6 +49,7 @@ export type SolanaChainPoolsInfo = {
 
 export const SOLANA_CHAIN_POOLS_INFO = {
   [SolanaChainEnum.SolanaDevnet]: SOLANA_DEVNET_METADATA,
+  [SolanaChainEnum.SolanaMainnet]: SOLANA_MAINNET_METADATA,
 } as SolanaChainPoolsInfo
 
 export type SolanaChainInfo = {
@@ -58,4 +63,5 @@ export type SolanaChainsInfo = {
 
 export const SOLANA_CHAIN_INFO = {
   [SolanaChainEnum.SolanaDevnet]: SOLANA_DEVNET_INFO,
+  [SolanaChainEnum.SolanaMainnet]: SOLANA_MAINNET_INFO,
 } as SolanaChainsInfo
