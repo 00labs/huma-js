@@ -18,7 +18,7 @@ export type CampaignPartner = {
   multiplier: number
 }
 
-interface BaseCampaign {
+export interface BaseCampaign {
   id: string
   name: string
   chainId: string
