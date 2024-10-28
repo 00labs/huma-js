@@ -17,6 +17,7 @@ export type SolanaPoolState = {
   epochEndTime?: number
   isUniTranche?: boolean
   blendedApy?: number
+  rangeApy?: string
   seniorTrancheApy?: number
   juniorTrancheApy?: number
   amountDefaulted?: number
