@@ -1,19 +1,19 @@
 import { BigNumber } from 'ethers'
 
-export interface FclConfig {
+export interface FlcConfig {
   minLiquidity: string
   riskYieldMultiplierInBps: number
   flcIndex: number
   maxLiquidity: string
 }
 
-export interface FclConfigWithApy extends FclConfig {
+export interface FlcConfigWithApy extends FlcConfig {
   apy: number
   firstLossCoverIndex: number
 }
 
 export interface PoolApy {
-  flcConfigsWithApy: FclConfigWithApy[]
+  flcConfigsWithApy: FlcConfigWithApy[]
   blendedApy: number
   seniorTrancheApy: number
   juniorTrancheApy: number
@@ -51,7 +51,7 @@ const getPoolApyV2Base = (
   tranchesRiskAdjustmentInBps: number,
   BP_FACTOR: number,
   FirstLossCoverIndexes: string[] = [],
-  flcConfigs: FclConfig[] = [],
+  flcConfigs: FlcConfig[] = [],
 ): PoolApy => {
   const APY = yieldInBps / BP_FACTOR
 
@@ -167,7 +167,7 @@ export const getPoolApyV2 = (
   tranchesRiskAdjustmentInBps: number,
   BP_FACTOR: number,
   FirstLossCoverIndexes: string[] = [],
-  flcConfigs: FclConfig[] = [],
+  flcConfigs: FlcConfig[] = [],
 ): PoolApy & { maxJuniorTrancheApy: number } => {
   const realApyResult = getPoolApyV2Base(
     protocolFeeInBps,
