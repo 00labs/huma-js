@@ -1,3 +1,4 @@
+import { BN } from '@coral-xyz/anchor'
 import {
   formatNumber,
   SolanaPoolInfo,
@@ -5,9 +6,8 @@ import {
   TrancheType,
 } from '@huma-finance/shared'
 import { SolanaPoolState } from '@huma-finance/web-shared'
-import React, { useMemo, useState } from 'react'
-import { BN } from '@coral-xyz/anchor'
 import { Account } from '@solana/spl-token'
+import React, { useMemo, useState } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -55,7 +55,7 @@ export function ChooseAmount({
       : seniorAvailableCapBN
 
     return {
-      juniorAvailableCapBN: totalAvailableCapBN.sub(seniorAvailableCapBN),
+      juniorAvailableCapBN: totalAvailableCapBN,
       seniorAvailableCapBN,
     }
   }, [poolState])
