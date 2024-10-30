@@ -127,7 +127,10 @@ export class HumaSolanaReceivableHelper {
     return tx
   }
 
-  async getReceivableInfo(referenceId: string): Promise<ReceivableInfo | null> {
+  async getReceivableInfo(
+    referenceId: string,
+    ownerOverride?: PublicKey,
+  ): Promise<ReceivableInfo | null> {
     const { publicKey, connection, chainId, poolName } = this.#solanaContext
     const program = getHumaProgram(chainId, connection)
     const poolInfo = getSolanaPoolInfo(chainId, poolName)
@@ -138,7 +141,7 @@ export class HumaSolanaReceivableHelper {
 
     const receivableReferenceData = await getReceivableReferenceData(
       chainId,
-      publicKey,
+      ownerOverride ?? publicKey,
       connection,
       referenceId,
     )
