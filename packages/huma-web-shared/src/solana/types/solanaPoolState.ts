@@ -20,6 +20,7 @@ export type SolanaPoolState = {
   rangeApy?: string
   seniorTrancheApy?: number
   juniorTrancheApy?: number
+  maxJuniorTrancheApy?: number
   amountDefaulted?: number
   amountOriginated?: number
   amountRepaid?: number
