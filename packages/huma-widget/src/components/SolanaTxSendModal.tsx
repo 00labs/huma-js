@@ -1,4 +1,5 @@
-import { SolanaChainEnum } from '@huma-finance/shared'
+/* eslint-disable no-await-in-loop */
+import { SolanaChainEnum, timeUtil } from '@huma-finance/shared'
 import React, { useEffect, useState } from 'react'
 
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
@@ -31,17 +32,29 @@ export function SolanaTxSendModal({
       }
 
       try {
-        const latestBlockHash = await connection.getLatestBlockhash()
         const signature = await sendTransaction(tx, connection)
         setSignature(signature)
         dispatch(setSolanaSignature(signature))
 
-        await connection.confirmTransaction({
-          blockhash: latestBlockHash.blockhash,
-          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-          signature,
-        })
-        handleSuccess({ signature })
+        let transactionConfirmed = false
+        for (let i = 0; i < 30; i += 1) {
+          timeUtil.sleep(1000)
+          const result = await connection.getSignatureStatus(signature)
+          if (result?.value?.confirmations) {
+            transactionConfirmed = true
+            break
+          }
+        }
+
+        if (transactionConfirmed) {
+          handleSuccess({ signature })
+        } else {
+          dispatch(
+            setError({
+              errorMessage: 'Transaction failed to confirm in time',
+            }),
+          )
+        }
       } catch (error: unknown) {
         const err = error as Error
         dispatch(setError({ errorMessage: err?.message || '' }))
