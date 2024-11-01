@@ -42,9 +42,9 @@ export function Success({
       .date(1)
     const withdrawTime = lockupEndTime.add(1, 'month')
     return [
-      `You can begin submitting redemption requests on ${timeUtil.timestampToLL(
+      `Redemption request will be automatically submitted on ${timeUtil.timestampToLL(
         lockupEndTime.unix(),
-      )}. Your deposit will be automatically redeemed and your yield rewards will stop on ${timeUtil.timestampToLL(
+      )}. Your deposit can be redeemed and yield rewards will stop on ${timeUtil.timestampToLL(
         withdrawTime.unix(),
       )}.`,
     ]
