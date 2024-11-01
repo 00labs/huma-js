@@ -1,5 +1,5 @@
 export const checkIsDev = () =>
-  !process.env.REACT_APP_FORCE_IS_DEV_FALSE &&
+  process.env.REACT_APP_FORCE_IS_DEV_FALSE !== 'true' &&
   !!(
     window.location.hostname.startsWith('dev') ||
     window.location.hostname.startsWith('v2') ||
