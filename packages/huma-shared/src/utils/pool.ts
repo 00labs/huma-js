@@ -230,7 +230,7 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph:
       'https://api.studio.thegraph.com/query/71608/huma-celo/version/latest',
     productionSubgraph:
-      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/3Cb7Uy2BqxvU8hCRNxMUDVaPdpDS9Kd52mWuQVdTpz8',
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/AiKR7gmYaxARPbS5SQoiKjf9A26SbkX6YKwU3BoM9yxN',
   },
   [ChainEnum.Alfajores]: {
     subgraph:
