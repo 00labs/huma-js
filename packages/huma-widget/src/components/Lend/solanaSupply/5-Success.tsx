@@ -44,7 +44,7 @@ export function Success({
     return [
       `You can begin submitting redemption requests on ${timeUtil.timestampToLL(
         lockupEndTime.unix(),
-      )}, which can be redeemed starting ${timeUtil.timestampToLL(
+      )}. Your deposit will be automatically redeemed and your yield rewards will stop on ${timeUtil.timestampToLL(
         withdrawTime.unix(),
       )}.`,
     ]

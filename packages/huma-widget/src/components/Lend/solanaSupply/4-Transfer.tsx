@@ -1,6 +1,8 @@
 import {
   CampaignService,
   checkIsDev,
+  convertToShares,
+  getSentinelAddress,
   getTokenAccounts,
   SolanaPoolInfo,
   SolanaTokenUtils,
@@ -13,9 +15,14 @@ import {
   useHumaProgram,
   useLenderAccounts,
 } from '@huma-finance/web-shared'
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import {
+  createApproveCheckedInstruction,
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Transaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
+import { BN } from '@coral-xyz/anchor'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -39,6 +46,7 @@ export function Transfer({
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()
+  const sentinel = getSentinelAddress(poolInfo.chainId)
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.underlyingMint
   const supplyBigNumber = SolanaTokenUtils.parseUnits(
@@ -51,6 +59,8 @@ export function Transfer({
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
     juniorLenderStateAccount,
+    seniorTrancheMintSupply,
+    juniorTrancheMintSupply,
     loading: isLoadingLenderAccounts,
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
   const program = useHumaProgram(poolInfo.chainId)
@@ -145,6 +155,33 @@ export function Transfer({
         .transaction()
       tx.add(depositTx)
 
+      // Approve automatic redemptions
+      const sharesAmount = convertToShares(
+        selectedTranche === 'senior'
+          ? new BN(poolState.seniorTrancheAssets ?? 0)
+          : new BN(poolState.juniorTrancheAssets ?? 0),
+        selectedTranche === 'senior'
+          ? seniorTrancheMintSupply ?? new BN(0)
+          : juniorTrancheMintSupply ?? new BN(0),
+        supplyBigNumber,
+      )
+      tx.add(
+        createApproveCheckedInstruction(
+          selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
+          new PublicKey(
+            selectedTranche === 'senior'
+              ? poolInfo.seniorTrancheMint
+              : poolInfo.juniorTrancheMint,
+          ),
+          new PublicKey(sentinel), // delegate
+          publicKey, // owner of the wallet
+          BigInt(sharesAmount.muln(1.1).toString()), // amount
+          poolInfo.trancheDecimals,
+          undefined, // multiSigners
+          TOKEN_2022_PROGRAM_ID,
+        ),
+      )
+
       setTransaction(tx)
     }
     getTx()
@@ -152,12 +189,17 @@ export function Transfer({
     isLoadingLenderAccounts,
     juniorLenderApprovedAccountPDA,
     juniorLenderStateAccount,
+    juniorTrancheMintSupply,
     poolInfo,
+    poolState.juniorTrancheAssets,
+    poolState.seniorTrancheAssets,
     program.methods,
     publicKey,
     selectedTranche,
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
+    seniorTrancheMintSupply,
+    sentinel,
     supplyBigNumber,
     transaction,
   ])
