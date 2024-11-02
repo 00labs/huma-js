@@ -46,7 +46,6 @@ export function Transfer({
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()
-  const sentinel = getSentinelAddress(poolInfo.chainId)
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.underlyingMint
   const supplyBigNumber = SolanaTokenUtils.parseUnits(
@@ -173,7 +172,7 @@ export function Transfer({
               ? poolInfo.seniorTrancheMint
               : poolInfo.juniorTrancheMint,
           ),
-          new PublicKey(sentinel), // delegate
+          new PublicKey(poolInfo.poolAuthority), // delegate
           publicKey, // owner of the wallet
           BigInt(sharesAmount.muln(1.1).toString()), // amount
           poolInfo.trancheDecimals,
@@ -199,7 +198,6 @@ export function Transfer({
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
     seniorTrancheMintSupply,
-    sentinel,
     supplyBigNumber,
     transaction,
   ])
