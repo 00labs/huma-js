@@ -66,7 +66,7 @@ export function ChooseAmount({
   }
 
   const handleAction = () => {
-    dispatch(setStep(WIDGET_STEP.Transfer))
+    dispatch(setStep(WIDGET_STEP.ApproveAllowance))
   }
 
   const getTrancheCap = () => {
@@ -125,7 +125,7 @@ export function ChooseAmount({
       )} balance`}
       infos={getInfos()}
       handleAction={handleAction}
-      actionText='SUPPLY'
+      actionText='NEXT'
     />
   )
 }
