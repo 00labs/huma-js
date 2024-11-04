@@ -46,7 +46,6 @@ export function Transfer({
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()
-  const sentinel = getSentinelAddress(poolInfo.chainId)
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.underlyingMint
   const supplyBigNumber = SolanaTokenUtils.parseUnits(
@@ -199,7 +198,6 @@ export function Transfer({
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
     seniorTrancheMintSupply,
-    sentinel,
     supplyBigNumber,
     transaction,
   ])
