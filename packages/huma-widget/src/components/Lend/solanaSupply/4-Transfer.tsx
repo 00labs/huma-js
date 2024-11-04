@@ -2,7 +2,6 @@ import {
   CampaignService,
   checkIsDev,
   convertToShares,
-  getSentinelAddress,
   getTokenAccounts,
   SolanaPoolInfo,
   SolanaTokenUtils,
