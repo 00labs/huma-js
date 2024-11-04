@@ -173,7 +173,7 @@ export function Transfer({
               ? poolInfo.seniorTrancheMint
               : poolInfo.juniorTrancheMint,
           ),
-          new PublicKey(sentinel), // delegate
+          new PublicKey(poolInfo.poolAuthority), // delegate
           publicKey, // owner of the wallet
           BigInt(sharesAmount.muln(1.1).toString()), // amount
           poolInfo.trancheDecimals,

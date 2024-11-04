@@ -75,7 +75,7 @@ export function Transfer({
         poolInfo,
         publicKey,
       )
-      const sentinelPubKey = new PublicKey(sentinel)
+      const poolAuthorityPubkey = new PublicKey(poolInfo.poolAuthority)
 
       if (!seniorTokenAccount?.amount && !juniorTokenAccount?.amount) {
         dispatch(
@@ -87,7 +87,7 @@ export function Transfer({
         seniorTokenAccount &&
         seniorTokenAccount.amount > 0 &&
         (seniorTokenAccount.delegate == null ||
-          !sentinelPubKey.equals(seniorTokenAccount.delegate) ||
+          !poolAuthorityPubkey.equals(seniorTokenAccount.delegate) ||
           seniorTokenAccount.delegatedAmount < seniorTokenAccount.amount)
       ) {
         const sharesAmount = convertToShares(
@@ -99,7 +99,7 @@ export function Transfer({
           createApproveCheckedInstruction(
             seniorTrancheATA,
             new PublicKey(poolInfo.seniorTrancheMint),
-            new PublicKey(sentinel), // delegate
+            poolAuthorityPubkey, // delegate
             publicKey, // owner of the wallet
             BigInt(sharesAmount.muln(1.1).toString()), // amount
             poolInfo.trancheDecimals,
@@ -112,7 +112,7 @@ export function Transfer({
         juniorTokenAccount &&
         juniorTokenAccount.amount > 0 &&
         (juniorTokenAccount.delegate == null ||
-          !sentinelPubKey.equals(juniorTokenAccount.delegate) ||
+          !poolAuthorityPubkey.equals(juniorTokenAccount.delegate) ||
           juniorTokenAccount.delegatedAmount < juniorTokenAccount.amount)
       ) {
         const sharesAmount = convertToShares(
@@ -124,7 +124,7 @@ export function Transfer({
           createApproveCheckedInstruction(
             juniorTrancheATA,
             new PublicKey(poolInfo.juniorTrancheMint),
-            new PublicKey(sentinel), // delegate
+            poolAuthorityPubkey, // delegate
             publicKey, // owner of the wallet
             BigInt(sharesAmount.muln(1.1).toString()), // amount
             poolInfo.trancheDecimals,
