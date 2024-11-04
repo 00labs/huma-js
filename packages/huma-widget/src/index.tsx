@@ -90,6 +90,10 @@ import {
   SolanaPaymentProps,
 } from './components/CreditLine/solanaPayment'
 import { NotifiContextWrapper } from './components/Notifi/NotifiContextWrapper'
+import {
+  SolanaEnableAutoRedemption,
+  SolanaEnableAutoRedemptionProps,
+} from './components/Lend/solanaEnableAutoRedemption'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -663,6 +667,28 @@ export function SolanaPaymentWidget(props: SolanaPaymentWidgetProps) {
   return (
     <SolanaWidget {...props}>
       <SolanaPayment {...props} />
+    </SolanaWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaEnableAutoRedemptionWidgetProps
+ */
+type SolanaEnableAutoRedemptionWidgetProps = SolanaEnableAutoRedemptionProps &
+  SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaEnableAutoRedemptionWidgetProps} props - Widget props
+ */
+export function SolanaEnableAutoRedemptionWidget(
+  props: SolanaEnableAutoRedemptionWidgetProps,
+) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaEnableAutoRedemption {...props} />
     </SolanaWidget>
   )
 }

@@ -23,6 +23,7 @@ import { ChooseTranche } from './2-ChooseTranche'
 import { ChooseAmount } from './3-ChooseAmount'
 import { Transfer } from './4-Transfer'
 import { Success } from './5-Success'
+import { ApproveAllowance } from './4-ApproveAllowance'
 
 export interface Campaign {
   id: string
@@ -142,6 +143,9 @@ export function SolanaLendSupply({
           selectedTranche={selectedTranche}
           isUniTranche={isUniTranche}
         />
+      )}
+      {step === WIDGET_STEP.ApproveAllowance && (
+        <ApproveAllowance poolState={poolState} />
       )}
       {step === WIDGET_STEP.Transfer && selectedTranche && (
         <Transfer
