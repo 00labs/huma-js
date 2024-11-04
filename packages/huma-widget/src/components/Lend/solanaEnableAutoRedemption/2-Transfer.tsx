@@ -1,5 +1,4 @@
 import {
-  convertToShares,
   getSentinelAddress,
   getTokenAccounts,
   SolanaPoolInfo,
@@ -7,6 +6,7 @@ import {
 import React, { useCallback, useEffect, useState } from 'react'
 
 import {
+  notEnabledAutoRedeem,
   SolanaPoolState,
   useHumaProgram,
   useLenderAccounts,
@@ -18,7 +18,6 @@ import {
 } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { BN } from '@coral-xyz/anchor'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError, setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -84,24 +83,19 @@ export function Transfer({
         return
       }
       if (
-        seniorTokenAccount &&
-        seniorTokenAccount.amount > 0 &&
-        (seniorTokenAccount.delegate == null ||
-          !poolAuthorityPubkey.equals(seniorTokenAccount.delegate) ||
-          seniorTokenAccount.delegatedAmount < seniorTokenAccount.amount)
-      ) {
-        const sharesAmount = convertToShares(
-          new BN(poolState.seniorTrancheAssets ?? 0),
-          seniorTrancheMintSupply ?? new BN(0),
-          new BN(seniorTokenAccount.amount.toString()),
+        notEnabledAutoRedeem(
+          seniorTokenAccount,
+          poolAuthorityPubkey,
+          seniorTokenAccount?.amount,
         )
+      ) {
         tx.add(
           createApproveCheckedInstruction(
             seniorTrancheATA,
             new PublicKey(poolInfo.seniorTrancheMint),
             poolAuthorityPubkey, // delegate
             publicKey, // owner of the wallet
-            BigInt(sharesAmount.muln(1.1).toString()), // amount
+            BigInt(seniorTokenAccount?.amount.toString() ?? 0), // amount
             poolInfo.trancheDecimals,
             undefined, // multiSigners
             TOKEN_2022_PROGRAM_ID,
@@ -109,24 +103,19 @@ export function Transfer({
         )
       }
       if (
-        juniorTokenAccount &&
-        juniorTokenAccount.amount > 0 &&
-        (juniorTokenAccount.delegate == null ||
-          !poolAuthorityPubkey.equals(juniorTokenAccount.delegate) ||
-          juniorTokenAccount.delegatedAmount < juniorTokenAccount.amount)
-      ) {
-        const sharesAmount = convertToShares(
-          new BN(poolState.juniorTrancheAssets ?? 0),
-          juniorTrancheMintSupply ?? new BN(0),
-          new BN(juniorTokenAccount.amount.toString()),
+        notEnabledAutoRedeem(
+          juniorTokenAccount,
+          poolAuthorityPubkey,
+          juniorTokenAccount?.amount,
         )
+      ) {
         tx.add(
           createApproveCheckedInstruction(
             juniorTrancheATA,
             new PublicKey(poolInfo.juniorTrancheMint),
             poolAuthorityPubkey, // delegate
             publicKey, // owner of the wallet
-            BigInt(sharesAmount.muln(1.1).toString()), // amount
+            BigInt(juniorTokenAccount?.amount.toString() ?? 0), // amount
             poolInfo.trancheDecimals,
             undefined, // multiSigners
             TOKEN_2022_PROGRAM_ID,

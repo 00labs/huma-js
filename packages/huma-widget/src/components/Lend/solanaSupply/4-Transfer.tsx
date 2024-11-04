@@ -14,6 +14,7 @@ import {
   SolanaPoolState,
   useHumaProgram,
   useLenderAccounts,
+  useTrancheTokenAccounts,
 } from '@huma-finance/web-shared'
 import {
   createApproveCheckedInstruction,
@@ -62,6 +63,11 @@ export function Transfer({
     juniorTrancheMintSupply,
     loading: isLoadingLenderAccounts,
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
+  const {
+    seniorTokenAccount,
+    juniorTokenAccount,
+    loading: isLoadingTrancheTokenAccounts,
+  } = useTrancheTokenAccounts(poolInfo)
   const program = useHumaProgram(poolInfo.chainId)
 
   const handleSuccess = useCallback(
@@ -94,7 +100,12 @@ export function Transfer({
 
   useEffect(() => {
     async function getTx() {
-      if (!publicKey || transaction || isLoadingLenderAccounts) {
+      if (
+        !publicKey ||
+        transaction ||
+        isLoadingLenderAccounts ||
+        isLoadingTrancheTokenAccounts
+      ) {
         return
       }
 
@@ -164,6 +175,17 @@ export function Transfer({
           : juniorTrancheMintSupply ?? new BN(0),
         supplyBigNumber,
       )
+      const existingShares = convertToShares(
+        selectedTranche === 'senior'
+          ? new BN(poolState.seniorTrancheAssets ?? 0)
+          : new BN(poolState.juniorTrancheAssets ?? 0),
+        selectedTranche === 'senior'
+          ? seniorTrancheMintSupply ?? new BN(0)
+          : juniorTrancheMintSupply ?? new BN(0),
+        selectedTranche === 'senior'
+          ? new BN(seniorTokenAccount?.amount.toString() ?? '0')
+          : new BN(juniorTokenAccount?.amount.toString() ?? '0'),
+      )
       tx.add(
         createApproveCheckedInstruction(
           selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
@@ -174,7 +196,7 @@ export function Transfer({
           ),
           new PublicKey(poolInfo.poolAuthority), // delegate
           publicKey, // owner of the wallet
-          BigInt(sharesAmount.muln(1.1).toString()), // amount
+          BigInt(sharesAmount.muln(1.1).add(existingShares).toString()), // amount
           poolInfo.trancheDecimals,
           undefined, // multiSigners
           TOKEN_2022_PROGRAM_ID,
@@ -186,8 +208,10 @@ export function Transfer({
     getTx()
   }, [
     isLoadingLenderAccounts,
+    isLoadingTrancheTokenAccounts,
     juniorLenderApprovedAccountPDA,
     juniorLenderStateAccount,
+    juniorTokenAccount?.amount,
     juniorTrancheMintSupply,
     poolInfo,
     poolState.juniorTrancheAssets,
@@ -197,12 +221,13 @@ export function Transfer({
     selectedTranche,
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
+    seniorTokenAccount?.amount,
     seniorTrancheMintSupply,
     supplyBigNumber,
     transaction,
   ])
 
-  if (isLoadingLenderAccounts) {
+  if (isLoadingLenderAccounts || isLoadingTrancheTokenAccounts) {
     return <LoadingModal title='Supply' />
   }
 

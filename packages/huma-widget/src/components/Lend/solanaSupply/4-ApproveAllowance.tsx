@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
-import dayjs from 'dayjs'
 import { Box, css, useTheme } from '@mui/material'
-import { SolanaPoolState } from '@huma-finance/web-shared'
+import { getLenderLockupDates, SolanaPoolState } from '@huma-finance/web-shared'
 import { timeUtil } from '@huma-finance/shared'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { WrapperModal } from '../../WrapperModal'
@@ -38,10 +37,9 @@ export function ApproveAllowance({ poolState }: Props): React.ReactElement {
     `,
   }
 
-  const lockupEndTime = dayjs()
-    .add(poolState.withdrawalLockupPeriodDays ?? 0, 'day')
-    .date(1)
-
+  const { lockupEndTimeUnix } = getLenderLockupDates(
+    poolState.withdrawalLockupPeriodDays ?? 0,
+  )
   return (
     <WrapperModal title='Auto-Redemption'>
       <Box css={styles.iconWrapper}>
@@ -51,7 +49,7 @@ export function ApproveAllowance({ poolState }: Props): React.ReactElement {
         This transaction will also enable auto-redemption for your tranche
         shares by approving our automation account as a delegate. Redemption
         requests will be automatically submitted on{' '}
-        {timeUtil.timestampToLL(lockupEndTime.unix())}.
+        {timeUtil.timestampToLL(lockupEndTimeUnix)}.
       </Box>
       <BottomButton variant='contained' onClick={handleNext}>
         SUPPLY

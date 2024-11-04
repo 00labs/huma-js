@@ -3,8 +3,7 @@ import {
   SolanaPoolInfo,
   timeUtil,
 } from '@huma-finance/shared'
-import { SolanaPoolState } from '@huma-finance/web-shared'
-import dayjs from 'dayjs'
+import { getLenderLockupDates, SolanaPoolState } from '@huma-finance/web-shared'
 import React from 'react'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -23,15 +22,14 @@ export function Success({
 }: Props): React.ReactElement {
   const { solanaSignature } = useAppSelector(selectWidgetState)
 
-  const lockupEndTime = dayjs()
-    .add(poolState.withdrawalLockupPeriodDays ?? 0, 'day')
-    .date(1)
-  const withdrawTime = lockupEndTime.add(1, 'month')
+  const { lockupEndTimeUnix, withdrawTimeUnix } = getLenderLockupDates(
+    poolState.withdrawalLockupPeriodDays ?? 0,
+  )
   const content = [
     `Redemption request will be automatically submitted on ${timeUtil.timestampToLL(
-      lockupEndTime.unix(),
+      lockupEndTimeUnix,
     )}. Your deposit can be redeemed and yield rewards will stop on ${timeUtil.timestampToLL(
-      withdrawTime.unix(),
+      withdrawTimeUnix,
     )}.`,
   ]
 
