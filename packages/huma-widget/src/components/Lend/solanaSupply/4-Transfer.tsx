@@ -2,7 +2,6 @@ import {
   CampaignService,
   checkIsDev,
   convertToShares,
-  getSentinelAddress,
   getTokenAccounts,
   SolanaPoolInfo,
   SolanaTokenUtils,
@@ -10,6 +9,7 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { BN } from '@coral-xyz/anchor'
 import {
   SolanaPoolState,
   useHumaProgram,
@@ -22,7 +22,6 @@ import {
 } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { BN } from '@coral-xyz/anchor'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'

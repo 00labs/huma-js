@@ -41,3 +41,19 @@ export const useChainInfo = (
     provider,
   }
 }
+
+export const useActiveChainInfo = (
+  isDev: boolean,
+  activeNetwork: CHAIN_TYPE,
+) => {
+  const evmChainInfo = useChainInfo(isDev, CHAIN_TYPE.EVM)
+  const solanaChainInfo = useChainInfo(isDev, CHAIN_TYPE.SOLANA)
+
+  if (activeNetwork === CHAIN_TYPE.EVM) {
+    return evmChainInfo
+  }
+  if (activeNetwork === CHAIN_TYPE.SOLANA) {
+    return solanaChainInfo
+  }
+  return null
+}
