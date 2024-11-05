@@ -1,3 +1,4 @@
+import { networks as TestnetNetwork } from '@huma-finance/soroban-huma-config'
 import { StellarChainEnum } from '../chain'
 import { STELLAR_TESTNET_METADATA } from '../metadata/testnet'
 import { POOL_NAME, POOL_TYPE } from '../../utils'
@@ -45,6 +46,7 @@ export const STELLAR_CHAIN_POOLS_INFO = {
 export type StellarChainInfo = {
   rpc: string
   humaConfig: string
+  networkPassphrase: string
 }
 
 export type StellarChainsInfo = {
@@ -55,9 +57,11 @@ export const STELLAR_CHAINS_INFO: StellarChainsInfo = {
   [StellarChainEnum.StellarTestnet]: {
     rpc: 'https://soroban-testnet.stellar.org',
     humaConfig: 'CDX6NBJ3OV4TWRCZK4DFBHDHE37UUDS66PPGNIPBGUI56D254EKVFETX',
+    networkPassphrase: TestnetNetwork.testnet.networkPassphrase,
   },
   [StellarChainEnum.StellarMainnet]: {
     rpc: '',
     humaConfig: '',
+    networkPassphrase: '',
   },
 }

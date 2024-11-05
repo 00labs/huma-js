@@ -90,6 +90,10 @@ import {
   SolanaPaymentProps,
 } from './components/CreditLine/solanaPayment'
 import { NotifiContextWrapper } from './components/Notifi/NotifiContextWrapper'
+import {
+  StellarLendSupply,
+  StellarLendSupplyProps,
+} from './components/Lend/stellarSupply'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -550,13 +554,13 @@ export function ReceivableBackedCreditLinePaymentWidgetV2(
 
 /**
  * Object representing the props passed to Solana widgets
- * @typedef {Object} SolanaWidgetProps
+ * @typedef {Object} GenericWidgetProps
  */
-type SolanaWidgetProps = {
+type GenericWidgetProps = {
   handleClose?: () => void
 }
 
-function SolanaWidget(props: WCProps<SolanaWidgetProps>) {
+function GenericWidget(props: WCProps<GenericWidgetProps>) {
   const { children } = props
 
   return (
@@ -570,7 +574,7 @@ function SolanaWidget(props: WCProps<SolanaWidgetProps>) {
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaLendSupplyWidgetProps
  */
-type SolanaLendSupplyWidgetProps = SolanaLendSupplyProps & SolanaWidgetProps
+type SolanaLendSupplyWidgetProps = SolanaLendSupplyProps & GenericWidgetProps
 
 /**
  * Lend pool supply widget for Solana pools
@@ -579,9 +583,9 @@ type SolanaLendSupplyWidgetProps = SolanaLendSupplyProps & SolanaWidgetProps
  */
 export function SolanaLendSupplyWidget(props: SolanaLendSupplyWidgetProps) {
   return (
-    <SolanaWidget {...props}>
+    <GenericWidget {...props}>
       <SolanaLendSupply {...props} />
-    </SolanaWidget>
+    </GenericWidget>
   )
 }
 
@@ -590,7 +594,7 @@ export function SolanaLendSupplyWidget(props: SolanaLendSupplyWidgetProps) {
  * @typedef {Object} SolanaLendAddRedemptionWidgetProps
  */
 type SolanaLendAddRedemptionWidgetProps = SolanaLendAddRedemptionProps &
-  SolanaWidgetProps
+  GenericWidgetProps
 
 /**
  * Lend pool supply widget for Solana pools
@@ -601,9 +605,9 @@ export function SolanaLendAddRedemptionWidget(
   props: SolanaLendAddRedemptionWidgetProps,
 ) {
   return (
-    <SolanaWidget {...props}>
+    <GenericWidget {...props}>
       <SolanaLendAddRedemption {...props} />
-    </SolanaWidget>
+    </GenericWidget>
   )
 }
 
@@ -612,7 +616,7 @@ export function SolanaLendAddRedemptionWidget(
  * @typedef {Object} SolanaLendCancelRedemptionWidgetProps
  */
 type SolanaLendCancelRedemptionWidgetProps = SolanaLendCancelRedemptionProps &
-  SolanaWidgetProps
+  GenericWidgetProps
 
 /**
  * Lend pool supply widget for Solana pools
@@ -623,9 +627,9 @@ export function SolanaLendCancelRedemptionWidget(
   props: SolanaLendCancelRedemptionWidgetProps,
 ) {
   return (
-    <SolanaWidget {...props}>
+    <GenericWidget {...props}>
       <SolanaLendCancelRedemption {...props} />
-    </SolanaWidget>
+    </GenericWidget>
   )
 }
 
@@ -633,7 +637,7 @@ export function SolanaLendCancelRedemptionWidget(
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaBorrowWidgetProps
  */
-type SolanaBorrowWidgetProps = SolanaBorrowProps & SolanaWidgetProps
+type SolanaBorrowWidgetProps = SolanaBorrowProps & GenericWidgetProps
 
 /**
  * Lend pool supply widget for Solana pools
@@ -642,9 +646,9 @@ type SolanaBorrowWidgetProps = SolanaBorrowProps & SolanaWidgetProps
  */
 export function SolanaBorrowWidget(props: SolanaBorrowWidgetProps) {
   return (
-    <SolanaWidget {...props}>
+    <GenericWidget {...props}>
       <SolanaBorrow {...props} />
-    </SolanaWidget>
+    </GenericWidget>
   )
 }
 
@@ -652,7 +656,7 @@ export function SolanaBorrowWidget(props: SolanaBorrowWidgetProps) {
  * Lend pool supply widget props for Solana pools
  * @typedef {Object} SolanaPaymentWidgetProps
  */
-type SolanaPaymentWidgetProps = SolanaPaymentProps & SolanaWidgetProps
+type SolanaPaymentWidgetProps = SolanaPaymentProps & GenericWidgetProps
 
 /**
  * Lend pool supply widget for Solana pools
@@ -661,9 +665,28 @@ type SolanaPaymentWidgetProps = SolanaPaymentProps & SolanaWidgetProps
  */
 export function SolanaPaymentWidget(props: SolanaPaymentWidgetProps) {
   return (
-    <SolanaWidget {...props}>
+    <GenericWidget {...props}>
       <SolanaPayment {...props} />
-    </SolanaWidget>
+    </GenericWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Stellar pools
+ * @typedef {Object} StellarLendSupplyWidgetProps
+ */
+type StellarLendSupplyWidgetProps = StellarLendSupplyProps & GenericWidgetProps
+
+/**
+ * Lend pool supply widget for Stellar pools
+ *
+ * @param {StellarLendSupplyWidgetProps} props - Widget props
+ */
+export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
+  return (
+    <GenericWidget {...props}>
+      <StellarLendSupply {...props} />
+    </GenericWidget>
   )
 }
 

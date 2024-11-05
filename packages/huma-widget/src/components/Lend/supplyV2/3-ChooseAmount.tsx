@@ -111,7 +111,7 @@ export function ChooseAmount({
     <InputAmountModal
       title='Enter Amount'
       subTitle={`Depositing to ${
-        isUniTranche ? 'uni tranche' : selectedTranche
+        isUniTranche ? 'uni' : selectedTranche
       } tranche`}
       tokenSymbol={symbol}
       currentAmount={currentAmount}
