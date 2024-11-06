@@ -4,32 +4,31 @@ import {
   tokenDecimalUtils,
   TrancheType,
 } from '@huma-finance/shared'
-import { signTransaction } from '@stellar/freighter-api'
+import AssembledTransaction from '@stellar/stellar-sdk'
 import { Client as TrancheVaultClient } from '@huma-finance/soroban-tranche-vault'
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
+  getClientCommonParams,
   StellarConnectionContext,
-  StellarPoolState,
 } from '@huma-finance/web-shared'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { LoadingModal } from '../../LoadingModal'
+import { StellarTxSendModal } from '../../StellarTxSendModal'
 
 type Props = {
   poolInfo: StellarPoolInfo
-  poolState: StellarPoolState
   selectedTranche: TrancheType
 }
 
 export function Transfer({
   poolInfo,
-  poolState,
   selectedTranche,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
+  const [tx, setTx] = useState<typeof AssembledTransaction | null>(null)
   const { address: stellarAddress } = useContext(StellarConnectionContext)
   const { supplyAmount } = useAppSelector(selectWidgetState)
   const { decimals } = poolInfo.underlyingToken
@@ -37,7 +36,7 @@ export function Transfer({
     String(supplyAmount),
     decimals,
   )
-  //
+
   const handleSuccess = useCallback(async () => {
     dispatch(setStep(WIDGET_STEP.Done))
   }, [dispatch])
@@ -51,23 +50,20 @@ export function Transfer({
       const chainMetadata = STELLAR_CHAINS_INFO[poolInfo.chainId]
       const trancheVaultClient = new TrancheVaultClient({
         publicKey: stellarAddress,
-        networkPassphrase: chainMetadata.networkPassphrase,
         contractId:
           selectedTranche === 'senior'
             ? poolInfo.seniorTranche!
-            : poolInfo.juniorTranche!,
-        rpcUrl: chainMetadata.rpc,
-        signTransaction,
+            : poolInfo.juniorTranche,
+        ...getClientCommonParams(chainMetadata),
       })
       const tx = await trancheVaultClient.deposit({
         lender: stellarAddress,
         assets: supplyBigNumber,
       })
-      console.log(tx)
-      await tx.signAndSend()
+      setTx(tx)
     }
     getTx()
   }, [poolInfo, selectedTranche, stellarAddress, supplyBigNumber])
 
-  return <LoadingModal title='Test' />
+  return <StellarTxSendModal tx={tx} handleSuccess={handleSuccess} />
 }

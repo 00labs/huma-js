@@ -9,7 +9,7 @@ import {
   Account,
 } from '@stellar/stellar-sdk'
 
-export async function fetchTokenBalance(
+export async function fetchStellarTokenBalance(
   chainMetadata: StellarChainInfo,
   tokenAddress: string,
   accountAddress: string,
@@ -25,7 +25,7 @@ export async function fetchTokenBalance(
     const accountParam = Address.fromString(accountAddress).toScVal()
 
     // Simulate the contract call
-    const account = new Account(sourceAddress ?? accountAddress , '0')
+    const account = new Account(sourceAddress ?? accountAddress, '0')
     const transaction = new TransactionBuilder(account, {
       fee: BASE_FEE,
       networkPassphrase: chainMetadata.networkPassphrase,

@@ -699,7 +699,7 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
  * @typedef {Object} SolanaEnableAutoRedemptionWidgetProps
  */
 type SolanaEnableAutoRedemptionWidgetProps = SolanaEnableAutoRedemptionProps &
-  SolanaWidgetProps
+  GenericWidgetProps
 
 /**
  * Lend pool supply widget for Solana pools
@@ -710,9 +710,9 @@ export function SolanaEnableAutoRedemptionWidget(
   props: SolanaEnableAutoRedemptionWidgetProps,
 ) {
   return (
-    <SolanaWidget {...props}>
+    <GenericWidget {...props}>
       <SolanaEnableAutoRedemption {...props} />
-    </SolanaWidget>
+    </GenericWidget>
   )
 }
 

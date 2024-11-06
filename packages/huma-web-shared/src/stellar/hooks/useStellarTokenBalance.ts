@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { StellarChainInfo } from '@huma-finance/shared'
-import { fetchTokenBalance } from '../utils'
+import { fetchStellarTokenBalance } from '../utils'
 
-export const useTokenBalance = (
+export const useStellarTokenBalance = (
   chainMetadata: StellarChainInfo,
   tokenAddress: string,
   accountAddress: string,
@@ -19,7 +19,7 @@ export const useTokenBalance = (
     const getTokenBalance = async () => {
       setIsLoadingTokenBalance(true)
       try {
-        const fetchedBalance = await fetchTokenBalance(
+        const fetchedBalance = await fetchStellarTokenBalance(
           chainMetadata,
           tokenAddress,
           accountAddress,

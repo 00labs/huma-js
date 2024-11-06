@@ -12,7 +12,7 @@ export const stellarTryFn = async (
     | PoolStorageClient
     | TrancheVaultClient,
   method: string,
-  params: any,
+  params: unknown,
 ) => {
   try {
     // @ts-ignore

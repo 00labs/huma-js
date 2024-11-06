@@ -1,2 +1,2 @@
 export * from './useStellarLender'
-export * from './useTokenBalance'
+export * from './useStellarTokenBalance'

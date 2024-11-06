@@ -78,13 +78,6 @@ const getSolanaGraphAPIUrl = (
 // @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
 const DEFAULT_CHAIN_ID = 137
 
-const getEthereumDappUrl = (isDev = false) =>
-  `https://${getDevPrefix(isDev)}app.huma.finance`
-const getSolanaDappUrl = (isDev = false) =>
-  `https://${getDevPrefix(isDev)}solapp.huma.finance`
-const getStellarDappUrl = (isDev = false) =>
-  `https://${getDevPrefix(isDev)}stellarapp.huma.finance`
-
 export const configUtil = {
   dappLink: 'https://app.huma.finance/#',
   linkedInLink: 'https://www.linkedin.com/company/huma-finance',
@@ -120,7 +113,4 @@ export const configUtil = {
   getCampaignAPIUrl,
   getSolanaGraphAPIUrl,
   DEFAULT_CHAIN_ID,
-  getEthereumDappUrl,
-  getSolanaDappUrl,
-  getStellarDappUrl,
 }

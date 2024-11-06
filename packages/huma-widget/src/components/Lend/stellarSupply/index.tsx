@@ -8,7 +8,7 @@ import {
   StellarConnectionContext,
   StellarPoolState,
   useStellarLender,
-  useTokenBalance,
+  useStellarTokenBalance,
 } from '@huma-finance/web-shared'
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -22,6 +22,7 @@ import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseTranche } from './2-ChooseTranche'
 import { ChooseAmount } from './3-ChooseAmount'
 import { Transfer } from './4-Transfer'
+import { Success } from './5-Success'
 
 export interface Campaign {
   id: string
@@ -58,7 +59,7 @@ export function StellarLendSupply({
     isSeniorApprovedLender,
   } = useStellarLender(stellarAddress, poolInfo)
   const chainMetadata = STELLAR_CHAINS_INFO[poolInfo.chainId]
-  const { tokenBalance, isLoadingTokenBalance } = useTokenBalance(
+  const { tokenBalance, isLoadingTokenBalance } = useStellarTokenBalance(
     chainMetadata,
     poolInfo.underlyingToken.address,
     stellarAddress,
@@ -136,20 +137,15 @@ export function StellarLendSupply({
         />
       )}
       {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer
-          poolInfo={poolInfo}
-          poolState={poolState}
-          selectedTranche={selectedTranche}
-        />
+        <Transfer poolInfo={poolInfo} selectedTranche={selectedTranche} />
       )}
-      {/* {step === WIDGET_STEP.Done && (
+      {step === WIDGET_STEP.Done && (
         <Success
           poolInfo={poolInfo}
           poolState={poolState}
-          campaign={poolState.campaign}
           handleAction={handleClose}
         />
-      )} */}
+      )}
       {step === WIDGET_STEP.Error && (
         <ErrorModal
           title='Supply'

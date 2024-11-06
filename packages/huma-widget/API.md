@@ -437,6 +437,13 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 
 ## StellarLendSupplyWidget(props)
 <p>Lend pool supply widget for Stellar pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>StellarLendSupplyWidgetProps</code>](#StellarLendSupplyWidgetProps) | <p>Widget props</p> |
+
 <a name="SolanaEnableAutoRedemptionWidget"></a>
 
 ## SolanaEnableAutoRedemptionWidget(props)
@@ -446,7 +453,6 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 
 | Param | Type | Description |
 | --- | --- | --- |
-| props | [<code>StellarLendSupplyWidgetProps</code>](#StellarLendSupplyWidgetProps) | <p>Widget props</p> |
 | props | [<code>SolanaEnableAutoRedemptionWidgetProps</code>](#SolanaEnableAutoRedemptionWidgetProps) | <p>Widget props</p> |
 
 <a name="CreditLineApproveProps"></a>
@@ -1093,6 +1099,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 
 ## StellarLendSupplyWidgetProps : <code>Object</code>
 <p>Lend pool supply widget props for Stellar pools</p>
+
+**Kind**: global typedef  
 <a name="SolanaEnableAutoRedemptionWidgetProps"></a>
 
 ## SolanaEnableAutoRedemptionWidgetProps : <code>Object</code>

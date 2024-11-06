@@ -60,6 +60,7 @@ export type WidgetState = {
   multisend?: MultisendPayload
   solanaSignature?: string
   pointsAccumulated?: number
+  txHash?: string
 }
 
 export const initialWidgetState: WidgetState = {}
