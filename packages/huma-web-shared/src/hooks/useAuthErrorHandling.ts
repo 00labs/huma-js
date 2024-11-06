@@ -105,6 +105,7 @@ export type AuthState = {
 export const useAuthErrorHandling = (
   isDev: boolean,
   chainType: CHAIN_TYPE = CHAIN_TYPE.EVM,
+  defaultChainId?: number,
 ): AuthState => {
   const [error, setError] = useState<unknown>(null)
   const [isVerificationRequired, setIsVerificationRequired] =
@@ -167,7 +168,7 @@ export const useAuthErrorHandling = (
         if (chainType === CHAIN_TYPE.EVM) {
           verifyEvmOwnership(
             evmAccount!,
-            evmChainId!,
+            defaultChainId ?? evmChainId!,
             isDev,
             evmProvider!,
             handleVerificationCompletion,
@@ -188,6 +189,7 @@ export const useAuthErrorHandling = (
     evmProvider,
     getErrorInfo,
     chainType,
+    defaultChainId,
   ])
 
   useEffect(() => {
