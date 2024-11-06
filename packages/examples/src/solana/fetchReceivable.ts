@@ -1,7 +1,8 @@
-import { Connection } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 import { AnchorProvider, setProvider, Wallet, web3 } from '@coral-xyz/anchor'
 import { POOL_NAME, SolanaChainEnum } from '@huma-finance/shared'
 import {
+  getReceivableReferenceData,
   HumaSolanaContext,
   HumaSolanaReceivableHelper,
 } from '@huma-finance/sdk'
@@ -32,9 +33,21 @@ async function main() {
     solanaContext: solanaHumaContext,
   })
 
-  const res = await humaReceivableHelper.getReceivableInfo('test-reference-id')
+  const owner = new PublicKey('owner public key')
+  const referenceId = 'test-reference-id2'
+
+  const res = await humaReceivableHelper.getReceivableInfo(referenceId, owner)
 
   console.log(res)
+
+  const receivableReferenceData = await getReceivableReferenceData(
+    SolanaChainEnum.SolanaDevnet,
+    owner,
+    connection,
+    referenceId,
+  )
+
+  console.log(receivableReferenceData)
 }
 
 main()

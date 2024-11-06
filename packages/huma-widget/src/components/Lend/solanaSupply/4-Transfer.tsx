@@ -1,6 +1,7 @@
 import {
   CampaignService,
   checkIsDev,
+  convertToShares,
   getTokenAccounts,
   SolanaPoolInfo,
   SolanaTokenUtils,
@@ -12,10 +13,16 @@ import {
   SolanaPoolState,
   useHumaProgram,
   useLenderAccounts,
+  useTrancheTokenAccounts,
 } from '@huma-finance/web-shared'
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import {
+  createApproveCheckedInstruction,
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Transaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
+import { BN } from '@coral-xyz/anchor'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -51,8 +58,15 @@ export function Transfer({
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
     juniorLenderStateAccount,
+    seniorTrancheMintSupply,
+    juniorTrancheMintSupply,
     loading: isLoadingLenderAccounts,
   } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
+  const {
+    seniorTokenAccount,
+    juniorTokenAccount,
+    loading: isLoadingTrancheTokenAccounts,
+  } = useTrancheTokenAccounts(poolInfo)
   const program = useHumaProgram(poolInfo.chainId)
 
   const handleSuccess = useCallback(
@@ -85,7 +99,12 @@ export function Transfer({
 
   useEffect(() => {
     async function getTx() {
-      if (!publicKey || transaction || isLoadingLenderAccounts) {
+      if (
+        !publicKey ||
+        transaction ||
+        isLoadingLenderAccounts ||
+        isLoadingTrancheTokenAccounts
+      ) {
         return
       }
 
@@ -145,24 +164,69 @@ export function Transfer({
         .transaction()
       tx.add(depositTx)
 
+      // Approve automatic redemptions
+      const sharesAmount = convertToShares(
+        selectedTranche === 'senior'
+          ? new BN(poolState.seniorTrancheAssets ?? 0)
+          : new BN(poolState.juniorTrancheAssets ?? 0),
+        selectedTranche === 'senior'
+          ? seniorTrancheMintSupply ?? new BN(0)
+          : juniorTrancheMintSupply ?? new BN(0),
+        supplyBigNumber,
+      )
+      const existingShares = convertToShares(
+        selectedTranche === 'senior'
+          ? new BN(poolState.seniorTrancheAssets ?? 0)
+          : new BN(poolState.juniorTrancheAssets ?? 0),
+        selectedTranche === 'senior'
+          ? seniorTrancheMintSupply ?? new BN(0)
+          : juniorTrancheMintSupply ?? new BN(0),
+        selectedTranche === 'senior'
+          ? new BN(seniorTokenAccount?.amount.toString() ?? '0')
+          : new BN(juniorTokenAccount?.amount.toString() ?? '0'),
+      )
+      tx.add(
+        createApproveCheckedInstruction(
+          selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
+          new PublicKey(
+            selectedTranche === 'senior'
+              ? poolInfo.seniorTrancheMint
+              : poolInfo.juniorTrancheMint,
+          ),
+          new PublicKey(poolInfo.poolAuthority), // delegate
+          publicKey, // owner of the wallet
+          BigInt(sharesAmount.muln(1.1).add(existingShares).toString()), // amount
+          poolInfo.trancheDecimals,
+          undefined, // multiSigners
+          TOKEN_2022_PROGRAM_ID,
+        ),
+      )
+
       setTransaction(tx)
     }
     getTx()
   }, [
     isLoadingLenderAccounts,
+    isLoadingTrancheTokenAccounts,
     juniorLenderApprovedAccountPDA,
     juniorLenderStateAccount,
+    juniorTokenAccount?.amount,
+    juniorTrancheMintSupply,
     poolInfo,
+    poolState.juniorTrancheAssets,
+    poolState.seniorTrancheAssets,
     program.methods,
     publicKey,
     selectedTranche,
     seniorLenderApprovedAccountPDA,
     seniorLenderStateAccount,
+    seniorTokenAccount?.amount,
+    seniorTrancheMintSupply,
     supplyBigNumber,
     transaction,
   ])
 
-  if (isLoadingLenderAccounts) {
+  if (isLoadingLenderAccounts || isLoadingTrancheTokenAccounts) {
     return <LoadingModal title='Supply' />
   }
 

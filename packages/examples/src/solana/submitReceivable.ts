@@ -35,10 +35,9 @@ async function main() {
     solanaContext: solanaHumaContext,
   })
 
-  const tx =
-    await humaSolanaProgramHelper.buildSubmitReceivableTransaction(
-      'test-reference-id2',
-    )
+  const tx = await humaSolanaProgramHelper.buildSubmitReceivableTransaction(
+    'test-reference-id2',
+  )
 
   console.log(tx)
 

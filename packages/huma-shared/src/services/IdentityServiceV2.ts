@@ -64,18 +64,15 @@ export type ResumeVerificationResultV2 = {
  * Object representing the Huma account.
  * @typedef {Object} HumaAccount
  * @property {string} accountId The account id.
- * @property {string} chainId The chain id.
  */
 export type HumaAccount = {
   accountId: string
-  chainId: string
 }
 
 /**
  * Get wallet's identity verification status.
  *
  * @param {string} walletAddress The wallet address.
- * @param {string} pool The pool address.
  * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResultV2>} Promise that returns the verification status result.

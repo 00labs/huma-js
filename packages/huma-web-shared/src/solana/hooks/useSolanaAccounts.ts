@@ -587,6 +587,8 @@ export const useLenderAccounts = (
   seniorLenderStateAccount: LenderStateAccount | null | undefined
   juniorTrancheWithdrawable: BN | null | undefined
   seniorTrancheWithdrawable: BN | null | undefined
+  seniorTrancheMintSupply: BN | null | undefined
+  juniorTrancheMintSupply: BN | null | undefined
   loading: boolean
   refresh: () => void
 } => {
@@ -611,6 +613,10 @@ export const useLenderAccounts = (
   const [juniorTrancheWithdrawable, setJuniorTrancheWithdrawable] =
     useState<BN | null>()
   const [seniorTrancheWithdrawable, setSeniorTrancheWithdrawable] =
+    useState<BN | null>()
+  const [juniorTrancheMintSupply, setJuniorTrancheMintSupply] =
+    useState<BN | null>()
+  const [seniorTrancheMintSupply, setSeniorTrancheMintSupply] =
     useState<BN | null>()
   const [refreshCount, refresh] = useForceRefresh()
 
@@ -663,7 +669,12 @@ export const useLenderAccounts = (
       setSeniorLenderStateAccountPDA(seniorLenderStateAccountPDACalc.toString())
 
       const program = getHumaProgram(chainId, connection, wallet as Wallet)
-      const [lenderApprovedAccounts, lenderStateAccounts] = await Promise.all([
+      const [
+        lenderApprovedAccounts,
+        lenderStateAccounts,
+        seniorTrancheMintSupply,
+        juniorTrancheMintSupply,
+      ] = await Promise.all([
         program.account.lender.fetchMultiple([
           seniorLenderAccountPDA,
           juniorLenderAccountPDA,
@@ -672,8 +683,18 @@ export const useLenderAccounts = (
           seniorLenderStateAccountPDACalc,
           juniorLenderStateAccountPDACalc,
         ]),
+        connection.getTokenSupply(
+          new PublicKey(poolInfo.seniorTrancheMint),
+          'confirmed',
+        ),
+        connection.getTokenSupply(
+          new PublicKey(poolInfo.juniorTrancheMint),
+          'confirmed',
+        ),
       ])
 
+      setJuniorTrancheMintSupply(new BN(juniorTrancheMintSupply.value.amount))
+      setSeniorTrancheMintSupply(new BN(seniorTrancheMintSupply.value.amount))
       setSeniorLenderApproved(lenderApprovedAccounts[0] !== null)
       setJuniorLenderApproved(lenderApprovedAccounts[1] !== null)
       setSeniorLenderStateAccount(lenderStateAccounts[0])
@@ -718,6 +739,8 @@ export const useLenderAccounts = (
     juniorLenderStateAccount,
     seniorTrancheWithdrawable,
     juniorTrancheWithdrawable,
+    seniorTrancheMintSupply,
+    juniorTrancheMintSupply,
     loading,
     refresh,
   }

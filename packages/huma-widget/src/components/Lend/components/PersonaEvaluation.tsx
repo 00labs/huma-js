@@ -96,9 +96,9 @@ export function PersonaEvaluation({
   ])
 
   const approveLender = useCallback(async () => {
+    isActionOngoingRef.current = true
+    setLoadingType('approveLender')
     try {
-      isActionOngoingRef.current = true
-      setLoadingType('approveLender')
       await IdentityServiceV2.approveLender(
         account!,
         chainId!,
@@ -106,7 +106,12 @@ export function PersonaEvaluation({
         isDev,
         chainSpecificData,
       )
-      if (!isUniTranche) {
+    } catch (e: unknown) {
+      console.error(e)
+    }
+
+    if (!isUniTranche) {
+      try {
         await IdentityServiceV2.approveLender(
           account!,
           chainId!,
@@ -114,17 +119,19 @@ export function PersonaEvaluation({
           isDev,
           chainSpecificData,
         )
+      } catch (e: unknown) {
+        console.error(e)
       }
-      if (isUniTranche) {
-        changeTranche('junior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
-      } else {
-        dispatch(setStep(WIDGET_STEP.ChooseTranche))
-      }
-    } finally {
-      isActionOngoingRef.current = false
-      setLoadingType(undefined)
     }
+    if (isUniTranche) {
+      changeTranche('junior')
+      dispatch(setStep(WIDGET_STEP.ChooseAmount))
+    } else {
+      dispatch(setStep(WIDGET_STEP.ChooseTranche))
+    }
+
+    isActionOngoingRef.current = false
+    setLoadingType(undefined)
   }, [
     account,
     chainId,

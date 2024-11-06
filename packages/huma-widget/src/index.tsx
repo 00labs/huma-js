@@ -94,6 +94,10 @@ import {
   StellarLendSupply,
   StellarLendSupplyProps,
 } from './components/Lend/stellarSupply'
+import {
+  SolanaEnableAutoRedemption,
+  SolanaEnableAutoRedemptionProps,
+} from './components/Lend/solanaEnableAutoRedemption'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -687,6 +691,28 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
     <GenericWidget {...props}>
       <StellarLendSupply {...props} />
     </GenericWidget>
+  )
+}
+
+/**
+ * Lend pool supply widget props for Solana pools
+ * @typedef {Object} SolanaEnableAutoRedemptionWidgetProps
+ */
+type SolanaEnableAutoRedemptionWidgetProps = SolanaEnableAutoRedemptionProps &
+  SolanaWidgetProps
+
+/**
+ * Lend pool supply widget for Solana pools
+ *
+ * @param {SolanaEnableAutoRedemptionWidgetProps} props - Widget props
+ */
+export function SolanaEnableAutoRedemptionWidget(
+  props: SolanaEnableAutoRedemptionWidgetProps,
+) {
+  return (
+    <SolanaWidget {...props}>
+      <SolanaEnableAutoRedemption {...props} />
+    </SolanaWidget>
   )
 }
 
