@@ -8,7 +8,6 @@ import {
   IdentityVerificationStatusV2,
   KYCCopy,
   KYCType,
-  TrancheType,
   VerificationStatusResultV2,
 } from '@huma-finance/shared'
 import { useAuthErrorHandling, useChainInfo } from '@huma-finance/web-shared'
@@ -34,22 +33,16 @@ type Props = {
     seniorTrancheVault: string
   }
   chainType: CHAIN_TYPE
-  isUniTranche: boolean
   pointsTestnetExperience: boolean
   campaign?: Campaign
-  chainSpecificData?: Record<string, unknown>
-  changeTranche: (tranche: TrancheType) => void
   handleClose: (options?: CloseModalOptions) => void
 }
 
 export function PersonaEvaluation({
   poolInfo,
-  isUniTranche,
   campaign,
   pointsTestnetExperience,
   chainType,
-  chainSpecificData,
-  changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
@@ -93,55 +86,6 @@ export function PersonaEvaluation({
     isDev,
     isWalletOwnershipVerified,
     pointsTestnetExperience,
-  ])
-
-  const approveLender = useCallback(async () => {
-    isActionOngoingRef.current = true
-    setLoadingType('approveLender')
-    try {
-      await IdentityServiceV2.approveLender(
-        account!,
-        chainId!,
-        poolInfo.juniorTrancheVault,
-        isDev,
-        chainSpecificData,
-      )
-    } catch (e: unknown) {
-      console.error(e)
-    }
-
-    if (!isUniTranche) {
-      try {
-        await IdentityServiceV2.approveLender(
-          account!,
-          chainId!,
-          poolInfo.seniorTrancheVault,
-          isDev,
-          chainSpecificData,
-        )
-      } catch (e: unknown) {
-        console.error(e)
-      }
-    }
-    if (isUniTranche) {
-      changeTranche('junior')
-      dispatch(setStep(WIDGET_STEP.ChooseAmount))
-    } else {
-      dispatch(setStep(WIDGET_STEP.ChooseTranche))
-    }
-
-    isActionOngoingRef.current = false
-    setLoadingType(undefined)
-  }, [
-    account,
-    chainId,
-    chainSpecificData,
-    changeTranche,
-    dispatch,
-    isDev,
-    isUniTranche,
-    poolInfo.juniorTrancheVault,
-    poolInfo.seniorTrancheVault,
   ])
 
   const checkVerificationStatus = useCallback(async () => {
@@ -247,7 +191,7 @@ export function PersonaEvaluation({
           }
 
           case IdentityVerificationStatusV2.CONSENTED_TO_SUBSCRIPTION: {
-            await approveLender()
+            dispatch(setStep(WIDGET_STEP.ApproveLender))
             break
           }
 
@@ -260,7 +204,7 @@ export function PersonaEvaluation({
     } finally {
       isActionOngoingRef.current = false
     }
-  }, [KYCCopies, account, approveLender, chainId, isDev, setAuthError])
+  }, [KYCCopies, account, chainId, dispatch, isDev, setAuthError])
 
   useEffect(() => {
     checkVerificationStatus()

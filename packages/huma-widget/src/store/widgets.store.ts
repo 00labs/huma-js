@@ -12,6 +12,7 @@ export enum WIDGET_STEP {
   Evaluation = 'Evaluation',
   FirstLossCover = 'FirstLossCover',
   ChooseAmount = 'ChooseAmount',
+  ApproveLender = 'ApproveLender',
   Permit = 'Permit',
   ApproveAllowance = 'ApproveAllowance',
   MintNFT = 'MintNFT',
