@@ -19,7 +19,7 @@ export function ApproveLender({
   isUniTranche,
   changeTranche,
 }: Props): React.ReactElement | null {
-  const solanChainInfo = SOLANA_CHAIN_INFO[poolInfo.chainId]
+  const solanaChainInfo = SOLANA_CHAIN_INFO[poolInfo.chainId]
 
   return (
     <ApproveLenderBase
@@ -28,7 +28,7 @@ export function ApproveLender({
       isUniTranche={isUniTranche}
       chainType={CHAIN_TYPE.SOLANA}
       chainSpecificData={{
-        huma_program_id: solanChainInfo.poolProgram,
+        huma_program_id: solanaChainInfo.poolProgram,
         pool_id: poolInfo.poolId,
       }}
       changeTranche={changeTranche}

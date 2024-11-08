@@ -88,11 +88,11 @@ export function LendSupplyV2({
 
   useEffect(() => {
     if (!step && poolInfo && lenderApproveStatusFetched && lpConfig) {
-      if (
-        campaign &&
-        !isUniTranche &&
-        (!lenderApprovedJunior || !lenderApprovedSenior)
-      ) {
+      const uniTrancheNotEvaluated = isUniTranche && !lenderApprovedJunior
+      const tranchesNotEvaluated =
+        !isUniTranche && !lenderApprovedJunior && !lenderApprovedSenior
+
+      if (uniTrancheNotEvaluated || tranchesNotEvaluated) {
         if (poolInfo.KYC) {
           dispatch(setStep(WIDGET_STEP.Evaluation))
         } else if (poolInfo.supplyLink) {
@@ -131,7 +131,6 @@ export function LendSupplyV2({
     lenderApprovedSenior,
     lpConfig,
     poolInfo,
-    campaign,
     step,
   ])
 

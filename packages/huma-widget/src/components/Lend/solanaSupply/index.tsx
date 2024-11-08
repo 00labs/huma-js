@@ -66,11 +66,6 @@ export function SolanaLendSupply({
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
 
-  console.log('isUniTranche', isUniTranche)
-  console.log('juniorLenderApproved', juniorLenderApproved)
-  console.log('seniorLenderApproved', seniorLenderApproved)
-  console.log('step', step)
-
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts && !isLoadingTokenAccount) {
       if (!juniorLenderApproved && !seniorLenderApproved) {
