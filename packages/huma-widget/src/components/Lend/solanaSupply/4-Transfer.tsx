@@ -9,6 +9,7 @@ import {
 } from '@huma-finance/shared'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { BN } from '@coral-xyz/anchor'
 import {
   SolanaPoolState,
   useHumaProgram,
