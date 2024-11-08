@@ -5,7 +5,7 @@ import { fetchStellarTokenBalance } from '../utils'
 export const useStellarTokenBalance = (
   chainMetadata: StellarChainInfo,
   tokenAddress: string,
-  accountAddress: string,
+  accountAddress: string | null,
   sourceAddress?: string,
 ): {
   tokenBalance: number | null
@@ -17,6 +17,10 @@ export const useStellarTokenBalance = (
 
   useEffect(() => {
     const getTokenBalance = async () => {
+      if (!accountAddress) {
+        return
+      }
+
       setIsLoadingTokenBalance(true)
       try {
         const fetchedBalance = await fetchStellarTokenBalance(

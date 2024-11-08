@@ -2,13 +2,13 @@ import { requestAccess, WatchWalletChanges } from '@stellar/freighter-api'
 import React, { useState, createContext, useMemo, useEffect } from 'react'
 
 export interface StellarConnectionContextType {
-  address: string
+  address: string | null
   requestAccessFn: () => void
 }
 
 export const StellarConnectionContext =
   createContext<StellarConnectionContextType>({
-    address: '',
+    address: null,
     requestAccessFn: () => {},
   })
 
@@ -19,7 +19,7 @@ type WCProps<P = {}> = P & {
 }
 
 export function StellarWeb3Provider({ children }: WCProps) {
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState<string | null>(null)
 
   // Watch for changes in the Freighter wallet address on a 3 second interval by default.
   // Need this to catch users switching wallet addresses in the extension and for auto-connecting
@@ -42,7 +42,7 @@ export function StellarWeb3Provider({ children }: WCProps) {
     const accessObj = await requestAccess()
 
     if (accessObj.error) {
-      setAddress('')
+      setAddress(null)
     } else {
       setAddress(accessObj.address)
     }

@@ -18,6 +18,7 @@ export type StellarPoolInfo = {
   creditStorage: string
   juniorTranche: string
   seniorTranche?: string
+  trancheDecimals: number
   underlyingToken: {
     address: string
     symbol: string

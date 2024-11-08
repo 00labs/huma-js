@@ -24,6 +24,8 @@ export type StellarPoolState = {
   amountOriginated?: number
   amountRepaid?: number
   disbursementReserve?: number
+  juniorTrancheTokenSupply?: string
+  seniorTrancheTokenSupply?: string
   accruedIncomes?: {
     eaIncome: string
     protocolIncome: string
