@@ -1,5 +1,4 @@
 import { Client as CreditStorageClient } from '@huma-finance/soroban-credit-storage'
-import { Client as PoolClient } from '@huma-finance/soroban-pool'
 import { Client as PoolCreditClient } from '@huma-finance/soroban-pool-credit'
 import { Client as PoolStorageClient } from '@huma-finance/soroban-pool-storage'
 import { Client as TrancheVaultClient } from '@huma-finance/soroban-tranche-vault'
@@ -7,7 +6,6 @@ import { Client as TrancheVaultClient } from '@huma-finance/soroban-tranche-vaul
 export const stellarTryFn = async (
   client:
     | CreditStorageClient
-    | PoolClient
     | PoolCreditClient
     | PoolStorageClient
     | TrancheVaultClient,

@@ -90,6 +90,12 @@
     "@solana/web3.js": "^1.95.3",
     "@solana/spl-token": "^0.4.8",
     "@stellar/freighter-api": "^3.0.0",
+    "@huma-finance/soroban-credit-storage": "0.0.15",
+    "@huma-finance/soroban-huma-config": "0.0.15",
+    "@huma-finance/soroban-pool-storage": "0.0.15",
+    "@huma-finance/soroban-sdk": "^0.0.15",
+    "@huma-finance/soroban-tranche-vault": "0.0.15",
+    "@stellar/stellar-sdk": "^12.3.0",
     "@coral-xyz/anchor": "^0.30.1",
     "lodash": "^4.17.21"
   },
