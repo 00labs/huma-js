@@ -2929,6 +2929,98 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
+"@huma-finance/soroban-credit-manager@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-credit-manager/-/soroban-credit-manager-0.0.15.tgz#5bc515bd24bf1184fb6483e95e8e9977c02f3eb9"
+  integrity sha512-OH7AxpJK/coZqsUux2CKuLjmVqNWWxVj8k50YiepQ9EL1yno/k7JRp/S5JoPeTmu55NqO3/FNfDmQCD1N9UiEg==
+  dependencies:
+    "@stellar/stellar-sdk" "^12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-credit-storage@0.0.15", "@huma-finance/soroban-credit-storage@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-credit-storage/-/soroban-credit-storage-0.0.15.tgz#2d836b486578637949a71bac53bfb59f7cc4ac6a"
+  integrity sha512-hoRhKA5nR0Qtc9vqH0mMKV9D/BYirzvAxiZzPAc3nelvHbRw5eLwNcBLDKZKRCk0HPXUrPH/MVMXdq5uRwHd5w==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-huma-config@0.0.15", "@huma-finance/soroban-huma-config@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-huma-config/-/soroban-huma-config-0.0.15.tgz#640507220374145a83969e1c6702b297fb1ddfae"
+  integrity sha512-YC+G14P/UgEkG1/yPex1IMRcyO9BUAQ6tyno37DpzimLXcDl5+BR2mSMvfG5gaTjnZ7lRHL0a+Kf/6vsFaOuIQ==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-pool-credit@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-credit/-/soroban-pool-credit-0.0.15.tgz#4368dfc0e52d408ac638cfef45473cc6e51861bf"
+  integrity sha512-iH7IKi+KnZYeIVavaktffwc3zahXRqCc0zXLwhpHwLp2yEomGIm3NnL6pMtPFRMX28afHTyMkxhuRkEfKby3Jg==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-pool-manager@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-manager/-/soroban-pool-manager-0.0.15.tgz#5cb6ab61dcff54e6d46af667368fcfabf221441e"
+  integrity sha512-2QYWZOyUlg2wR7HE17EgnlIj+GqVDl3O3KVkBo5yH2HbtbRZI2BBlwuznGPtgct0tOuVqofxeZXXZOXfQYNqaQ==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-pool-storage@0.0.15", "@huma-finance/soroban-pool-storage@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-storage/-/soroban-pool-storage-0.0.15.tgz#fa2470397029e51ad48c03f94bac073ae6927ec6"
+  integrity sha512-GsdnRwmlSq7wByr5HGOzlYOG6s6F64mIzmOLhEhfrNWXEUJwbOTk9RU1kSgV0eXvwDVFcnVZB5TJRbwQk11YeA==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-pool@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool/-/soroban-pool-0.0.15.tgz#82006be938fbc4258664348eb2f9c11845a630f0"
+  integrity sha512-mxTjRMXNJzGNbCKWCX3swgvQOh3bZQTEExwkb/504SS0BTA6ketYCWaZWhQPFwhkxF9aoH0ruhRynn9ZAMPUmA==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-sdk@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-sdk/-/soroban-sdk-0.0.15.tgz#e6fb11ae9de2d856ae39ff88bc3f855c639156b2"
+  integrity sha512-x9YaXVfM8asFDt4SBQNzx2DteCX7uZBghY7P1NFZ7MSv89JIYaZYhAGh3BHPdFeW8MdjhIbvxrFJxKm3kaPbjw==
+  dependencies:
+    "@huma-finance/soroban-credit-manager" "^0.0.15"
+    "@huma-finance/soroban-credit-storage" "^0.0.15"
+    "@huma-finance/soroban-huma-config" "^0.0.15"
+    "@huma-finance/soroban-pool" "^0.0.15"
+    "@huma-finance/soroban-pool-credit" "^0.0.15"
+    "@huma-finance/soroban-pool-manager" "^0.0.15"
+    "@huma-finance/soroban-pool-storage" "^0.0.15"
+    "@huma-finance/soroban-sep41" "^0.0.15"
+    "@huma-finance/soroban-tranche-vault" "^0.0.15"
+    "@stellar/stellar-sdk" "^12.1.0"
+    dotenv "^16.0.3"
+    ts-node "^10.9.1"
+    tslib "^2.5.0"
+    typescript "^4.8.4"
+
+"@huma-finance/soroban-sep41@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-sep41/-/soroban-sep41-0.0.15.tgz#c172e62a70166a363f8633a84400a871d0149857"
+  integrity sha512-nhbGgLpgh9yowMXQzMBPafQQgoB/IFHGMQKE3zk6UBfSQHouZTkm8kRX1OSuMt7KWvk2eWPjS5j8VdsWr+gABw==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
+"@huma-finance/soroban-tranche-vault@0.0.15", "@huma-finance/soroban-tranche-vault@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-tranche-vault/-/soroban-tranche-vault-0.0.15.tgz#e3127dc008b0580bb6dffca428451f6c69e06dd7"
+  integrity sha512-PZhKBhDpD8tH1tWJY5Oc8aHZ4fdzCBGUxHUKMlYqDnk7kMbI73X1OAUVuCpqxvb2Y/prxt5GE2B3JW4QFHzUVQ==
+  dependencies:
+    "@stellar/stellar-sdk" "12.1.0"
+    buffer "6.0.3"
+
 "@humanwhocodes/config-array@^0.11.13":
   version "0.11.14"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.14.tgz#d78e481a039f7566ecc9660b4ea7fe6b1fec442b"
@@ -6148,6 +6240,56 @@
     "@stablelib/keyagreement" "^1.0.1"
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
+
+"@stellar/freighter-api@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@stellar/freighter-api/-/freighter-api-3.0.0.tgz#305854910e46c199728e34e6fe19ce2e253a86b9"
+  integrity sha512-AI1AeHnCPLMcM8d6182FScOJjCFd1tLZcNuu5M10NmtuLfNzavw+f991dWBoz6h41mOKjauIaojR+7VfU2nULg==
+
+"@stellar/js-xdr@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@stellar/js-xdr/-/js-xdr-3.1.2.tgz#db7611135cf21e989602fd72f513c3bed621bc74"
+  integrity sha512-VVolPL5goVEIsvuGqDc5uiKxV03lzfWdvYg1KikvwheDmTBO68CKDji3bAZ/kppZrx5iTA8z3Ld5yuytcvhvOQ==
+
+"@stellar/stellar-base@^12.0.1", "@stellar/stellar-base@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-base/-/stellar-base-12.1.1.tgz#16a07e74995725c544510be7086723c28300ed11"
+  integrity sha512-gOBSOFDepihslcInlqnxKZdIW9dMUO1tpOm3AtJR33K2OvpXG6SaVHCzAmCFArcCqI9zXTEiSoh70T48TmiHJA==
+  dependencies:
+    "@stellar/js-xdr" "^3.1.2"
+    base32.js "^0.1.0"
+    bignumber.js "^9.1.2"
+    buffer "^6.0.3"
+    sha.js "^2.3.6"
+    tweetnacl "^1.0.3"
+  optionalDependencies:
+    sodium-native "^4.1.1"
+
+"@stellar/stellar-sdk@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-12.1.0.tgz#eafe064d36696ada5b7bd7e871f7199b6ed39222"
+  integrity sha512-Va0hu9SaPezmMbO5eMwL5D15Wrx1AGWRtxayUDRWV2Fr3ynY58mvCZS1vsgNQ4kE8MZe3nBVKv6T9Kzqwgx1PQ==
+  dependencies:
+    "@stellar/stellar-base" "^12.0.1"
+    axios "^1.7.2"
+    bignumber.js "^9.1.2"
+    eventsource "^2.0.2"
+    randombytes "^2.1.0"
+    toml "^3.0.0"
+    urijs "^1.19.1"
+
+"@stellar/stellar-sdk@^12.1.0", "@stellar/stellar-sdk@^12.3.0":
+  version "12.3.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-12.3.0.tgz#d3c00364097f6717a66fd1a83d96a1ef5ba43306"
+  integrity sha512-F2DYFop/M5ffXF0lvV5Ezjk+VWNKg0QDX8gNhwehVU3y5LYA3WAY6VcCarMGPaG9Wdgoeh1IXXzOautpqpsltw==
+  dependencies:
+    "@stellar/stellar-base" "^12.1.1"
+    axios "^1.7.7"
+    bignumber.js "^9.1.2"
+    eventsource "^2.0.2"
+    randombytes "^2.1.0"
+    toml "^3.0.0"
+    urijs "^1.19.1"
 
 "@supercharge/promise-pool@^2.1.0":
   version "2.4.0"
@@ -9409,7 +9551,7 @@ axios@^1.0.0, axios@^1.4.0:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-axios@^1.6.7:
+axios@^1.6.7, axios@^1.7.2, axios@^1.7.7:
   version "1.7.7"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.7.tgz#2f554296f9892a72ac8d8e4c5b79c14a91d0a47f"
   integrity sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==
@@ -9669,6 +9811,11 @@ base-x@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-4.0.0.tgz#d0e3b7753450c73f8ad2389b5c018a4af7b2224a"
   integrity sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==
+
+base32.js@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/base32.js/-/base32.js-0.1.0.tgz#b582dec693c2f11e893cf064ee6ac5b6131a2202"
+  integrity sha512-n3TkB02ixgBOhTvANakDb4xaMXnYUVkNoRFJjQflcqMQhyEKxEHdj3E6N8t8sUQ0mjH/3/JxzlXuz3ul/J90pQ==
 
 base64-arraybuffer@0.1.5:
   version "0.1.5"
@@ -13183,6 +13330,11 @@ events@3.3.0, events@^3.2.0, events@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
+
+eventsource@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/eventsource/-/eventsource-2.0.2.tgz#76dfcc02930fb2ff339520b6d290da573a9e8508"
+  integrity sha512-IzUmBGPR3+oUG9dUeXynyNmf91/3zUSJg1lCktzKw47OXuhco54U3r9B7O4XX+Rb1Itm9OZ2b0RkTs10bICOxA==
 
 evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
   version "1.0.3"
@@ -18384,7 +18536,7 @@ node-gyp-build@^4.2.0, node-gyp-build@^4.3.0:
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.8.0.tgz#3fee9c1731df4581a3f9ead74664369ff00d26dd"
   integrity sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==
 
-node-gyp-build@^4.2.2, node-gyp-build@^4.5.0:
+node-gyp-build@^4.2.2, node-gyp-build@^4.5.0, node-gyp-build@^4.8.0:
   version "4.8.2"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.8.2.tgz#4f802b71c1ab2ca16af830e6c1ea7dd1ad9496fa"
   integrity sha512-IRUxE4BVsHWXkV/SFOut4qTlagw2aM8T5/vnTsmrHJvVoKueJHRc/JaFND7QDDc61kLYUJ6qlZM3sqTSyx2dTw==
@@ -21966,7 +22118,7 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-sha.js@^2.4.0, sha.js@^2.4.11, sha.js@^2.4.8:
+sha.js@^2.3.6, sha.js@^2.4.0, sha.js@^2.4.11, sha.js@^2.4.8:
   version "2.4.11"
   resolved "https://registry.yarnpkg.com/sha.js/-/sha.js-2.4.11.tgz#37a5cf0b81ecbc6943de109ba2960d1b26584ae7"
   integrity sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ==
@@ -22215,6 +22367,13 @@ socks@^2.6.2:
   dependencies:
     ip "^2.0.0"
     smart-buffer "^4.2.0"
+
+sodium-native@^4.1.1:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/sodium-native/-/sodium-native-4.3.0.tgz#cc76b70824b0e131cbdc5f56d5369eaa89e1ad72"
+  integrity sha512-OcMgoS0NJx+4yVUlhvL9uZsVZfmyHZ2RpSXkiIoOHMglqvJDeGwn1rUigPrvcNTq3m9hPXtt6syxQbF3vvwmRQ==
+  dependencies:
+    node-gyp-build "^4.8.0"
 
 sonic-boom@^2.2.1:
   version "2.8.0"
@@ -23597,7 +23756,7 @@ typeforce@^1.18.0:
   resolved "https://registry.yarnpkg.com/typeforce/-/typeforce-1.18.0.tgz#d7416a2c5845e085034d70fcc5b6cc4a90edbfdc"
   integrity sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==
 
-"typescript@^3 || ^4", typescript@^4.6.2:
+"typescript@^3 || ^4", typescript@^4.6.2, typescript@^4.8.4:
   version "4.9.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
   integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
@@ -23905,6 +24064,11 @@ uri-js@^4.2.2, uri-js@^4.4.1:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+urijs@^1.19.1:
+  version "1.19.11"
+  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.11.tgz#204b0d6b605ae80bea54bea39280cdb7c9f923cc"
+  integrity sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==
 
 url-loader@^4.1.1:
   version "4.1.1"

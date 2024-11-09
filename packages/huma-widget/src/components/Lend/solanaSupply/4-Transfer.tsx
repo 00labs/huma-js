@@ -22,7 +22,6 @@ import {
 } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { BN } from '@coral-xyz/anchor'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -167,23 +166,23 @@ export function Transfer({
       // Approve automatic redemptions
       const sharesAmount = convertToShares(
         selectedTranche === 'senior'
-          ? new BN(poolState.seniorTrancheAssets ?? 0)
-          : new BN(poolState.juniorTrancheAssets ?? 0),
+          ? BigInt(poolState.seniorTrancheAssets ?? 0)
+          : BigInt(poolState.juniorTrancheAssets ?? 0),
         selectedTranche === 'senior'
-          ? seniorTrancheMintSupply ?? new BN(0)
-          : juniorTrancheMintSupply ?? new BN(0),
-        supplyBigNumber,
+          ? BigInt(seniorTrancheMintSupply?.toString() ?? 0)
+          : BigInt(juniorTrancheMintSupply?.toString() ?? 0),
+        BigInt(supplyBigNumber.toString()),
       )
       const existingShares = convertToShares(
         selectedTranche === 'senior'
-          ? new BN(poolState.seniorTrancheAssets ?? 0)
-          : new BN(poolState.juniorTrancheAssets ?? 0),
+          ? BigInt(poolState.seniorTrancheAssets ?? 0)
+          : BigInt(poolState.juniorTrancheAssets ?? 0),
         selectedTranche === 'senior'
-          ? seniorTrancheMintSupply ?? new BN(0)
-          : juniorTrancheMintSupply ?? new BN(0),
+          ? BigInt(seniorTrancheMintSupply?.toString() ?? 0)
+          : BigInt(juniorTrancheMintSupply?.toString() ?? 0),
         selectedTranche === 'senior'
-          ? new BN(seniorTokenAccount?.amount.toString() ?? '0')
-          : new BN(juniorTokenAccount?.amount.toString() ?? '0'),
+          ? BigInt(seniorTokenAccount?.amount.toString() ?? '0')
+          : BigInt(juniorTokenAccount?.amount.toString() ?? '0'),
       )
       tx.add(
         createApproveCheckedInstruction(
@@ -195,7 +194,7 @@ export function Transfer({
           ),
           new PublicKey(poolInfo.poolAuthority), // delegate
           publicKey, // owner of the wallet
-          BigInt(sharesAmount.muln(1.1).add(existingShares).toString()), // amount
+          (sharesAmount * BigInt(11)) / BigInt(10) + existingShares, // amount
           poolInfo.trancheDecimals,
           undefined, // multiSigners
           TOKEN_2022_PROGRAM_ID,

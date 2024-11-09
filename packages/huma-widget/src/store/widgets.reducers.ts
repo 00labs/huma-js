@@ -33,6 +33,7 @@ export const widgetSlice = createSlice({
       state.redeemAmount = undefined
       state.redeemShares = undefined
       state.solanaSignature = undefined
+      state.txHash = undefined
     },
     setStep: (state, { payload }: PayloadAction<WIDGET_STEP>) => {
       state.step = payload
@@ -106,6 +107,9 @@ export const widgetSlice = createSlice({
     setSolanaSignature: (state, { payload }: PayloadAction<string>) => {
       state.solanaSignature = payload
     },
+    setTxHash: (state, { payload }: PayloadAction<string>) => {
+      state.txHash = payload
+    },
     setPointsAccumulated: (
       state,
       { payload }: PayloadAction<number | undefined>,
@@ -141,6 +145,7 @@ export const {
   setRedeemAmount,
   setRedeemShares,
   setSolanaSignature,
+  setTxHash,
   setPointsAccumulated,
 } = widgetSlice.actions
 
