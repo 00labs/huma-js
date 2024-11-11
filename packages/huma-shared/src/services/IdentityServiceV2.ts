@@ -64,23 +64,14 @@ export type ResumeVerificationResultV2 = {
 /**
  * Object representing the Huma account.
  * @typedef {Object} HumaAccount
- * @property {string} accountId The account id.
- * @property {string} name The account name.
- */
-export type HumaAccount = {
-  accountId: string
-  name: string
-}
-
-/**
- * Object representing the Huma account.
- * @typedef {Object} HumaAccount
+ * @property {string} id The account id.
  * @property {string} accountId The account id.
  * @property {string} name The account name.
  * @property {Wallet[]} wallets The account wallets.
  * @property {boolean} isNewAccount Is new account or not.
  */
-export type LoginResult = {
+export type HumaAccount = {
+  id: string
   accountId: string
   name: string
   wallets: {
@@ -88,6 +79,12 @@ export type LoginResult = {
     chainId: string
   }[]
   isNewAccount: boolean
+  referralCode: string
+  numReferrals: number
+  referrer: {
+    id: string
+    name: string
+  }
 }
 
 /**
@@ -250,14 +247,14 @@ const authenticate = async (
   )
 
 /**
- * Get Huma account.
+ * Get Huma account old.
  *
  * @param {string} walletAddress The wallet address.
  * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<void>} Promise that returns void.
  */
-const getHumaAccount = async (
+const getHumaAccountOld = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
@@ -268,6 +265,24 @@ const getHumaAccount = async (
       isDev,
     )}/wallets/${walletAddress}/account?chainId=${chainId}`,
   )
+
+/**
+ * Get Huma account.
+ *
+ * @param {string} networkType Network type.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<HumaAccount>} Promise that returns huma account.
+ */
+const getHumaAccount = async (
+  networkType: NETWORK_TYPE,
+  isDev = false,
+): Promise<HumaAccount> => {
+  const { account } = await requestGet<{ account: HumaAccount }>(
+    `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/account`,
+  )
+  account.accountId = account.id
+  return account
+}
 
 /**
  * Huma account login by wallet address and chain.
@@ -281,13 +296,28 @@ const humaAccountLogin = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<LoginResult> =>
-  requestPost<LoginResult>(
+): Promise<HumaAccount> =>
+  requestPost<HumaAccount>(
     `${configUtil.getIdentityAPIUrl(chainId, isDev)}/auth/login`,
     {
       walletAddress,
       chainId: String(chainId),
     },
+  )
+
+/**
+ * Huma account logout.
+ *
+ * @param {string} networkType Network type.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const humaAccountLogout = async (
+  networkType: NETWORK_TYPE,
+  isDev = false,
+): Promise<void> =>
+  requestPost(
+    `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/auth/logout`,
   )
 
 /**
@@ -308,6 +338,29 @@ const humaAccountUpdate = async (
     humaAccount,
   )
 
+/**
+ * Huma account adds wallet.
+ *
+ * @param {string} networkType Network type.
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<HumaAccount>} Promise that returns huma account.
+ */
+const humaAccountAddWallet = async (
+  networkType: NETWORK_TYPE,
+  walletAddress: string,
+  chainId: number,
+  isDev = false,
+): Promise<HumaAccount> =>
+  requestPost(
+    `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/account/wallets`,
+    {
+      walletAddress,
+      chainId: String(chainId),
+    },
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -316,7 +369,10 @@ export const IdentityServiceV2 = {
   consentToSubscription,
   approveLender,
   authenticate,
+  getHumaAccountOld,
   getHumaAccount,
   humaAccountLogin,
+  humaAccountLogout,
   humaAccountUpdate,
+  humaAccountAddWallet,
 }
