@@ -70,6 +70,24 @@ export type HumaAccount = {
 }
 
 /**
+ * Object representing the Huma account.
+ * @typedef {Object} HumaAccount
+ * @property {string} accountId The account id.
+ * @property {string} name The account name.
+ * @property {Wallet[]} wallets The account wallets.
+ * @property {boolean} isNewAccount Is new account or not.
+ */
+export type LoginResult = {
+  accountId: string
+  name: string
+  wallets: {
+    address: string
+    chainId: string
+  }[]
+  isNewAccount: boolean
+}
+
+/**
  * Get wallet's identity verification status.
  *
  * @param {string} walletAddress The wallet address.
@@ -248,6 +266,27 @@ const getHumaAccount = async (
     )}/wallets/${walletAddress}/account?chainId=${chainId}`,
   )
 
+/**
+ * Login by wallet address and chain.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const login = async (
+  walletAddress: string,
+  chainId: number,
+  isDev = false,
+): Promise<LoginResult> =>
+  requestPost<LoginResult>(
+    `${configUtil.getIdentityAPIUrl(chainId, isDev)}/auth/login`,
+    {
+      walletAddress,
+      chainId: String(chainId),
+    },
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -257,4 +296,5 @@ export const IdentityServiceV2 = {
   approveLender,
   authenticate,
   getHumaAccount,
+  login,
 }
