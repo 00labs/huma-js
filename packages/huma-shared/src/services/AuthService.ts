@@ -33,7 +33,25 @@ const verifySignature = async (
     },
   )
 
+const verifySolanaTx = async (
+  message: string,
+  serializedTx: number[],
+  chainId: number,
+  isDev: boolean = false,
+): Promise<null> =>
+  requestPost<null>(
+    `${configUtil.getAuthServiceUrl(
+      chainId,
+      isDev,
+    )}/verify-signature?chainId=${chainId}`,
+    {
+      message,
+      serializedTx,
+    },
+  )
+
 export const AuthService = {
   createSession,
   verifySignature,
+  verifySolanaTx,
 }
