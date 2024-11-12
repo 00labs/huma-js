@@ -61,7 +61,7 @@ export function PersonaEvaluation({
     setError: setAuthError,
     isWalletOwnershipVerified,
     isWalletOwnershipVerificationRequired,
-  } = useAuthErrorHandling(isDev)
+  } = useAuthErrorHandling(isDev, chainType)
   const KYCCopies = poolInfo.KYC!.Persona!
   const [loadingType, setLoadingType] = useState<LoadingType>()
   const [kycCopy, setKYCCopy] = useState<KYCCopy>(KYCCopies.verifyIdentity)
