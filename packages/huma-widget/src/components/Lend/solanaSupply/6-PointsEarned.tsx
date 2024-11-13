@@ -92,7 +92,7 @@ export function PointsEarned({
         )
         setWalletOwnership(ownership)
         if (!ownership) {
-          setAuthError('WalletNotSignInException')
+          setAuthError('WalletNotSignedInException')
         }
       }
     }
