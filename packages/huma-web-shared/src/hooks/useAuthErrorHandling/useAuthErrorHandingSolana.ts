@@ -6,12 +6,7 @@ import {
   SOLANA_CHAINS,
   SolanaChainEnum,
 } from '@huma-finance/shared'
-import { WalletName } from '@solana/wallet-adapter-base'
-import { useConnection, useWallet, Wallet } from '@solana/wallet-adapter-react'
-import {
-  LedgerWalletName,
-  PhantomWalletName,
-} from '@solana/wallet-adapter-wallets'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import {
   Connection,
   PublicKey,
@@ -27,11 +22,6 @@ import { ErrorType } from '.'
 const MEMO_PROGRAM_ID = new PublicKey(
   'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
 )
-
-const WALLETS_WITH_SERIALIZED_TX: WalletName<string>[] = [
-  LedgerWalletName,
-  PhantomWalletName,
-]
 
 const createSiwsMessage = (
   address: string,
@@ -67,7 +57,6 @@ const buildAuthTx = async (message: string): Promise<Transaction> => {
 }
 
 const verifyOwnershipSolana = async (
-  wallet: Wallet,
   connection: Connection,
   address: string,
   chainId: number,
@@ -80,23 +69,23 @@ const verifyOwnershipSolana = async (
     const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
     const message = createSiwsMessage(address, chainId, nonce, expiresAt)
 
-    if (WALLETS_WITH_SERIALIZED_TX.includes(wallet.adapter.name)) {
-      const tx = await buildAuthTx(message)
-      tx.feePayer = new PublicKey(address)
-      tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-      const signedTx = await signTransaction(tx)
-      const serializedTx = signedTx.serialize().toString('base64')
-      await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
-    } else {
+    if (signMessage) {
       const encodedMessage = new TextEncoder().encode(message)
       const signedMessage = await signMessage(encodedMessage)
-      const signatureEncoded = bs58.encode(signedMessage as Uint8Array)
+      const signatureEncoded = bs58.encode(signedMessage)
       await AuthService.verifySignature(
         message,
         signatureEncoded,
         chainId,
         isDev,
       )
+    } else {
+      const tx = await buildAuthTx(message)
+      tx.feePayer = new PublicKey(address)
+      tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+      const signedTx = await signTransaction(tx)
+      const serializedTx = signedTx.serialize().toString('base64')
+      await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
     }
 
     onVerificationComplete()
@@ -120,13 +109,12 @@ export const useAuthErrorHandingSolana = (
   handleVerificationCompletion: () => void,
 ) => {
   const { connection } = useConnection()
-  const { publicKey, signMessage, wallet, signTransaction } = useWallet()
+  const { publicKey, signMessage, signTransaction } = useWallet()
   const account = publicKey?.toString() ?? ''
 
   useEffect(() => {
     if (
       chainType !== CHAIN_TYPE.SOLANA ||
-      !wallet ||
       !account ||
       !error ||
       !signMessage ||
@@ -149,7 +137,6 @@ export const useAuthErrorHandingSolana = (
       setErrorType('NotSignedIn')
       setIsVerificationRequired(true)
       verifyOwnershipSolana(
-        wallet,
         connection,
         account,
         isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
@@ -176,6 +163,5 @@ export const useAuthErrorHandingSolana = (
     setIsVerificationRequired,
     signMessage,
     signTransaction,
-    wallet,
   ])
 }
