@@ -41,7 +41,7 @@ export const useAuthErrorHandling = (
       ].includes(error.response?.data?.detail?.type)
 
     const isWalletNotCreatedError = error === 'WalletNotCreatedException'
-    const isWalletNotSignInError = error === 'WalletNotSignInException'
+    const isWalletNotSignInError = error === 'WalletNotSignedInException'
 
     return {
       isUnauthorizedError,
