@@ -79,7 +79,7 @@ const verifyOwnershipSolana = async (
     const message = createSiwsMessage(address, chainId, nonce, expiresAt)
     const account = new PublicKey(address)
 
-    if (signMessage) {
+    try {
       const encodedMessage = new TextEncoder().encode(message)
       const signedMessage = await signMessage(encodedMessage)
       const signatureEncoded = bs58.encode(signedMessage)
@@ -89,7 +89,9 @@ const verifyOwnershipSolana = async (
         chainId,
         isDev,
       )
-    } else {
+    } catch (e) {
+      console.error(e)
+      // If the wallet does not support message signing, try to sign a transaction
       const tx = await buildAuthTx(account, message)
       tx.feePayer = account
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
