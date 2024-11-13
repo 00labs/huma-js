@@ -43,13 +43,22 @@ const createSiwsMessage = (
   return message.prepareMessage()
 }
 
-const buildAuthTx = async (message: string): Promise<Transaction> => {
+const buildAuthTx = async (
+  account: PublicKey,
+  message: string,
+): Promise<Transaction> => {
   const tx = new Transaction()
 
   tx.add(
     new TransactionInstruction({
       programId: MEMO_PROGRAM_ID,
-      keys: [],
+      keys: [
+        {
+          pubkey: account,
+          isSigner: true,
+          isWritable: true,
+        },
+      ],
       data: Buffer.from(message, 'utf8'),
     }),
   )
@@ -68,6 +77,7 @@ const verifyOwnershipSolana = async (
   try {
     const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
     const message = createSiwsMessage(address, chainId, nonce, expiresAt)
+    const account = new PublicKey(address)
 
     if (signMessage) {
       const encodedMessage = new TextEncoder().encode(message)
@@ -80,8 +90,8 @@ const verifyOwnershipSolana = async (
         isDev,
       )
     } else {
-      const tx = await buildAuthTx(message)
-      tx.feePayer = new PublicKey(address)
+      const tx = await buildAuthTx(account, message)
+      tx.feePayer = account
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
       const signedTx = await signTransaction(tx)
       const serializedTx = signedTx.serialize().toString('base64')
@@ -94,7 +104,7 @@ const verifyOwnershipSolana = async (
   }
 }
 
-export const useAuthErrorHandingSolana = (
+export const useAuthErrorHandlingSolana = (
   chainType: CHAIN_TYPE,
   isDev: boolean,
   error: any,

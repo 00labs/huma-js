@@ -41,7 +41,7 @@ export const verifyOwnershipEvm = async (
   onVerificationComplete()
 }
 
-export const useAuthErrorHandingEvm = (
+export const useAuthErrorHandlingEvm = (
   chainType: CHAIN_TYPE,
   isDev: boolean,
   error: any,

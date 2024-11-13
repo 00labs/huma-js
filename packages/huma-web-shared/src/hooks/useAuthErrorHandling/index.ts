@@ -2,8 +2,8 @@
 import { CHAIN_TYPE } from '@huma-finance/shared'
 import axios, { HttpStatusCode } from 'axios'
 import { useCallback, useState } from 'react'
-import { useAuthErrorHandingEvm } from './useAuthErrorHandingEvm'
-import { useAuthErrorHandingSolana } from './useAuthErrorHandingSolana'
+import { useAuthErrorHandlingEvm } from './useAuthErrorHandlingEvm'
+import { useAuthErrorHandlingSolana } from './useAuthErrorHandlingSolana'
 
 export type ErrorType = 'NotSignedIn' | 'UserRejected' | 'Other'
 
@@ -50,7 +50,7 @@ export const useAuthErrorHandling = (
     }
   }, [])
 
-  useAuthErrorHandingEvm(
+  useAuthErrorHandlingEvm(
     chainType,
     isDev,
     error,
@@ -60,7 +60,7 @@ export const useAuthErrorHandling = (
     setIsVerificationRequired,
     handleVerificationCompletion,
   )
-  useAuthErrorHandingSolana(
+  useAuthErrorHandlingSolana(
     chainType,
     isDev,
     error,
