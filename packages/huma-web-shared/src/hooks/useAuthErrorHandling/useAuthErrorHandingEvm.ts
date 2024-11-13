@@ -58,36 +58,40 @@ export const useAuthErrorHandingEvm = (
   const { account, chainId, provider } = useWeb3React()
 
   useEffect(() => {
-    if (chainType === CHAIN_TYPE.EVM) {
-      if (!account || !chainId || !error || !provider) {
-        return
-      }
+    if (
+      chainType !== CHAIN_TYPE.EVM ||
+      !account ||
+      !chainId ||
+      !error ||
+      !provider
+    ) {
+      return
+    }
 
-      const {
-        isUnauthorizedError,
-        isWalletNotCreatedError,
-        isWalletNotSignInError,
-      } = getErrorInfo(error)
+    const {
+      isUnauthorizedError,
+      isWalletNotCreatedError,
+      isWalletNotSignInError,
+    } = getErrorInfo(error)
 
-      if (
-        isUnauthorizedError ||
-        isWalletNotCreatedError ||
-        isWalletNotSignInError
-      ) {
-        setErrorType('NotSignedIn')
-        setIsVerificationRequired(true)
-        verifyOwnershipEvm(
-          account,
-          chainId,
-          isDev,
-          provider,
-          handleVerificationCompletion,
-        ).catch((e) => setError(e))
-      } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
-        setErrorType('UserRejected')
-      } else {
-        setErrorType('Other')
-      }
+    if (
+      isUnauthorizedError ||
+      isWalletNotCreatedError ||
+      isWalletNotSignInError
+    ) {
+      setErrorType('NotSignedIn')
+      setIsVerificationRequired(true)
+      verifyOwnershipEvm(
+        account,
+        chainId,
+        isDev,
+        provider,
+        handleVerificationCompletion,
+      ).catch((e) => setError(e))
+    } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
+      setErrorType('UserRejected')
+    } else {
+      setErrorType('Other')
     }
   }, [
     account,

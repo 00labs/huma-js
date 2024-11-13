@@ -35,7 +35,7 @@ const verifySignature = async (
 
 const verifySolanaTx = async (
   message: string,
-  serializedTx: number[],
+  serializedTx: string,
   chainId: number,
   isDev: boolean = false,
 ): Promise<null> =>

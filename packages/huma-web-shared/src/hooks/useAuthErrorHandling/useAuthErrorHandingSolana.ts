@@ -22,6 +22,12 @@ import bs58 from 'bs58'
 import { useEffect } from 'react'
 import { ErrorType } from '.'
 
+// Required for serialized tx for hard wallet sign in like Ledger. Followed this article:
+// https://medium.com/@legendaryangelist/how-to-implement-message-signing-with-the-ledger-on-solana-50a4a925e752
+const MEMO_PROGRAM_ID = new PublicKey(
+  'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
+)
+
 const WALLETS_WITH_SERIALIZED_TX: WalletName<string>[] = [
   LedgerWalletName,
   PhantomWalletName,
@@ -47,18 +53,14 @@ const createSiwsMessage = (
   return message.prepareMessage()
 }
 
-const buildAuthTx = async (nonce: string): Promise<Transaction> => {
+const buildAuthTx = async (message: string): Promise<Transaction> => {
   const tx = new Transaction()
-
-  const PROGRAM_ID = new PublicKey(
-    'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
-  )
 
   tx.add(
     new TransactionInstruction({
-      programId: PROGRAM_ID,
+      programId: MEMO_PROGRAM_ID,
       keys: [],
-      data: Buffer.from(nonce, 'utf8'),
+      data: Buffer.from(message, 'utf8'),
     }),
   )
   return tx
@@ -78,14 +80,12 @@ const verifyOwnershipSolana = async (
     const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
     const message = createSiwsMessage(address, chainId, nonce, expiresAt)
 
-    // Wallets that require serialized tx for example Ledger. Followed this article:
-    // https://medium.com/@legendaryangelist/how-to-implement-message-signing-with-the-ledger-on-solana-50a4a925e752
     if (WALLETS_WITH_SERIALIZED_TX.includes(wallet.adapter.name)) {
       const tx = await buildAuthTx(message)
       tx.feePayer = new PublicKey(address)
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
       const signedTx = await signTransaction(tx)
-      const serializedTx = Array.from(signedTx.serialize())
+      const serializedTx = signedTx.serialize().toString('base64')
       await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
     } else {
       const encodedMessage = new TextEncoder().encode(message)
@@ -124,39 +124,44 @@ export const useAuthErrorHandingSolana = (
   const account = publicKey?.toString() ?? ''
 
   useEffect(() => {
-    if (chainType === CHAIN_TYPE.SOLANA) {
-      if (!wallet || !account || !error || !signMessage || !signTransaction) {
-        return
-      }
+    if (
+      chainType !== CHAIN_TYPE.SOLANA ||
+      !wallet ||
+      !account ||
+      !error ||
+      !signMessage ||
+      !signTransaction
+    ) {
+      return
+    }
 
-      const {
-        isUnauthorizedError,
-        isWalletNotCreatedError,
-        isWalletNotSignInError,
-      } = getErrorInfo(error)
+    const {
+      isUnauthorizedError,
+      isWalletNotCreatedError,
+      isWalletNotSignInError,
+    } = getErrorInfo(error)
 
-      if (
-        isUnauthorizedError ||
-        isWalletNotCreatedError ||
-        isWalletNotSignInError
-      ) {
-        setErrorType('NotSignedIn')
-        setIsVerificationRequired(true)
-        verifyOwnershipSolana(
-          wallet,
-          connection,
-          account,
-          isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
-          isDev,
-          signTransaction,
-          signMessage,
-          handleVerificationCompletion,
-        ).catch((e) => setError(e))
-      } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
-        setErrorType('UserRejected')
-      } else {
-        setErrorType('Other')
-      }
+    if (
+      isUnauthorizedError ||
+      isWalletNotCreatedError ||
+      isWalletNotSignInError
+    ) {
+      setErrorType('NotSignedIn')
+      setIsVerificationRequired(true)
+      verifyOwnershipSolana(
+        wallet,
+        connection,
+        account,
+        isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
+        isDev,
+        signTransaction,
+        signMessage,
+        handleVerificationCompletion,
+      ).catch((e) => setError(e))
+    } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
+      setErrorType('UserRejected')
+    } else {
+      setErrorType('Other')
     }
   }, [
     account,
