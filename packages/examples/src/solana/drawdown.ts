@@ -28,7 +28,7 @@ async function main() {
     publicKey: wallet.publicKey,
     connection: connection,
     chainId: SolanaChainEnum.SolanaDevnet,
-    poolName: POOL_NAME.HumaCreditLine,
+    poolName: POOL_NAME.ArfCreditPool3Months,
   })
 
   const humaSolanaProgramHelper = new HumaSolanaProgramHelper({
