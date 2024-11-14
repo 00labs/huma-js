@@ -15,7 +15,7 @@ export async function buildOptimalTransaction(
     context.connection.getRecentPrioritizationFees({
       lockedWritableAccounts: txAccounts,
     }),
-    context.connection.getLatestBlockhash(),
+    context.connection.getLatestBlockhash('confirmed'),
   ])
 
   let averagePrioritizationFee = recentPrioritizationFees.reduce(
