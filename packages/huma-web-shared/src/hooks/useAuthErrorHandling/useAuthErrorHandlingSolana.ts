@@ -91,8 +91,8 @@ const verifyOwnershipSolana = async (
         isDev,
       )
     } catch (e: unknown) {
-      console.error(e);
-      if(e instanceof WalletSignMessageError) {
+      console.error(e)
+      if (e instanceof WalletSignMessageError) {
         // If the wallet does not support message signing, try to sign a transaction
         const tx = await buildAuthTx(account, message)
         tx.feePayer = account
