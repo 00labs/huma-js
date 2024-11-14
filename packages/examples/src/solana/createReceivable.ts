@@ -49,7 +49,7 @@ async function main() {
       currencyCode: '840',
       receivableAmount: new BN(100),
       maturityDate: new BN(oneWeekFromNow),
-      referenceId: 'test-reference-id3',
+      referenceId: 'test-reference-id4',
     },
   )
 
