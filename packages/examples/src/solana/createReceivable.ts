@@ -49,16 +49,20 @@ async function main() {
       currencyCode: '840',
       receivableAmount: new BN(100),
       maturityDate: new BN(oneWeekFromNow),
-      referenceId: 'test-reference-id4',
+      referenceId: 'test-reference-id6',
     },
   )
 
   console.log(tx)
 
-  const txResult = await sendAndConfirmTransaction(connection, tx, [
-    newAsset,
-    keypair,
-  ])
+  const txResult = await sendAndConfirmTransaction(
+    connection,
+    tx,
+    [newAsset, keypair],
+    {
+      preflightCommitment: 'confirmed',
+    },
+  )
 
   console.log(txResult)
 }
