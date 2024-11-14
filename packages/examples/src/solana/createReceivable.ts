@@ -31,7 +31,7 @@ async function main() {
     publicKey: wallet.publicKey,
     connection: connection,
     chainId: SolanaChainEnum.SolanaDevnet,
-    poolName: POOL_NAME.HumaCreditLine,
+    poolName: POOL_NAME.ArfCreditPool3Months,
   })
 
   const humaReceivableHelper = new HumaSolanaReceivableHelper({
@@ -49,7 +49,7 @@ async function main() {
       currencyCode: '840',
       receivableAmount: new BN(100),
       maturityDate: new BN(oneWeekFromNow),
-      referenceId: 'test-reference-id2',
+      referenceId: 'test-reference-id3',
     },
   )
 
