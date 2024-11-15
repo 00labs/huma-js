@@ -20,11 +20,12 @@ import { ErrorModal } from '../../ErrorModal'
 import { PointsEarned } from '../../PointsEarned'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { Evaluation } from './1-Evaluation'
-import { ChooseTranche } from './2-ChooseTranche'
-import { ChooseAmount } from './3-ChooseAmount'
-import { ApproveAllowance } from './4-ApproveAllowance'
-import { Transfer } from './4-Transfer'
-import { Success } from './5-Success'
+import { ApproveLender } from './2-ApproveLender'
+import { ChooseTranche } from './3-ChooseTranche'
+import { ChooseAmount } from './4-ChooseAmount'
+import { ApproveAllowance } from './5-ApproveAllowance'
+import { Transfer } from './6-Transfer'
+import { Success } from './7-Success'
 
 export interface Campaign {
   id: string
@@ -119,11 +120,17 @@ export function SolanaLendSupply({
       {step === WIDGET_STEP.Evaluation && (
         <Evaluation
           poolInfo={poolInfo}
-          isUniTranche={!!isUniTranche}
           campaign={poolState.campaign}
           networkType={getSolanaNetworkType(poolInfo.chainId)}
           handleClose={handleClose}
+        />
+      )}
+      {step === WIDGET_STEP.ApproveLender && (
+        <ApproveLender
+          poolInfo={poolInfo}
+          isUniTranche={!!isUniTranche}
           changeTranche={setSelectedTranche}
+          networkType={getSolanaNetworkType(poolInfo.chainId)}
         />
       )}
       {step === WIDGET_STEP.ChooseTranche && (
