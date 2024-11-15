@@ -64,3 +64,26 @@ export const requestPut = async <T>(
       .then((response) => response.data as T)
   )
 }
+
+export const requestPatch = async <T>(
+  url: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload?: any,
+  customConfig: AxiosRequestConfig = {},
+): Promise<T> => {
+  const config = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+    ...customConfig,
+  }
+
+  return (
+    axios
+      .post(url, payload, config)
+      // @ts-ignore
+      .then((response) => response.data as T)
+  )
+}
