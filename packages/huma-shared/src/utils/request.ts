@@ -55,10 +55,18 @@ export const requestPatch = async <T>(
   payload?: any,
   customConfig: AxiosRequestConfig = {},
 ): Promise<T> => {
-  const config = getConfig(customConfig)
+  const config = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+    ...customConfig,
+  }
+
   return (
     axios
-      .patch(url, payload, config)
+      .post(url, payload, config)
       // @ts-ignore
       .then((response) => response.data as T)
   )
