@@ -39,6 +39,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     },
     extra: {
       borrower: '0x08534d9b632a7A35d7af4aAe5d487A15FC247691',
+      investorReportLink: 'https://docsend.com/view/s/kqgcgyazduf942xi',
     },
   },
   ArfCreditPool6Months: {
@@ -76,6 +77,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     },
     extra: {
       borrower: '0x08534d9b632a7A35d7af4aAe5d487A15FC247691',
+      investorReportLink: 'https://docsend.com/view/s/kqgcgyazduf942xi',
     },
   },
 }

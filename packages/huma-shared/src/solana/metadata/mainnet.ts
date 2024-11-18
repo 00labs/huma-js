@@ -38,6 +38,7 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
     },
     extra: {
       hasReceivables: true,
+      investorReportLink: 'https://docsend.com/view/s/at55wptaq9mc3dhu',
     },
   },
   ArfCreditPool6Months: {
@@ -69,6 +70,7 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
     },
     extra: {
       hasReceivables: true,
+      investorReportLink: 'https://docsend.com/view/s/at55wptaq9mc3dhu',
     },
   },
 }

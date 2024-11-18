@@ -112,6 +112,7 @@ export type PoolInfoV2 = {
     borrower?: string // For single borrower pools
     rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
     enableGetTestUSDC?: boolean
+    investorReportLink?: string
   }
   redirect?: REDIRECTS
 }

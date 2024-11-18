@@ -36,6 +36,7 @@ export type SolanaPoolInfo = {
     isClosed?: boolean
     hidden?: boolean
     hasReceivables?: boolean
+    investorReportLink?: string
   }
 }
 
