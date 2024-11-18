@@ -1,4 +1,4 @@
-import { NETWORK_TYPE } from 'utils'
+import { NETWORK_TYPE } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { requestGet, requestPatch, requestPost } from '../utils/request'
 
