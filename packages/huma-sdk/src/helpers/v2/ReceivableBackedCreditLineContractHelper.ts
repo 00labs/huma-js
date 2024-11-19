@@ -13,7 +13,7 @@ import {
   POOL_TYPE,
   RECEIVABLE_BACKED_CREDIT_LINE_V2_ABI,
 } from '@huma-finance/shared'
-import { ReceivableBackedCreditLine } from '@huma-finance/shared/src/v2/abis/types'
+import { ReceivableBackedCreditLine } from '@huma-finance/shared/src/evm/v2/abis/types'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { getChainConfirmations, getContract } from '../../utils'
 import { approveERC20AllowanceIfInsufficient } from '../ERC20ContractHelper'

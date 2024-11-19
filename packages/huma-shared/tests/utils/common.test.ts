@@ -1,4 +1,4 @@
-import { isEmpty, openInNewTab, sleep } from '../../src/utils/common'
+import { isEmpty, openInNewTab, sleep } from '../../src/common/utils/common'
 
 describe('isEmpty', () => {
   it('returns true if the value is undefined', () => {

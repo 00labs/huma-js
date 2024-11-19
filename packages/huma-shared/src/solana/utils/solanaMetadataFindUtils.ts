@@ -1,4 +1,4 @@
-import { POOL_NAME } from '../../utils'
+import { POOL_NAME } from '../../common'
 import { SolanaPoolInfo, SolanaPoolsInfo } from '../pool'
 
 export const findSolanaPoolByPDA = (

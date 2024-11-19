@@ -1,6 +1,6 @@
 import { BN } from '@coral-xyz/anchor'
 
-import { getPoolApyV2 } from '../../utils/apy'
+import { getPoolApyV2 } from '../../evm/utils/apy'
 import { SOLANA_BP_FACTOR } from '../const'
 
 export const getSolanaPoolApy = (

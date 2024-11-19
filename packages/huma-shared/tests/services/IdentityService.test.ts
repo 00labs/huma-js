@@ -1,11 +1,11 @@
-import { requestPut } from '../../src/utils/request'
-import { IdentityService } from '../../src/services/IdentityService'
+import { IdentityService } from '../../src/common/services/IdentityService'
+import { requestPut } from '../../src/common/utils/request'
 
-jest.mock('../../src/utils/request', () => ({
+jest.mock('../../src/common/utils/request', () => ({
   requestPut: jest.fn(),
 }))
 
-jest.mock('../../src/utils/config', () => ({
+jest.mock('../../src/common/utils/config', () => ({
   configUtil: {
     getIdentityAPIUrl: jest.fn().mockReturnValue('http://localhost'),
   },

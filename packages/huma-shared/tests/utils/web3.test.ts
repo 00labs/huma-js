@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Contract } from 'ethers'
-import { AddressZero } from '@ethersproject/constants'
-import { getContract, isAddress } from '../../src/utils/web3'
+import { getContract, isAddress } from '../../src/evm/utils/web3'
 
 describe('isAddress', () => {
   it('returns the checksummed address if the address is valid', () => {

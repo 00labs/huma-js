@@ -8,7 +8,7 @@ import {
   increaseGasLimit,
   isTxFailed,
   TxStateType,
-} from '../../src/utils/transaction'
+} from '../../src/evm/utils/transaction'
 
 describe('isTxFailed', () => {
   it('returns true for failed transaction states', () => {

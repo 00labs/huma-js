@@ -1,9 +1,9 @@
-import { Box, Button } from '@mui/material'
 import {
   getSolanaExplorerUrl,
   openInNewTab,
   SolanaChainEnum,
 } from '@huma-finance/shared'
+import { Box, Button } from '@mui/material'
 import React from 'react'
 
 type Props = {

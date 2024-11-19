@@ -1,4 +1,4 @@
-import { Campaign } from '@huma-finance/shared'
+import { Campaign, StellarPoolInfo } from '@huma-finance/shared'
 
 export type StellarPoolState = {
   poolAddress: string
@@ -36,5 +36,5 @@ export type StellarPoolState = {
     protocolIncomeWithdrawn: string
     poolOwnerIncomeWithdrawn: string
   }
-  campaign?: Campaign
+  campaign?: Campaign<StellarPoolInfo>
 }

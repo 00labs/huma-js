@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChainEnum } from '../../src/utils/chain'
+import { POOL_NAME, POOL_TYPE } from '../../src/common/utils/pool'
+import { ChainEnum } from '../../src/evm/utils/chain'
 import {
-  POOL_NAME,
-  POOL_TYPE,
   getPoolInfo,
   getPoolInfoForPoolAddress,
   isPoolName,
   usePools,
-} from '../../src/utils/pool'
+} from '../../src/evm/utils/pool'
 
 describe('getPoolInfo', () => {
   it('returns undefined if chainId is undefined', () => {

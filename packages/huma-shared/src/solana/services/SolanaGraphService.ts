@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request'
 
-import { configUtil } from '../../utils/config'
-import { requestPost } from '../../utils/request'
+import { configUtil } from '../../common/utils/config'
+import { requestPost } from '../../common/utils/request'
 
 export type SolanaEvent = {
   name: string

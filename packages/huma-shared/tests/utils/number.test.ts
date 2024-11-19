@@ -6,7 +6,7 @@ import {
   formatNumber,
   toBigNumber,
   upScale,
-} from '../../src/utils/number'
+} from '../../src/common/utils/number'
 
 describe('formatMoney', () => {
   it('returns the input if it is empty', () => {

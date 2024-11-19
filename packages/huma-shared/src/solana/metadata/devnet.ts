@@ -1,5 +1,4 @@
-import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
-import { ARF_PERSONA_KYC_COPY } from '../../v2'
+import { ARF_PERSONA_KYC_COPY, POOL_NAME, POOL_TYPE } from '../../common'
 import { SolanaChainEnum } from '../chain'
 import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
 

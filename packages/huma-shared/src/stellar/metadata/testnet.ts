@@ -1,6 +1,6 @@
+import { POOL_NAME, POOL_TYPE } from '../../common'
 import { StellarChainEnum } from '../chain'
 import { StellarPoolsInfo } from '../types/metadata'
-import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 
 export const STELLAR_TESTNET_METADATA: StellarPoolsInfo = {
   Roam: {

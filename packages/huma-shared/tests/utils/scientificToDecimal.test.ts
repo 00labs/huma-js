@@ -1,4 +1,4 @@
-import { scientificToDecimal } from '../../src/utils/scientificToDecimal'
+import { scientificToDecimal } from '../../src/common/utils/scientificToDecimal'
 
 describe('scientificToDecimal', () => {
   it('returns the decimal representation of a scientific notation number', () => {

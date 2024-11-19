@@ -33,12 +33,12 @@ import {
   PoolSafe,
   Receivable,
   TrancheVault,
-} from '@huma-finance/shared/src/v2/abis/types'
-import { CreditManager } from '@huma-finance/shared/src/v2/abis/types/CreditManager'
+} from '@huma-finance/shared/src/evm/v2/abis/types'
+import { CreditManager } from '@huma-finance/shared/src/evm/v2/abis/types/CreditManager'
 import {
   LPConfigStructOutput,
   PoolSettingsStructOutput,
-} from '@huma-finance/shared/src/v2/abis/types/PoolConfig'
+} from '@huma-finance/shared/src/evm/v2/abis/types/PoolConfig'
 import { BigNumber, Contract } from 'ethers'
 import { useEffect, useState } from 'react'
 

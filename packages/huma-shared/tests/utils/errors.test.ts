@@ -1,11 +1,11 @@
-import { EARejectMessage } from '../../src/utils/const'
 import {
   DEFAULT_ERROR_ACTION,
   DEFAULT_ERROR_HEADER,
   EARejectionError,
   IntegrationError,
   MetaMaskConnectionError,
-} from '../../src/utils/errors'
+} from '../../src/common/utils/errors'
+import { EARejectMessage } from '../../src/evm/utils/const'
 
 describe('IntegrationError', () => {
   it('sets the correct properties', () => {

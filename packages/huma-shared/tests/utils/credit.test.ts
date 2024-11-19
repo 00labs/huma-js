@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BigNumber } from 'ethers'
 
-import { CreditState, hasRFActiveLoan } from '../../src/utils/credit'
+import { CreditState, hasRFActiveLoan } from '../../src/evm/utils/credit'
 
 describe('hasRFActiveLoan', () => {
   it('returns false if creditRecord or receivableInfo is undefined', () => {

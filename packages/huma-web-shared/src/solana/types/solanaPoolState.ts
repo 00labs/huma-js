@@ -1,4 +1,4 @@
-import { SolanaCampaign } from '@huma-finance/shared'
+import { Campaign, SolanaPoolInfo } from '@huma-finance/shared'
 
 export type SolanaPoolState = {
   poolId?: string
@@ -35,5 +35,5 @@ export type SolanaPoolState = {
     protocolIncomeWithdrawn: string
     poolOwnerIncomeWithdrawn: string
   }
-  campaign?: SolanaCampaign
+  campaign?: Campaign<SolanaPoolInfo>
 }

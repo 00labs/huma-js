@@ -1,5 +1,4 @@
-import { POOL_NAME, POOL_TYPE } from '../utils'
-import { IndustryType, KYCType } from '../v2'
+import { IndustryType, KYCType, POOL_NAME, POOL_TYPE } from '../common'
 import { SolanaChainEnum } from './chain'
 import { SOLANA_DEVNET_INFO, SOLANA_DEVNET_METADATA } from './metadata/devnet'
 import {

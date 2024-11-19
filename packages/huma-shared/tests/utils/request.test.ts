@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { requestGet, requestPut } from '../../src/utils/request'
+import { requestGet, requestPut } from '../../src/common/utils/request'
 
 jest.mock('axios')
 

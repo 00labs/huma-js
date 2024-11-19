@@ -1,7 +1,6 @@
+import { IndustryType, POOL_NAME, POOL_TYPE } from '../../common'
 import { StellarChainEnum } from '../chain'
 import { STELLAR_TESTNET_METADATA } from '../metadata/testnet'
-import { POOL_NAME, POOL_TYPE } from '../../utils'
-import { IndustryType } from '../../v2'
 
 export type StellarPoolInfo = {
   title: string

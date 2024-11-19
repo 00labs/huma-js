@@ -1,5 +1,5 @@
 import { formatNumber, PoolInfoV2, TrancheType } from '@huma-finance/shared'
-import { LPConfigStructOutput } from '@huma-finance/shared/src/v2/abis/types/PoolConfig'
+import { LPConfigStructOutput } from '@huma-finance/shared/src/evm/v2/abis/types/PoolConfig'
 import {
   usePoolSafeAllowanceV2,
   usePoolUnderlyingTokenBalanceV2,

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChainEnum } from '../../src/utils/chain'
+import { ChainEnum } from '../../src/evm/utils/chain'
 import {
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
-} from '../../src/utils/notifi'
+} from '../../src/evm/utils/notifi'
 
 describe('getBlockchainConfigFromChain', () => {
   it('returns POLYGON for Polygon and Mumbai chains', () => {

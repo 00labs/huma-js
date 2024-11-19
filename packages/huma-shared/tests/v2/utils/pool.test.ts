@@ -1,11 +1,12 @@
-import { ChainEnum, POOL_NAME } from '../../../src/utils'
+import { POOL_NAME } from '../../../src/common/utils/pool'
+import { ChainEnum } from '../../../src/evm/utils/chain'
 import {
-  getChainPoolNamesV2,
   CHAIN_POOLS_INFO_V2,
+  getChainPoolNamesV2,
   getPoolInfoForPoolAddressV2,
-} from '../../../src/v2/utils'
+} from '../../../src/evm/v2/utils'
 
-jest.mock('../../../src/v2/metadata/localhost', () => ({
+jest.mock('../../../src/evm/v2/metadata/localhost', () => ({
   LOCALHOST_METADATA: {
     JiaV2: {
       poolName: 'JiaV2',

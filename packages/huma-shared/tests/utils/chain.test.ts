@@ -9,7 +9,7 @@ import {
   isChainEnum,
   supportedChainId,
   URLS,
-} from '../../src/utils/chain'
+} from '../../src/evm/utils/chain'
 
 describe('isChainEnum', () => {
   it('should return true for valid chainId', () => {

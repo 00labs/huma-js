@@ -2,15 +2,15 @@ import {
   ApprovalResult,
   EAPayload,
   EAService,
-} from '../../src/services/EAService'
-import { EARejectionError } from '../../src/utils/errors'
-import { requestPost } from '../../src/utils/request'
+} from '../../src/common/services/EAService'
+import { EARejectionError } from '../../src/common/utils/errors'
+import { requestPost } from '../../src/common/utils/request'
 
-jest.mock('../../src/utils/request', () => ({
+jest.mock('../../src/common/utils/request', () => ({
   requestPost: jest.fn(),
 }))
 
-jest.mock('../../src/utils/config', () => ({
+jest.mock('../../src/common/utils/config', () => ({
   configUtil: {
     getEAVerseUrl: jest.fn().mockReturnValue('http://localhost'),
     getEABaseUrlV1: jest.fn().mockReturnValue('http://localhost'),

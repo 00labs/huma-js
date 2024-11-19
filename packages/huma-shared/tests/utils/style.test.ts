@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { combineStyles } from '../../src/utils/style'
+import { combineStyles } from '../../src/common/utils/style'
 
 describe('combineStyles', () => {
   it('combines multiple styles into a single style object', () => {

@@ -5,7 +5,7 @@ import {
   getChainIdFromSignerOrProvider,
   getContract,
   getERC20Contract,
-} from '../../../src/utils'
+} from '../../../src/evm/utils'
 import {
   getCurrentEpochInfoV2,
   getEpochManagerContractV2,
@@ -18,21 +18,21 @@ import {
   getTrancheAssetsToSharesV2,
   getTrancheSharesToAssetsV2,
   getTrancheVaultAssetsV2,
-} from '../../../src/v2/utils'
-import { getTrancheVaultContractV2 } from '../../../src/v2/utils/trancheVaultContract'
+} from '../../../src/evm/v2/utils'
+import { getTrancheVaultContractV2 } from '../../../src/evm/v2/utils/trancheVaultContract'
 
-jest.mock('../../../src/utils/web3', () => ({
+jest.mock('../../../src/evm/utils/web3', () => ({
   getContract: jest.fn(),
   getERC20Contract: jest.fn(),
 }))
 
-jest.mock('../../../src/utils/chain', () => ({
-  ...jest.requireActual('../../../src/utils/chain'),
+jest.mock('../../../src/evm/utils/chain', () => ({
+  ...jest.requireActual('../../../src/evm/utils/chain'),
   getChainIdFromSignerOrProvider: jest.fn(),
 }))
 
-jest.mock('../../../src/v2/utils/pool', () => ({
-  ...jest.requireActual('../../../src/v2/utils/pool'),
+jest.mock('../../../src/evm/v2/utils/pool', () => ({
+  ...jest.requireActual('../../../src/evm/v2/utils/pool'),
   CHAIN_POOLS_INFO_V2: {
     5: {
       JiaV2: {

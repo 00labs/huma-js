@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import moment from 'moment'
+import { sleep } from '../../src/common/utils/common'
 import {
   getUnixTimestamp,
   secondsToDays,
   timestampToLL,
   timestampToStr,
-} from '../../src/utils/time'
-import { sleep } from '../../src/utils/common'
+} from '../../src/common/utils/time'
 
 describe('timestampToStr', () => {
   it('returns the formatted date string based on the given timestamp and format', () => {

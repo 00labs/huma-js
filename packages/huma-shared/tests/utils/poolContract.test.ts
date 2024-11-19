@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BigNumber } from 'ethers'
 
-import { getChainIdFromSignerOrProvider } from '../../src/utils/chain'
-import { getPoolApr } from '../../src/utils/poolContract'
-import { getContract } from '../../src/utils/web3'
-import { getPoolInfo } from '../../src/utils/pool'
+import { getChainIdFromSignerOrProvider } from '../../src/evm/utils/chain'
+import { getPoolInfo } from '../../src/evm/utils/pool'
+import { getPoolApr } from '../../src/evm/utils/poolContract'
+import { getContract } from '../../src/evm/utils/web3'
 
-jest.mock('../../src/utils/pool', () => ({
+jest.mock('../../src/evm/utils/pool', () => ({
   PoolContractMap: {
     5: {
       CreditLine: {
@@ -29,18 +29,18 @@ jest.mock('../../src/utils/pool', () => ({
   },
 }))
 
-jest.mock('../../src/utils/chain', () => ({
+jest.mock('../../src/evm/utils/chain', () => ({
   getContract: jest.fn(),
   getERC20Contract: jest.fn(),
   getChainIdFromSignerOrProvider: jest.fn(),
 }))
 
-jest.mock('../../src/utils/web3', () => ({
+jest.mock('../../src/evm/utils/web3', () => ({
   getContract: jest.fn(),
   getERC20Contract: jest.fn(),
 }))
 
-jest.mock('../../src/utils/pool', () => ({
+jest.mock('../../src/evm/utils/pool', () => ({
   getPoolInfo: jest.fn(),
 }))
 

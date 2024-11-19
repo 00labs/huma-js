@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CHAINS, ChainEnum } from '../../src/utils/chain'
-import { configUtil } from '../../src/utils/config'
+import { configUtil } from '../../src/common/utils/config'
+import { CHAINS, ChainEnum } from '../../src/evm/utils/chain'
 
 describe('getEAVerseUrl', () => {
   it('returns the correct URL for a given chain id in production', () => {
