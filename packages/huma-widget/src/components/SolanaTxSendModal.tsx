@@ -1,5 +1,9 @@
 import { SolanaChainEnum } from '@huma-finance/shared'
 import React, { useEffect, useState } from 'react'
+import {
+  buildOptimalTransactionFromConnection,
+  extractWritableAccounts,
+} from '@huma-finance/sdk'
 
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
@@ -31,14 +35,21 @@ export function SolanaTxSendModal({
       }
 
       try {
-        const latestBlockHash = await connection.getLatestBlockhash()
-        const signature = await sendTransaction(tx, connection)
+        const lockedWritableAccounts = extractWritableAccounts(tx)
+        const optimizedTx = await buildOptimalTransactionFromConnection(
+          tx,
+          lockedWritableAccounts,
+          connection,
+        )
+        const signature = await sendTransaction(optimizedTx, connection, {
+          maxRetries: 5,
+          preflightCommitment: 'confirmed',
+        })
         setSignature(signature)
         dispatch(setSolanaSignature(signature))
-
         await connection.confirmTransaction({
-          blockhash: latestBlockHash.blockhash,
-          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          blockhash: optimizedTx.recentBlockhash!,
+          lastValidBlockHeight: optimizedTx.lastValidBlockHeight!,
           signature,
         })
         handleSuccess({ signature })
