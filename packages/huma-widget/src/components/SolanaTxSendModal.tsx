@@ -1,4 +1,4 @@
-import { SolanaChainEnum } from '@huma-finance/shared'
+import { sleep, SolanaChainEnum } from '@huma-finance/shared'
 import React, { useEffect, useState } from 'react'
 import {
   buildOptimalTransactionFromConnection,
@@ -34,6 +34,7 @@ export function SolanaTxSendModal({
         return
       }
 
+      let signatureResult = ''
       try {
         // Optimize transaction
         const lockedWritableAccounts = extractWritableAccounts(tx)
@@ -42,20 +43,40 @@ export function SolanaTxSendModal({
           lockedWritableAccounts,
           connection,
         )
-        const signature = await sendTransaction(optimizedTx, connection, {
-          maxRetries: 5,
+        signatureResult = await sendTransaction(optimizedTx, connection, {
           preflightCommitment: 'confirmed',
           skipPreflight: true,
         })
-        setSignature(signature)
-        dispatch(setSolanaSignature(signature))
+        setSignature(signatureResult)
+        dispatch(setSolanaSignature(signatureResult))
         await connection.confirmTransaction({
           blockhash: optimizedTx.recentBlockhash!,
           lastValidBlockHeight: optimizedTx.lastValidBlockHeight!,
-          signature,
+          signature: signatureResult,
         })
-        handleSuccess({ signature })
+        handleSuccess({ signature: signatureResult })
       } catch (error: unknown) {
+        let signatureStatusRetries = 0
+
+        while (signatureStatusRetries < 5) {
+          // Attempt to load the signature status using transaction history
+          // eslint-disable-next-line no-await-in-loop
+          await sleep(1000)
+          // eslint-disable-next-line no-await-in-loop
+          const result = await connection.getSignatureStatus(signatureResult, {
+            searchTransactionHistory: true,
+          })
+          if (
+            result?.value?.confirmationStatus === 'finalized' ||
+            result?.value?.confirmationStatus === 'confirmed'
+          ) {
+            handleSuccess({ signature: signatureResult })
+            return
+          }
+
+          signatureStatusRetries += 1
+        }
+
         const err = error as Error
         dispatch(setError({ errorMessage: err?.message || '' }))
       }
