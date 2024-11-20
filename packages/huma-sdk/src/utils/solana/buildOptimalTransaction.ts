@@ -38,7 +38,7 @@ async function buildOptimalTransactionImpl(
     0,
   )
   averagePrioritizationFee = Math.ceil(
-    (averagePrioritizationFee / recentPrioritizationFees.length) * 1.5,
+    (averagePrioritizationFee / recentPrioritizationFees.length) * 2000,
   )
 
   tx.instructions.unshift(
