@@ -1,4 +1,4 @@
-import { sleep, SolanaChainEnum } from '@huma-finance/shared'
+import { SolanaChainEnum } from '@huma-finance/shared'
 import React, { useEffect, useState } from 'react'
 import {
   buildOptimalTransactionFromConnection,
@@ -24,13 +24,13 @@ export function SolanaTxSendModal({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { sendTransaction, signTransaction, publicKey } = useWallet()
+  const { sendTransaction } = useWallet()
   const { connection } = useConnection()
   const [signature, setSignature] = useState<string>('')
 
   useEffect(() => {
     async function sendTx() {
-      if (!connection || !tx || !publicKey || !signTransaction) {
+      if (!connection || !tx) {
         return
       }
 
@@ -42,43 +42,11 @@ export function SolanaTxSendModal({
           lockedWritableAccounts,
           connection,
         )
-        optimizedTx.feePayer = publicKey
-
-        // Sign and serialize transaction
-        const signedTx = await signTransaction(optimizedTx)
-        signedTx.recentBlockhash = optimizedTx.recentBlockhash
-        signedTx.lastValidBlockHeight = optimizedTx.lastValidBlockHeight
-        const rawTransaction = signedTx.serialize()
-
-        // Try to send raw transaction multiple times through RPC
-        let blockheight = await connection.getBlockHeight()
-        let signature
-        let sendCount = 0
-        while (blockheight < signedTx.lastValidBlockHeight! && sendCount < 10) {
-          console.log(blockheight)
-          signature = connection.sendRawTransaction(rawTransaction, {
-            preflightCommitment: 'confirmed',
-            skipPreflight: true,
-          })
-          /* eslint-disable no-await-in-loop */
-          await sleep(500)
-          /* eslint-disable no-await-in-loop */
-          blockheight = await connection.getBlockHeight()
-          sendCount += 1
-        }
-
-        signature = await signature
-        if (!signature) {
-          dispatch(
-            setError({
-              errorMessage:
-                'Failed to send transaction due to transaction signature expiration (~1.5 minutes). Please try again.',
-            }),
-          )
-          return
-        }
-
-        // Confirm transaction
+        const signature = await sendTransaction(optimizedTx, connection, {
+          maxRetries: 5,
+          preflightCommitment: 'confirmed',
+          skipPreflight: true,
+        })
         setSignature(signature)
         dispatch(setSolanaSignature(signature))
         await connection.confirmTransaction({
@@ -93,15 +61,7 @@ export function SolanaTxSendModal({
       }
     }
     sendTx()
-  }, [
-    connection,
-    dispatch,
-    handleSuccess,
-    sendTransaction,
-    tx,
-    publicKey,
-    signTransaction,
-  ])
+  }, [connection, dispatch, handleSuccess, sendTransaction, tx])
 
   return (
     <LoadingModal
