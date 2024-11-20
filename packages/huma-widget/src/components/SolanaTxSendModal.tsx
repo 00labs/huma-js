@@ -44,6 +44,7 @@ export function SolanaTxSendModal({
         const signature = await sendTransaction(optimizedTx, connection, {
           maxRetries: 5,
           preflightCommitment: 'confirmed',
+          skipPreflight: true,
         })
         setSignature(signature)
         dispatch(setSolanaSignature(signature))
