@@ -1,5 +1,6 @@
+import { NETWORK_TYPE } from '../utils/chain'
 import { configUtil } from '../utils/config'
-import { requestGet, requestPost } from '../utils/request'
+import { requestGet, requestPatch, requestPost } from '../utils/request'
 
 /**
  * Enum representing the identity status V2.
@@ -64,9 +65,29 @@ export type ResumeVerificationResultV2 = {
  * Object representing the Huma account.
  * @typedef {Object} HumaAccount
  * @property {string} accountId The account id.
+ * @property {string} name The account name.
  */
 export type HumaAccount = {
   accountId: string
+  name: string
+}
+
+/**
+ * Object representing the Huma account.
+ * @typedef {Object} HumaAccount
+ * @property {string} accountId The account id.
+ * @property {string} name The account name.
+ * @property {Wallet[]} wallets The account wallets.
+ * @property {boolean} isNewAccount Is new account or not.
+ */
+export type LoginResult = {
+  accountId: string
+  name: string
+  wallets: {
+    address: string
+    chainId: string
+  }[]
+  isNewAccount: boolean
 }
 
 /**
@@ -248,6 +269,45 @@ const getHumaAccount = async (
     )}/wallets/${walletAddress}/account?chainId=${chainId}`,
   )
 
+/**
+ * Huma account login by wallet address and chain.
+ *
+ * @param {string} walletAddress The wallet address.
+ * @param {number} chainId Chain ID.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const humaAccountLogin = async (
+  walletAddress: string,
+  chainId: number,
+  isDev = false,
+): Promise<LoginResult> =>
+  requestPost<LoginResult>(
+    `${configUtil.getIdentityAPIUrl(chainId, isDev)}/auth/login`,
+    {
+      walletAddress,
+      chainId: String(chainId),
+    },
+  )
+
+/**
+ * Update huma account.
+ *
+ * @param {string} networkType Network type.
+ * @param {boolean} isDev Is dev environment or not.
+ * @param {HumaAccount} humaAccount The Huma account.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const humaAccountUpdate = async (
+  networkType: NETWORK_TYPE,
+  humaAccount: Partial<HumaAccount>,
+  isDev = false,
+): Promise<void> =>
+  requestPatch(
+    `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/account`,
+    humaAccount,
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -257,4 +317,6 @@ export const IdentityServiceV2 = {
   approveLender,
   authenticate,
   getHumaAccount,
+  humaAccountLogin,
+  humaAccountUpdate,
 }

@@ -49,11 +49,12 @@ export const useActiveChainInfo = (
   const evmChainInfo = useChainInfo(isDev, CHAIN_TYPE.EVM)
   const solanaChainInfo = useChainInfo(isDev, CHAIN_TYPE.SOLANA)
 
-  if (activeNetwork === CHAIN_TYPE.EVM) {
-    return evmChainInfo
+  switch (activeNetwork) {
+    case CHAIN_TYPE.EVM:
+      return evmChainInfo
+    case CHAIN_TYPE.SOLANA:
+      return solanaChainInfo
+    default:
+      return null
   }
-  if (activeNetwork === CHAIN_TYPE.SOLANA) {
-    return solanaChainInfo
-  }
-  return null
 }

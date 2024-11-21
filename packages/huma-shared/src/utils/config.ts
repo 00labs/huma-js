@@ -44,6 +44,14 @@ const getIdentityAPIUrl = (chainId: number, isDev = false) =>
     isDev,
   )}.identity-verification.huma.finance`
 
+const getIdentityAPIUrlV2 = (
+  networkType: 'testnet' | 'mainnet',
+  isDev = false,
+) =>
+  `https://${getDevPrefix(
+    isDev,
+  )}${networkType}.identity-verification.huma.finance`
+
 const getAuthServiceUrl = (chainId: number, isDev = false) =>
   `https://${getNetworkAgnosticServiceUrlPrefix(
     chainId,
@@ -108,6 +116,7 @@ export const configUtil = {
   getEABaseUrlV1,
   getRequestAPIUrl,
   getIdentityAPIUrl,
+  getIdentityAPIUrlV2,
   getAuthServiceUrl,
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,

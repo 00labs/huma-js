@@ -1,6 +1,11 @@
 import type { AddEthereumChainParameter } from '@web3-react/types'
 import { ethers } from 'ethers'
 
+export enum NETWORK_TYPE {
+  testnet = 'testnet',
+  mainnet = 'mainnet',
+}
+
 export enum CHAIN_TYPE {
   EVM = 'evm',
   SOLANA = 'solana',
