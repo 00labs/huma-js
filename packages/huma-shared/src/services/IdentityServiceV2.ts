@@ -330,12 +330,31 @@ const humaAccountLogout = async (
  */
 const humaAccountUpdate = async (
   networkType: NETWORK_TYPE,
-  humaAccount: Partial<HumaAccount>,
+  humaAccount: { name: string },
   isDev = false,
 ): Promise<void> =>
   requestPatch(
     `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/account`,
     humaAccount,
+  )
+
+/**
+ * Update huma account referral code.
+ *
+ * @param {string} networkType Network type.
+ * @param {string} referralCode The referral code.
+ * @param {boolean} isDev Is dev environment or not.
+ * @param {HumaAccount} humaAccount The Huma account.
+ * @returns {Promise<void>} Promise that returns void.
+ */
+const humaAccountUpdateReferral = async (
+  networkType: NETWORK_TYPE,
+  referralCode: string,
+  isDev = false,
+): Promise<void> =>
+  requestPost(
+    `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/account/referral`,
+    { referralCode },
   )
 
 /**
@@ -375,4 +394,5 @@ export const IdentityServiceV2 = {
   humaAccountLogout,
   humaAccountUpdate,
   humaAccountAddWallet,
+  humaAccountUpdateReferral,
 }
