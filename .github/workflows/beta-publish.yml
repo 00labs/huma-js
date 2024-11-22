@@ -3,7 +3,7 @@ name: Beta NPM Packages Publishing
 on:
   pull_request:
     types: [closed]
-    branches: ["develop", "v2"]
+    branches: ["develop", "v2", "solana"]
   workflow_dispatch:
 
 jobs:
@@ -46,4 +46,4 @@ jobs:
 
       - name: Publish packages
         run: |
-          yarn lerna:publish:canary --yes
+          yarn lerna:publish:canary --yes --force-publish

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Approval } from '@huma-finance/shared'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import {
   initialWidgetState,
@@ -32,6 +32,8 @@ export const widgetSlice = createSlice({
       state.withdrawShares = undefined
       state.redeemAmount = undefined
       state.redeemShares = undefined
+      state.solanaSignature = undefined
+      state.txHash = undefined
     },
     setStep: (state, { payload }: PayloadAction<WIDGET_STEP>) => {
       state.step = payload
@@ -102,6 +104,18 @@ export const widgetSlice = createSlice({
     setMultisend: (state, { payload }: PayloadAction<MultisendPayload>) => {
       state.multisend = payload
     },
+    setSolanaSignature: (state, { payload }: PayloadAction<string>) => {
+      state.solanaSignature = payload
+    },
+    setTxHash: (state, { payload }: PayloadAction<string>) => {
+      state.txHash = payload
+    },
+    setPointsAccumulated: (
+      state,
+      { payload }: PayloadAction<number | undefined>,
+    ) => {
+      state.pointsAccumulated = payload
+    },
     setError: (
       state,
       {
@@ -130,6 +144,9 @@ export const {
   setWithdrawShares,
   setRedeemAmount,
   setRedeemShares,
+  setSolanaSignature,
+  setTxHash,
+  setPointsAccumulated,
 } = widgetSlice.actions
 
 export default widgetSlice.reducer

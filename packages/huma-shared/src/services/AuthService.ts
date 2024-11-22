@@ -10,7 +10,10 @@ const createSession = async (
   isDev: boolean = false,
 ): Promise<CreateSessionResult> =>
   requestPost<CreateSessionResult>(
-    `${configUtil.getAuthServiceUrl(chainId, isDev)}/session`,
+    `${configUtil.getAuthServiceUrl(
+      chainId,
+      isDev,
+    )}/session?chainId=${chainId}`,
   )
 
 const verifySignature = async (
@@ -20,14 +23,35 @@ const verifySignature = async (
   isDev: boolean = false,
 ): Promise<null> =>
   requestPost<null>(
-    `${configUtil.getAuthServiceUrl(chainId, isDev)}/verify-signature`,
+    `${configUtil.getAuthServiceUrl(
+      chainId,
+      isDev,
+    )}/verify-signature?chainId=${chainId}`,
     {
       message,
       signature,
     },
   )
 
+const verifySolanaTx = async (
+  message: string,
+  serializedTx: string,
+  chainId: number,
+  isDev: boolean = false,
+): Promise<null> =>
+  requestPost<null>(
+    `${configUtil.getAuthServiceUrl(
+      chainId,
+      isDev,
+    )}/verify-signature?chainId=${chainId}`,
+    {
+      message,
+      serializedTx,
+    },
+  )
+
 export const AuthService = {
   createSession,
   verifySignature,
+  verifySolanaTx,
 }

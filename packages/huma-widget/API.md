@@ -38,6 +38,20 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Receivable backed credit line borrow widget V2</p></dd>
 <dt><a href="#ReceivableBackedCreditLinePaymentWidgetV2">ReceivableBackedCreditLinePaymentWidgetV2(props)</a> ⇒</dt>
 <dd><p>Receivable backed credit line payment widget V2</p></dd>
+<dt><a href="#SolanaLendSupplyWidget">SolanaLendSupplyWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Solana pools</p></dd>
+<dt><a href="#SolanaLendAddRedemptionWidget">SolanaLendAddRedemptionWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Solana pools</p></dd>
+<dt><a href="#SolanaLendCancelRedemptionWidget">SolanaLendCancelRedemptionWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Solana pools</p></dd>
+<dt><a href="#SolanaBorrowWidget">SolanaBorrowWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Solana pools</p></dd>
+<dt><a href="#SolanaPaymentWidget">SolanaPaymentWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Solana pools</p></dd>
+<dt><a href="#StellarLendSupplyWidget">StellarLendSupplyWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Stellar pools</p></dd>
+<dt><a href="#SolanaEnableAutoRedemptionWidget">SolanaEnableAutoRedemptionWidget(props)</a></dt>
+<dd><p>Lend pool supply widget for Solana pools</p></dd>
 </dl>
 
 ## Typedefs
@@ -55,6 +69,10 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Credit line pool payment props</p></dd>
 <dt><a href="#CreditLinePaymentPropsV2">CreditLinePaymentPropsV2</a> : <code>Object</code></dt>
 <dd><p>Credit line pool payment props V2</p></dd>
+<dt><a href="#SolanaBorrowProps">SolanaBorrowProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
+<dt><a href="#SolanaPaymentProps">SolanaPaymentProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
 <dt><a href="#SupplyFirstLossCoverProps">SupplyFirstLossCoverProps</a> : <code>Object</code></dt>
 <dd><p>Supply first loss cover props</p></dd>
 <dt><a href="#InvoiceFactoringBorrowProps">InvoiceFactoringBorrowProps</a> : <code>Object</code></dt>
@@ -65,6 +83,16 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool add redemption props</p></dd>
 <dt><a href="#CancelRedemptionPropsV2">CancelRedemptionPropsV2</a> : <code>Object</code></dt>
 <dd><p>Lend pool cancel redemption request props</p></dd>
+<dt><a href="#SolanaLendAddRedemptionProps">SolanaLendAddRedemptionProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
+<dt><a href="#SolanaLendCancelRedemptionProps">SolanaLendCancelRedemptionProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
+<dt><a href="#SolanaEnableAutoRedemptionProps">SolanaEnableAutoRedemptionProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
+<dt><a href="#SolanaLendSupplyProps">SolanaLendSupplyProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
+<dt><a href="#StellarLendSupplyProps">StellarLendSupplyProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendSupplyProps">LendSupplyProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendSupplyPropsV2">LendSupplyPropsV2</a> : <code>Object</code></dt>
@@ -115,6 +143,22 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Receivable backed credit line pool borrow widget props V2</p></dd>
 <dt><a href="#ReceivableBackedCreditLinePaymentWidgetPropsV2">ReceivableBackedCreditLinePaymentWidgetPropsV2</a> : <code>Object</code></dt>
 <dd><p>Receivable backed credit line pool payment widget props V2</p></dd>
+<dt><a href="#GenericWidgetProps">GenericWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Object representing the props passed to Solana widgets</p></dd>
+<dt><a href="#SolanaLendSupplyWidgetProps">SolanaLendSupplyWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Solana pools</p></dd>
+<dt><a href="#SolanaLendAddRedemptionWidgetProps">SolanaLendAddRedemptionWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Solana pools</p></dd>
+<dt><a href="#SolanaLendCancelRedemptionWidgetProps">SolanaLendCancelRedemptionWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Solana pools</p></dd>
+<dt><a href="#SolanaBorrowWidgetProps">SolanaBorrowWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Solana pools</p></dd>
+<dt><a href="#SolanaPaymentWidgetProps">SolanaPaymentWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Solana pools</p></dd>
+<dt><a href="#StellarLendSupplyWidgetProps">StellarLendSupplyWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Stellar pools</p></dd>
+<dt><a href="#SolanaEnableAutoRedemptionWidgetProps">SolanaEnableAutoRedemptionWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool supply widget props for Solana pools</p></dd>
 </dl>
 
 <a name="InvoiceFactoringBorrowWidget"></a>
@@ -334,6 +378,83 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | props | [<code>ReceivableBackedCreditLinePaymentWidgetPropsV2</code>](#ReceivableBackedCreditLinePaymentWidgetPropsV2) | <p>The receivable backed credit line pool payment widget props V2.</p> |
 
+<a name="SolanaLendSupplyWidget"></a>
+
+## SolanaLendSupplyWidget(props)
+<p>Lend pool supply widget for Solana pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaLendSupplyWidgetProps</code>](#SolanaLendSupplyWidgetProps) | <p>Widget props</p> |
+
+<a name="SolanaLendAddRedemptionWidget"></a>
+
+## SolanaLendAddRedemptionWidget(props)
+<p>Lend pool supply widget for Solana pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaLendAddRedemptionWidgetProps</code>](#SolanaLendAddRedemptionWidgetProps) | <p>Widget props</p> |
+
+<a name="SolanaLendCancelRedemptionWidget"></a>
+
+## SolanaLendCancelRedemptionWidget(props)
+<p>Lend pool supply widget for Solana pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaLendCancelRedemptionWidgetProps</code>](#SolanaLendCancelRedemptionWidgetProps) | <p>Widget props</p> |
+
+<a name="SolanaBorrowWidget"></a>
+
+## SolanaBorrowWidget(props)
+<p>Lend pool supply widget for Solana pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaBorrowWidgetProps</code>](#SolanaBorrowWidgetProps) | <p>Widget props</p> |
+
+<a name="SolanaPaymentWidget"></a>
+
+## SolanaPaymentWidget(props)
+<p>Lend pool supply widget for Solana pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaPaymentWidgetProps</code>](#SolanaPaymentWidgetProps) | <p>Widget props</p> |
+
+<a name="StellarLendSupplyWidget"></a>
+
+## StellarLendSupplyWidget(props)
+<p>Lend pool supply widget for Stellar pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>StellarLendSupplyWidgetProps</code>](#StellarLendSupplyWidgetProps) | <p>Widget props</p> |
+
+<a name="SolanaEnableAutoRedemptionWidget"></a>
+
+## SolanaEnableAutoRedemptionWidget(props)
+<p>Lend pool supply widget for Solana pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaEnableAutoRedemptionWidgetProps</code>](#SolanaEnableAutoRedemptionWidgetProps) | <p>Widget props</p> |
+
 <a name="CreditLineApproveProps"></a>
 
 ## CreditLineApproveProps : <code>Object</code>
@@ -423,6 +544,33 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the credit line pool payment action is successful.</p> |
 
+<a name="SolanaBorrowProps"></a>
+
+## SolanaBorrowProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool. * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="SolanaPaymentProps"></a>
+
+## SolanaPaymentProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
 <a name="SupplyFirstLossCoverProps"></a>
 
 ## SupplyFirstLossCoverProps : <code>Object</code>
@@ -497,6 +645,81 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | trancheType | <code>TrancheType</code> | <p>The type of the tranche.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
+
+<a name="SolanaLendAddRedemptionProps"></a>
+
+## SolanaLendAddRedemptionProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool. * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| tranche | <code>POOL\_NTrancheTypeAME</code> | <p>The tranche type.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="SolanaLendCancelRedemptionProps"></a>
+
+## SolanaLendCancelRedemptionProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool. * @property {function():void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="SolanaEnableAutoRedemptionProps"></a>
+
+## SolanaEnableAutoRedemptionProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="SolanaLendSupplyProps"></a>
+
+## SolanaLendSupplyProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool.</p> |
+| pointsTestnetExperience | <code>boolean</code> | <p>If the user is in the testnet experience.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="StellarLendSupplyProps"></a>
+
+## StellarLendSupplyProps : <code>Object</code>
+<p>Lend pool supply props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>StellarPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>StellarPoolState</code> | <p>The current state config of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
 <a name="LendSupplyProps"></a>
 
@@ -836,3 +1059,51 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | ReceivableBackedCreditLinePaymentPropsV2 | <code>ReceivableBackedCreditLinePaymentPropsV2</code> | <p>Receivable backed credit line pool payment props V2.</p> |
 | WidgetProps | [<code>WidgetProps</code>](#WidgetProps) | <p>Widget general props.</p> |
 
+<a name="GenericWidgetProps"></a>
+
+## GenericWidgetProps : <code>Object</code>
+<p>Object representing the props passed to Solana widgets</p>
+
+**Kind**: global typedef  
+<a name="SolanaLendSupplyWidgetProps"></a>
+
+## SolanaLendSupplyWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Solana pools</p>
+
+**Kind**: global typedef  
+<a name="SolanaLendAddRedemptionWidgetProps"></a>
+
+## SolanaLendAddRedemptionWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Solana pools</p>
+
+**Kind**: global typedef  
+<a name="SolanaLendCancelRedemptionWidgetProps"></a>
+
+## SolanaLendCancelRedemptionWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Solana pools</p>
+
+**Kind**: global typedef  
+<a name="SolanaBorrowWidgetProps"></a>
+
+## SolanaBorrowWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Solana pools</p>
+
+**Kind**: global typedef  
+<a name="SolanaPaymentWidgetProps"></a>
+
+## SolanaPaymentWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Solana pools</p>
+
+**Kind**: global typedef  
+<a name="StellarLendSupplyWidgetProps"></a>
+
+## StellarLendSupplyWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Stellar pools</p>
+
+**Kind**: global typedef  
+<a name="SolanaEnableAutoRedemptionWidgetProps"></a>
+
+## SolanaEnableAutoRedemptionWidgetProps : <code>Object</code>
+<p>Lend pool supply widget props for Solana pools</p>
+
+**Kind**: global typedef  

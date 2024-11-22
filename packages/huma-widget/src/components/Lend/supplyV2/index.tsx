@@ -1,5 +1,5 @@
 import {
-  IdentityVerificationStatusV2,
+  CloseModalOptions,
   openInNewTab,
   POOL_NAME,
   TrancheType,
@@ -19,15 +19,16 @@ import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
+import { PointsEarned } from '../../PointsEarned'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { ChooseTranche } from './1-ChooseTranche'
 import { Evaluation } from './2-Evaluation'
-import { ChooseAmount } from './3-ChooseAmount'
-import { ApproveAllowance } from './4-ApproveAllowance'
-import { Transfer } from './5-Transfer'
-import { Success } from './6-Success'
-import { Notifications } from './7-Notifications'
-import { PointsEarned } from './8-PointsEarned'
+import { ApproveLender } from './3-ApproveLender'
+import { ChooseAmount } from './4-ChooseAmount'
+import { ApproveAllowance } from './5-ApproveAllowance'
+import { Transfer } from './6-Transfer'
+import { Success } from './7-Success'
+import { Notifications } from './8-Notifications'
 
 export interface Campaign {
   id: string
@@ -40,14 +41,14 @@ export interface Campaign {
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
- * @property {function((IdentityVerificationStatusV2|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
+ * @property {function((CloseModalOptions|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   pointsTestnetExperience: boolean
   campaign?: Campaign
-  handleClose: (identityStatus?: IdentityVerificationStatusV2) => void
+  handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: (blockNumber?: number) => void
 }
 
@@ -65,7 +66,6 @@ export function LendSupplyV2({
   const { poolUnderlyingToken } = poolInfo || {}
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
-  const [transactionHash, setTransactionHash] = useState<string | undefined>()
   const lpConfig = useLPConfigV2(poolName, provider)
   const isUniTranche = lpConfig?.maxSeniorJuniorRatio === 0
   const [lenderApprovedSenior] = useLenderApprovedV2(
@@ -88,11 +88,11 @@ export function LendSupplyV2({
 
   useEffect(() => {
     if (!step && poolInfo && lenderApproveStatusFetched && lpConfig) {
-      if (
-        campaign &&
-        !isUniTranche &&
-        (!lenderApprovedJunior || !lenderApprovedSenior)
-      ) {
+      const uniTrancheNotEvaluated = isUniTranche && !lenderApprovedJunior
+      const tranchesNotEvaluated =
+        !isUniTranche && !lenderApprovedJunior && !lenderApprovedSenior
+
+      if (uniTrancheNotEvaluated || tranchesNotEvaluated) {
         if (poolInfo.KYC) {
           dispatch(setStep(WIDGET_STEP.Evaluation))
         } else if (poolInfo.supplyLink) {
@@ -102,15 +102,8 @@ export function LendSupplyV2({
         return
       }
 
-      if (lenderApprovedJunior && !lenderApprovedSenior) {
-        setSelectedTranche('junior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
-        return
-      }
-
-      if (lenderApprovedSenior && !lenderApprovedJunior) {
-        setSelectedTranche('senior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
+      if (!isUniTranche && (!lenderApprovedJunior || !lenderApprovedSenior)) {
+        dispatch(setStep(WIDGET_STEP.ApproveLender))
         return
       }
 
@@ -138,7 +131,6 @@ export function LendSupplyV2({
     lenderApprovedSenior,
     lpConfig,
     poolInfo,
-    campaign,
     step,
   ])
 
@@ -179,10 +171,15 @@ export function LendSupplyV2({
         <Evaluation
           poolInfo={poolInfo}
           handleClose={handleClose}
-          isUniTranche={isUniTranche}
-          changeTranche={setSelectedTranche}
           pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
+        />
+      )}
+      {step === WIDGET_STEP.ApproveLender && (
+        <ApproveLender
+          poolInfo={poolInfo}
+          isUniTranche={isUniTranche}
+          changeTranche={setSelectedTranche}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (
@@ -199,25 +196,29 @@ export function LendSupplyV2({
         <ApproveAllowance poolInfo={poolInfo} />
       )}
       {step === WIDGET_STEP.Transfer && selectedTranche && (
-        <Transfer poolInfo={poolInfo} trancheType={selectedTranche} />
+        <Transfer
+          poolInfo={poolInfo}
+          trancheType={selectedTranche}
+          pointsTestnetExperience={pointsTestnetExperience}
+          campaign={campaign}
+        />
       )}
       {step === WIDGET_STEP.Done && (
         <Success
           poolInfo={poolInfo}
           lpConfig={lpConfig}
           campaign={campaign}
-          updateTransactionHash={setTransactionHash}
           handleAction={handleClose}
         />
       )}
       {step === WIDGET_STEP.Notifications && (
         <Notifications campaign={campaign} handleAction={handleClose} />
       )}
-      {step === WIDGET_STEP.PointsEarned && transactionHash && (
+      {step === WIDGET_STEP.PointsEarned && (
         <PointsEarned
-          transactionHash={transactionHash}
-          lpConfig={lpConfig}
-          pointsTestnetExperience={pointsTestnetExperience}
+          lpConfig={{
+            withdrawalLockupPeriodDays: lpConfig.withdrawalLockoutPeriodInDays,
+          }}
           handleAction={handleClose}
         />
       )}

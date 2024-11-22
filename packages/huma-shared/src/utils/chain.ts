@@ -1,6 +1,12 @@
 import type { AddEthereumChainParameter } from '@web3-react/types'
 import { ethers } from 'ethers'
 
+export enum CHAIN_TYPE {
+  EVM = 'evm',
+  SOLANA = 'solana',
+  STELLAR = 'stellar',
+}
+
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Ether',
   symbol: 'ETH',

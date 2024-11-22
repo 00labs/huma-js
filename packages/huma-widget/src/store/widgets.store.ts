@@ -12,6 +12,7 @@ export enum WIDGET_STEP {
   Evaluation = 'Evaluation',
   FirstLossCover = 'FirstLossCover',
   ChooseAmount = 'ChooseAmount',
+  ApproveLender = 'ApproveLender',
   Permit = 'Permit',
   ApproveAllowance = 'ApproveAllowance',
   MintNFT = 'MintNFT',
@@ -58,6 +59,9 @@ export type WidgetState = {
   tokenId?: string
   stream?: WidgetStream
   multisend?: MultisendPayload
+  solanaSignature?: string
+  pointsAccumulated?: number
+  txHash?: string
 }
 
 export const initialWidgetState: WidgetState = {}

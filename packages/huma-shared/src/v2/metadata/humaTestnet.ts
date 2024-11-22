@@ -42,7 +42,7 @@ export const HUMA_TESTNET_METADATA: PoolsInfoV2 = {
         },
         verifyIdentity: {
           title: 'Verify Identity',
-          description: `This pool is only available to accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
+          description: `This pool is only available to professional/accredited investors at the moment, with minimum investments of $10,000. Please complete identity verification and investor accreditation via ${KYC_PROVIDER.Securitize}.`,
           buttonText: 'VERIFY MY IDENTITY',
         },
         emailSignatureLink: {

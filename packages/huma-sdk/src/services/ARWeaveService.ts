@@ -1,9 +1,10 @@
-import Bundlr from '@bundlr-network/client'
-import type {
+import Irys from '@irys/sdk'
+import {
   FundResponse,
+  IrysConfig,
+  Network,
   UploadResponse,
-} from '@bundlr-network/client/build/cjs/common/types'
-import { Web3Provider } from '@ethersproject/providers'
+} from '@irys/sdk/build/cjs/common/types'
 import axios from 'axios'
 import request, { gql } from 'graphql-request'
 
@@ -24,72 +25,92 @@ export type BundlrConfig = {
 }
 
 /**
- * Get the configuration for Bundlr network given a chain ID
+ * Represents the constructor arguments for the Irys service.
+ *
+ * @typedef {Object} IrysConstructorArgs
+ * @property {string} [url] - The URL of the Irys service.
+ * @property {Network} [network] - The network configuration for the Irys service. Can be mainnet or devnet.
+ * @property {string} token - The token for authentication.
+ * @property {string} [key] - The key for encryption.
+ * @property {IrysConfig} [config] - Additional configuration options for the Irys service.
+ */
+export type IrysConstructorArgs = {
+  url?: string
+  network?: Network
+  token: string
+  key?: string
+  config?: IrysConfig
+}
+
+/**
+ * Get the configuration for the Irys network given a chain ID
  *
  * @function
  * @memberof ARWeaveService
  * @param {number} chainId - The chain ID.
- * @returns {BundlrConfig} - The configuration for the Bundlr network.
+ * @returns {IrysConstructorArgs} - The configuration for the Irys network.
  */
-export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
+export function getIrysNetworkConfig(chainId: number): IrysConstructorArgs {
   switch (chainId) {
-    case 5: // Goerli
-      return {
-        nodeUrl: 'https://devnet.bundlr.network',
-        currency: 'ethereum',
-        providerUrl:
-          'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-      }
-    // @dev #TODO: remove mumbai
-    case 80001: // Mumbai
-      return {
-        nodeUrl: 'https://devnet.bundlr.network',
-        currency: 'matic',
-        providerUrl: 'https://rpc.ankr.com/polygon_mumbai',
-      }
     case 80002: // Amoy
       return {
-        nodeUrl: 'https://devnet.bundlr.network',
-        currency: 'matic',
-        providerUrl: 'https://rpc.ankr.com/polygon_amoy',
+        network: 'devnet',
+        token: 'matic',
+        config: {
+          providerUrl: 'https://rpc.ankr.com/polygon_amoy',
+        },
       }
     case 137: // Matic
       return {
-        nodeUrl: 'https://node1.bundlr.network',
-        currency: 'matic',
+        network: 'mainnet',
+        token: 'matic',
       }
     case 44787: // Alfajores
       return {
-        nodeUrl: 'https://devnet.bundlr.network',
-        currency: '', // Uploads with Celo is not currently supported by Bundlr
-        // TODO: Allow for any currency combination with network
+        network: 'devnet',
+        token: '',
       }
     case 42220: // Celo
       return {
-        nodeUrl: 'https://node1.bundlr.network',
-        currency: '', // Uploads with Celo is not currently supported by Bundlr
+        network: 'mainnet',
+        token: '', // Uploads with Celo is not currently supported by Bundlr
       }
     case 534352: // Scroll
       return {
-        nodeUrl: 'https://node1.bundlr.network',
-        currency: 'scroll-eth',
+        network: 'mainnet',
+        token: 'scroll-eth',
       }
     case 534351: // Scroll Sepolia
       return {
-        nodeUrl: 'https://devnet.bundlr.network',
-        currency: 'scroll-eth',
-        providerUrl: 'https://rpc.ankr.com/scroll_sepolia_testnet',
+        network: 'devnet',
+        token: 'scroll-eth',
+        config: {
+          providerUrl: 'https://rpc.ankr.com/scroll_sepolia_testnet',
+        },
+      }
+    case 101: // Solana Mainnet
+      return {
+        network: 'mainnet',
+        token: 'solana',
+      }
+    case 103: // Solana Devnet
+      return {
+        network: 'devnet',
+        token: 'solana',
+        config: {
+          providerUrl: 'https://api.devnet.solana.com',
+        },
       }
     default:
       return {
-        nodeUrl: '',
-        currency: '',
+        network: '',
+        token: '',
       }
   }
 }
 
 /**
- * Get a Bundlr instance for a specific network
+ * Get an Irys instance for a specific network
  *
  * @async
  * @function
@@ -98,107 +119,77 @@ export function getBundlrNetworkConfig(chainId: number): BundlrConfig {
  * @param {string} privateKey - The private key of the wallet to use Bundlr with.
  * @returns The Bundlr instance
  */
-async function getBundlrInstance(config: BundlrConfig, privateKey: string) {
-  const bundlr = new Bundlr(
-    config.nodeUrl,
-    config.currency,
-    privateKey,
-    config.providerUrl
-      ? {
-          providerUrl: config.providerUrl,
-        }
-      : undefined,
-  )
-  await bundlr.ready()
-
-  return bundlr
+async function getIrysInstance(
+  config: IrysConstructorArgs,
+  privateKey: string,
+) {
+  return new Irys({ ...config, key: privateKey })
 }
 
 /**
- * Prefund the Bundlr network with the specified amount. Required if not lazy funding.
+ * Prefund the Irys network with the specified amount. Required if not lazy funding.
  * Important note: The amount is denominated in the base unit of currency for that network.
- * If you want to upload 5 Matic to the Bundlr node, pass in an amount of 5.
+ * If you want to upload 5 Matic to the Irys node, pass in an amount of 5.
  *
  * @async
  * @function
  * @memberof ARWeaveService
- * @param {BundlrConfig} config - The configuration for the Bundlr network.
+ * @param {IrysConstructorArgs} config - The configuration for the Bundlr network.
  * @param {string} privateKey - The private key of the wallet to send funds from.
  * @param {number} amount - The amount to fund, denoted in whatever currency specified by the config (e.g. MATIC, ETH)
  * @returns {Promise<FundResponse>} - The fund response.
  */
-async function prefundBundlr(
-  config: BundlrConfig,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function prefundIrys(
+  config: IrysConstructorArgs,
   privateKey: string,
   amount: number,
 ): Promise<FundResponse> {
-  const bundlr = new Bundlr(
-    config.nodeUrl,
-    config.currency,
-    privateKey,
-    config.providerUrl
-      ? {
-          providerUrl: config.providerUrl,
-        }
-      : undefined,
-  )
-  await bundlr.ready()
+  const irys = await getIrysInstance(config, privateKey)
 
   // Convert currency to its atomic units (e.g. MATIC -> wei)
-  const atomicAmount = bundlr.utils.toAtomic(amount)
+  const atomicAmount = irys.utils.toAtomic(amount)
 
-  return bundlr.fund(atomicAmount)
+  return irys.fund(atomicAmount)
 }
 
 /**
- * Store data on ARWeave using the Bundlr Network.
+ * Store data on ARWeave using the Irys Network.
  *
  * @async
  * @function
  * @memberof ARWeaveService
- * @param {BundlrConfig} config - Configuration object for the Bundlr instance.
- * @param {string} privateKey - Private key used for interacting with the Bundlr instance.
- * @param {Record<string, unknown>} data - The data to store in the Bundlr instance.
+ * @param {IrysConstructorArgs} config - Configuration object for the Irys instance.
+ * @param {string} privateKey - Private key used for interacting with the Irys instance.
+ * @param {Record<string, unknown>} data - The data to store in the Irys instance.
  * @param {Array<{ name: string, value: string }>} tags - Array of tag objects with `name` and `value` properties.
- * @param {boolean} [lazyFund=true] - Optional flag to fund the Bundlr instance lazily. If set to `false`, the
- *        Bundlr node should already be funded or else uploads will fail.
+ * @param {boolean} [lazyFund=true] - Optional flag to fund the Irys instance lazily. If set to `false`, the
+ *        Irys node should already be funded or else uploads will fail.
  * @returns {Promise<UploadResponse>} Promise resolving with the upload response.
  */
 async function storeData(
-  config: BundlrConfig,
-  privateKey: Web3Provider | string,
+  config: IrysConstructorArgs,
+  privateKey: string,
   data: Record<string, unknown>,
   tags: { name: string; value: string }[],
   lazyFund: boolean = true,
 ): Promise<UploadResponse> {
-  const bundlr = new Bundlr(
-    config.nodeUrl,
-    config.currency,
-    privateKey,
-    config.providerUrl
-      ? {
-          providerUrl: config.providerUrl,
-        }
-      : undefined,
-  )
-  await bundlr.ready()
+  const irys = await getIrysInstance(config, privateKey)
 
   const dataStr = JSON.stringify(data)
 
   if (lazyFund) {
     const size = Buffer.byteLength(dataStr)
-    const price = await bundlr.getPrice(size)
+    const price = await irys.getPrice(size)
 
     // Add a buffer of 20% to account for fluctuations in the price
     const priceWithBuffer = price.multipliedBy(1.2).integerValue()
     console.log(
-      `Funding bundlr with ${priceWithBuffer} ${config.currency} to upload data`,
+      `Funding irys with ${priceWithBuffer} ${config.token} to upload data`,
     )
-    await bundlr.fund(priceWithBuffer)
+    await irys.fund(priceWithBuffer)
   }
 
-  return bundlr.upload(dataStr, { tags })
+  return irys.upload(dataStr, { tags })
 }
 
 /**
@@ -217,7 +208,7 @@ async function queryForMetadata(
   sender: string,
   referenceId: string,
 ): Promise<string | null> {
-  const config = getBundlrNetworkConfig(chainId)
+  const config = getIrysNetworkConfig(chainId)
   const query = gql`
     query ArweaveHumaMetadataQuery($sender: String!, $referenceId: String!) {
       transactions(
@@ -237,10 +228,16 @@ async function queryForMetadata(
   `
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await request(`${config.nodeUrl}/graphql`, query, {
-    sender,
-    referenceId,
-  })
+  const data: any = await request(
+    config.network === 'mainnet'
+      ? 'https://arweave.mainnet.irys.xyz/graphql'
+      : 'https://arweave.devnet.irys.xyz/graphql',
+    query,
+    {
+      sender,
+      referenceId,
+    },
+  )
 
   return data?.transactions?.edges?.[0]?.node?.id
 }
@@ -256,7 +253,7 @@ async function queryForMetadata(
  */
 async function fetchMetadataFromUrl(url: string): Promise<JSON | null> {
   try {
-    const response = await axios.get(url)
+    const response = await axios.get(url, { withCredentials: false })
     return response.data
   } catch (error) {
     console.error('Error fetching data:', error)
@@ -284,9 +281,9 @@ function getURIFromARWeaveId(arweaveId: string): string {
 export const ARWeaveService = {
   queryForMetadata,
   storeData,
-  prefundBundlr,
-  getBundlrNetworkConfig,
-  getBundlrInstance,
+  prefundIrys,
+  getIrysNetworkConfig,
+  getIrysInstance,
   fetchMetadataFromUrl,
   getURIFromARWeaveId,
 }

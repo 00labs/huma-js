@@ -20,10 +20,12 @@ export enum POOL_NAME {
   ArfCreditPool6Months = 'ArfCreditPool6Months',
   ArfCreditPool12Months = 'ArfCreditPool12Months',
   ArfPoolUSDC = 'ArfPoolUSDC',
+  ArfPoolPYUSD = 'ArfPoolPYUSD',
   BSOS = 'BSOS',
   ImpactMarket = 'ImpactMarket',
   Raincards = 'Raincards',
   Quipu = 'Quipu',
+  Roam = 'Roam',
 }
 
 export enum POOL_TYPE {
@@ -229,7 +231,7 @@ export const PoolSubgraphMap: PoolSubgraphMapType = {
     subgraph:
       'https://api.studio.thegraph.com/query/71608/huma-celo/version/latest',
     productionSubgraph:
-      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/3Cb7Uy2BqxvU8hCRNxMUDVaPdpDS9Kd52mWuQVdTpz8',
+      'https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/AiKR7gmYaxARPbS5SQoiKjf9A26SbkX6YKwU3BoM9yxN',
   },
   [ChainEnum.Alfajores]: {
     subgraph:
@@ -285,6 +287,7 @@ export const PoolContractMap: PoolContractMapType = {
         extra: {
           order: 1,
           borrower: '0xd4F254006d486688cE7515199C55266C581B949A',
+          rwrUploader: '0x8Ddf4bE03d535A57D8b3D942941BDF65E96D994e',
           disableBorrow: true,
           lenderApprovalProvider: {
             type: 'KYC',
@@ -605,6 +608,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
           borrower: '0xD3CCe1eC5a3981B27bD998f33A7eafdD27Ad2dF4',
+          rwrUploader: '0x8Ddf4bE03d535A57D8b3D942941BDF65E96D994e',
         },
       },
       [POOL_NAME.JiaUSDC]: {

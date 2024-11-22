@@ -31,7 +31,7 @@ export function WidgetWrapper({
 }: WCProps<Props>): React.ReactElement | null {
   const theme = useTheme()
   const dispatch = useAppDispatch()
-  const { step } = useAppSelector(selectWidgetState)
+  const { step, solanaSignature } = useAppSelector(selectWidgetState)
   const [{ state, failReason, txReceipt }] = useAtom(sendTxAtom)
   const reset = useResetAtom(txAtom)
 
@@ -42,12 +42,14 @@ export function WidgetWrapper({
   }, [dispatch, failReason, state])
 
   useEffect(() => {
-    if (step === WIDGET_STEP.Done && txReceipt) {
-      if (handleSuccess) {
+    if (step === WIDGET_STEP.Done && (txReceipt || solanaSignature)) {
+      if (handleSuccess && txReceipt) {
         handleSuccess(txReceipt.blockNumber)
+      } else if (handleSuccess && solanaSignature) {
+        handleSuccess(0) // solana tx doesn't have block number
       }
     }
-  }, [handleSuccess, step, txReceipt])
+  }, [handleSuccess, solanaSignature, step, txReceipt])
 
   const handleCloseModal = useCallback(() => {
     reset()

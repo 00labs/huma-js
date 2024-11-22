@@ -9,7 +9,7 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     poolVersion: 'v2',
     industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPool3Months,
-    poolType: POOL_TYPE.CreditLine,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x5227254a6aCa397e95F310b52f6D3143A5A9Ee14',
     poolConfig: '0xebf8D31C5492Dc93FC73a6AD136d47c45AB2C7a5',
     poolCredit: '0xc6F10af4746784a0DD095f4E5718d53ff94eB4a0',
@@ -37,13 +37,16 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     KYC: {
       Persona: ARF_PERSONA_KYC_COPY,
     },
+    extra: {
+      borrower: '0x08534d9b632a7A35d7af4aAe5d487A15FC247691',
+    },
   },
   ArfCreditPool6Months: {
     chainId: ChainEnum.Scroll,
     poolVersion: 'v2',
     industry: 'Remittance Financing',
     poolName: POOL_NAME.ArfCreditPool6Months,
-    poolType: POOL_TYPE.CreditLine,
+    poolType: POOL_TYPE.ReceivableBackedCreditLine,
     pool: '0x1900e417869691277cfd20f4001b768B03375272',
     poolConfig: '0xE9D7893B52BE6D81C540f2E81f3A65FAbF8A0fa4',
     poolCredit: '0x2e3A03C8Bd31300C2c027C9C9d1b762677F6FaA6',
@@ -70,6 +73,9 @@ export const SCROLL_METADATA: PoolsInfoV2 = {
     desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
     KYC: {
       Persona: ARF_PERSONA_KYC_COPY,
+    },
+    extra: {
+      borrower: '0x08534d9b632a7A35d7af4aAe5d487A15FC247691',
     },
   },
 }
