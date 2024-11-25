@@ -26,7 +26,9 @@ export function PointsEarned({
   const { pointsAccumulated } = useAppSelector(selectWidgetState)
   const hasPointsAccumulated =
     !isEmpty(pointsAccumulated) && pointsAccumulated! > 0
-  const lockupMonths = Math.round(lpConfig.withdrawalLockupPeriodDays ?? 0 / 30)
+  const lockupMonths = Math.round(
+    (lpConfig.withdrawalLockupPeriodDays ?? 0) / 30,
+  )
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
 
