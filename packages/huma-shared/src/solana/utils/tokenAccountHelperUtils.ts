@@ -20,19 +20,19 @@ export const getTokenAccounts = (
   const underlyingTokenATA = getAssociatedTokenAddressSync(
     new PublicKey(poolInfo.underlyingMint.address),
     account,
-    false, // allowOwnerOffCurve
+    true, // allowOwnerOffCurve
     TOKEN_PROGRAM_ID,
   )
   const juniorTrancheATA = getAssociatedTokenAddressSync(
     new PublicKey(poolInfo.juniorTrancheMint),
     account,
-    false,
+    true,
     TOKEN_2022_PROGRAM_ID,
   )
   const seniorTrancheATA = getAssociatedTokenAddressSync(
     new PublicKey(poolInfo.seniorTrancheMint),
     account,
-    false,
+    true,
     TOKEN_2022_PROGRAM_ID,
   )
   const poolJuniorTrancheATA = getAssociatedTokenAddressSync(
