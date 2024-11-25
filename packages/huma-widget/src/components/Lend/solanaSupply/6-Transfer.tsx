@@ -142,6 +142,27 @@ export function Transfer({
         tx.add(createLenderAccountsTx)
       }
 
+      const depositTx = await program.methods
+        .deposit(supplyBigNumber)
+        .accountsPartial({
+          approvedLender,
+          depositor: publicKey,
+          poolConfig: poolInfo.poolConfig,
+          underlyingMint: poolInfo.underlyingMint.address,
+          trancheMint:
+            selectedTranche === 'senior'
+              ? poolInfo.seniorTrancheMint
+              : poolInfo.juniorTrancheMint,
+          poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
+          depositorUnderlyingToken: underlyingTokenATA,
+          depositorTrancheToken:
+            selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
+          humaConfig: poolInfo.humaConfig,
+          underlyingTokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .transaction()
+      tx.add(depositTx)
+
       // Approve automatic redemptions
       const sharesAmount = convertToShares(
         selectedTranche === 'senior'
@@ -179,27 +200,6 @@ export function Transfer({
           TOKEN_2022_PROGRAM_ID,
         ),
       )
-
-      const depositTx = await program.methods
-        .deposit(supplyBigNumber)
-        .accountsPartial({
-          approvedLender,
-          depositor: publicKey,
-          poolConfig: poolInfo.poolConfig,
-          underlyingMint: poolInfo.underlyingMint.address,
-          trancheMint:
-            selectedTranche === 'senior'
-              ? poolInfo.seniorTrancheMint
-              : poolInfo.juniorTrancheMint,
-          poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
-          depositorUnderlyingToken: underlyingTokenATA,
-          depositorTrancheToken:
-            selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
-          humaConfig: poolInfo.humaConfig,
-          underlyingTokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .transaction()
-      tx.add(depositTx)
 
       setTransaction(tx)
     }
