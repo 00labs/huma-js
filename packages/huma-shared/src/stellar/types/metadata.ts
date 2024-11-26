@@ -1,5 +1,6 @@
 import { StellarChainEnum } from '../chain'
 import { STELLAR_TESTNET_METADATA } from '../metadata/testnet'
+import { STELLAR_MAINNET_METADATA } from '../metadata/mainnet'
 import { POOL_NAME, POOL_TYPE } from '../../utils'
 import { IndustryType } from '../../v2'
 
@@ -41,6 +42,7 @@ export type StellarChainPoolsInfo = {
 
 export const STELLAR_CHAIN_POOLS_INFO = {
   [StellarChainEnum.StellarTestnet]: STELLAR_TESTNET_METADATA,
+  [StellarChainEnum.StellarMainnet]: STELLAR_MAINNET_METADATA,
 } as StellarChainPoolsInfo
 
 export type StellarChainInfo = {
@@ -60,8 +62,8 @@ export const STELLAR_CHAINS_INFO: StellarChainsInfo = {
     networkPassphrase: 'Test SDF Network ; September 2015',
   },
   [StellarChainEnum.StellarMainnet]: {
-    rpc: '',
-    humaConfig: '',
-    networkPassphrase: '',
+    rpc: 'https://mainnet.sorobanrpc.com',
+    humaConfig: 'CAVRWN3JYHZLKREHPDXFRCMEXPLPF2LIYRWKBHIRWSE62OCRTELBLQ4O',
+    networkPassphrase: 'Public Global Stellar Network ; September 2015',
   },
 }
