@@ -88,6 +88,36 @@ export type HumaAccount = {
 }
 
 /**
+ * Object representing the accreditation answers.
+ * @typedef {Object} AccreditationAnswers
+ * @property {string} question1 The question 1.
+ * @property {boolean} question1Answer The question 1 answer.
+ * @property {string} question2 The question 2.
+ * @property {boolean} question2Answer The question 2 answer.
+ * @property {string} question3 The question 3.
+ * @property {boolean} question3Answer The question 3 answer.
+ */
+export type AccreditationAnswers = {
+  question1: string
+  question1Answer: boolean
+  question2: string
+  question2Answer: boolean
+  question3: string
+  question3Answer: boolean
+}
+
+/**
+ * Object representing the account name validity.
+ * @typedef {Object} AccountNameValidity
+ * @property {string} name The account name.
+ * @property {string} invalidReason The invalid reason.
+ */
+export type AccountNameValidity = {
+  name: string
+  invalidReason: 'already_taken' | 'inappropriate_language'
+}
+
+/**
  * Get wallet's identity verification status.
  *
  * @param {string} walletAddress The wallet address.
@@ -106,15 +136,6 @@ const getVerificationStatusV2 = async (
       isDev,
     )}/wallets/${walletAddress}/verification-status?&chainId=${chainId}`,
   )
-
-export type AccreditationAnswers = {
-  question1: string
-  question1Answer: boolean
-  question2: string
-  question2Answer: boolean
-  question3: string
-  question3Answer: boolean
-}
 
 /**
  * Start wallet's accreditation process.
@@ -380,6 +401,26 @@ const humaAccountAddWallet = async (
     },
   )
 
+/**
+ * Huma account name validity.
+ *
+ * @param {string} networkType Network type.
+ * @param {name} name Name to check validity.
+ * @param {boolean} isDev Is dev environment or not.
+ * @returns {Promise<HumaAccount>} Promise that returns huma account.
+ */
+const humaAccountNameValidity = async (
+  networkType: NETWORK_TYPE,
+  name: string,
+  isDev = false,
+): Promise<AccountNameValidity> =>
+  requestGet(
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
+      isDev,
+    )}/account/name-validity?name=${name}`,
+  )
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -395,4 +436,5 @@ export const IdentityServiceV2 = {
   humaAccountUpdate,
   humaAccountAddWallet,
   humaAccountUpdateReferral,
+  humaAccountNameValidity,
 }
