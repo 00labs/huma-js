@@ -183,6 +183,10 @@ export function isTestnet(chainId: number): boolean {
   return CHAINS[chainId].isTestnet ?? false
 }
 
+export function getEvmNetworkType(chainId: ChainEnum): NETWORK_TYPE {
+  return isTestnet(chainId) ? NETWORK_TYPE.testnet : NETWORK_TYPE.mainnet
+}
+
 export function isChainEnum(
   chainId: number | string | undefined,
 ): chainId is keyof typeof ChainEnum {
@@ -192,7 +196,7 @@ export function isChainEnum(
 function isExtendedChainInformation(
   chainInformation: BasicChainInformation | ExtendedChainInformation,
 ): chainInformation is ExtendedChainInformation {
-  return !!(chainInformation as ExtendedChainInformation).nativeCurrency
+  return !!(chainInformation as ExtendedChainInformation)?.nativeCurrency
 }
 
 export function getAddChainParameters(

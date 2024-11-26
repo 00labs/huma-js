@@ -1,5 +1,6 @@
 import {
   CloseModalOptions,
+  getEvmNetworkType,
   openInNewTab,
   POOL_NAME,
   TrancheType,
@@ -180,8 +181,8 @@ export function LendSupplyV2({
           handleClose={handleClose}
           isUniTranche={isUniTranche}
           changeTranche={setSelectedTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
+          networkType={getEvmNetworkType(poolInfo.chainId)}
         />
       )}
       {step === WIDGET_STEP.ChooseAmount && (

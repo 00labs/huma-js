@@ -1,5 +1,6 @@
 import {
   CloseModalOptions,
+  getSolanaNetworkType,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
@@ -21,9 +22,9 @@ import { WidgetWrapper } from '../../WidgetWrapper'
 import { Evaluation } from './1-Evaluation'
 import { ChooseTranche } from './2-ChooseTranche'
 import { ChooseAmount } from './3-ChooseAmount'
+import { ApproveAllowance } from './4-ApproveAllowance'
 import { Transfer } from './4-Transfer'
 import { Success } from './5-Success'
-import { ApproveAllowance } from './4-ApproveAllowance'
 
 export interface Campaign {
   id: string
@@ -122,8 +123,8 @@ export function SolanaLendSupply({
         <Evaluation
           poolInfo={poolInfo}
           isUniTranche={!!isUniTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
           campaign={poolState.campaign}
+          networkType={getSolanaNetworkType(poolInfo.chainId)}
           handleClose={handleClose}
           changeTranche={setSelectedTranche}
         />

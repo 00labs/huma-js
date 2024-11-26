@@ -78,13 +78,22 @@ export type HumaAccount = {
     address: string
     chainId: string
   }[]
-  isNewAccount: boolean
   referralCode: string
   numReferrals: number
   referrer: {
     id: string
     name: string
   }
+}
+
+/**
+ * Object representing the Huma account login result.
+ * @typedef {Object} HumaAccountLoginResult
+ * @property {HumaAccount} account The Huma account.
+ * @property {boolean} isNewAccount Is new account or not.
+ */
+export type HumaAccountLoginResult = HumaAccount & {
+  isNewAccount: boolean
 }
 
 /**
@@ -118,108 +127,99 @@ export type AccountNameValidity = {
 }
 
 /**
- * Get wallet's identity verification status.
+ * Get account's identity verification status.
  *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
+ * @param {string} networkType Network type.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResultV2>} Promise that returns the verification status result.
  */
 const getVerificationStatusV2 = async (
-  walletAddress: string,
-  chainId: number,
+  networkType: NETWORK_TYPE,
   isDev = false,
 ): Promise<VerificationStatusResultV2> =>
   requestGet<VerificationStatusResultV2>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
       isDev,
-    )}/wallets/${walletAddress}/verification-status?&chainId=${chainId}`,
+    )}/account/verification-status`,
   )
 
 /**
- * Start wallet's accreditation process.
+ * Start account's accreditation process.
  *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
+ * @param {NETWORK_TYPE} networkType Network type.
  * @param {AccreditationAnswers} answers accreditation answer.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<VerificationStatusResultV2>} Promise that returns the start verification result.
+ * @returns {Promise<VerificationStatusResultV2>} Promise that returns the accreditation result.
  */
 const accredit = async (
-  walletAddress: string,
-  chainId: number,
+  networkType: NETWORK_TYPE,
   answers: AccreditationAnswers,
   isDev = false,
 ): Promise<AccreditationResultV2> =>
   requestPost<AccreditationResultV2>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
       isDev,
-    )}/wallets/${walletAddress}/accredit?chainId=${chainId}`,
+    )}/account/accreditation`,
     { answers },
   )
 
 /**
- * Start wallet's verification process.
+ * Start account's verification process.
  *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
+ * @param {NETWORK_TYPE} networkType Network type.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResultV2>} Promise that returns the start verification result.
  */
 const startVerification = async (
-  walletAddress: string,
-  chainId: number,
+  networkType: NETWORK_TYPE,
   isDev = false,
 ): Promise<VerificationStatusResultV2> =>
   requestPost<VerificationStatusResultV2>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
       isDev,
-    )}/wallets/${walletAddress}/start-verification?chainId=${chainId}`,
+    )}/account/verification`,
   )
 
 /**
- * Resume wallet's verification process.
+ * Resume account's verification process.
  *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
+ * @param {NETWORK_TYPE} networkType Network type.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<ResumeVerificationResultV2>} Promise that returns the start verification result.
+ * @returns {Promise<ResumeVerificationResultV2>} Promise that returns the resume verification result.
  */
 const resumeVerification = async (
-  walletAddress: string,
-  chainId: number,
+  networkType: NETWORK_TYPE,
   isDev = false,
 ): Promise<ResumeVerificationResultV2> =>
-  requestPost<ResumeVerificationResultV2>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
+  requestPatch<ResumeVerificationResultV2>(
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
       isDev,
-    )}/wallets/${walletAddress}/resume-verification?chainId=${chainId}`,
+    )}/account/verification`,
   )
 
 /**
  * Consent to subscription.
  *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
+ * @param {NETWORK_TYPE} networkType Network type.
  * @param {string} documentHash The subscription file hash.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<void>} Promise that returns void.
  */
 const consentToSubscription = async (
-  walletAddress: string,
-  chainId: number,
+  networkType: NETWORK_TYPE,
   documentHash: string,
   isDev = false,
 ): Promise<void> =>
   requestPost<void>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
       isDev,
-    )}/wallets/${walletAddress}/consent-to-subscription?chainId=${chainId}&documentHash=${documentHash}`,
+    )}/account/purchase-consent`,
+    { documentHash },
   )
 
 /**
@@ -239,52 +239,12 @@ const approveLender = async (
   isDev = false,
   chainSpecificData?: Record<string, unknown>,
 ): Promise<void> =>
-  requestPost<void>(
+  requestPatch<void>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
-    )}/wallets/${walletAddress}/approve-lender?chainId=${chainId}&contractAddress=${contractAddress}`,
-    { chain_specific_data: chainSpecificData },
-  )
-
-/**
- * Authenticate wallet account.
- *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
- * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<void>} Promise that returns void.
- */
-const authenticate = async (
-  walletAddress: string,
-  chainId: number,
-  isDev = false,
-): Promise<void> =>
-  requestPost<void>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
-      isDev,
-    )}/wallets/${walletAddress}/authenticate?chainId=${chainId}`,
-  )
-
-/**
- * Get Huma account old.
- *
- * @param {string} walletAddress The wallet address.
- * @param {number} chainId Chain ID.
- * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<void>} Promise that returns void.
- */
-const getHumaAccountOld = async (
-  walletAddress: string,
-  chainId: number,
-  isDev = false,
-): Promise<HumaAccount> =>
-  requestGet<HumaAccount>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
-      isDev,
-    )}/wallets/${walletAddress}/account?chainId=${chainId}`,
+    )}/account/wallets/${chainId}/${walletAddress}`,
+    { trancheAddress: contractAddress, chainSpecificData },
   )
 
 /**
@@ -311,14 +271,14 @@ const getHumaAccount = async (
  * @param {string} walletAddress The wallet address.
  * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<void>} Promise that returns void.
+ * @returns {Promise<HumaAccountLoginResult>} Promise that returns HumaAccountLoginResult.
  */
 const humaAccountLogin = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<HumaAccount> =>
-  requestPost<HumaAccount>(
+): Promise<HumaAccountLoginResult> =>
+  requestPost<HumaAccountLoginResult>(
     `${configUtil.getIdentityAPIUrl(chainId, isDev)}/auth/login`,
     {
       walletAddress,
@@ -428,8 +388,6 @@ export const IdentityServiceV2 = {
   resumeVerification,
   consentToSubscription,
   approveLender,
-  authenticate,
-  getHumaAccountOld,
   getHumaAccount,
   humaAccountLogin,
   humaAccountLogout,
