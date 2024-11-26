@@ -1,5 +1,5 @@
 import { isSolanaTestnet, SolanaChainEnum } from '../solana/chain'
-import { CHAINS } from './chain'
+import { CHAINS, NETWORK_TYPE } from './chain'
 
 const getDevPrefix = (isDev = false) => (isDev ? 'dev.' : '')
 
@@ -44,10 +44,7 @@ const getIdentityAPIUrl = (chainId: number, isDev = false) =>
     isDev,
   )}.identity-verification.huma.finance`
 
-const getIdentityAPIUrlV2 = (
-  networkType: 'testnet' | 'mainnet',
-  isDev = false,
-) =>
+const getIdentityAPIUrlV2 = (networkType: NETWORK_TYPE, isDev = false) =>
   `https://${getDevPrefix(
     isDev,
   )}${networkType}.identity-verification.huma.finance`

@@ -134,6 +134,8 @@ export const useAuthErrorHandling = (
         'IdTokenNotFoundException',
         'InvalidIdTokenException',
         'WalletMismatchException',
+        'AccountTokenNotFoundException',
+        'InvalidAccountTokenException',
       ].includes(error.response?.data?.detail?.type)
 
     const isWalletNotCreatedError = error === 'WalletNotCreatedException'
