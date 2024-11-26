@@ -56,7 +56,7 @@ export function PointsEarned({
   const hasPointsAccumulated =
     !isEmpty(pointsAccumulated) && pointsAccumulated! > 0
   const lockupMonths = Math.round(
-    poolState.withdrawalLockupPeriodDays ?? 0 / 30,
+    (poolState.withdrawalLockupPeriodDays ?? 0) / 30,
   )
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
