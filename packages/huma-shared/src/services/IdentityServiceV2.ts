@@ -244,7 +244,7 @@ const approveLender = async (
       chainId,
       isDev,
     )}/account/wallets/${chainId}/${walletAddress}`,
-    { trancheAddress: contractAddress, chain_specific_data: chainSpecificData },
+    { trancheAddress: contractAddress, chainSpecificData },
   )
 
 /**
