@@ -78,13 +78,22 @@ export type HumaAccount = {
     address: string
     chainId: string
   }[]
-  isNewAccount: boolean
   referralCode: string
   numReferrals: number
   referrer: {
     id: string
     name: string
   }
+}
+
+/**
+ * Object representing the Huma account login result.
+ * @typedef {Object} HumaAccountLoginResult
+ * @property {HumaAccount} account The Huma account.
+ * @property {boolean} isNewAccount Is new account or not.
+ */
+export type HumaAccountLoginResult = HumaAccount & {
+  isNewAccount: boolean
 }
 
 /**
@@ -279,8 +288,8 @@ const getHumaAccountOld = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<HumaAccount> =>
-  requestGet<HumaAccount>(
+): Promise<Omit<HumaAccount, 'isNewAccount'>> =>
+  requestGet<Omit<HumaAccount, 'isNewAccount'>>(
     `${configUtil.getIdentityAPIUrl(
       chainId,
       isDev,
@@ -311,14 +320,14 @@ const getHumaAccount = async (
  * @param {string} walletAddress The wallet address.
  * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
- * @returns {Promise<void>} Promise that returns void.
+ * @returns {Promise<HumaAccountLoginResult>} Promise that returns HumaAccountLoginResult.
  */
 const humaAccountLogin = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<HumaAccount> =>
-  requestPost<HumaAccount>(
+): Promise<HumaAccountLoginResult> =>
+  requestPost<HumaAccountLoginResult>(
     `${configUtil.getIdentityAPIUrl(chainId, isDev)}/auth/login`,
     {
       walletAddress,
