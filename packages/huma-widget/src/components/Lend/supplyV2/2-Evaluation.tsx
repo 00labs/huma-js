@@ -1,6 +1,7 @@
 import {
   CHAIN_TYPE,
   CloseModalOptions,
+  NETWORK_TYPE,
   PoolInfoV2,
   TrancheType,
 } from '@huma-finance/shared'
@@ -13,8 +14,8 @@ import { SecuritizeEvaluation } from '../components/SecuritizeEvaluation'
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
-  pointsTestnetExperience: boolean
   campaign?: Campaign
+  networkType: NETWORK_TYPE
   changeTranche: (tranche: TrancheType) => void
   handleClose: (options?: CloseModalOptions) => void
 }
@@ -23,7 +24,7 @@ export function Evaluation({
   poolInfo,
   isUniTranche,
   campaign,
-  pointsTestnetExperience,
+  networkType,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -38,8 +39,8 @@ export function Evaluation({
         poolInfo={poolInfo}
         handleClose={handleClose}
         isUniTranche={isUniTranche}
-        pointsTestnetExperience={pointsTestnetExperience}
         campaign={campaign}
+        networkType={networkType}
         chainType={CHAIN_TYPE.EVM}
         changeTranche={changeTranche}
       />

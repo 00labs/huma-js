@@ -1,5 +1,6 @@
 import {
   CHAIN_TYPE,
+  NETWORK_TYPE,
   SOLANA_CHAIN_INFO,
   SolanaPoolInfo,
   TrancheType,
@@ -12,8 +13,8 @@ import { Campaign } from '../supplyV2'
 type Props = {
   poolInfo: SolanaPoolInfo
   isUniTranche: boolean
-  pointsTestnetExperience: boolean
   campaign?: Campaign
+  networkType: NETWORK_TYPE
   changeTranche: (tranche: TrancheType) => void
   handleClose: () => void
 }
@@ -21,8 +22,8 @@ type Props = {
 export function Evaluation({
   poolInfo,
   isUniTranche,
-  pointsTestnetExperience,
   campaign,
+  networkType,
   changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
@@ -38,8 +39,8 @@ export function Evaluation({
         }}
         handleClose={handleClose}
         isUniTranche={isUniTranche}
-        pointsTestnetExperience={pointsTestnetExperience}
         campaign={campaign}
+        networkType={networkType}
         chainSpecificData={{
           huma_program_id: solanChainInfo.poolProgram,
           pool_id: poolInfo.poolId,
