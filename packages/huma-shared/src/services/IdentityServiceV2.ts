@@ -225,6 +225,7 @@ const consentToSubscription = async (
 /**
  * Approve wallet as lender.
  *
+ * @param {NETWORK_TYPE} networkType Network type.
  * @param {string} walletAddress The wallet address.
  * @param {number} chainId Chain ID.
  * @param {string} contractAddress The tranche vault contract address.
@@ -233,6 +234,7 @@ const consentToSubscription = async (
  * @returns {Promise<void>} Promise that returns void.
  */
 const approveLender = async (
+  networkType: NETWORK_TYPE,
   walletAddress: string,
   chainId: number,
   contractAddress: string,
@@ -240,8 +242,8 @@ const approveLender = async (
   chainSpecificData?: Record<string, unknown>,
 ): Promise<void> =>
   requestPatch<void>(
-    `${configUtil.getIdentityAPIUrl(
-      chainId,
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
       isDev,
     )}/account/wallets/${chainId}/${walletAddress}`,
     { trancheAddress: contractAddress, chainSpecificData },
@@ -268,18 +270,20 @@ const getHumaAccount = async (
 /**
  * Huma account login by wallet address and chain.
  *
+ * @param {string} networkType Network type.
  * @param {string} walletAddress The wallet address.
  * @param {number} chainId Chain ID.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<HumaAccountLoginResult>} Promise that returns HumaAccountLoginResult.
  */
 const humaAccountLogin = async (
+  networkType: NETWORK_TYPE,
   walletAddress: string,
   chainId: number,
   isDev = false,
 ): Promise<HumaAccountLoginResult> =>
   requestPost<HumaAccountLoginResult>(
-    `${configUtil.getIdentityAPIUrl(chainId, isDev)}/auth/login`,
+    `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/auth/login`,
     {
       walletAddress,
       chainId: String(chainId),
