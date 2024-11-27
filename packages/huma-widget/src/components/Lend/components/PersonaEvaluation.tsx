@@ -80,6 +80,7 @@ export function PersonaEvaluation({
       setLoadingType('approveLender')
       try {
         await IdentityServiceV2.approveLender(
+          networkType,
           account,
           chainId,
           poolInfo.juniorTrancheVault,
@@ -93,6 +94,7 @@ export function PersonaEvaluation({
       if (!isUniTranche) {
         try {
           await IdentityServiceV2.approveLender(
+            networkType,
             account,
             chainId,
             poolInfo.seniorTrancheVault,
@@ -119,6 +121,7 @@ export function PersonaEvaluation({
       dispatch,
       isDev,
       isUniTranche,
+      networkType,
       poolInfo.juniorTrancheVault,
       poolInfo.seniorTrancheVault,
     ],
