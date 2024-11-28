@@ -92,6 +92,17 @@ export type LeaderboardItem = {
   referredCount: number
 }
 
+export type AccountPoints = {
+  accountId: string
+  basePoints: number
+  liquidityPoints: number
+  liquidityPointsList: {
+    address: string
+    points: number
+  }[]
+  referralPoints: number
+}
+
 function checkWalletOwnership(
   wallet: string,
   isDev: boolean,
@@ -247,6 +258,49 @@ function getLeaderboard(
         return undefined
       }
       return res.data?.leaderboard
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
+function getAccountPoints(
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+): Promise<AccountPoints | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+
+  const query = gql`
+    query {
+      accountPoints {
+        ... on AccountPointsResult {
+          accountId
+          basePoints
+          liquidityPoints
+          liquidityPointsList {
+            address
+            points
+          }
+          referralPoints
+        }
+        ... on PointServiceError {
+          message
+        }
+      }
+    }
+  `
+
+  return requestPost<{
+    data?: { accountPoints: AccountPoints }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data?.accountPoints
     })
     .catch((err) => {
       console.error(err)
@@ -522,4 +576,5 @@ export const CampaignService = {
   updateWalletPoints,
   checkAndCreateWallet,
   getLeaderboard,
+  getAccountPoints,
 }
