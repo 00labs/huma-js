@@ -72,7 +72,7 @@ export function Transfer({
     async (options?: { signature: string }) => {
       if (publicKey && poolState.campaign && options?.signature) {
         try {
-          const result = await CampaignService.updateAccountPoints(
+          const result = await CampaignService.updateHumaAccountPoints(
             publicKey.toString(),
             options.signature,
             poolInfo.chainId,
