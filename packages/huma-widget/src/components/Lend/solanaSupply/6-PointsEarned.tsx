@@ -5,6 +5,7 @@ import {
   CloseModalOptions,
   formatNumber,
   isEmpty,
+  NETWORK_TYPE,
 } from '@huma-finance/shared'
 import {
   SolanaPoolState,
@@ -35,14 +36,14 @@ const ERROR_MESSAGE =
 type Props = {
   transactionHash: string
   poolState: SolanaPoolState
-  pointsTestnetExperience: boolean
+  networkType: NETWORK_TYPE
   handleAction: (options?: CloseModalOptions) => void
 }
 
 export function PointsEarned({
   transactionHash,
   poolState,
-  pointsTestnetExperience,
+  networkType,
   handleAction,
 }: Props): React.ReactElement {
   const theme = useTheme()
@@ -87,8 +88,8 @@ export function PointsEarned({
       if (account) {
         const ownership = await CampaignService.checkWalletOwnership(
           account,
+          networkType,
           isDev,
-          pointsTestnetExperience,
         )
         setWalletOwnership(ownership)
         if (!ownership) {
@@ -97,7 +98,7 @@ export function PointsEarned({
       }
     }
     checkWalletOwnership()
-  }, [account, isDev, pointsTestnetExperience, setAuthError])
+  }, [account, isDev, networkType, setAuthError])
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
@@ -121,12 +122,12 @@ export function PointsEarned({
     const updateWalletPoints = async () => {
       if (walletOwnership) {
         try {
-          const result = await CampaignService.updateWalletPoints(
+          const result = await CampaignService.updateAccountPoints(
             account!,
             transactionHash,
             chainId!,
+            networkType,
             isDev,
-            pointsTestnetExperience,
           )
           setPointsAccumulated(result.pointsAccumulated)
           setState(STATE.Congrats)
@@ -136,15 +137,7 @@ export function PointsEarned({
       }
     }
     updateWalletPoints()
-  }, [
-    account,
-    chainId,
-    dispatch,
-    isDev,
-    pointsTestnetExperience,
-    transactionHash,
-    walletOwnership,
-  ])
+  }, [account, chainId, isDev, networkType, transactionHash, walletOwnership])
 
   const handleCloseModal = useCallback(() => {
     reset()
