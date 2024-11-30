@@ -68,7 +68,10 @@ export type ResumeVerificationResultV2 = {
  * @property {string} accountId The account id.
  * @property {string} name The account name.
  * @property {Wallet[]} wallets The account wallets.
- * @property {boolean} isNewAccount Is new account or not.
+ * @property {string} referralCode The account referral code.
+ * @property {number} numReferrals The number of referrals.
+ * @property {Referrer} referrer The account referrer.
+ * @property {string} createdAt The account created time.
  */
 export type HumaAccount = {
   id: string
@@ -84,6 +87,7 @@ export type HumaAccount = {
     id: string
     name: string
   }
+  createdAt: string
 }
 
 /**
@@ -385,6 +389,29 @@ const humaAccountNameValidity = async (
     )}/account/name-validity?name=${name}`,
   )
 
+/**
+ * Get recently joined accounts.
+ *
+ * @param {string} networkType Network type.
+ * @param {boolean} isDev Is dev environment or not.
+ * @param {number} limit The limit of the number of accounts to return.
+ * @returns {Promise<HumaAccount[]>} Promise that returns recently joined huma accounts.
+ */
+const getRecentlyJoinedHumaAccounts = async (
+  networkType: NETWORK_TYPE,
+  isDev = false,
+  limit = 10,
+): Promise<HumaAccount[]> => {
+  const result = await requestGet<{ accounts: HumaAccount[] }>(
+    `${configUtil.getIdentityAPIUrlV2(
+      networkType,
+      isDev,
+    )}/accounts/recently-joined?limit=${limit}`,
+  )
+
+  return result.accounts
+}
+
 export const IdentityServiceV2 = {
   getVerificationStatusV2,
   accredit,
@@ -399,4 +426,5 @@ export const IdentityServiceV2 = {
   humaAccountAddWallet,
   humaAccountUpdateReferral,
   humaAccountNameValidity,
+  getRecentlyJoinedHumaAccounts,
 }

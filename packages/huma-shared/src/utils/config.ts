@@ -72,6 +72,11 @@ const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
     pointsTestnetExperience ? 'testnet.' : 'mainnet.'
   }campaign-points.huma.finance/graphql`
 
+const getCampaignAPIUrlV2 = (networkType: NETWORK_TYPE, isDev: boolean) =>
+  `https://${getDevPrefix(
+    isDev,
+  )}${networkType}.campaign-points.huma.finance/graphql`
+
 const getSolanaGraphAPIUrl = (
   isDev: boolean,
   pointsTestnetExperience: boolean,
@@ -117,6 +122,7 @@ export const configUtil = {
   getAuthServiceUrl,
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,
+  getCampaignAPIUrlV2,
   getSolanaGraphAPIUrl,
   DEFAULT_CHAIN_ID,
 }

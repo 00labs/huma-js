@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request'
 
 import { SolanaChainEnum, SolanaPoolInfo } from '../solana'
-import { ChainEnum } from '../utils/chain'
+import { ChainEnum, NETWORK_TYPE } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { requestPost } from '../utils/request'
 import { PoolInfoV2 } from '../v2/utils/pool'
@@ -82,6 +82,25 @@ type CampaignPoints = {
   juniorTranchePoints: number
   seniorTranchePoints: number
   lockupPeriodMonths: number
+}
+
+export type LeaderboardItem = {
+  accountId: string
+  accountName: string
+  points: number
+  rank: number
+  referredCount: number
+}
+
+export type AccountPoints = {
+  accountId: string
+  basePoints: number
+  liquidityPoints: number
+  liquidityPointsList: {
+    address: string
+    points: number
+  }[]
+  referralPoints: number
 }
 
 function checkWalletOwnership(
@@ -196,6 +215,92 @@ function getWalletRankList(
         return undefined
       }
       return res.data?.walletPoints
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
+function getLeaderboard(
+  seasonId: string,
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+): Promise<{ data: LeaderboardItem[] } | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+
+  const query = gql`
+    query {
+      leaderboard(seasonId: "${seasonId}") {
+        ... on LeaderboardResult {
+          data {
+            accountId
+            accountName
+            points
+            referredCount
+            rank
+          }
+        }
+        ... on PointServiceError {
+          message
+        }
+      }
+    }
+  `
+
+  return requestPost<{
+    data?: { leaderboard: { data: LeaderboardItem[] } }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data?.leaderboard
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
+function getAccountPoints(
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+): Promise<AccountPoints | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+
+  const query = gql`
+    query {
+      accountPoints {
+        ... on AccountPointsResult {
+          accountId
+          basePoints
+          liquidityPoints
+          liquidityPointsList {
+            address
+            points
+          }
+          referralPoints
+        }
+        ... on PointServiceError {
+          message
+        }
+      }
+    }
+  `
+
+  return requestPost<{
+    data?: { accountPoints: AccountPoints }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data?.accountPoints
     })
     .catch((err) => {
       console.error(err)
@@ -470,4 +575,6 @@ export const CampaignService = {
   createNewWallet,
   updateWalletPoints,
   checkAndCreateWallet,
+  getLeaderboard,
+  getAccountPoints,
 }
