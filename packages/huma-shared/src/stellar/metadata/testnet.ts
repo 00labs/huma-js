@@ -21,7 +21,7 @@ export const STELLAR_TESTNET_METADATA: StellarPoolsInfo = {
     underlyingToken: {
       address: 'CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA',
       symbol: 'USDC',
-      decimals: 6,
+      decimals: 7,
       icon: 'USDC',
     },
     extra: {
