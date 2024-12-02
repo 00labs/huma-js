@@ -68,8 +68,9 @@ export type LeaderboardItem = {
   referredCount: number
 }
 
-export type AccountPoints = {
+export type HumaAccountPoints = {
   accountId: string
+  totalPoints: number
   basePoints: number
   liquidityPoints: number
   liquidityPointsList: {
@@ -115,7 +116,13 @@ function getLeaderboard(
   seasonId: string,
   networkType: NETWORK_TYPE,
   isDev: boolean,
-): Promise<{ data: LeaderboardItem[] } | undefined> {
+): Promise<
+  | {
+      leaderboardItems: LeaderboardItem[]
+      accountLeaderboard: LeaderboardItem | undefined
+    }
+  | undefined
+> {
   const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
@@ -146,7 +153,18 @@ function getLeaderboard(
         console.error(res.errors)
         return undefined
       }
-      return res.data?.leaderboard
+      const leaderboardItems = res.data?.leaderboard?.data
+      let accountLeaderboard: LeaderboardItem | undefined
+      if (leaderboardItems) {
+        // This means that the first item is the user itself
+        if (leaderboardItems[1]?.rank === 1) {
+          accountLeaderboard = leaderboardItems.shift()
+        }
+      }
+      return {
+        leaderboardItems: leaderboardItems ?? [],
+        accountLeaderboard,
+      }
     })
     .catch((err) => {
       console.error(err)
@@ -154,10 +172,10 @@ function getLeaderboard(
     })
 }
 
-function getAccountPoints(
+function getHumaAccountPoints(
   networkType: NETWORK_TYPE,
   isDev: boolean,
-): Promise<AccountPoints | undefined> {
+): Promise<HumaAccountPoints | undefined> {
   const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
@@ -181,7 +199,7 @@ function getAccountPoints(
   `
 
   return requestPost<{
-    data?: { accountPoints: AccountPoints }
+    data?: { accountPoints: HumaAccountPoints }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
@@ -189,7 +207,14 @@ function getAccountPoints(
         console.error(res.errors)
         return undefined
       }
-      return res.data?.accountPoints
+      const accountPoints = res.data?.accountPoints
+      if (accountPoints) {
+        accountPoints.totalPoints =
+          accountPoints.basePoints +
+          accountPoints.liquidityPoints +
+          accountPoints.referralPoints
+      }
+      return accountPoints
     })
     .catch((err) => {
       console.error(err)
@@ -239,7 +264,7 @@ function getEstimatedPoints(
     })
 }
 
-function updateAccountPoints(
+function updateHumaAccountPoints(
   walletAddress: string,
   transactionHash: string,
   chainId: ChainEnum | SolanaChainEnum,
@@ -294,6 +319,6 @@ export const CampaignService = {
   checkWalletOwnership,
   getEstimatedPoints,
   getLeaderboard,
-  getAccountPoints,
-  updateAccountPoints,
+  getHumaAccountPoints,
+  updateHumaAccountPoints,
 }

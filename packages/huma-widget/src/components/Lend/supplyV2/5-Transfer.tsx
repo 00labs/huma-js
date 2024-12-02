@@ -50,7 +50,7 @@ export function Transfer({
     async (options?: { txHash: string }) => {
       if (campaign && options?.txHash) {
         try {
-          const result = await CampaignService.updateAccountPoints(
+          const result = await CampaignService.updateHumaAccountPoints(
             account!,
             options.txHash,
             chainId!,
