@@ -52,7 +52,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     'DEFAULT_ADMIN_ROLE()': FunctionFragment
     'LENDER_ROLE()': FunctionFragment
     'addApprovedLender(address,bool)': FunctionFragment
-    'addRedemptionRequest(uint256)': FunctionFragment
+    'addRedemptionRequest(address,uint256)': FunctionFragment
     'allowance(address,address)': FunctionFragment
     'approve(address,uint256)': FunctionFragment
     'balanceOf(address)': FunctionFragment
@@ -181,7 +181,7 @@ export interface TrancheVaultInterface extends utils.Interface {
   ): string
   encodeFunctionData(
     functionFragment: 'addRedemptionRequest',
-    values: [PromiseOrValue<BigNumberish>],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string
   encodeFunctionData(
     functionFragment: 'allowance',
@@ -555,7 +555,7 @@ export interface TrancheVaultInterface extends utils.Interface {
     'LiquidityDeposited(address,uint256,uint256)': EventFragment
     'PoolConfigCacheUpdated(address)': EventFragment
     'PoolConfigChanged(address,address)': EventFragment
-    'RedemptionRequestAdded(address,uint256,uint256)': EventFragment
+    'RedemptionRequestAdded(address,address,uint256,uint256)': EventFragment
     'RedemptionRequestRemoved(address,uint256,uint256)': EventFragment
     'ReinvestYieldConfigSet(address,bool,address)': EventFragment
     'RoleAdminChanged(bytes32,bytes32,bytes32)': EventFragment
@@ -727,11 +727,12 @@ export type PoolConfigChangedEventFilter =
 
 export interface RedemptionRequestAddedEventObject {
   account: string
+  requester: string
   shares: BigNumber
   epochId: BigNumber
 }
 export type RedemptionRequestAddedEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
+  [string, string, BigNumber, BigNumber],
   RedemptionRequestAddedEventObject
 >
 
@@ -895,6 +896,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<ContractTransaction>
 
     addRedemptionRequest(
+      lender: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>
@@ -1168,6 +1170,7 @@ export interface TrancheVault extends BaseContract {
   ): Promise<ContractTransaction>
 
   addRedemptionRequest(
+    lender: PromiseOrValue<string>,
     shares: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>
@@ -1435,6 +1438,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<void>
 
     addRedemptionRequest(
+      lender: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>
@@ -1789,13 +1793,15 @@ export interface TrancheVault extends BaseContract {
       oldPoolConfig?: PromiseOrValue<string> | null,
     ): PoolConfigChangedEventFilter
 
-    'RedemptionRequestAdded(address,uint256,uint256)'(
+    'RedemptionRequestAdded(address,address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
+      requester?: PromiseOrValue<string> | null,
       shares?: null,
       epochId?: null,
     ): RedemptionRequestAddedEventFilter
     RedemptionRequestAdded(
       account?: PromiseOrValue<string> | null,
+      requester?: PromiseOrValue<string> | null,
       shares?: null,
       epochId?: null,
     ): RedemptionRequestAddedEventFilter
@@ -1919,6 +1925,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<BigNumber>
 
     addRedemptionRequest(
+      lender: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>
@@ -2168,6 +2175,7 @@ export interface TrancheVault extends BaseContract {
     ): Promise<PopulatedTransaction>
 
     addRedemptionRequest(
+      lender: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>
