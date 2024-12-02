@@ -11,7 +11,7 @@ export const SCROLL_SEPOLIA_METADATA: PoolsInfoV2 = {
     poolName: POOL_NAME.ArfCreditPool3Months,
     poolType: POOL_TYPE.CreditLine,
     pool: '0xA457970f2d9f0EDaaf027cD581336235c9E5A669',
-    poolConfig: '0xCc063C2b40A212C47523670bCD73274A8C596573',
+    poolConfig: '0x9BA2b35EA6C4fa3527B3FE4D5732f4C337DA26FA',
     poolCredit: '0x2c289b61c92Dfaf2be5968fd6367ab32AC4AD26f',
     poolCreditManager: '0xb455B4BFcA6cFA9873D90FfAdA43369009e14fd2',
     poolSafe: '0x055AA17ed23AdE6e4437f6259DF2FF1440d2D7ed',

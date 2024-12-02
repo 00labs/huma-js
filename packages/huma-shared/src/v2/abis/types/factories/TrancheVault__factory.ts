@@ -49,7 +49,17 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'RedemptionCancellationDisabled',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'ReinvestYieldOptionAlreadySet',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'SentinelServiceAccountRequired',
     type: 'error',
   },
   {
@@ -323,6 +333,12 @@ const _abi = [
         indexed: true,
         internalType: 'address',
         name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'requester',
         type: 'address',
       },
       {
@@ -625,6 +641,11 @@ const _abi = [
   },
   {
     inputs: [
+      {
+        internalType: 'address',
+        name: 'lender',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: 'shares',
