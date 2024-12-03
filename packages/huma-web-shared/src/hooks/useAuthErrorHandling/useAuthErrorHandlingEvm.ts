@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AuthService, CHAIN_TYPE } from '@huma-finance/shared'
+import { AuthService, CHAIN_TYPE, CHAINS } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { SiweMessage } from 'siwe'
@@ -65,6 +65,14 @@ export const useAuthErrorHandlingEvm = (
       !error ||
       !provider
     ) {
+      return
+    }
+
+    const isChainSupported = Object.values(CHAINS).some(
+      (chain) => chain.id === chainId,
+    )
+
+    if (!isChainSupported) {
       return
     }
 
