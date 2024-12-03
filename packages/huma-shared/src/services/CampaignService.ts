@@ -116,13 +116,7 @@ function getLeaderboard(
   seasonId: string,
   networkType: NETWORK_TYPE,
   isDev: boolean,
-): Promise<
-  | {
-      leaderboardItems: LeaderboardItem[]
-      accountLeaderboard: LeaderboardItem | undefined
-    }
-  | undefined
-> {
+): Promise<LeaderboardItem[] | undefined> {
   const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
@@ -138,7 +132,7 @@ function getLeaderboard(
           }
         }
         ... on PointServiceError {
-          message
+          errMessage
         }
       }
     }
@@ -153,18 +147,48 @@ function getLeaderboard(
         console.error(res.errors)
         return undefined
       }
-      const leaderboardItems = res.data?.leaderboard?.data
-      let accountLeaderboard: LeaderboardItem | undefined
-      if (leaderboardItems) {
-        // This means that the first item is the user itself
-        if (leaderboardItems[1]?.rank === 1) {
-          accountLeaderboard = leaderboardItems.shift()
+      return res.data?.leaderboard?.data
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
+function getHumaAccountRanking(
+  seasonId: string,
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+): Promise<LeaderboardItem | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+
+  const query = gql`
+    query {
+      myRankingEntry(seasonId: "${seasonId}") {
+        ... on LeaderboardItem {
+          accountId
+          accountName
+          points
+          referredCount
+          rank
+        }
+        ... on PointServiceError {
+            errMessage
         }
       }
-      return {
-        leaderboardItems: leaderboardItems ?? [],
-        accountLeaderboard,
+  }
+  `
+
+  return requestPost<{
+    data?: { myRankingEntry: LeaderboardItem }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
       }
+      return res.data?.myRankingEntry
     })
     .catch((err) => {
       console.error(err)
@@ -192,7 +216,7 @@ function getHumaAccountPoints(
           referralPoints
         }
         ... on PointServiceError {
-          message
+          errMessage
         }
       }
     }
@@ -286,7 +310,7 @@ function updateHumaAccountPoints(
           pointsAccumulated
         }
         ... on PointServiceError {
-          message
+          errMessage
         }
       }
     }
@@ -319,6 +343,7 @@ export const CampaignService = {
   checkWalletOwnership,
   getEstimatedPoints,
   getLeaderboard,
+  getHumaAccountRanking,
   getHumaAccountPoints,
   updateHumaAccountPoints,
 }
