@@ -155,7 +155,7 @@ function getLeaderboard(
     })
 }
 
-function getHumaAccountRank(
+function getHumaAccountRanking(
   seasonId: string,
   networkType: NETWORK_TYPE,
   isDev: boolean,
@@ -343,7 +343,7 @@ export const CampaignService = {
   checkWalletOwnership,
   getEstimatedPoints,
   getLeaderboard,
-  getHumaAccountRank,
+  getHumaAccountRanking,
   getHumaAccountPoints,
   updateHumaAccountPoints,
 }
