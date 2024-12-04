@@ -226,12 +226,12 @@ export const URLS: { [chainId: number]: string[] } = Object.keys(
   return accumulator
 }, {})
 
-export const getWalletAddressAbbr = (address: string) => {
+export const getWalletAddressAbbr = (address: string, startNum = 6) => {
   if (!address) {
     return address
   }
   const { length } = address
-  return `${address.slice(0, 6)}...${address.slice(length - 4, length)}`
+  return `${address.slice(0, startNum)}...${address.slice(length - 4, length)}`
 }
 
 /**
