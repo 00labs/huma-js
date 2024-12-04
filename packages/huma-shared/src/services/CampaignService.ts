@@ -64,7 +64,7 @@ export type LeaderboardItem = {
   accountId: string
   accountName: string
   points: number
-  rank: number
+  ranking: number
   referredCount: number
 }
 
@@ -128,7 +128,7 @@ function getLeaderboard(
             accountName
             points
             referredCount
-            rank
+            ranking
           }
         }
         ... on PointServiceError {
@@ -170,7 +170,7 @@ function getHumaAccountRanking(
           accountName
           points
           referredCount
-          rank
+          ranking
         }
         ... on PointServiceError {
             errMessage
