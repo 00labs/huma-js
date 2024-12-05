@@ -33,6 +33,42 @@ export class HumaSolanaProgramHelper {
     this.#solanaContext = solanaContext
   }
 
+  async getAvailableCreditForPool(): Promise<BN> {
+    const { chainId, poolName } = this.#solanaContext
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error('Could not find pool')
+    }
+
+    const accountInfo = await this.getAccountInfo()
+    if (accountInfo === null) {
+      throw new Error('Could not get account info for this pool.')
+    }
+
+    const tokenAccount = await getAccount(
+      this.#solanaContext.connection,
+      new PublicKey(poolInfo.poolUnderlyingTokenAccount),
+      undefined,
+      TOKEN_PROGRAM_ID,
+    )
+
+    const { creditConfig, creditState } = accountInfo
+    const principalAmount = creditState.creditRecord.unbilledPrincipal
+      .add(creditState.creditRecord.nextDue)
+      .sub(creditState.creditRecord.yieldDue)
+      .add(creditState.dueDetail.principalPastDue)
+    const unusedCredit = creditConfig.creditLimit.sub(principalAmount)
+    const poolTokenBalanceBN = new BN(tokenAccount.amount.toString())
+    // Set available credit to the minimum of the pool balance or the credit available amount,
+    // since both are upper bounds on the amount of credit that can be borrowed.
+    // If either is negative, cap the available credit to 0.
+    const creditAvailable = unusedCredit.lt(poolTokenBalanceBN)
+      ? unusedCredit
+      : poolTokenBalanceBN
+    return creditAvailable.ltn(0) ? new BN(0) : creditAvailable
+  }
+
   async buildSubmitReceivableTransaction(
     referenceId: string,
   ): Promise<Transaction> {
@@ -306,7 +342,36 @@ export class HumaSolanaProgramHelper {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getAccountInfo(): Promise<any> {
+  async getAccountInfo(): Promise<{
+    creditConfig: {
+      creditLimit: BN
+      committedAmount: BN
+      numPeriods: number
+      yieldBps: number
+    }
+    creditState: {
+      creditRecord: {
+        status: unknown
+        nextDue: BN
+        yieldDue: BN
+        nextDueDate: BN
+        totalPastDue: BN
+        missedPeriods: number
+        remainingPeriods: number
+        unbilledPrincipal: BN
+      }
+      dueDetail: {
+        paid: BN
+        accrued: BN
+        lateFee: BN
+        committed: BN
+        yieldPastDue: BN
+        principalPastDue: BN
+        lateFeeUpdatedDate: BN
+      }
+      receivableAvailableCredits: BN
+    }
+  } | null> {
     const { publicKey, chainId, poolName } = this.#solanaContext
     const program = getHumaProgram(chainId, this.#solanaContext.connection)
     const poolInfo = getSolanaPoolInfo(chainId, poolName)

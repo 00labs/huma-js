@@ -24,6 +24,7 @@
     "solanaDeclarePayment": "ts-node src/solana/declarePayment.ts",
     "solanaSubmitReceivable": "ts-node src/solana/submitReceivable.ts",
     "solanaFetchReceivable": "ts-node src/solana/fetchReceivable.ts",
+    "solanaFetchAvailableCredit": "ts-node src/solana/fetchAvailableCredit.ts",
     "solanaFetchBorrowerDetails": "ts-node src/solana/fetchBorrowerDetails.ts",
     "solanaDrawdown": "ts-node src/solana/drawdown.ts",
     "solanaPayback": "ts-node src/solana/payback.ts",
