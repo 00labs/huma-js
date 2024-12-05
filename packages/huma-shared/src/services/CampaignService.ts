@@ -78,6 +78,7 @@ export type HumaAccountPoints = {
     points: number
   }[]
   referralPoints: number
+  bonusPoints: number
 }
 
 function checkWalletOwnership(
@@ -214,6 +215,7 @@ function getHumaAccountPoints(
             points
           }
           referralPoints
+          bonusPoints
         }
         ... on PointServiceError {
           errMessage
@@ -236,7 +238,8 @@ function getHumaAccountPoints(
         accountPoints.totalPoints =
           accountPoints.basePoints +
           accountPoints.liquidityPoints +
-          accountPoints.referralPoints
+          accountPoints.referralPoints +
+          accountPoints.bonusPoints
       }
       return accountPoints
     })
