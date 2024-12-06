@@ -55,12 +55,15 @@ const getPoolApyV2Base = (
 ): PoolApy => {
   const APY = yieldInBps / BP_FACTOR
 
-  const liquidityCapBN = BigNumber.from(liquidityCap)
+  let liquidityCapBN = BigNumber.from(liquidityCap)
   const seniorDeployedAssetsBN = BigNumber.from(seniorDeployedAssets)
   const juniorDeployedAssetsBN = BigNumber.from(juniorDeployedAssets)
   const totalDeployedAssetsBN = seniorDeployedAssetsBN.add(
     juniorDeployedAssetsBN,
   )
+  if (liquidityCapBN.eq(0)) {
+    liquidityCapBN = totalDeployedAssetsBN
+  }
   const seniorMaxAssetsBN = liquidityCapBN
     .sub(totalDeployedAssetsBN)
     .add(seniorDeployedAssetsBN)
@@ -87,7 +90,7 @@ const getPoolApyV2Base = (
     .mul(Math.round(postPoolProfitRatio * BP_FACTOR))
     .div(BP_FACTOR)
   const blendedApy =
-    poolPostProfitBN.mul(BP_FACTOR).div(liquidityCap).toNumber() / BP_FACTOR
+    poolPostProfitBN.mul(BP_FACTOR).div(liquidityCapBN).toNumber() / BP_FACTOR
 
   let seniorTrancheApy = 0
   let seniorPostProfitBN = BigNumber.from(0)
@@ -185,7 +188,12 @@ export const getPoolApyV2 = (
     flcConfigs,
   )
 
-  const liquidityCapBN = BigNumber.from(liquidityCap)
+  let liquidityCapBN = BigNumber.from(liquidityCap)
+  if (liquidityCapBN.eq(0)) {
+    liquidityCapBN = BigNumber.from(seniorDeployedAssets).add(
+      BigNumber.from(juniorDeployedAssets),
+    )
+  }
   const juniorAssetsBN = liquidityCapBN.div(maxSeniorJuniorRatio + 1)
   const seniorAssetsBN = liquidityCapBN.sub(juniorAssetsBN)
   const maxJuniorApyResult = getPoolApyV2Base(
