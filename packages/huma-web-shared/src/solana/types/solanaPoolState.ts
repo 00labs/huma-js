@@ -36,4 +36,5 @@ export type SolanaPoolState = {
     poolOwnerIncomeWithdrawn: string
   }
   campaign?: SolanaCampaign
+  autoRedemptionAfterLockup?: boolean
 }

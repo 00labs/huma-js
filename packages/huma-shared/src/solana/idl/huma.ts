@@ -356,6 +356,7 @@ export type Huma = {
         'Records a new redemption request.',
         '',
         '# Arguments',
+        '* `lender` - The lender whose shares are being requested for redemption.',
         '* `shares` - The number of shares the lender wants to redeem.',
         '',
         '# Access Control',
@@ -364,7 +365,7 @@ export type Huma = {
       discriminator: [72, 203, 201, 17, 75, 60, 157, 47]
       accounts: [
         {
-          name: 'lender'
+          name: 'signer'
           signer: true
         },
         {
@@ -472,7 +473,7 @@ export type Huma = {
                 path: 'trancheMint'
               },
               {
-                kind: 'account'
+                kind: 'arg'
                 path: 'lender'
               },
             ]
@@ -560,7 +561,7 @@ export type Huma = {
         },
         {
           name: 'hookProgram'
-          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
+          address: 'JAhzUQ7nK7zeTdnbLDQR3y7UwSKnxeqdctCbjG8Z2abM'
         },
         {
           name: 'tokenProgram'
@@ -568,6 +569,10 @@ export type Huma = {
         },
       ]
       args: [
+        {
+          name: 'lender'
+          type: 'pubkey'
+        },
         {
           name: 'shares'
           type: 'u128'
@@ -1184,7 +1189,7 @@ export type Huma = {
         },
         {
           name: 'hookProgram'
-          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
+          address: 'JAhzUQ7nK7zeTdnbLDQR3y7UwSKnxeqdctCbjG8Z2abM'
         },
         {
           name: 'tokenProgram'
@@ -3777,7 +3782,7 @@ export type Huma = {
         },
         {
           name: 'hookProgram'
-          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
+          address: 'JAhzUQ7nK7zeTdnbLDQR3y7UwSKnxeqdctCbjG8Z2abM'
         },
         {
           name: 'poolAuthority'
@@ -4705,6 +4710,42 @@ export type Huma = {
               },
             ]
           }
+        },
+      ]
+      args: []
+    },
+    {
+      name: 'reallocPoolConfig'
+      discriminator: [23, 125, 97, 240, 16, 108, 85, 88]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'humaConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'huma_config.id'
+                account: 'humaConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'poolConfig'
+          writable: true
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
         },
       ]
       args: []
@@ -7734,6 +7775,10 @@ export type Huma = {
       discriminator: [76, 55, 28, 161, 130, 142, 226, 133]
     },
     {
+      name: 'poolConfigReallocatedEvent'
+      discriminator: [90, 254, 193, 102, 77, 252, 10, 50]
+    },
+    {
       name: 'poolCreatedEvent'
       discriminator: [25, 94, 75, 47, 112, 99, 53, 63]
     },
@@ -7920,6 +7965,10 @@ export type Huma = {
       name: 'authorizedInitialDepositorRequired'
     },
     {
+      code: 6215
+      name: 'lenderOrSentinelRequired'
+    },
+    {
       code: 6301
       name: 'protocolFeeHigherThanUpperLimit'
     },
@@ -8016,6 +8065,10 @@ export type Huma = {
       name: 'poolNameTooLong'
     },
     {
+      code: 6419
+      name: 'invalidPoolConfig'
+    },
+    {
       code: 6501
       name: 'previousAssetsNotWithdrawn'
     },
@@ -8034,6 +8087,14 @@ export type Huma = {
     {
       code: 6505
       name: 'epochClosedTooEarly'
+    },
+    {
+      code: 6506
+      name: 'insufficientAuthorizationForAutoRedemption'
+    },
+    {
+      code: 6507
+      name: 'redemptionCancellationDisabled'
     },
     {
       code: 6601
@@ -9407,6 +9468,7 @@ export type Huma = {
         '* `fixed_senior_yield_bps` - The fixed yield for senior tranche. Either this or tranches_risk_adjustment_bps is non-zero.',
         '* `tranches_risk_adjustment_bps` - Percentage of yield to be shifted from senior to junior. Either this or fixed_senior_yield_bps is non-zero.',
         '* `withdrawal_lockup_period_days` - How long a lender has to wait after the last deposit before they can withdraw.',
+        "* `auto_redemption_after_lockup` - When enabled, lenders' shares are automatically redeemed after the lockup period.",
       ]
       type: {
         kind: 'struct'
@@ -9430,6 +9492,10 @@ export type Huma = {
           {
             name: 'withdrawalLockupPeriodDays'
             type: 'u16'
+          },
+          {
+            name: 'autoRedemptionAfterLockup'
+            type: 'bool'
           },
         ]
       }
@@ -10393,6 +10459,40 @@ export type Huma = {
                 name: 'feeStructure'
               }
             }
+          },
+          {
+            name: 'padding'
+            type: {
+              array: ['u8', 160]
+            }
+          },
+        ]
+      }
+    },
+    {
+      name: 'poolConfigReallocatedEvent'
+      docs: [
+        'The pool config has been reallocated.',
+        '',
+        '# Fields',
+        '* `pool_config` - The address of the pool config account.',
+        '* `account_span` - The size of the pool config account.',
+        '* `lamports_diff` - The increased rent.',
+      ]
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'poolConfig'
+            type: 'pubkey'
+          },
+          {
+            name: 'accountSpan'
+            type: 'u64'
+          },
+          {
+            name: 'lamportsDiff'
+            type: 'u64'
           },
         ]
       }
