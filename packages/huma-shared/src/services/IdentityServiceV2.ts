@@ -285,14 +285,17 @@ const humaAccountLogin = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<HumaAccountLoginResult> =>
-  requestPost<HumaAccountLoginResult>(
+): Promise<HumaAccountLoginResult> => {
+  const result = await requestPost<HumaAccountLoginResult>(
     `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/auth/login`,
     {
       walletAddress,
       chainId: String(chainId),
     },
   )
+  result.id = result.accountId
+  return result
+}
 
 /**
  * Huma account logout.
