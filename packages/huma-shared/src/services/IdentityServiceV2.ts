@@ -65,7 +65,6 @@ export type ResumeVerificationResultV2 = {
  * Object representing the Huma account.
  * @typedef {Object} HumaAccount
  * @property {string} id The account id.
- * @property {string} accountId The account id.
  * @property {string} name The account name.
  * @property {Wallet[]} wallets The account wallets.
  * @property {string} referralCode The account referral code.
@@ -75,7 +74,6 @@ export type ResumeVerificationResultV2 = {
  */
 export type HumaAccount = {
   id: string
-  accountId: string
   name: string
   wallets: {
     address: string
@@ -97,6 +95,7 @@ export type HumaAccount = {
  * @property {boolean} isNewAccount Is new account or not.
  */
 export type HumaAccountLoginResult = HumaAccount & {
+  account: HumaAccount
   isNewAccount: boolean
 }
 
@@ -267,7 +266,6 @@ const getHumaAccount = async (
   const { account } = await requestGet<{ account: HumaAccount }>(
     `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/account`,
   )
-  account.accountId = account.id
   return account
 }
 
@@ -285,14 +283,17 @@ const humaAccountLogin = async (
   walletAddress: string,
   chainId: number,
   isDev = false,
-): Promise<HumaAccountLoginResult> =>
-  requestPost<HumaAccountLoginResult>(
+): Promise<HumaAccountLoginResult> => {
+  const result = await requestPost<HumaAccountLoginResult>(
     `${configUtil.getIdentityAPIUrlV2(networkType, isDev)}/auth/login`,
     {
       walletAddress,
       chainId: String(chainId),
     },
   )
+
+  return result
+}
 
 /**
  * Huma account logout.
