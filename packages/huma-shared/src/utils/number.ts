@@ -16,7 +16,7 @@ export const formatMoney = (
 
   let numCast = Number(num)
   // If num is greater than a certain amount, round out decimals
-  if (numCast > 1_000) {
+  if (numCast > 100_000) {
     numCast = Math.round(numCast)
   }
 
