@@ -45,7 +45,10 @@ export function ChooseAmount({
     const juniorTrancheAssetsBN = new BN(juniorTrancheAssets ?? 0)
     const seniorTrancheAssetsBN = new BN(seniorTrancheAssets ?? 0)
     const totalDeployedBN = seniorTrancheAssetsBN.add(juniorTrancheAssetsBN)
-    const totalAvailableCapBN = new BN(liquidityCap ?? 0).sub(totalDeployedBN)
+    let totalAvailableCapBN = new BN(liquidityCap ?? 0).sub(totalDeployedBN)
+    totalAvailableCapBN = totalAvailableCapBN.ltn(0)
+      ? new BN(0)
+      : totalAvailableCapBN
     const maxSeniorAssetsBN = juniorTrancheAssetsBN.muln(
       maxSeniorJuniorRatio ?? 0,
     )

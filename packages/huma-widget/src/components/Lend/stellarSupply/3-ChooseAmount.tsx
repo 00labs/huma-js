@@ -41,7 +41,9 @@ export function ChooseAmount({
     const juniorTrancheAssetsBN = BigInt(juniorTrancheAssets ?? 0)
     const seniorTrancheAssetsBN = BigInt(seniorTrancheAssets ?? 0)
     const totalDeployedBN = seniorTrancheAssetsBN + juniorTrancheAssetsBN
-    const totalAvailableCapBN = BigInt(liquidityCap ?? 0) - totalDeployedBN
+    let totalAvailableCapBN = BigInt(liquidityCap ?? 0) - totalDeployedBN
+    totalAvailableCapBN =
+      totalAvailableCapBN < 0 ? BigInt(0) : totalAvailableCapBN
     const maxSeniorAssetsBN =
       juniorTrancheAssetsBN * BigInt(maxSeniorJuniorRatio ?? 0)
     let seniorAvailableCapBN = maxSeniorAssetsBN - seniorTrancheAssetsBN
