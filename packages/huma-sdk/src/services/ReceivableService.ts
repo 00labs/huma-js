@@ -1,6 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { BigNumberish, ethers, Overrides } from 'ethers'
 import {
+  isValidHttpUrl,
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
@@ -445,7 +446,12 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
   }
 
   const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) => {
-    if (!rwrInfoBase.tokenURI) {
+    if (
+      rwrInfoBase.tokenURI == null ||
+      rwrInfoBase.tokenURI === '' ||
+      !isValidHttpUrl(rwrInfoBase.tokenURI) ||
+      !rwrInfoBase.tokenURI
+    ) {
       return null
     }
     return ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
