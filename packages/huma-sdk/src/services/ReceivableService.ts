@@ -446,12 +446,7 @@ async function loadReceivablesOfOwnerWithMetadata<T>(
   }
 
   const fetchMetadata = async (rwrInfoBase: RealWorldReceivableInfoBase) => {
-    if (
-      rwrInfoBase.tokenURI == null ||
-      rwrInfoBase.tokenURI === '' ||
-      !isValidHttpUrl(rwrInfoBase.tokenURI) ||
-      !rwrInfoBase.tokenURI
-    ) {
+    if (!isValidHttpUrl(rwrInfoBase.tokenURI) || !rwrInfoBase.tokenURI) {
       return null
     }
     return ARWeaveService.fetchMetadataFromUrl(rwrInfoBase.tokenURI)
