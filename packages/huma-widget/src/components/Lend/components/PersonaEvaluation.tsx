@@ -7,10 +7,9 @@ import {
   KYCCopy,
   KYCType,
   NETWORK_TYPE,
-  TrancheType,
   VerificationStatusResultV2,
 } from '@huma-finance/shared'
-import { useAuthErrorHandling, useChainInfo } from '@huma-finance/web-shared'
+import { useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -34,27 +33,20 @@ type Props = {
   }
   networkType: NETWORK_TYPE
   chainType: CHAIN_TYPE
-  isUniTranche: boolean
   campaign?: Campaign
-  chainSpecificData?: Record<string, unknown>
-  changeTranche: (tranche: TrancheType) => void
   handleClose: (options?: CloseModalOptions) => void
 }
 
 export function PersonaEvaluation({
   poolInfo,
-  isUniTranche,
   campaign,
   networkType,
   chainType,
-  chainSpecificData,
-  changeTranche,
   handleClose,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
-  const { account, chainId } = useChainInfo(isDev, chainType)
   const {
     errorType,
     setError: setAuthError,
@@ -74,184 +66,119 @@ export function PersonaEvaluation({
   const isActionOngoingRef = useRef<boolean>(false)
   const isKYCResumedRef = useRef<boolean>(false)
 
-  const approveLender = useCallback(
-    async (account: string, chainId: number) => {
+  const checkVerificationStatus = useCallback(async () => {
+    if (isActionOngoingRef.current || isKYCResumedRef.current) {
+      return
+    }
+    try {
       isActionOngoingRef.current = true
-      setLoadingType('approveLender')
-      try {
-        await IdentityServiceV2.approveLender(
-          networkType,
-          account,
-          chainId,
-          poolInfo.juniorTrancheVault,
-          isDev,
-          chainSpecificData,
-        )
-      } catch (e: unknown) {
-        console.error(e)
-      }
+      setLoadingType('verificationStatus')
+      const verificationStatus =
+        await IdentityServiceV2.getVerificationStatusV2(networkType, isDev)
+      setVerificationStatus(verificationStatus)
+      setInquiryId(verificationStatus.personaInquiryId)
 
-      if (!isUniTranche) {
-        try {
-          await IdentityServiceV2.approveLender(
-            networkType,
-            account,
-            chainId,
-            poolInfo.seniorTrancheVault,
-            isDev,
-            chainSpecificData,
-          )
-        } catch (e: unknown) {
-          console.error(e)
+      switch (verificationStatus.status) {
+        case IdentityVerificationStatusV2.ACCREDITED: {
+          const startVerificationResult =
+            await IdentityServiceV2.startVerification(networkType, isDev)
+          setInquiryId(startVerificationResult.personaInquiryId)
+          setKYCCopy(KYCCopies.verifyIdentity)
+          setLoadingType(undefined)
+          if (
+            startVerificationResult.status ===
+            IdentityVerificationStatusV2.BYPASSED
+          ) {
+            setVerificationStatus(startVerificationResult)
+            setKYCCopy(KYCCopies.verificationBypassed)
+          }
+
+          break
         }
-      }
-      if (isUniTranche) {
-        changeTranche('junior')
-        dispatch(setStep(WIDGET_STEP.ChooseAmount))
-      } else {
-        dispatch(setStep(WIDGET_STEP.ChooseTranche))
-      }
 
-      isActionOngoingRef.current = false
-      setLoadingType(undefined)
-    },
-    [
-      chainSpecificData,
-      changeTranche,
-      dispatch,
-      isDev,
-      isUniTranche,
-      networkType,
-      poolInfo.juniorTrancheVault,
-      poolInfo.seniorTrancheVault,
-    ],
-  )
+        case IdentityVerificationStatusV2.CREATED: {
+          setKYCCopy(KYCCopies.verifyIdentity)
+          setLoadingType(undefined)
+          break
+        }
 
-  const checkVerificationStatus = useCallback(
-    async (account: string, chainId: number) => {
-      if (isActionOngoingRef.current || isKYCResumedRef.current) {
-        return
-      }
-      try {
-        isActionOngoingRef.current = true
-        setLoadingType('verificationStatus')
-        const verificationStatus =
-          await IdentityServiceV2.getVerificationStatusV2(networkType, isDev)
-        setVerificationStatus(verificationStatus)
-        setInquiryId(verificationStatus.personaInquiryId)
-
-        switch (verificationStatus.status) {
-          case IdentityVerificationStatusV2.ACCREDITED: {
-            const startVerificationResult =
-              await IdentityServiceV2.startVerification(networkType, isDev)
-            setInquiryId(startVerificationResult.personaInquiryId)
-            setKYCCopy(KYCCopies.verifyIdentity)
-            setLoadingType(undefined)
-            if (
-              startVerificationResult.status ===
-              IdentityVerificationStatusV2.BYPASSED
-            ) {
-              setVerificationStatus(startVerificationResult)
-              setKYCCopy(KYCCopies.verificationBypassed)
-            }
-
-            break
-          }
-
-          case IdentityVerificationStatusV2.CREATED: {
-            setKYCCopy(KYCCopies.verifyIdentity)
-            setLoadingType(undefined)
-            break
-          }
-
-          case IdentityVerificationStatusV2.PENDING: {
-            if (!isKYCCompletedRef.current) {
-              const resumeVerificationResult =
-                await IdentityServiceV2.resumeVerification(networkType, isDev)
-              verificationStatus.status = resumeVerificationResult.status
-              setVerificationStatus(verificationStatus)
-              setSessionToken(resumeVerificationResult.sessionToken)
-              setLoadingType(undefined)
-              isKYCResumedRef.current = true
-            } else {
-              setLoadingType('verificationStatus')
-            }
-            setKYCCopy(KYCCopies.verifyIdentity)
-            break
-          }
-
-          case IdentityVerificationStatusV2.EXPIRED: {
+        case IdentityVerificationStatusV2.PENDING: {
+          if (!isKYCCompletedRef.current) {
             const resumeVerificationResult =
               await IdentityServiceV2.resumeVerification(networkType, isDev)
             verificationStatus.status = resumeVerificationResult.status
             setVerificationStatus(verificationStatus)
             setSessionToken(resumeVerificationResult.sessionToken)
-            setKYCCopy(KYCCopies.verifyIdentity)
             setLoadingType(undefined)
             isKYCResumedRef.current = true
-            break
+          } else {
+            setLoadingType('verificationStatus')
           }
-
-          case IdentityVerificationStatusV2.BYPASSED: {
-            setKYCCopy(KYCCopies.verificationBypassed)
-            setLoadingType(undefined)
-
-            break
-          }
-
-          case IdentityVerificationStatusV2.APPROVED: {
-            setKYCCopy(KYCCopies.verificationApproved)
-            setLoadingType(undefined)
-            break
-          }
-
-          case IdentityVerificationStatusV2.DECLINED: {
-            setKYCCopy(KYCCopies.verificationDeclined)
-            setLoadingType(undefined)
-            break
-          }
-
-          case IdentityVerificationStatusV2.NEEDS_REVIEW: {
-            setKYCCopy(KYCCopies.verificationNeedsReview)
-            setLoadingType(undefined)
-            break
-          }
-
-          case IdentityVerificationStatusV2.CONSENTED_TO_SUBSCRIPTION: {
-            await approveLender(account, chainId)
-            break
-          }
-
-          default:
-            break
+          setKYCCopy(KYCCopies.verifyIdentity)
+          break
         }
-      } catch (e: unknown) {
-        setAuthError(e)
-      } finally {
-        isActionOngoingRef.current = false
+
+        case IdentityVerificationStatusV2.EXPIRED: {
+          const resumeVerificationResult =
+            await IdentityServiceV2.resumeVerification(networkType, isDev)
+          verificationStatus.status = resumeVerificationResult.status
+          setVerificationStatus(verificationStatus)
+          setSessionToken(resumeVerificationResult.sessionToken)
+          setKYCCopy(KYCCopies.verifyIdentity)
+          setLoadingType(undefined)
+          isKYCResumedRef.current = true
+          break
+        }
+
+        case IdentityVerificationStatusV2.BYPASSED: {
+          setKYCCopy(KYCCopies.verificationBypassed)
+          setLoadingType(undefined)
+
+          break
+        }
+
+        case IdentityVerificationStatusV2.APPROVED: {
+          setKYCCopy(KYCCopies.verificationApproved)
+          setLoadingType(undefined)
+          break
+        }
+
+        case IdentityVerificationStatusV2.DECLINED: {
+          setKYCCopy(KYCCopies.verificationDeclined)
+          setLoadingType(undefined)
+          break
+        }
+
+        case IdentityVerificationStatusV2.NEEDS_REVIEW: {
+          setKYCCopy(KYCCopies.verificationNeedsReview)
+          setLoadingType(undefined)
+          break
+        }
+
+        case IdentityVerificationStatusV2.CONSENTED_TO_SUBSCRIPTION: {
+          dispatch(setStep(WIDGET_STEP.ApproveLender))
+          break
+        }
+
+        default:
+          break
       }
-    },
-    [KYCCopies, approveLender, isDev, networkType, setAuthError],
-  )
-
-  useEffect(() => {
-    if (account && chainId) {
-      checkVerificationStatus(account, chainId)
+    } catch (e: unknown) {
+      setAuthError(e)
+    } finally {
+      isActionOngoingRef.current = false
     }
-  }, [account, chainId, checkVerificationStatus])
+  }, [KYCCopies, dispatch, isDev, networkType, setAuthError])
 
   useEffect(() => {
-    if (
-      account &&
-      chainId &&
-      isWalletOwnershipVerificationRequired &&
-      isWalletOwnershipVerified
-    ) {
-      checkVerificationStatus(account, chainId)
+    checkVerificationStatus()
+  }, [checkVerificationStatus])
+
+  useEffect(() => {
+    if (isWalletOwnershipVerificationRequired && isWalletOwnershipVerified) {
+      checkVerificationStatus()
     }
   }, [
-    account,
-    chainId,
     checkVerificationStatus,
     isWalletOwnershipVerificationRequired,
     isWalletOwnershipVerified,
@@ -260,20 +187,18 @@ export function PersonaEvaluation({
   useEffect(() => {
     const interval = setInterval(() => {
       if (
-        account &&
-        chainId &&
         verificationStatus?.status &&
         [
           IdentityVerificationStatusV2.CREATED,
           IdentityVerificationStatusV2.PENDING,
         ].includes(verificationStatus.status)
       ) {
-        checkVerificationStatus(account, chainId)
+        checkVerificationStatus()
       }
     }, 3 * 1000)
     // eslint-disable-next-line consistent-return
     return () => clearInterval(interval)
-  }, [account, chainId, checkVerificationStatus, verificationStatus?.status])
+  }, [checkVerificationStatus, verificationStatus?.status])
 
   useEffect(() => {
     if (errorType === 'NotSignedIn') {
@@ -301,49 +226,41 @@ export function PersonaEvaluation({
     }
   }, [showPersonaClient])
 
-  const startKYC = useCallback(
-    async (account: string, chainId: number) => {
-      isActionOngoingRef.current = true
-      isKYCResumedRef.current = false
-      setLoadingType('startKYC')
-      const client: Client = new Persona.Client({
-        inquiryId,
-        sessionToken,
-        frameWidth: '480px',
-        onReady: () => {
-          client.open()
-          setShowPersonaClient(true)
-        },
-        onComplete: () => {
-          isKYCCompletedRef.current = true
-          isActionOngoingRef.current = false
-          setShowPersonaClient(false)
-          checkVerificationStatus(account, chainId)
-        },
-        onCancel: () => {
-          isActionOngoingRef.current = false
-          setShowPersonaClient(false)
-          setLoadingType(undefined)
-          handleClose()
-        },
-        onError: () => {
-          isActionOngoingRef.current = false
-          setShowPersonaClient(false)
-          setLoadingType(undefined)
-        },
-      })
-    },
-    [checkVerificationStatus, handleClose, inquiryId, sessionToken],
-  )
+  const startKYC = useCallback(async () => {
+    isActionOngoingRef.current = true
+    isKYCResumedRef.current = false
+    setLoadingType('startKYC')
+    const client: Client = new Persona.Client({
+      inquiryId,
+      sessionToken,
+      frameWidth: '480px',
+      onReady: () => {
+        client.open()
+        setShowPersonaClient(true)
+      },
+      onComplete: () => {
+        isKYCCompletedRef.current = true
+        isActionOngoingRef.current = false
+        setShowPersonaClient(false)
+        checkVerificationStatus()
+      },
+      onCancel: () => {
+        isActionOngoingRef.current = false
+        setShowPersonaClient(false)
+        setLoadingType(undefined)
+        handleClose()
+      },
+      onError: () => {
+        isActionOngoingRef.current = false
+        setShowPersonaClient(false)
+        setLoadingType(undefined)
+      },
+    })
+  }, [checkVerificationStatus, handleClose, inquiryId, sessionToken])
 
   // Start KYC flow directly for the first time
   useEffect(() => {
-    if (
-      !account ||
-      !chainId ||
-      isActionOngoingRef.current ||
-      isKYCResumedRef.current
-    ) {
+    if (isActionOngoingRef.current || isKYCResumedRef.current) {
       return
     }
     if (verificationStatus && !KYCAutoStarted) {
@@ -352,7 +269,7 @@ export function PersonaEvaluation({
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
         case IdentityVerificationStatusV2.EXPIRED: {
-          startKYC(account, chainId)
+          startKYC()
           setKYCAutoStarted(true)
           break
         }
@@ -361,16 +278,16 @@ export function PersonaEvaluation({
           break
       }
     }
-  }, [KYCAutoStarted, account, chainId, startKYC, verificationStatus])
+  }, [KYCAutoStarted, startKYC, verificationStatus])
 
   const handleAction = useCallback(() => {
-    if (account && chainId && verificationStatus) {
+    if (verificationStatus) {
       switch (verificationStatus.status) {
         case IdentityVerificationStatusV2.ACCREDITED:
         case IdentityVerificationStatusV2.CREATED:
         case IdentityVerificationStatusV2.PENDING:
         case IdentityVerificationStatusV2.EXPIRED:
-          startKYC(account, chainId)
+          startKYC()
           break
 
         case IdentityVerificationStatusV2.DECLINED:
@@ -387,7 +304,7 @@ export function PersonaEvaluation({
           break
       }
     }
-  }, [account, chainId, handleClose, startKYC, verificationStatus])
+  }, [handleClose, startKYC, verificationStatus])
 
   const styles = {
     iconWrapper: css`

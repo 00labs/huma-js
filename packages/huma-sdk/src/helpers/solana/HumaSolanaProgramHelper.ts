@@ -15,6 +15,7 @@ import {
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
 import { PublicKey, Transaction } from '@solana/web3.js'
+import { buildOptimalTransaction } from '../../utils/solana/buildOptimalTransaction'
 import { getReceivableReferenceData } from '../../utils/solana/getReceivableReferenceAccount'
 import { HumaSolanaContext } from './HumaSolanaContext'
 
@@ -30,6 +31,42 @@ export class HumaSolanaProgramHelper {
     }
 
     this.#solanaContext = solanaContext
+  }
+
+  async getAvailableCreditForPool(): Promise<BN> {
+    const { chainId, poolName } = this.#solanaContext
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error('Could not find pool')
+    }
+
+    const accountInfo = await this.getAccountInfo()
+    if (accountInfo === null) {
+      throw new Error('Could not get account info for this pool.')
+    }
+
+    const tokenAccount = await getAccount(
+      this.#solanaContext.connection,
+      new PublicKey(poolInfo.poolUnderlyingTokenAccount),
+      undefined,
+      TOKEN_PROGRAM_ID,
+    )
+
+    const { creditConfig, creditState } = accountInfo
+    const principalAmount = creditState.creditRecord.unbilledPrincipal
+      .add(creditState.creditRecord.nextDue)
+      .sub(creditState.creditRecord.yieldDue)
+      .add(creditState.dueDetail.principalPastDue)
+    const unusedCredit = creditConfig.creditLimit.sub(principalAmount)
+    const poolTokenBalanceBN = new BN(tokenAccount.amount.toString())
+    // Set available credit to the minimum of the pool balance or the credit available amount,
+    // since both are upper bounds on the amount of credit that can be borrowed.
+    // If either is negative, cap the available credit to 0.
+    const creditAvailable = unusedCredit.lt(poolTokenBalanceBN)
+      ? unusedCredit
+      : poolTokenBalanceBN
+    return creditAvailable.ltn(0) ? new BN(0) : creditAvailable
   }
 
   async buildSubmitReceivableTransaction(
@@ -71,6 +108,21 @@ export class HumaSolanaProgramHelper {
       })
       .transaction()
     tx.add(programTx)
+
+    await buildOptimalTransaction(
+      tx,
+      [
+        publicKey,
+        receivableReferenceData.asset,
+        new PublicKey(poolInfo.humaConfig),
+        new PublicKey(poolInfo.poolConfig),
+        new PublicKey(poolInfo.poolState),
+        creditConfigAccount,
+        creditStateAccount,
+        new PublicKey(MPL_CORE_PROGRAM_ID),
+      ],
+      this.#solanaContext,
+    )
 
     return tx
   }
@@ -158,6 +210,24 @@ export class HumaSolanaProgramHelper {
       .transaction()
     tx.add(programTx)
 
+    await buildOptimalTransaction(
+      tx,
+      [
+        publicKey,
+        new PublicKey(poolInfo.humaConfig),
+        new PublicKey(poolInfo.poolConfig),
+        new PublicKey(poolInfo.poolState),
+        creditConfigAccount,
+        creditStateAccount,
+        new PublicKey(poolInfo.poolAuthority),
+        new PublicKey(poolInfo.underlyingMint.address),
+        new PublicKey(poolInfo.poolUnderlyingTokenAccount),
+        borrowerUnderlyingTokenAccountAddress,
+        TOKEN_PROGRAM_ID,
+      ],
+      this.#solanaContext,
+    )
+
     return tx
   }
 
@@ -177,7 +247,7 @@ export class HumaSolanaProgramHelper {
       poolInfo,
       publicKey,
     )
-    const { underlyingTokenATA: borrowerUnderlyingTokenAcccount } =
+    const { underlyingTokenATA: borrowerUnderlyingTokenAccount } =
       getTokenAccounts(poolInfo, publicKey)
 
     const accounts = {
@@ -189,7 +259,7 @@ export class HumaSolanaProgramHelper {
       poolAuthority: poolInfo.poolAuthority,
       underlyingMint: poolInfo.underlyingMint.address,
       poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
-      borrowerUnderlyingToken: borrowerUnderlyingTokenAcccount,
+      borrowerUnderlyingToken: borrowerUnderlyingTokenAccount,
       tokenProgram: TOKEN_PROGRAM_ID,
     }
 
@@ -206,6 +276,24 @@ export class HumaSolanaProgramHelper {
         .transaction()
     }
 
+    await buildOptimalTransaction(
+      tx,
+      [
+        publicKey,
+        new PublicKey(poolInfo.humaConfig),
+        new PublicKey(poolInfo.poolConfig),
+        new PublicKey(poolInfo.poolState),
+        creditConfigAccount,
+        creditStateAccount,
+        new PublicKey(poolInfo.poolAuthority),
+        new PublicKey(poolInfo.underlyingMint.address),
+        new PublicKey(poolInfo.poolUnderlyingTokenAccount),
+        borrowerUnderlyingTokenAccount,
+        TOKEN_PROGRAM_ID,
+      ],
+      this.#solanaContext,
+    )
+
     return tx
   }
 
@@ -220,7 +308,7 @@ export class HumaSolanaProgramHelper {
     const { underlyingTokenATA: borrowerUnderlyingTokenAccount } =
       getTokenAccounts(poolInfo, publicKey)
 
-    return new Transaction().add(
+    const tx = new Transaction().add(
       createApproveCheckedInstruction(
         borrowerUnderlyingTokenAccount,
         new PublicKey(poolInfo.underlyingMint.address),
@@ -237,10 +325,53 @@ export class HumaSolanaProgramHelper {
         TOKEN_PROGRAM_ID,
       ),
     )
+
+    await buildOptimalTransaction(
+      tx,
+      [
+        publicKey,
+        borrowerUnderlyingTokenAccount,
+        new PublicKey(poolInfo.underlyingMint.address),
+        new PublicKey(getSentinelAddress(chainId)),
+        TOKEN_PROGRAM_ID,
+      ],
+      this.#solanaContext,
+    )
+
+    return tx
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getAccountInfo(): Promise<any> {
+  async getAccountInfo(): Promise<{
+    creditConfig: {
+      creditLimit: BN
+      committedAmount: BN
+      numPeriods: number
+      yieldBps: number
+    }
+    creditState: {
+      creditRecord: {
+        status: unknown
+        nextDue: BN
+        yieldDue: BN
+        nextDueDate: BN
+        totalPastDue: BN
+        missedPeriods: number
+        remainingPeriods: number
+        unbilledPrincipal: BN
+      }
+      dueDetail: {
+        paid: BN
+        accrued: BN
+        lateFee: BN
+        committed: BN
+        yieldPastDue: BN
+        principalPastDue: BN
+        lateFeeUpdatedDate: BN
+      }
+      receivableAvailableCredits: BN
+    }
+  } | null> {
     const { publicKey, chainId, poolName } = this.#solanaContext
     const program = getHumaProgram(chainId, this.#solanaContext.connection)
     const poolInfo = getSolanaPoolInfo(chainId, poolName)
