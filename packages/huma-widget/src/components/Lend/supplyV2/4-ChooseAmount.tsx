@@ -1,55 +1,59 @@
-import { BN } from '@coral-xyz/anchor'
+import { formatNumber, PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import { LPConfigStructOutput } from '@huma-finance/shared/src/v2/abis/types/PoolConfig'
 import {
-  formatNumber,
-  SolanaPoolInfo,
-  SolanaTokenUtils,
-  TrancheType,
-} from '@huma-finance/shared'
-import { SolanaPoolState } from '@huma-finance/web-shared'
-import { Account } from '@solana/spl-token'
+  usePoolSafeAllowanceV2,
+  usePoolUnderlyingTokenBalanceV2,
+} from '@huma-finance/web-shared'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber, ethers } from 'ethers'
 import React, { useMemo, useState } from 'react'
+
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { InputAmountModal } from '../../InputAmountModal'
 
 type Props = {
-  poolInfo: SolanaPoolInfo
-  poolState: SolanaPoolState
-  tokenAccount?: Account
+  poolInfo: PoolInfoV2
+  lpConfig: LPConfigStructOutput
+  juniorAssets: BigNumber
+  seniorAssets: BigNumber
   selectedTranche: TrancheType | undefined
-  isUniTranche?: boolean
+  isUniTranche: boolean
 }
 
 export function ChooseAmount({
   poolInfo,
-  poolState,
-  tokenAccount,
+  lpConfig,
+  juniorAssets: juniorAssetsBN,
+  seniorAssets: seniorAssetsBN,
   selectedTranche,
   isUniTranche,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { symbol, decimals } = poolInfo.underlyingMint
+  const { account, provider } = useWeb3React()
+  const { symbol, decimals } = poolInfo.poolUnderlyingToken
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
-  const balance = tokenAccount
-    ? new BN(tokenAccount.amount.toString())
-    : new BN(0)
+  const { allowance = BigNumber.from(0) } = usePoolSafeAllowanceV2(
+    poolInfo.poolName,
+    account,
+    provider,
+  )
+  const [balance] = usePoolUnderlyingTokenBalanceV2(
+    poolInfo.poolName,
+    account,
+    provider,
+  )
 
   const { juniorAvailableCapBN, seniorAvailableCapBN } = useMemo(() => {
-    const {
-      maxSeniorJuniorRatio,
-      liquidityCap,
-      seniorTrancheAssets,
-      juniorTrancheAssets,
-    } = poolState
-    const juniorTrancheAssetsBN = new BN(juniorTrancheAssets ?? 0)
-    const seniorTrancheAssetsBN = new BN(seniorTrancheAssets ?? 0)
-    const totalDeployedBN = seniorTrancheAssetsBN.add(juniorTrancheAssetsBN)
-    const totalAvailableCapBN = new BN(liquidityCap ?? 0).sub(totalDeployedBN)
-    const maxSeniorAssetsBN = juniorTrancheAssetsBN.muln(
-      maxSeniorJuniorRatio ?? 0,
-    )
-    let seniorAvailableCapBN = maxSeniorAssetsBN.sub(seniorTrancheAssetsBN)
+    const { maxSeniorJuniorRatio, liquidityCap: liquidityCapBN } = lpConfig
+    const totalDeployedBN = seniorAssetsBN.add(juniorAssetsBN)
+    let totalAvailableCapBN = liquidityCapBN.sub(totalDeployedBN)
+    totalAvailableCapBN = totalAvailableCapBN.lt(0)
+      ? BigNumber.from(0)
+      : totalAvailableCapBN
+    const maxSeniorAssetsBN = juniorAssetsBN.mul(maxSeniorJuniorRatio)
+    let seniorAvailableCapBN = maxSeniorAssetsBN.sub(seniorAssetsBN)
     seniorAvailableCapBN = seniorAvailableCapBN.gt(totalAvailableCapBN)
       ? totalAvailableCapBN
       : seniorAvailableCapBN
@@ -58,7 +62,7 @@ export function ChooseAmount({
       juniorAvailableCapBN: totalAvailableCapBN,
       seniorAvailableCapBN,
     }
-  }, [poolState])
+  }, [juniorAssetsBN, lpConfig, seniorAssetsBN])
 
   const handleChangeAmount = (newAmount: number) => {
     setCurrentAmount(newAmount)
@@ -66,7 +70,14 @@ export function ChooseAmount({
   }
 
   const handleAction = () => {
-    dispatch(setStep(WIDGET_STEP.ApproveAllowance))
+    const currentAmountBN = ethers.utils.parseUnits(
+      String(currentAmount),
+      decimals,
+    )
+    const step = currentAmountBN.gt(allowance)
+      ? WIDGET_STEP.ApproveAllowance
+      : WIDGET_STEP.Transfer
+    dispatch(setStep(step))
   }
 
   const getTrancheCap = () => {
@@ -76,35 +87,25 @@ export function ChooseAmount({
     return seniorAvailableCapBN
   }
 
-  const getMinAmount = (): number => {
-    const minAmount = poolState.minDepositAmount
-      ? SolanaTokenUtils.formatUnits(
-          new BN(poolState.minDepositAmount),
-          decimals,
-        )
-      : 0
-    return Math.max(0, Math.ceil(Number(minAmount)))
-  }
-
-  const getMaxAmount = (): BN => {
+  const getMaxAmount = () => {
     const trancheCap = getTrancheCap()
     return balance.gt(trancheCap) ? trancheCap : balance
   }
 
   const getInfos = () => {
     const trancheCap = getTrancheCap()
-    const currentAmountBN = SolanaTokenUtils.parseUnits(
+    const currentAmountBN = ethers.utils.parseUnits(
       String(currentAmount),
       decimals,
     )
     const remainingCap = trancheCap.sub(currentAmountBN)
 
-    if (remainingCap.ltn(0)) {
+    if (remainingCap.lt(0)) {
       return ['0 remaining capacity']
     }
     return [
       `${formatNumber(
-        SolanaTokenUtils.formatUnits(remainingCap, decimals),
+        ethers.utils.formatUnits(remainingCap, decimals),
       )} remaining capacity`,
     ]
   }
@@ -118,14 +119,13 @@ export function ChooseAmount({
       tokenSymbol={symbol}
       currentAmount={currentAmount}
       handleChangeAmount={handleChangeAmount}
-      minimumAmount={getMinAmount()}
-      maxAmount={Number(SolanaTokenUtils.formatUnits(getMaxAmount(), decimals))}
+      maxAmount={Number(ethers.utils.formatUnits(getMaxAmount(), decimals))}
       maxAmountTitle={`${formatNumber(
-        SolanaTokenUtils.formatUnits(balance, decimals),
+        ethers.utils.formatUnits(balance, decimals),
       )} balance`}
       infos={getInfos()}
       handleAction={handleAction}
-      actionText='NEXT'
+      actionText='SUPPLY'
     />
   )
 }

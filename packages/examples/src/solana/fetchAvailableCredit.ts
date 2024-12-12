@@ -1,4 +1,9 @@
-import { Connection, Keypair, sendAndConfirmTransaction } from '@solana/web3.js'
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+} from '@solana/web3.js'
 import {
   AnchorProvider,
   BN,
@@ -25,7 +30,7 @@ async function main() {
   setProvider(new AnchorProvider(connection, wallet))
 
   const solanaHumaContext = new HumaSolanaContext({
-    publicKey: wallet.publicKey,
+    publicKey: new PublicKey('4PxkeCBfCCPYWMgV2g9URsMqkp3VR1S5ABuB1ZbrRpVz'),
     connection: connection,
     chainId: SolanaChainEnum.SolanaDevnet,
     poolName: POOL_NAME.ArfCreditPool3Months,
@@ -35,12 +40,9 @@ async function main() {
     solanaContext: solanaHumaContext,
   })
 
-  const tx = await humaSolanaProgramHelper.buildDrawdownTransaction(new BN(10))
+  const data = await humaSolanaProgramHelper.getAvailableCreditForPool()
 
-  console.log(tx)
-
-  const txResult = await sendAndConfirmTransaction(connection, tx, [keypair])
-  console.log(txResult)
+  console.log(data)
 }
 
 main()

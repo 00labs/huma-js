@@ -172,13 +172,13 @@ export const useTrancheTokenAccounts = (
         getAssociatedTokenAddress(
           new PublicKey(poolInfo.seniorTrancheMint),
           publicKey,
-          false, // allowOwnerOffCurve
+          true, // allowOwnerOffCurve
           TOKEN_2022_PROGRAM_ID,
         ),
         getAssociatedTokenAddress(
           new PublicKey(poolInfo.juniorTrancheMint),
           publicKey,
-          false, // allowOwnerOffCurve
+          true, // allowOwnerOffCurve
           TOKEN_2022_PROGRAM_ID,
         ),
       ])
@@ -252,7 +252,7 @@ export const useTokenAccount = (
       const associatedTokenAddress = await getAssociatedTokenAddress(
         new PublicKey(poolInfo.underlyingMint.address),
         publicKey,
-        false, // allowOwnerOffCurve
+        true, // allowOwnerOffCurve
         TOKEN_PROGRAM_ID,
       )
 
