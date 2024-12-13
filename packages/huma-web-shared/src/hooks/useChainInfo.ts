@@ -42,6 +42,24 @@ export const useChainInfo = (
   }
 }
 
+export const useChainsInfo = (isDev: boolean) => {
+  const { account: evmAccount, chainId: evmChainId } = useChainInfo(
+    isDev,
+    CHAIN_TYPE.EVM,
+  )
+  const { account: solanaAccount, chainId: solanaChainId } = useChainInfo(
+    isDev,
+    CHAIN_TYPE.SOLANA,
+  )
+
+  return {
+    evmAccount,
+    evmChainId,
+    solanaAccount,
+    solanaChainId,
+  }
+}
+
 export const useActiveChainInfo = (
   isDev: boolean,
   activeNetwork: CHAIN_TYPE,
