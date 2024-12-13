@@ -96,12 +96,12 @@ function checkWalletOwnership(
 
   return requestPost<{
     data?: {
-      walletOwnership: boolean
+      walletOwnership: boolean & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
-      if (res.errors) {
+      if (res.errors || res.data?.walletOwnership?.errMessage) {
         console.error(res.errors)
         return undefined
       }
@@ -140,11 +140,11 @@ function getLeaderboard(
   `
 
   return requestPost<{
-    data?: { leaderboard: { data: LeaderboardItem[] } }
+    data?: { leaderboard: { data: LeaderboardItem[] & { errMessage: string } } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
-      if (res.errors) {
+      if (res.errors || res.data?.leaderboard?.data?.errMessage) {
         console.error(res.errors)
         return undefined
       }
@@ -181,11 +181,11 @@ function getHumaAccountRanking(
   `
 
   return requestPost<{
-    data?: { myRankingEntry: LeaderboardItem }
+    data?: { myRankingEntry: LeaderboardItem & { errMessage: string } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
-      if (res.errors) {
+      if (res.errors || res.data?.myRankingEntry?.errMessage) {
         console.error(res.errors)
         return undefined
       }
@@ -225,11 +225,11 @@ function getHumaAccountPoints(
   `
 
   return requestPost<{
-    data?: { accountPoints: HumaAccountPoints }
+    data?: { accountPoints: HumaAccountPoints & { errMessage: string } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
-      if (res.errors) {
+      if (res.errors || res.data?.accountPoints?.errMessage) {
         console.error(res.errors)
         return undefined
       }
@@ -274,12 +274,12 @@ function getEstimatedPoints(
     data?: {
       calculateEstimatedPoints?: {
         campaignPointsEstimations?: CampaignPoints[]
-      }
+      } & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
-      if (res.errors) {
+      if (res.errors || res.data?.calculateEstimatedPoints?.errMessage) {
         console.error(res.errors)
         return []
       }
@@ -321,12 +321,14 @@ function updateHumaAccountPoints(
 
   return requestPost<{
     data?: {
-      updateAccountPoints?: { pointsAccumulated?: number }
+      updateAccountPoints?: { pointsAccumulated?: number } & {
+        errMessage: string
+      }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
-      if (res.errors) {
+      if (res.errors || res.data?.updateAccountPoints?.errMessage) {
         console.error(res.errors)
         return {}
       }
