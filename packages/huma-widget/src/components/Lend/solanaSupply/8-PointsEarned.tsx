@@ -4,6 +4,7 @@ import {
   checkIsDev,
   CloseModalOptions,
   formatNumber,
+  HUMA_ACCOUNT_EXCEPTION,
   isEmpty,
   NETWORK_TYPE,
 } from '@huma-finance/shared'
@@ -86,14 +87,18 @@ export function PointsEarned({
   useEffect(() => {
     const checkWalletOwnership = async () => {
       if (account) {
-        const ownership = await CampaignService.checkWalletOwnership(
-          account,
-          networkType,
-          isDev,
-        )
-        setWalletOwnership(ownership)
-        if (!ownership) {
-          setAuthError('WalletNotSignedInException')
+        try {
+          const ownership = await CampaignService.checkWalletOwnership(
+            account,
+            networkType,
+            isDev,
+          )
+          setWalletOwnership(ownership)
+          if (!ownership) {
+            setAuthError(HUMA_ACCOUNT_EXCEPTION.WalletNotSignedInException)
+          }
+        } catch (error) {
+          setAuthError(HUMA_ACCOUNT_EXCEPTION.WalletNotSignedInException)
         }
       }
     }
