@@ -15,8 +15,6 @@ export const CAMPAIGN_REFERENCE_CODE = 'CAMPAIGN_REFERENCE_CODE'
 export const BP_FACTOR_NUMBER = 10000
 
 export enum HUMA_ACCOUNT_EXCEPTION {
-  IdTokenNotFoundException = 'IdTokenNotFoundException',
-  InvalidIdTokenException = 'InvalidIdTokenException',
   WalletMismatchException = 'WalletMismatchException',
   AccountTokenNotFoundException = 'AccountTokenNotFoundException',
   InvalidAccountTokenException = 'InvalidAccountTokenException',
