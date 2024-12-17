@@ -35,7 +35,6 @@ export const useAuthErrorHandling = (
       axios.isAxiosError(error) &&
       error.response?.status === HttpStatusCode.Unauthorized &&
       [
-        HUMA_ACCOUNT_EXCEPTION.WalletMismatchException,
         HUMA_ACCOUNT_EXCEPTION.AccountTokenNotFoundException,
         HUMA_ACCOUNT_EXCEPTION.InvalidAccountTokenException,
       ].includes(error.response?.data?.detail?.type)
