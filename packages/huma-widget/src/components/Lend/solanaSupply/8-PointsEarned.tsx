@@ -7,18 +7,13 @@ import {
   isEmpty,
   NETWORK_TYPE,
 } from '@huma-finance/shared'
-import {
-  SolanaPoolState,
-  txAtom,
-  useAuthErrorHandling,
-  useChainInfo,
-} from '@huma-finance/web-shared'
+import { SolanaPoolState, txAtom, useChainInfo } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { resetState, setError } from '../../../store/widgets.reducers'
+import { resetState } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
@@ -29,9 +24,6 @@ enum STATE {
   SignIn = 'SignIn',
   Congrats = 'Congrats',
 }
-
-const ERROR_MESSAGE =
-  'Failed to update wallet points. Be assured that your points will be added later.'
 
 type Props = {
   transactionHash: string
@@ -61,83 +53,26 @@ export function PointsEarned({
   )
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
-
-  const {
-    errorType,
-    setError: setAuthError,
-    isWalletOwnershipVerified,
-    isWalletOwnershipVerificationRequired,
-  } = useAuthErrorHandling(isDev)
-  const [walletOwnership, setWalletOwnership] = useState<boolean | undefined>()
   const [state, setState] = useState<STATE>(STATE.Loading)
 
   useEffect(() => {
-    if (isWalletOwnershipVerificationRequired) {
-      setState(STATE.Loading)
-    }
-  }, [isWalletOwnershipVerificationRequired])
-
-  useEffect(() => {
-    if (isWalletOwnershipVerified) {
-      setWalletOwnership(true)
-    }
-  }, [isWalletOwnershipVerified])
-
-  useEffect(() => {
-    const checkWalletOwnership = async () => {
-      if (account) {
-        const ownership = await CampaignService.checkWalletOwnership(
-          account,
+    const updateWalletPoints = async () => {
+      try {
+        const result = await CampaignService.updateHumaAccountPoints(
+          account!,
+          transactionHash,
+          chainId!,
           networkType,
           isDev,
         )
-        setWalletOwnership(ownership)
-        if (!ownership) {
-          setAuthError('WalletNotSignedInException')
-        }
-      }
-    }
-    checkWalletOwnership()
-  }, [account, isDev, networkType, setAuthError])
-
-  useEffect(() => {
-    if (errorType === 'NotSignedIn') {
-      setState(STATE.SignIn)
-    } else if (errorType === 'UserRejected') {
-      dispatch(
-        setError({
-          errorMessage: 'User has rejected the transaction.',
-        }),
-      )
-    } else if (errorType === 'Other') {
-      dispatch(
-        setError({
-          errorMessage: ERROR_MESSAGE,
-        }),
-      )
-    }
-  }, [dispatch, errorType])
-
-  useEffect(() => {
-    const updateWalletPoints = async () => {
-      if (walletOwnership) {
-        try {
-          const result = await CampaignService.updateHumaAccountPoints(
-            account!,
-            transactionHash,
-            chainId!,
-            networkType,
-            isDev,
-          )
-          setPointsAccumulated(result.pointsAccumulated)
-          setState(STATE.Congrats)
-        } catch (error) {
-          console.error('Failed to update wallet points', error)
-        }
+        setPointsAccumulated(result.pointsAccumulated)
+        setState(STATE.Congrats)
+      } catch (error) {
+        console.error('Failed to update wallet points', error)
       }
     }
     updateWalletPoints()
-  }, [account, chainId, isDev, networkType, transactionHash, walletOwnership])
+  }, [account, chainId, isDev, networkType, transactionHash])
 
   const handleCloseModal = useCallback(() => {
     reset()

@@ -3,6 +3,7 @@ import { gql } from 'graphql-request'
 import { SolanaChainEnum, SolanaPoolInfo } from '../solana'
 import { ChainEnum, NETWORK_TYPE } from '../utils/chain'
 import { configUtil } from '../utils/config'
+import { COMMON_ERROR_MESSAGE } from '../utils/const'
 import { requestPost } from '../utils/request'
 import { PoolInfoV2 } from '../v2/utils/pool'
 
@@ -96,20 +97,25 @@ function checkWalletOwnership(
 
   return requestPost<{
     data?: {
-      walletOwnership: boolean
+      walletOwnership: boolean & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return undefined
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
+      }
+      const errMessage = res.data?.walletOwnership?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
       }
       return res.data?.walletOwnership
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
@@ -140,19 +146,24 @@ function getLeaderboard(
   `
 
   return requestPost<{
-    data?: { leaderboard: { data: LeaderboardItem[] } }
+    data?: { leaderboard: { data: LeaderboardItem[] & { errMessage: string } } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return undefined
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
+      }
+      const errMessage = res.data?.leaderboard?.data?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
       }
       return res.data?.leaderboard?.data
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
@@ -181,19 +192,25 @@ function getHumaAccountRanking(
   `
 
   return requestPost<{
-    data?: { myRankingEntry: LeaderboardItem }
+    data?: { myRankingEntry: LeaderboardItem & { errMessage: string } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return undefined
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
+      const errMessage = res.data?.myRankingEntry?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
       return res.data?.myRankingEntry
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
@@ -225,14 +242,20 @@ function getHumaAccountPoints(
   `
 
   return requestPost<{
-    data?: { accountPoints: HumaAccountPoints }
+    data?: { accountPoints: HumaAccountPoints & { errMessage: string } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return undefined
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
+      const errMessage = res.data?.accountPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
       const accountPoints = res.data?.accountPoints
       if (accountPoints) {
         accountPoints.totalPoints =
@@ -245,7 +268,7 @@ function getHumaAccountPoints(
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
@@ -274,20 +297,26 @@ function getEstimatedPoints(
     data?: {
       calculateEstimatedPoints?: {
         campaignPointsEstimations?: CampaignPoints[]
-      }
+      } & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
         console.error(res.errors)
-        return []
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
+      const errMessage = res.data?.calculateEstimatedPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
       return res.data?.calculateEstimatedPoints?.campaignPointsEstimations ?? []
     })
     .catch((err) => {
       console.error(err)
-      return []
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
@@ -321,20 +350,28 @@ function updateHumaAccountPoints(
 
   return requestPost<{
     data?: {
-      updateAccountPoints?: { pointsAccumulated?: number }
+      updateAccountPoints?: { pointsAccumulated?: number } & {
+        errMessage: string
+      }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return {}
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
+      const errMessage = res.data?.updateAccountPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
       return res.data?.updateAccountPoints ?? {}
     })
     .catch((err) => {
       console.error(err)
-      return {}
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
