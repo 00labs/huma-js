@@ -58,7 +58,7 @@ export type StellarChainsInfo = {
 export const STELLAR_CHAINS_INFO: StellarChainsInfo = {
   [StellarChainEnum.StellarTestnet]: {
     rpc: 'https://soroban-testnet.stellar.org',
-    humaConfig: 'CDX6NBJ3OV4TWRCZK4DFBHDHE37UUDS66PPGNIPBGUI56D254EKVFETX',
+    humaConfig: 'CAAVSHWNTUFIZCKCCXRDRFRRUDEBTKNRWBPHHOA4ZIYD3ELAOY4LOHUY',
     networkPassphrase: 'Test SDF Network ; September 2015',
   },
   [StellarChainEnum.StellarMainnet]: {

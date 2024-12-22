@@ -28,7 +28,7 @@ export async function fetchStellarDepositRecord(
   poolInfo: StellarPoolInfo,
   tranche: TrancheType,
   account: string,
-): Promise<DepositRecord> {
+): Promise<DepositRecord | null> {
   try {
     const chainMetadata = STELLAR_CHAINS_INFO[poolInfo.chainId]
     const server = new SorobanRpc.Server(chainMetadata.rpc)
@@ -49,7 +49,7 @@ export async function fetchStellarDepositRecord(
         data.last_deposit_time === undefined ||
         data.principal === undefined
       ) {
-        throw new Error('Failed to fetch deposit record')
+        return null
       }
 
       return {
@@ -58,9 +58,9 @@ export async function fetchStellarDepositRecord(
       }
     }
 
-    throw new Error('Failed to fetch deposit record')
+    return null
   } catch (error) {
     console.error('Error fetching deposit record:', error)
-    throw error
+    return null
   }
 }
