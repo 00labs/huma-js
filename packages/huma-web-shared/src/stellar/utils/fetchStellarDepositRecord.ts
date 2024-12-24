@@ -3,7 +3,7 @@ import {
   StellarPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
-import { SorobanRpc, Address, xdr, scValToNative } from '@stellar/stellar-sdk'
+import { rpc, Address, xdr, scValToNative } from '@stellar/stellar-sdk'
 
 const getDepositRecordKey = (contractId: string, address: string) => {
   const addressScVal = new Address(address).toScVal()
@@ -31,7 +31,7 @@ export async function fetchStellarDepositRecord(
 ): Promise<DepositRecord | null> {
   try {
     const chainMetadata = STELLAR_CHAINS_INFO[poolInfo.chainId]
-    const server = new SorobanRpc.Server(chainMetadata.rpc)
+    const server = new rpc.Server(chainMetadata.rpc)
 
     const key = getDepositRecordKey(
       tranche === 'senior' ? poolInfo.seniorTranche! : poolInfo.juniorTranche,

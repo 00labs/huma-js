@@ -1,6 +1,6 @@
 import { StellarChainInfo } from '@huma-finance/shared'
 import {
-  SorobanRpc,
+  rpc,
   Contract,
   Address,
   scValToNative,
@@ -16,7 +16,7 @@ export async function fetchStellarTokenBalance(
   sourceAddress?: string,
 ) {
   try {
-    const server = new SorobanRpc.Server(chainMetadata.rpc)
+    const server = new rpc.Server(chainMetadata.rpc)
 
     // Create a Contract instance
     const contract = new Contract(tokenAddress)
