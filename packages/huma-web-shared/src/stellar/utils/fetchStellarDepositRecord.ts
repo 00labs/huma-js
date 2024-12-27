@@ -3,7 +3,7 @@ import {
   StellarPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
-import { SorobanRpc, Address, xdr, scValToNative } from '@stellar/stellar-sdk'
+import { rpc, Address, xdr, scValToNative } from '@stellar/stellar-sdk'
 
 const getDepositRecordKey = (contractId: string, address: string) => {
   const addressScVal = new Address(address).toScVal()
@@ -28,10 +28,10 @@ export async function fetchStellarDepositRecord(
   poolInfo: StellarPoolInfo,
   tranche: TrancheType,
   account: string,
-): Promise<DepositRecord> {
+): Promise<DepositRecord | null> {
   try {
     const chainMetadata = STELLAR_CHAINS_INFO[poolInfo.chainId]
-    const server = new SorobanRpc.Server(chainMetadata.rpc)
+    const server = new rpc.Server(chainMetadata.rpc)
 
     const key = getDepositRecordKey(
       tranche === 'senior' ? poolInfo.seniorTranche! : poolInfo.juniorTranche,
@@ -49,7 +49,7 @@ export async function fetchStellarDepositRecord(
         data.last_deposit_time === undefined ||
         data.principal === undefined
       ) {
-        throw new Error('Failed to fetch deposit record')
+        return null
       }
 
       return {
@@ -58,9 +58,9 @@ export async function fetchStellarDepositRecord(
       }
     }
 
-    throw new Error('Failed to fetch deposit record')
+    return null
   } catch (error) {
     console.error('Error fetching deposit record:', error)
-    throw error
+    return null
   }
 }
