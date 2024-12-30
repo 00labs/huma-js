@@ -8,7 +8,7 @@ export type Huma = {
   address: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9'
   metadata: {
     name: 'huma'
-    version: '0.1.0'
+    version: '2.2.0'
     spec: '0.1.0'
     description: 'Created with Anchor'
   }
@@ -561,7 +561,7 @@ export type Huma = {
         },
         {
           name: 'hookProgram'
-          address: 'JAhzUQ7nK7zeTdnbLDQR3y7UwSKnxeqdctCbjG8Z2abM'
+          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
         },
         {
           name: 'tokenProgram'
@@ -576,6 +576,124 @@ export type Huma = {
         {
           name: 'shares'
           type: 'u128'
+        },
+      ]
+    },
+    {
+      name: 'addYieldDistributingLender'
+      docs: [
+        'Adds an approved lender as a yield distributing lender.',
+        '',
+        '',
+        '# Arguments',
+        '* `lender` - The lender address.',
+        '',
+        '# Access Control',
+        'Only pool operators can call this instruction.',
+      ]
+      discriminator: [33, 123, 56, 23, 130, 142, 148, 129]
+      accounts: [
+        {
+          name: 'poolOperator'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'poolConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'pool_config.pool_id'
+                account: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'poolState'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'trancheMint'
+        },
+        {
+          name: 'approvedLender'
+        },
+        {
+          name: 'poolOperatorConfig'
+        },
+        {
+          name: 'yieldDistributingLenderConfig'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  100,
+                  105,
+                  115,
+                  116,
+                  114,
+                  105,
+                  98,
+                  117,
+                  116,
+                  105,
+                  110,
+                  103,
+                  95,
+                  108,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'arg'
+                path: 'lender'
+              },
+            ]
+          }
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        },
+      ]
+      args: [
+        {
+          name: 'lender'
+          type: 'pubkey'
         },
       ]
     },
@@ -1189,7 +1307,7 @@ export type Huma = {
         },
         {
           name: 'hookProgram'
-          address: 'JAhzUQ7nK7zeTdnbLDQR3y7UwSKnxeqdctCbjG8Z2abM'
+          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
         },
         {
           name: 'tokenProgram'
@@ -3782,7 +3900,7 @@ export type Huma = {
         },
         {
           name: 'hookProgram'
-          address: 'JAhzUQ7nK7zeTdnbLDQR3y7UwSKnxeqdctCbjG8Z2abM'
+          address: 'BzaHku1HrxKYWTr89JwnWn232QYdnxz444VZ4nWeaziX'
         },
         {
           name: 'poolAuthority'
@@ -4873,7 +4991,7 @@ export type Huma = {
         'The capital that the lender has contributed will continue to work as normal.',
         '',
         '# Dev Notes',
-        'It is intentional not to delete depositRecord for the lender so that they do not',
+        'It is intentional not to delete `DepositRecord` for the lender so that they do not',
         'lose existing investment. They can request redemption post removal as a lender.',
         'Because of lockup period and pool liquidity constraints, we cannot automatically',
         'disburse the investment by this lender.',
@@ -4944,6 +5062,53 @@ export type Huma = {
                   118,
                   101,
                   100,
+                  95,
+                  108,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'arg'
+                path: 'lender'
+              },
+            ]
+          }
+        },
+        {
+          name: 'yieldDistributingLenderConfig'
+          writable: true
+          optional: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  100,
+                  105,
+                  115,
+                  116,
+                  114,
+                  105,
+                  98,
+                  117,
+                  116,
+                  105,
+                  110,
+                  103,
                   95,
                   108,
                   101,
@@ -5182,6 +5347,115 @@ export type Huma = {
       args: [
         {
           name: 'operator'
+          type: 'pubkey'
+        },
+      ]
+    },
+    {
+      name: 'removeYieldDistributingLender'
+      docs: [
+        'Marks a lender as ineligible for yield distribution.',
+        '',
+        '# Arguments',
+        '* `lender` - The lender address.',
+        '',
+        '# Access Control',
+        'Only pool operators can call this instruction.',
+      ]
+      discriminator: [140, 153, 125, 9, 100, 99, 177, 200]
+      accounts: [
+        {
+          name: 'poolOperator'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'poolConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'pool_config.pool_id'
+                account: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'poolState'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'trancheMint'
+        },
+        {
+          name: 'poolOperatorConfig'
+        },
+        {
+          name: 'yieldDistributingLenderConfig'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  100,
+                  105,
+                  115,
+                  116,
+                  114,
+                  105,
+                  98,
+                  117,
+                  116,
+                  105,
+                  110,
+                  103,
+                  95,
+                  108,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'arg'
+                path: 'lender'
+              },
+            ]
+          }
+        },
+      ]
+      args: [
+        {
+          name: 'lender'
           type: 'pubkey'
         },
       ]
@@ -7554,6 +7828,165 @@ export type Huma = {
         },
       ]
     },
+    {
+      name: 'withdrawYields'
+      docs: [
+        'Withdraws the yield accrued by the lender.',
+        '',
+        '# Access Control',
+        'Only yield distributing lenders can call this instruction.',
+      ]
+      discriminator: [248, 111, 218, 8, 55, 252, 196, 181]
+      accounts: [
+        {
+          name: 'lender'
+          signer: true
+        },
+        {
+          name: 'humaConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'huma_config.id'
+                account: 'humaConfig'
+              },
+            ]
+          }
+          relations: ['poolConfig']
+        },
+        {
+          name: 'poolConfig'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                kind: 'account'
+                path: 'pool_config.pool_id'
+                account: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'poolState'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'yieldDistributingLender'
+        },
+        {
+          name: 'lenderState'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  108,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101,
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'trancheMint'
+              },
+              {
+                kind: 'account'
+                path: 'lender'
+              },
+            ]
+          }
+        },
+        {
+          name: 'poolAuthority'
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121,
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'poolConfig'
+              },
+            ]
+          }
+        },
+        {
+          name: 'underlyingMint'
+          relations: ['poolConfig']
+        },
+        {
+          name: 'poolUnderlyingToken'
+          writable: true
+        },
+        {
+          name: 'lenderUnderlyingToken'
+          writable: true
+        },
+        {
+          name: 'trancheMint'
+          writable: true
+        },
+        {
+          name: 'lenderTrancheToken'
+          writable: true
+        },
+        {
+          name: 'underlyingTokenProgram'
+        },
+        {
+          name: 'trancheTokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+      ]
+      args: []
+    },
   ]
   accounts: [
     {
@@ -7607,6 +8040,10 @@ export type Huma = {
     {
       name: 'trancheState'
       discriminator: [212, 231, 254, 24, 238, 63, 92, 105]
+    },
+    {
+      name: 'yieldDistributingLender'
+      discriminator: [179, 145, 84, 62, 168, 249, 253, 29]
     },
   ]
   events: [
@@ -7871,12 +8308,24 @@ export type Huma = {
       discriminator: [19, 250, 33, 106, 8, 220, 78, 241]
     },
     {
+      name: 'yieldDistributingLenderAddedEvent'
+      discriminator: [198, 65, 87, 191, 19, 49, 27, 80]
+    },
+    {
+      name: 'yieldDistributingLenderRemovedEvent'
+      discriminator: [97, 210, 181, 37, 25, 43, 227, 77]
+    },
+    {
       name: 'yieldTrackerRefreshedEvent'
       discriminator: [48, 100, 71, 36, 117, 201, 145, 140]
     },
     {
       name: 'yieldUpdatedEvent'
       discriminator: [177, 90, 108, 19, 131, 243, 44, 244]
+    },
+    {
+      name: 'yieldsWithdrawnEvent'
+      discriminator: [151, 129, 132, 11, 52, 147, 28, 227]
     },
   ]
   errors: [
@@ -7967,6 +8416,10 @@ export type Huma = {
     {
       code: 6215
       name: 'lenderOrSentinelRequired'
+    },
+    {
+      code: 6216
+      name: 'yieldDistributingLenderRequired'
     },
     {
       code: 6301
@@ -8067,6 +8520,10 @@ export type Huma = {
     {
       code: 6419
       name: 'invalidPoolConfig'
+    },
+    {
+      code: 6420
+      name: 'insufficientBalanceForYieldWithdrawal'
     },
     {
       code: 6501
@@ -11677,6 +12134,68 @@ export type Huma = {
       }
     },
     {
+      name: 'yieldDistributingLender'
+      docs: [
+        'Designation of whether a lender is eligible for yield distribution. A lender with this',
+        'designation has the option to withdraw their yield generated from the pool.',
+      ]
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'bump'
+            type: 'u8'
+          },
+        ]
+      }
+    },
+    {
+      name: 'yieldDistributingLenderAddedEvent'
+      docs: [
+        'A lender has been designated as eligible for yield distribution.',
+        '',
+        '# Fields',
+        '* `tranche` - The tranche mint key.',
+        '* `lender` - The address of the lender with the designation.',
+      ]
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'tranche'
+            type: 'pubkey'
+          },
+          {
+            name: 'lender'
+            type: 'pubkey'
+          },
+        ]
+      }
+    },
+    {
+      name: 'yieldDistributingLenderRemovedEvent'
+      docs: [
+        'A lender has been designated as no longer eligible for yield distribution.',
+        '',
+        '# Fields',
+        '* `tranche` - The tranche mint key.',
+        '* `lender` - The address of the lender whose designation is being removed.',
+      ]
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'tranche'
+            type: 'pubkey'
+          },
+          {
+            name: 'lender'
+            type: 'pubkey'
+          },
+        ]
+      }
+    },
+    {
       name: 'yieldTrackerRefreshedEvent'
       docs: [
         'The senior yield tracker has been refreshed.',
@@ -11733,6 +12252,39 @@ export type Huma = {
           {
             name: 'newYieldBps'
             type: 'u32'
+          },
+        ]
+      }
+    },
+    {
+      name: 'yieldsWithdrawnEvent'
+      docs: [
+        'A lender has withdrawn their yield.',
+        '',
+        '# Fields',
+        '* `tranche` - The tranche mint key.',
+        '* `lender` - The lender withdrawing yield.',
+        '* `yields` - The amount of yield being withdrawn.',
+        '* `shares_burned` - The number of shares burned.',
+      ]
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'tranche'
+            type: 'pubkey'
+          },
+          {
+            name: 'lender'
+            type: 'pubkey'
+          },
+          {
+            name: 'yields'
+            type: 'u128'
+          },
+          {
+            name: 'sharesBurned'
+            type: 'u128'
           },
         ]
       }
@@ -11903,6 +12455,11 @@ export type Huma = {
       name: 'trancheStateSeed'
       type: 'bytes'
       value: '[116, 114, 97, 110, 99, 104, 101, 95, 115, 116, 97, 116, 101]'
+    },
+    {
+      name: 'yieldDistributingLenderSeed'
+      type: 'bytes'
+      value: '[121, 105, 101, 108, 100, 95, 100, 105, 115, 116, 114, 105, 98, 117, 116, 105, 110, 103, 95, 108, 101, 110, 100, 101, 114]'
     },
   ]
 }
