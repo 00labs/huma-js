@@ -48,7 +48,10 @@ export function ChooseAmount({
   const { juniorAvailableCapBN, seniorAvailableCapBN } = useMemo(() => {
     const { maxSeniorJuniorRatio, liquidityCap: liquidityCapBN } = lpConfig
     const totalDeployedBN = seniorAssetsBN.add(juniorAssetsBN)
-    const totalAvailableCapBN = liquidityCapBN.sub(totalDeployedBN)
+    let totalAvailableCapBN = liquidityCapBN.sub(totalDeployedBN)
+    totalAvailableCapBN = totalAvailableCapBN.lt(0)
+      ? BigNumber.from(0)
+      : totalAvailableCapBN
     const maxSeniorAssetsBN = juniorAssetsBN.mul(maxSeniorJuniorRatio)
     let seniorAvailableCapBN = maxSeniorAssetsBN.sub(seniorAssetsBN)
     seniorAvailableCapBN = seniorAvailableCapBN.gt(totalAvailableCapBN)

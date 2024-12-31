@@ -46,7 +46,7 @@ export function Transfer({
     <TxSendModalV2
       contract={trancheVaultContract}
       method='addRedemptionRequest'
-      params={[redeemSharesBN]}
+      params={[account, redeemSharesBN]}
       handleSuccess={handleSuccess}
     />
   )

@@ -14,13 +14,13 @@ describe('formatMoney', () => {
   })
 
   it('returns the formatted number if the input is a valid number', () => {
-    expect(formatMoney(1234.56)).toBe('$1,235')
-    expect(formatMoney('1234.56')).toBe('$1,235')
+    expect(formatMoney(1234.56)).toBe('$1,234.56')
+    expect(formatMoney('1234.56')).toBe('$1,234.56')
   })
 
-  it('rounds the number if it is greater than 1000', () => {
-    expect(formatMoney(1234.99)).toBe('$1,235')
-    expect(formatMoney('1234.99')).toBe('$1,235')
+  it('rounds the number if it is greater than 100,000', () => {
+    expect(formatMoney(123456.99)).toBe('$123,457')
+    expect(formatMoney('123456.99')).toBe('$123,457')
   })
 })
 
