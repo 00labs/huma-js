@@ -11,6 +11,7 @@
     "startCreateAlt": "ts-node src/createReceivableAlternateNetwork.ts",
     "startPay": "ts-node src/payReceivable.ts",
     "startPayReference": "ts-node src/payReceivableWithReferenceId.ts",
+    "startDeclarePaymentByTokenIdV2": "ts-node src/declarePaymentByTokenIdV2.ts",
     "startDrawdownPayback": "ts-node src/drawdownAndPaybackToPool.ts",
     "startDrawdownPaybackV2": "ts-node src/drawdownAndPaybackReceivableV2.ts",
     "startPoolHelpers": "ts-node src/poolContract.ts",
