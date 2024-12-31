@@ -27,6 +27,7 @@
     "solanaFetchAvailableCredit": "ts-node src/solana/fetchAvailableCredit.ts",
     "solanaFetchBorrowerDetails": "ts-node src/solana/fetchBorrowerDetails.ts",
     "solanaDrawdown": "ts-node src/solana/drawdown.ts",
+    "solanaWithdrawYield": "ts-node src/solana/withdrawYield.ts",
     "solanaPayback": "ts-node src/solana/payback.ts",
     "lint-staged": "lint-staged"
   },

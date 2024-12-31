@@ -2,7 +2,7 @@
   "address": "EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9",
   "metadata": {
     "name": "huma",
-    "version": "0.1.0",
+    "version": "2.2.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
   },
@@ -312,6 +312,7 @@
         "Records a new redemption request.",
         "",
         "# Arguments",
+        "* `lender` - The lender whose shares are being requested for redemption.",
         "* `shares` - The number of shares the lender wants to redeem.",
         "",
         "# Access Control",
@@ -320,7 +321,7 @@
       "discriminator": [72, 203, 201, 17, 75, 60, 157, 47],
       "accounts": [
         {
-          "name": "lender",
+          "name": "signer",
           "signer": true
         },
         {
@@ -405,7 +406,7 @@
                 "path": "tranche_mint"
               },
               {
-                "kind": "account",
+                "kind": "arg",
                 "path": "lender"
               }
             ]
@@ -434,59 +435,11 @@
         },
         {
           "name": "pool_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "lender_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "extra_account_meta_list",
@@ -521,8 +474,107 @@
       ],
       "args": [
         {
+          "name": "lender",
+          "type": "pubkey"
+        },
+        {
           "name": "shares",
           "type": "u128"
+        }
+      ]
+    },
+    {
+      "name": "add_yield_distributing_lender",
+      "docs": [
+        "Adds an approved lender as a yield distributing lender.",
+        "",
+        "",
+        "# Arguments",
+        "* `lender` - The lender address.",
+        "",
+        "# Access Control",
+        "Only pool operators can call this instruction."
+      ],
+      "discriminator": [33, 123, 56, 23, 130, 142, 148, 129],
+      "accounts": [
+        {
+          "name": "pool_operator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tranche_mint"
+        },
+        {
+          "name": "approved_lender"
+        },
+        {
+          "name": "pool_operator_config"
+        },
+        {
+          "name": "yield_distributing_lender_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121, 105, 101, 108, 100, 95, 100, 105, 115, 116, 114, 105, 98,
+                  117, 116, 105, 110, 103, 95, 108, 101, 110, 100, 101, 114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "arg",
+                "path": "lender"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "lender",
+          "type": "pubkey"
         }
       ]
     },
@@ -989,59 +1041,11 @@
         },
         {
           "name": "pool_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "lender_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "extra_account_meta_list",
@@ -1389,31 +1393,7 @@
           }
         },
         {
-          "name": "pool_underlying_token",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "name": "pool_underlying_token"
         },
         {
           "name": "junior_mint",
@@ -1493,60 +1473,12 @@
         },
         {
           "name": "pool_junior_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "junior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "pool_senior_token",
           "writable": true,
-          "optional": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "senior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "optional": true
         },
         {
           "name": "underlying_token_program"
@@ -1631,31 +1563,7 @@
         },
         {
           "name": "lender_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -1751,31 +1659,7 @@
           }
         },
         {
-          "name": "pool_underlying_token",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "name": "pool_underlying_token"
         },
         {
           "name": "junior_mint",
@@ -1855,60 +1739,12 @@
         },
         {
           "name": "pool_junior_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "junior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "pool_senior_token",
           "writable": true,
-          "optional": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "senior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "optional": true
         },
         {
           "name": "underlying_token_program"
@@ -2079,31 +1915,7 @@
         },
         {
           "name": "lender_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -2238,31 +2050,7 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -2709,87 +2497,15 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "depositor_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "depositor"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "depositor_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "depositor"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "underlying_token_program"
@@ -2989,59 +2705,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "lender_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -3182,59 +2850,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "borrower_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "borrower"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -3387,118 +3007,18 @@
           }
         },
         {
-          "name": "pool_owner_treasury_junior_token",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.pool_owner_treasury",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "junior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "name": "pool_owner_treasury_junior_token"
         },
         {
           "name": "pool_owner_treasury_senior_token",
-          "optional": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.pool_owner_treasury",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "senior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "optional": true
         },
         {
-          "name": "ea_junior_token",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.evaluation_agent",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "junior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "name": "ea_junior_token"
         },
         {
           "name": "ea_senior_token",
-          "optional": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.evaluation_agent",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "senior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "optional": true
         },
         {
           "name": "token_program",
@@ -3862,87 +3382,15 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "depositor_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "depositor"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "depositor_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "depositor"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "underlying_token_program"
@@ -4105,60 +3553,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "borrower_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "credit_state.borrower",
-                "account": "CreditState"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -4320,59 +3719,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "borrower_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "borrower"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -4696,6 +4047,42 @@
       "args": []
     },
     {
+      "name": "realloc_pool_config",
+      "discriminator": [23, 125, 97, 240, 16, 108, 85, 88],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "huma_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "huma_config.id",
+                "account": "HumaConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_config",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "refresh_credit",
       "docs": [
         "Updates the account and brings its billing status current.",
@@ -4808,7 +4195,7 @@
         "The capital that the lender has contributed will continue to work as normal.",
         "",
         "# Dev Notes",
-        "It is intentional not to delete depositRecord for the lender so that they do not",
+        "It is intentional not to delete `DepositRecord` for the lender so that they do not",
         "lose existing investment. They can request redemption post removal as a lender.",
         "Because of lockup period and pool liquidity constraints, we cannot automatically",
         "disburse the investment by this lender.",
@@ -4873,6 +4260,30 @@
                 "value": [
                   97, 112, 112, 114, 111, 118, 101, 100, 95, 108, 101, 110, 100,
                   101, 114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "arg",
+                "path": "lender"
+              }
+            ]
+          }
+        },
+        {
+          "name": "yield_distributing_lender_config",
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121, 105, 101, 108, 100, 95, 100, 105, 115, 116, 114, 105, 98,
+                  117, 116, 105, 110, 103, 95, 108, 101, 110, 100, 101, 114
                 ]
               },
               {
@@ -5084,6 +4495,92 @@
       ]
     },
     {
+      "name": "remove_yield_distributing_lender",
+      "docs": [
+        "Marks a lender as ineligible for yield distribution.",
+        "",
+        "# Arguments",
+        "* `lender` - The lender address.",
+        "",
+        "# Access Control",
+        "Only pool operators can call this instruction."
+      ],
+      "discriminator": [140, 153, 125, 9, 100, 99, 177, 200],
+      "accounts": [
+        {
+          "name": "pool_operator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tranche_mint"
+        },
+        {
+          "name": "pool_operator_config"
+        },
+        {
+          "name": "yield_distributing_lender_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121, 105, 101, 108, 100, 95, 100, 105, 115, 116, 114, 105, 98,
+                  117, 116, 105, 110, 103, 95, 108, 101, 110, 100, 101, 114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "arg",
+                "path": "lender"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "lender",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
       "name": "set_admin_rnr",
       "docs": [
         "Sets pool admin rewards and responsibility settings.",
@@ -5250,31 +4747,7 @@
           }
         },
         {
-          "name": "new_ea_junior_token",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "arg",
-                "path": "new_ea"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "junior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "name": "new_ea_junior_token"
         },
         {
           "name": "underlying_mint",
@@ -5282,60 +4755,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "ea_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.evaluation_agent",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "underlying_token_program"
@@ -5617,59 +5041,11 @@
           }
         },
         {
-          "name": "new_treasury_junior_token",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "arg",
-                "path": "new_treasury"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "junior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "name": "new_treasury_junior_token"
         },
         {
           "name": "new_treasury_senior_token",
-          "optional": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "arg",
-                "path": "new_treasury"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "senior_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "optional": true
         },
         {
           "name": "underlying_mint",
@@ -5677,60 +5053,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "pool_owner_treasury_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.pool_owner_treasury",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "underlying_token_program"
@@ -7025,87 +6352,15 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "lender_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "lender_tranche_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "lender"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "tranche_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "underlying_token_program"
@@ -7208,60 +6463,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "ea_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_config.evaluation_agent",
-                "account": "PoolConfig"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -7364,59 +6570,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "signer_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -7519,59 +6677,11 @@
         },
         {
           "name": "pool_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "pool_authority"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "signer_underlying_token",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "token_program"
-              },
-              {
-                "kind": "account",
-                "path": "underlying_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
-                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
-                219, 233, 248, 89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "token_program"
@@ -7583,6 +6693,142 @@
           "type": "u128"
         }
       ]
+    },
+    {
+      "name": "withdraw_yields",
+      "docs": [
+        "Withdraws the yield accrued by the lender.",
+        "",
+        "# Access Control",
+        "Only yield distributing lenders can call this instruction."
+      ],
+      "discriminator": [248, 111, 218, 8, 55, 252, 196, 181],
+      "accounts": [
+        {
+          "name": "lender",
+          "signer": true
+        },
+        {
+          "name": "huma_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [104, 117, 109, 97, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "huma_config.id",
+                "account": "HumaConfig"
+              }
+            ]
+          },
+          "relations": ["pool_config"]
+        },
+        {
+          "name": "pool_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config.pool_id",
+                "account": "PoolConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 111, 108, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config"
+              }
+            ]
+          }
+        },
+        {
+          "name": "yield_distributing_lender"
+        },
+        {
+          "name": "lender_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108, 101, 110, 100, 101, 114, 95, 115, 116, 97, 116, 101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tranche_mint"
+              },
+              {
+                "kind": "account",
+                "path": "lender"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 111, 111, 108, 95, 97, 117, 116, 104, 111, 114, 105, 116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool_config"
+              }
+            ]
+          }
+        },
+        {
+          "name": "underlying_mint",
+          "relations": ["pool_config"]
+        },
+        {
+          "name": "pool_underlying_token",
+          "writable": true
+        },
+        {
+          "name": "lender_underlying_token",
+          "writable": true
+        },
+        {
+          "name": "tranche_mint",
+          "writable": true
+        },
+        {
+          "name": "lender_tranche_token",
+          "writable": true
+        },
+        {
+          "name": "underlying_token_program"
+        },
+        {
+          "name": "tranche_token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -7637,6 +6883,10 @@
     {
       "name": "TrancheState",
       "discriminator": [212, 231, 254, 24, 238, 63, 92, 105]
+    },
+    {
+      "name": "YieldDistributingLender",
+      "discriminator": [179, 145, 84, 62, 168, 249, 253, 29]
     }
   ],
   "events": [
@@ -7805,6 +7055,10 @@
       "discriminator": [76, 55, 28, 161, 130, 142, 226, 133]
     },
     {
+      "name": "PoolConfigReallocatedEvent",
+      "discriminator": [90, 254, 193, 102, 77, 252, 10, 50]
+    },
+    {
       "name": "PoolCreatedEvent",
       "discriminator": [25, 94, 75, 47, 112, 99, 53, 63]
     },
@@ -7897,12 +7151,24 @@
       "discriminator": [19, 250, 33, 106, 8, 220, 78, 241]
     },
     {
+      "name": "YieldDistributingLenderAddedEvent",
+      "discriminator": [198, 65, 87, 191, 19, 49, 27, 80]
+    },
+    {
+      "name": "YieldDistributingLenderRemovedEvent",
+      "discriminator": [97, 210, 181, 37, 25, 43, 227, 77]
+    },
+    {
       "name": "YieldTrackerRefreshedEvent",
       "discriminator": [48, 100, 71, 36, 117, 201, 145, 140]
     },
     {
       "name": "YieldUpdatedEvent",
       "discriminator": [177, 90, 108, 19, 131, 243, 44, 244]
+    },
+    {
+      "name": "YieldsWithdrawnEvent",
+      "discriminator": [151, 129, 132, 11, 52, 147, 28, 227]
     }
   ],
   "errors": [
@@ -7989,6 +7255,14 @@
     {
       "code": 6214,
       "name": "AuthorizedInitialDepositorRequired"
+    },
+    {
+      "code": 6215,
+      "name": "LenderOrSentinelRequired"
+    },
+    {
+      "code": 6216,
+      "name": "YieldDistributingLenderRequired"
     },
     {
       "code": 6301,
@@ -8087,6 +7361,14 @@
       "name": "PoolNameTooLong"
     },
     {
+      "code": 6419,
+      "name": "InvalidPoolConfig"
+    },
+    {
+      "code": 6420,
+      "name": "InsufficientBalanceForYieldWithdrawal"
+    },
+    {
       "code": 6501,
       "name": "PreviousAssetsNotWithdrawn"
     },
@@ -8105,6 +7387,14 @@
     {
       "code": 6505,
       "name": "EpochClosedTooEarly"
+    },
+    {
+      "code": 6506,
+      "name": "InsufficientAuthorizationForAutoRedemption"
+    },
+    {
+      "code": 6507,
+      "name": "RedemptionCancellationDisabled"
     },
     {
       "code": 6601,
@@ -9477,7 +8767,8 @@
         "* `max_senior_junior_ratio` - The upper bound of senior-to-junior ratio allowed.",
         "* `fixed_senior_yield_bps` - The fixed yield for senior tranche. Either this or tranches_risk_adjustment_bps is non-zero.",
         "* `tranches_risk_adjustment_bps` - Percentage of yield to be shifted from senior to junior. Either this or fixed_senior_yield_bps is non-zero.",
-        "* `withdrawal_lockup_period_days` - How long a lender has to wait after the last deposit before they can withdraw."
+        "* `withdrawal_lockup_period_days` - How long a lender has to wait after the last deposit before they can withdraw.",
+        "* `auto_redemption_after_lockup` - When enabled, lenders' shares are automatically redeemed after the lockup period."
       ],
       "type": {
         "kind": "struct",
@@ -9501,6 +8792,10 @@
           {
             "name": "withdrawal_lockup_period_days",
             "type": "u16"
+          },
+          {
+            "name": "auto_redemption_after_lockup",
+            "type": "bool"
           }
         ]
       }
@@ -10464,6 +9759,40 @@
                 "name": "FeeStructure"
               }
             }
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": ["u8", 160]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "PoolConfigReallocatedEvent",
+      "docs": [
+        "The pool config has been reallocated.",
+        "",
+        "# Fields",
+        "* `pool_config` - The address of the pool config account.",
+        "* `account_span` - The size of the pool config account.",
+        "* `lamports_diff` - The increased rent."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool_config",
+            "type": "pubkey"
+          },
+          {
+            "name": "account_span",
+            "type": "u64"
+          },
+          {
+            "name": "lamports_diff",
+            "type": "u64"
           }
         ]
       }
@@ -11648,6 +10977,68 @@
       }
     },
     {
+      "name": "YieldDistributingLender",
+      "docs": [
+        "Designation of whether a lender is eligible for yield distribution. A lender with this",
+        "designation has the option to withdraw their yield generated from the pool."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldDistributingLenderAddedEvent",
+      "docs": [
+        "A lender has been designated as eligible for yield distribution.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The address of the lender with the designation."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tranche",
+            "type": "pubkey"
+          },
+          {
+            "name": "lender",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldDistributingLenderRemovedEvent",
+      "docs": [
+        "A lender has been designated as no longer eligible for yield distribution.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The address of the lender whose designation is being removed."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tranche",
+            "type": "pubkey"
+          },
+          {
+            "name": "lender",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
       "name": "YieldTrackerRefreshedEvent",
       "docs": [
         "The senior yield tracker has been refreshed.",
@@ -11704,6 +11095,39 @@
           {
             "name": "new_yield_bps",
             "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldsWithdrawnEvent",
+      "docs": [
+        "A lender has withdrawn their yield.",
+        "",
+        "# Fields",
+        "* `tranche` - The tranche mint key.",
+        "* `lender` - The lender withdrawing yield.",
+        "* `yields` - The amount of yield being withdrawn.",
+        "* `shares_burned` - The number of shares burned."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tranche",
+            "type": "pubkey"
+          },
+          {
+            "name": "lender",
+            "type": "pubkey"
+          },
+          {
+            "name": "yields",
+            "type": "u128"
+          },
+          {
+            "name": "shares_burned",
+            "type": "u128"
           }
         ]
       }
@@ -11874,6 +11298,11 @@
       "name": "TRANCHE_STATE_SEED",
       "type": "bytes",
       "value": "[116, 114, 97, 110, 99, 104, 101, 95, 115, 116, 97, 116, 101]"
+    },
+    {
+      "name": "YIELD_DISTRIBUTING_LENDER_SEED",
+      "type": "bytes",
+      "value": "[121, 105, 101, 108, 100, 95, 100, 105, 115, 116, 114, 105, 98, 117, 116, 105, 110, 103, 95, 108, 101, 110, 100, 101, 114]"
     }
   ]
 }
