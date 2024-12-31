@@ -14,6 +14,7 @@ import {
   getDueDetailV2,
   getPoolUnderlyingTokenBalanceV2,
   getPoolUnderlyingTokenInfoV2,
+  getTrancheRedemptionStatusV2,
   isChainEnum,
   POOL_ABI_V2,
   POOL_CONFIG_V2_ABI,
@@ -650,37 +651,32 @@ export function useRedemptionStatusV2(
   provider: JsonRpcProvider | Web3Provider | undefined,
 ): [RedemptionStatus | undefined, () => void] {
   const [redemptionStatus, setRedemptionStatus] = useState<RedemptionStatus>()
-  const vaultContract = useTrancheVaultContractV2(
-    poolName,
-    trancheType,
-    provider,
-  )
   const [refreshCount, refresh] = useForceRefresh()
 
   useEffect(() => {
-    if (account && vaultContract) {
+    if (account) {
       const fetchData = async () => {
-        const redemptionRecord = await vaultContract.lenderRedemptionRecords(
+        const redemptionStatus = await getTrancheRedemptionStatusV2(
+          poolName,
+          trancheType,
           account,
+          provider,
         )
-        const cancellableRedemptionShares =
-          await vaultContract.cancellableRedemptionShares(account)
-        const cancellableRedemptionAssets = await vaultContract.convertToAssets(
-          cancellableRedemptionShares,
-        )
-        const withdrawableAssets = await vaultContract.withdrawableAssets(
-          account,
-        )
-        setRedemptionStatus({
-          numSharesRequested: redemptionRecord.numSharesRequested.toString(),
-          withdrawableAssets: withdrawableAssets.toString(),
-          cancellableRedemptionShares: cancellableRedemptionShares.toString(),
-          cancellableRedemptionAssets: cancellableRedemptionAssets.toString(),
-        })
+        if (redemptionStatus) {
+          setRedemptionStatus({
+            numSharesRequested:
+              redemptionStatus.lenderRedemptionRecords.numSharesRequested.toString(),
+            withdrawableAssets: redemptionStatus.withdrawableAssets.toString(),
+            cancellableRedemptionShares:
+              redemptionStatus.cancellableRedemptionShares.toString(),
+            cancellableRedemptionAssets:
+              redemptionStatus.cancellableRedemptionAssets.toString(),
+          })
+        }
       }
       fetchData()
     }
-  }, [account, vaultContract, refreshCount])
+  }, [account, poolName, provider, trancheType, refreshCount])
 
   return [redemptionStatus, refresh]
 }
