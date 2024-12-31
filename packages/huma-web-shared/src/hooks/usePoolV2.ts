@@ -660,7 +660,7 @@ export function useRedemptionStatusV2(
   useEffect(() => {
     if (account && vaultContract) {
       const fetchData = async () => {
-        const redemptionRecords = await vaultContract.lenderRedemptionRecords(
+        const redemptionRecord = await vaultContract.lenderRedemptionRecords(
           account,
         )
         const cancellableRedemptionShares =
@@ -668,9 +668,12 @@ export function useRedemptionStatusV2(
         const cancellableRedemptionAssets = await vaultContract.convertToAssets(
           cancellableRedemptionShares,
         )
+        const withdrawableAssets = await vaultContract.withdrawableAssets(
+          account,
+        )
         setRedemptionStatus({
-          numSharesRequested: redemptionRecords.numSharesRequested.toString(),
-          withdrawableAssets: redemptionRecords.totalAmountProcessed.toString(),
+          numSharesRequested: redemptionRecord.numSharesRequested.toString(),
+          withdrawableAssets: withdrawableAssets.toString(),
           cancellableRedemptionShares: cancellableRedemptionShares.toString(),
           cancellableRedemptionAssets: cancellableRedemptionAssets.toString(),
         })
