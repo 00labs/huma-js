@@ -1,4 +1,5 @@
 import {
+  ARF_3_MONTH_POOL_SCROLL_MAP,
   CHAIN_POOLS_INFO_V2,
   ChainEnum,
   CreditEvent,
@@ -258,12 +259,8 @@ function getReceivableV2Info(
     poolAddress = CHAIN_POOLS_INFO_V2[chainId as ChainEnum]?.[poolName]?.pool
   }
 
-  const ARF_3_MONTH_POOL_SCROLL_OLD =
-    '0x5227254a6aCa397e95F310b52f6D3143A5A9Ee14'
-  const ARF_3_MONTH_POOL_SCROLL_NEW =
-    '0x51051d2E2bac59b525C7f001E91d31193c4CafFe'
-  if (poolAddress === ARF_3_MONTH_POOL_SCROLL_NEW) {
-    poolAddress = ARF_3_MONTH_POOL_SCROLL_OLD
+  if (poolAddress === ARF_3_MONTH_POOL_SCROLL_MAP.poolNew) {
+    poolAddress = ARF_3_MONTH_POOL_SCROLL_MAP.poolOld
   }
 
   const ReceivablesV2Query = `
