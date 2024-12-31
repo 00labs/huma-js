@@ -636,6 +636,52 @@ export function useCancellableRedemptionInfoV2(
   return [redemptionInfo, refresh]
 }
 
+type RedemptionStatus = {
+  numSharesRequested: string
+  withdrawableAssets: string
+  cancellableRedemptionShares: string
+  cancellableRedemptionAssets: string
+}
+
+export function useRedemptionStatusV2(
+  poolName: POOL_NAME,
+  trancheType: TrancheType,
+  account: string | undefined,
+  provider: JsonRpcProvider | Web3Provider | undefined,
+): [RedemptionStatus | undefined, () => void] {
+  const [redemptionStatus, setRedemptionStatus] = useState<RedemptionStatus>()
+  const vaultContract = useTrancheVaultContractV2(
+    poolName,
+    trancheType,
+    provider,
+  )
+  const [refreshCount, refresh] = useForceRefresh()
+
+  useEffect(() => {
+    if (account && vaultContract) {
+      const fetchData = async () => {
+        const redemptionRecords = await vaultContract.lenderRedemptionRecords(
+          account,
+        )
+        const cancellableRedemptionShares =
+          await vaultContract.cancellableRedemptionShares(account)
+        const cancellableRedemptionAssets = await vaultContract.convertToAssets(
+          cancellableRedemptionShares,
+        )
+        setRedemptionStatus({
+          numSharesRequested: redemptionRecords.numSharesRequested.toString(),
+          withdrawableAssets: redemptionRecords.totalAmountProcessed.toString(),
+          cancellableRedemptionShares: cancellableRedemptionShares.toString(),
+          cancellableRedemptionAssets: cancellableRedemptionAssets.toString(),
+        })
+      }
+      fetchData()
+    }
+  }, [account, vaultContract, refreshCount])
+
+  return [redemptionStatus, refresh]
+}
+
 export function useCreditStatsV2(
   poolName: POOL_NAME,
   account: string | undefined,
