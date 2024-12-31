@@ -14,7 +14,6 @@ import {
   getDueDetailV2,
   getPoolUnderlyingTokenBalanceV2,
   getPoolUnderlyingTokenInfoV2,
-  getTrancheRedemptionStatusV2,
   isChainEnum,
   POOL_ABI_V2,
   POOL_CONFIG_V2_ABI,
@@ -635,50 +634,6 @@ export function useCancellableRedemptionInfoV2(
   }, [account, vaultContract, refreshCount])
 
   return [redemptionInfo, refresh]
-}
-
-type RedemptionStatus = {
-  numSharesRequested: string
-  withdrawableAssets: string
-  cancellableRedemptionShares: string
-  cancellableRedemptionAssets: string
-}
-
-export function useRedemptionStatusV2(
-  poolName: POOL_NAME,
-  trancheType: TrancheType,
-  account: string | undefined,
-  provider: JsonRpcProvider | Web3Provider | undefined,
-): [RedemptionStatus | undefined, () => void] {
-  const [redemptionStatus, setRedemptionStatus] = useState<RedemptionStatus>()
-  const [refreshCount, refresh] = useForceRefresh()
-
-  useEffect(() => {
-    if (account) {
-      const fetchData = async () => {
-        const redemptionStatus = await getTrancheRedemptionStatusV2(
-          poolName,
-          trancheType,
-          account,
-          provider,
-        )
-        if (redemptionStatus) {
-          setRedemptionStatus({
-            numSharesRequested:
-              redemptionStatus.lenderRedemptionRecords.numSharesRequested.toString(),
-            withdrawableAssets: redemptionStatus.withdrawableAssets.toString(),
-            cancellableRedemptionShares:
-              redemptionStatus.cancellableRedemptionShares.toString(),
-            cancellableRedemptionAssets:
-              redemptionStatus.cancellableRedemptionAssets.toString(),
-          })
-        }
-      }
-      fetchData()
-    }
-  }, [account, poolName, provider, trancheType, refreshCount])
-
-  return [redemptionStatus, refresh]
 }
 
 export function useCreditStatsV2(
