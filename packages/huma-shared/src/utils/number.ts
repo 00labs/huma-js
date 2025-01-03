@@ -30,6 +30,25 @@ export const formatMoney = (
   return moneyFormatter.format(numCast)
 }
 
+export const formatMoneyFixed = (
+  num: number | string | undefined,
+  toFixed = 0,
+) => {
+  if (isEmpty(num) || Number.isNaN(num)) {
+    return num
+  }
+
+  const numCast = Number(num)
+  const moneyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: toFixed,
+    maximumFractionDigits: toFixed,
+  })
+
+  return moneyFormatter.format(numCast)
+}
+
 export const formatAssets = (
   assets: BigNumberish | undefined,
   decimals: number | undefined,
@@ -47,6 +66,22 @@ export const formatNumber = (num: number | string | undefined) => {
   if (numCast > 1_000) {
     numCast = Math.round(numCast)
   }
+  return numberFormatter.format(numCast)
+}
+
+export const formatNumberFixed = (
+  num: number | string | undefined,
+  toFixed = 0,
+) => {
+  if (isEmpty(num) || Number.isNaN(num)) {
+    return num
+  }
+
+  const numberFormatter = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: toFixed,
+    minimumFractionDigits: toFixed,
+  })
+  const numCast = Number(num)
   return numberFormatter.format(numCast)
 }
 
@@ -125,5 +160,17 @@ export const formatBNFixed = (
     return '--'
   }
   const amount = ethers.utils.formatUnits(amountBN, decimals)
-  return Number(amount).toFixed(toFixed)
+  return formatNumberFixed(amount, toFixed)
+}
+
+export const formatMoneyBNFixed = (
+  amountBN: BigNumber | undefined,
+  decimals: number,
+  toFixed: number = 0,
+) => {
+  if (!amountBN) {
+    return '--'
+  }
+  const amount = ethers.utils.formatUnits(amountBN, decimals)
+  return formatMoneyFixed(amount, toFixed)
 }
