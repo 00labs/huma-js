@@ -3,6 +3,7 @@ import {
   CHAIN_TYPE,
   checkIsDev,
   IdentityServiceV2,
+  NETWORK_TYPE,
   timeUtil,
   TrancheType,
 } from '@huma-finance/shared'
@@ -18,6 +19,7 @@ type Props = {
   juniorTrancheVault: string
   seniorTrancheVault: string
   chainType: CHAIN_TYPE
+  networkType: NETWORK_TYPE
   isUniTranche: boolean
   chainSpecificData?: Record<string, unknown>
   changeTranche: (tranche: TrancheType) => void
@@ -28,6 +30,7 @@ export function ApproveLenderBase({
   seniorTrancheVault,
   isUniTranche,
   chainType,
+  networkType,
   chainSpecificData,
   changeTranche,
 }: Props): React.ReactElement | null {
@@ -43,6 +46,7 @@ export function ApproveLenderBase({
         try {
           tryAttempts -= 1
           await IdentityServiceV2.approveLender(
+            networkType,
             account!,
             chainId!,
             trancheVault,
@@ -64,7 +68,7 @@ export function ApproveLenderBase({
         }
       }
     },
-    [account, chainId, chainSpecificData, dispatch, isDev],
+    [account, chainId, chainSpecificData, dispatch, isDev, networkType],
   )
 
   useEffect(() => {

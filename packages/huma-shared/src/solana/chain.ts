@@ -1,3 +1,5 @@
+import { NETWORK_TYPE } from '../utils'
+
 export enum SolanaChainEnum {
   SolanaDevnet = 901,
   SolanaMainnet = 900,
@@ -18,6 +20,10 @@ export const SOLANA_CHAINS = {
 
 export function isSolanaTestnet(chainId: SolanaChainEnum): boolean {
   return chainId !== SolanaChainEnum.SolanaMainnet
+}
+
+export function getSolanaNetworkType(chainId: SolanaChainEnum): NETWORK_TYPE {
+  return isSolanaTestnet(chainId) ? NETWORK_TYPE.testnet : NETWORK_TYPE.mainnet
 }
 
 export function getSolanaExplorerUrl(

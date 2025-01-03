@@ -1,5 +1,6 @@
 import {
   CloseModalOptions,
+  getSolanaNetworkType,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
@@ -36,14 +37,12 @@ export interface Campaign {
  * @typedef {Object} SolanaLendSupplyProps
  * @property {SolanaPoolInfo} poolInfo The metadata of the pool.
  * @property {SolanaPoolState} poolState The current state config of the pool.
- * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {function((CloseModalOptions|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function():void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface SolanaLendSupplyProps {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
-  pointsTestnetExperience: boolean
   handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: () => void
 }
@@ -51,7 +50,6 @@ export interface SolanaLendSupplyProps {
 export function SolanaLendSupply({
   poolInfo,
   poolState,
-  pointsTestnetExperience,
   handleClose,
   handleSuccess,
 }: SolanaLendSupplyProps): React.ReactElement | null {
@@ -128,8 +126,8 @@ export function SolanaLendSupply({
       {step === WIDGET_STEP.Evaluation && (
         <Evaluation
           poolInfo={poolInfo}
-          pointsTestnetExperience={pointsTestnetExperience}
           campaign={poolState.campaign}
+          networkType={getSolanaNetworkType(poolInfo.chainId)}
           handleClose={handleClose}
         />
       )}
@@ -164,7 +162,7 @@ export function SolanaLendSupply({
           poolInfo={poolInfo}
           poolState={poolState}
           selectedTranche={selectedTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
+          networkType={getSolanaNetworkType(poolInfo.chainId)}
         />
       )}
       {step === WIDGET_STEP.Done && (

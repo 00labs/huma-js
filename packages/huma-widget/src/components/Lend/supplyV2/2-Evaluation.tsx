@@ -1,4 +1,9 @@
-import { CHAIN_TYPE, CloseModalOptions, PoolInfoV2 } from '@huma-finance/shared'
+import {
+  CHAIN_TYPE,
+  CloseModalOptions,
+  NETWORK_TYPE,
+  PoolInfoV2,
+} from '@huma-finance/shared'
 import React from 'react'
 
 import { Campaign } from '.'
@@ -7,7 +12,7 @@ import { SecuritizeEvaluation } from '../components/SecuritizeEvaluation'
 
 type Props = {
   poolInfo: PoolInfoV2
-  pointsTestnetExperience: boolean
+  networkType: NETWORK_TYPE
   campaign?: Campaign
   handleClose: (options?: CloseModalOptions) => void
 }
@@ -15,7 +20,7 @@ type Props = {
 export function Evaluation({
   poolInfo,
   campaign,
-  pointsTestnetExperience,
+  networkType,
   handleClose,
 }: Props): React.ReactElement | null {
   if (poolInfo.KYC?.Securitize) {
@@ -28,8 +33,8 @@ export function Evaluation({
       <PersonaEvaluation
         poolInfo={poolInfo}
         handleClose={handleClose}
-        pointsTestnetExperience={pointsTestnetExperience}
         campaign={campaign}
+        networkType={networkType}
         chainType={CHAIN_TYPE.EVM}
       />
     )

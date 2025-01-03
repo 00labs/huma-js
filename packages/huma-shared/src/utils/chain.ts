@@ -1,6 +1,11 @@
 import type { AddEthereumChainParameter } from '@web3-react/types'
 import { ethers } from 'ethers'
 
+export enum NETWORK_TYPE {
+  testnet = 'testnet',
+  mainnet = 'mainnet',
+}
+
 export enum CHAIN_TYPE {
   EVM = 'evm',
   SOLANA = 'solana',
@@ -178,6 +183,10 @@ export function isTestnet(chainId: number): boolean {
   return CHAINS[chainId].isTestnet ?? false
 }
 
+export function getEvmNetworkType(chainId: ChainEnum): NETWORK_TYPE {
+  return isTestnet(chainId) ? NETWORK_TYPE.testnet : NETWORK_TYPE.mainnet
+}
+
 export function isChainEnum(
   chainId: number | string | undefined,
 ): chainId is keyof typeof ChainEnum {
@@ -187,7 +196,7 @@ export function isChainEnum(
 function isExtendedChainInformation(
   chainInformation: BasicChainInformation | ExtendedChainInformation,
 ): chainInformation is ExtendedChainInformation {
-  return !!(chainInformation as ExtendedChainInformation).nativeCurrency
+  return !!(chainInformation as ExtendedChainInformation)?.nativeCurrency
 }
 
 export function getAddChainParameters(
@@ -217,12 +226,12 @@ export const URLS: { [chainId: number]: string[] } = Object.keys(
   return accumulator
 }, {})
 
-export const getWalletAddressAbbr = (address: string) => {
+export const getWalletAddressAbbr = (address: string, startNum = 6) => {
   if (!address) {
     return address
   }
   const { length } = address
-  return `${address.slice(0, 6)}...${address.slice(length - 4, length)}`
+  return `${address.slice(0, startNum)}...${address.slice(length - 4, length)}`
 }
 
 /**

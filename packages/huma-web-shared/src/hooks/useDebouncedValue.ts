@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-export const useDebouncedValue = (
-  value: number | string = '',
+export const useDebouncedValue = <T extends number | string | undefined>(
+  value: T,
   delay = 500,
-): string | number => {
+): T => {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {

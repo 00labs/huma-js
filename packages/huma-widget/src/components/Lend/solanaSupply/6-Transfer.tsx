@@ -3,12 +3,11 @@ import {
   checkIsDev,
   convertToShares,
   getTokenAccounts,
+  NETWORK_TYPE,
   SolanaPoolInfo,
   SolanaTokenUtils,
   TrancheType,
 } from '@huma-finance/shared'
-import React, { useCallback, useEffect, useState } from 'react'
-
 import {
   SolanaPoolState,
   useHumaProgram,
@@ -22,6 +21,7 @@ import {
 } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
@@ -33,14 +33,14 @@ type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   selectedTranche: TrancheType
-  pointsTestnetExperience: boolean
+  networkType: NETWORK_TYPE
 }
 
 export function Transfer({
   poolInfo,
   poolState,
   selectedTranche,
-  pointsTestnetExperience,
+  networkType,
 }: Props): React.ReactElement | null {
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
@@ -72,12 +72,12 @@ export function Transfer({
     async (options?: { signature: string }) => {
       if (publicKey && poolState.campaign && options?.signature) {
         try {
-          const result = await CampaignService.updateWalletPoints(
+          const result = await CampaignService.updateHumaAccountPoints(
             publicKey.toString(),
             options.signature,
             poolInfo.chainId,
+            networkType,
             isDev,
-            pointsTestnetExperience,
           )
           dispatch(setPointsAccumulated(result.pointsAccumulated))
         } catch (error) {
@@ -89,7 +89,7 @@ export function Transfer({
     [
       dispatch,
       isDev,
-      pointsTestnetExperience,
+      networkType,
       poolInfo.chainId,
       poolState.campaign,
       publicKey,

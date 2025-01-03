@@ -702,7 +702,6 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
 | poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool.</p> |
-| pointsTestnetExperience | <code>boolean</code> | <p>If the user is in the testnet experience.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
@@ -747,7 +746,6 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
-| pointsTestnetExperience | <code>boolean</code> | <p>If the user is in the testnet experience.</p> |
 | campaign | <code>Campaign</code> | <p>The campaign info.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
