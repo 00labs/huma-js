@@ -1,4 +1,4 @@
-import { BN } from '@coral-xyz/anchor'
+import { BN, utils } from '@coral-xyz/anchor'
 import {
   getCreditAccounts,
   getHumaProgram,
@@ -11,6 +11,7 @@ import {
   createApproveCheckedInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
+  TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
@@ -123,6 +124,100 @@ export class HumaSolanaProgramHelper {
       ],
       this.#solanaContext,
     )
+
+    return tx
+  }
+
+  async buildWithdrawYieldsTransaction(): Promise<Transaction> {
+    const { publicKey, connection, chainId, poolName } = this.#solanaContext
+    const program = getHumaProgram(chainId, connection)
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error('Could not find pool')
+    }
+
+    const tx: Transaction = new Transaction()
+
+    const { underlyingTokenATA, seniorTrancheATA, juniorTrancheATA } =
+      getTokenAccounts(poolInfo, publicKey)
+    const [juniorYieldDistributingLenderAccount] =
+      PublicKey.findProgramAddressSync(
+        [
+          utils.bytes.utf8.encode('yield_distributing_lender'),
+          new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
+          publicKey.toBuffer(),
+        ],
+        program.programId,
+      )
+    const programTx = await program.methods
+      .withdrawYields()
+      .accountsPartial({
+        lender: publicKey,
+        humaConfig: poolInfo.humaConfig,
+        poolConfig: poolInfo.poolConfig,
+        yieldDistributingLender: juniorYieldDistributingLenderAccount,
+        underlyingMint: poolInfo.underlyingMint.address,
+        poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
+        lenderUnderlyingToken: underlyingTokenATA,
+        trancheMint: poolInfo.juniorTrancheMint,
+        lenderTrancheToken: juniorTrancheATA,
+        underlyingTokenProgram: TOKEN_PROGRAM_ID,
+        trancheTokenProgram: TOKEN_2022_PROGRAM_ID,
+      })
+      .transaction()
+    const txAccounts: PublicKey[] = [
+      publicKey,
+      new PublicKey(poolInfo.humaConfig),
+      new PublicKey(poolInfo.poolConfig),
+      juniorYieldDistributingLenderAccount,
+      new PublicKey(poolInfo.underlyingMint.address),
+      new PublicKey(poolInfo.poolUnderlyingTokenAccount),
+      underlyingTokenATA,
+      new PublicKey(poolInfo.juniorTrancheMint),
+      juniorTrancheATA,
+      TOKEN_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID,
+    ]
+    tx.add(programTx)
+
+    if (poolInfo.seniorTrancheMint) {
+      const [seniorYieldDistributingLenderAccount] =
+        PublicKey.findProgramAddressSync(
+          [
+            utils.bytes.utf8.encode('yield_distributing_lender'),
+            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
+            publicKey.toBuffer(),
+          ],
+          program.programId,
+        )
+      const programTx = await program.methods
+        .withdrawYields()
+        .accountsPartial({
+          lender: publicKey,
+          humaConfig: poolInfo.humaConfig,
+          poolConfig: poolInfo.poolConfig,
+          yieldDistributingLender: seniorYieldDistributingLenderAccount,
+          underlyingMint: poolInfo.underlyingMint.address,
+          poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
+          lenderUnderlyingToken: underlyingTokenATA,
+          trancheMint: poolInfo.seniorTrancheMint,
+          lenderTrancheToken: seniorTrancheATA,
+          underlyingTokenProgram: TOKEN_PROGRAM_ID,
+          trancheTokenProgram: TOKEN_2022_PROGRAM_ID,
+        })
+        .transaction()
+      txAccounts.push(
+        ...[
+          seniorYieldDistributingLenderAccount,
+          new PublicKey(poolInfo.seniorTrancheMint),
+          seniorTrancheATA,
+        ],
+      )
+      tx.add(programTx)
+    }
+
+    await buildOptimalTransaction(tx, txAccounts, this.#solanaContext)
 
     return tx
   }

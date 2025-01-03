@@ -61,9 +61,9 @@ export function Transfer({
         poolJuniorTrancheATA,
       } = getTokenAccounts(poolInfo, publicKey)
       const tx = await program.methods
-        .addRedemptionRequest(redeemBN)
+        .addRedemptionRequest(publicKey, redeemBN)
         .accountsPartial({
-          lender: publicKey,
+          signer: publicKey,
           humaConfig: poolInfo.humaConfig,
           poolConfig: poolInfo.poolConfig,
           trancheMint:

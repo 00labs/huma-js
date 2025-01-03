@@ -1,13 +1,14 @@
 import {
+  ARF_3_MONTH_POOL_SCROLL_MAP,
+  CHAIN_POOLS_INFO_V2,
+  ChainEnum,
   CreditEvent,
+  isV2Pool,
   POOL_NAME,
   POOL_TYPE,
   PoolContractMap,
   PoolSubgraphMap,
   RealWorldReceivableInfoBase,
-  CHAIN_POOLS_INFO_V2,
-  ChainEnum,
-  isV2Pool,
   requestPost,
 } from '@huma-finance/shared'
 import { gql } from 'graphql-request'
@@ -256,6 +257,10 @@ function getReceivableV2Info(
   let poolAddress = PoolContractMap[chainId]?.[poolType]?.[poolName]?.pool
   if (!poolAddress) {
     poolAddress = CHAIN_POOLS_INFO_V2[chainId as ChainEnum]?.[poolName]?.pool
+  }
+
+  if (poolAddress === ARF_3_MONTH_POOL_SCROLL_MAP.poolNew) {
+    poolAddress = ARF_3_MONTH_POOL_SCROLL_MAP.poolOld
   }
 
   const ReceivablesV2Query = `
