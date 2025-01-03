@@ -1,4 +1,9 @@
-import { CHAIN_TYPE, PoolInfoV2, TrancheType } from '@huma-finance/shared'
+import {
+  CHAIN_TYPE,
+  getEvmNetworkType,
+  PoolInfoV2,
+  TrancheType,
+} from '@huma-finance/shared'
 import React from 'react'
 
 import { ApproveLenderBase } from '../components/ApproveLenderBase'
@@ -20,6 +25,7 @@ export function ApproveLender({
       seniorTrancheVault={poolInfo.seniorTrancheVault}
       isUniTranche={isUniTranche}
       chainType={CHAIN_TYPE.EVM}
+      networkType={getEvmNetworkType(poolInfo.chainId)}
       changeTranche={changeTranche}
     />
   )

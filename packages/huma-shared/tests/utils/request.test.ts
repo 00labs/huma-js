@@ -13,15 +13,10 @@ describe('requestGet', () => {
     const result = await requestGet(url)
 
     expect(result).toEqual(responseData)
-    expect(axios.get).toHaveBeenCalledWith(
-      url,
-      {},
-      {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'GET',
-        withCredentials: true,
-      },
-    )
+    expect(axios.get).toHaveBeenCalledWith(url, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    })
   })
 
   it('throws an error if the GET request fails', async () => {
@@ -31,15 +26,10 @@ describe('requestGet', () => {
 
     const url = 'https://example.com/api'
     await expect(requestGet(url)).rejects.toThrow(errorMessage)
-    expect(axios.get).toHaveBeenCalledWith(
-      url,
-      {},
-      {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'GET',
-        withCredentials: true,
-      },
-    )
+    expect(axios.get).toHaveBeenCalledWith(url, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    })
   })
 })
 

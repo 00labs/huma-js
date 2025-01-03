@@ -1,5 +1,5 @@
 import { isSolanaTestnet, SolanaChainEnum } from '../solana/chain'
-import { CHAINS } from './chain'
+import { CHAINS, NETWORK_TYPE } from './chain'
 
 const getDevPrefix = (isDev = false) => (isDev ? 'dev.' : '')
 
@@ -44,6 +44,11 @@ const getIdentityAPIUrl = (chainId: number, isDev = false) =>
     isDev,
   )}.identity-verification.huma.finance`
 
+const getIdentityAPIUrlV2 = (networkType: NETWORK_TYPE, isDev = false) =>
+  `https://${getDevPrefix(
+    isDev,
+  )}${networkType}.identity-verification.huma.finance`
+
 const getAuthServiceUrl = (chainId: number, isDev = false) =>
   `https://${getNetworkAgnosticServiceUrlPrefix(
     chainId,
@@ -66,6 +71,11 @@ const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
   `https://${getDevPrefix(isDev)}${
     pointsTestnetExperience ? 'testnet.' : 'mainnet.'
   }campaign-points.huma.finance/graphql`
+
+const getCampaignAPIUrlV2 = (networkType: NETWORK_TYPE, isDev: boolean) =>
+  `https://${getDevPrefix(
+    isDev,
+  )}${networkType}.campaign-points.huma.finance/graphql`
 
 const getSolanaGraphAPIUrl = (
   isDev: boolean,
@@ -108,9 +118,11 @@ export const configUtil = {
   getEABaseUrlV1,
   getRequestAPIUrl,
   getIdentityAPIUrl,
+  getIdentityAPIUrlV2,
   getAuthServiceUrl,
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,
+  getCampaignAPIUrlV2,
   getSolanaGraphAPIUrl,
   DEFAULT_CHAIN_ID,
 }

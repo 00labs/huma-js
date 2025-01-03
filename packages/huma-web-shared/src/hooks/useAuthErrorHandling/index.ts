@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CHAIN_TYPE } from '@huma-finance/shared'
+import { CHAIN_TYPE, HUMA_ACCOUNT_EXCEPTION } from '@huma-finance/shared'
 import axios, { HttpStatusCode } from 'axios'
 import { useCallback, useState } from 'react'
 import { useAuthErrorHandlingEvm } from './useAuthErrorHandlingEvm'
@@ -35,13 +35,14 @@ export const useAuthErrorHandling = (
       axios.isAxiosError(error) &&
       error.response?.status === HttpStatusCode.Unauthorized &&
       [
-        'IdTokenNotFoundException',
-        'InvalidIdTokenException',
-        'WalletMismatchException',
+        HUMA_ACCOUNT_EXCEPTION.AccountTokenNotFoundException,
+        HUMA_ACCOUNT_EXCEPTION.InvalidAccountTokenException,
       ].includes(error.response?.data?.detail?.type)
 
-    const isWalletNotCreatedError = error === 'WalletNotCreatedException'
-    const isWalletNotSignInError = error === 'WalletNotSignedInException'
+    const isWalletNotCreatedError =
+      error === HUMA_ACCOUNT_EXCEPTION.WalletNotCreatedException
+    const isWalletNotSignInError =
+      error === HUMA_ACCOUNT_EXCEPTION.WalletNotSignedInException
 
     return {
       isUnauthorizedError,

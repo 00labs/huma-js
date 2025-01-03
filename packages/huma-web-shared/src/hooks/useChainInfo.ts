@@ -41,3 +41,38 @@ export const useChainInfo = (
     provider,
   }
 }
+
+export const useChainsInfo = (isDev: boolean) => {
+  const { account: evmAccount, chainId: evmChainId } = useChainInfo(
+    isDev,
+    CHAIN_TYPE.EVM,
+  )
+  const { account: solanaAccount, chainId: solanaChainId } = useChainInfo(
+    isDev,
+    CHAIN_TYPE.SOLANA,
+  )
+
+  return {
+    evmAccount,
+    evmChainId,
+    solanaAccount,
+    solanaChainId,
+  }
+}
+
+export const useActiveChainInfo = (
+  isDev: boolean,
+  activeNetwork: CHAIN_TYPE,
+) => {
+  const evmChainInfo = useChainInfo(isDev, CHAIN_TYPE.EVM)
+  const solanaChainInfo = useChainInfo(isDev, CHAIN_TYPE.SOLANA)
+
+  switch (activeNetwork) {
+    case CHAIN_TYPE.EVM:
+      return evmChainInfo
+    case CHAIN_TYPE.SOLANA:
+      return solanaChainInfo
+    default:
+      return null
+  }
+}
