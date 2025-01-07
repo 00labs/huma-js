@@ -1,5 +1,6 @@
 import {
   CloseModalOptions,
+  getEvmNetworkType,
   openInNewTab,
   POOL_NAME,
   TrancheType,
@@ -39,14 +40,12 @@ export interface Campaign {
  * Lend pool supply props
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
- * @property {boolean} pointsTestnetExperience If the user is in the testnet experience.
  * @property {Campaign} campaign The campaign info.
  * @property {function((CloseModalOptions|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
-  pointsTestnetExperience: boolean
   campaign?: Campaign
   handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: (blockNumber?: number) => void
@@ -54,7 +53,6 @@ export interface LendSupplyPropsV2 {
 
 export function LendSupplyV2({
   poolName: poolNameStr,
-  pointsTestnetExperience,
   campaign,
   handleClose,
   handleSuccess,
@@ -171,8 +169,8 @@ export function LendSupplyV2({
         <Evaluation
           poolInfo={poolInfo}
           handleClose={handleClose}
-          pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
+          networkType={getEvmNetworkType(poolInfo.chainId)}
         />
       )}
       {step === WIDGET_STEP.ApproveLender && (
@@ -199,8 +197,8 @@ export function LendSupplyV2({
         <Transfer
           poolInfo={poolInfo}
           trancheType={selectedTranche}
-          pointsTestnetExperience={pointsTestnetExperience}
           campaign={campaign}
+          networkType={getEvmNetworkType(poolInfo.chainId)}
         />
       )}
       {step === WIDGET_STEP.Done && (

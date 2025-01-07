@@ -1,6 +1,7 @@
 import {
   CampaignService,
   checkIsDev,
+  NETWORK_TYPE,
   PoolInfoV2,
   TrancheType,
 } from '@huma-finance/shared'
@@ -19,14 +20,14 @@ import { TxSendModalV2 } from '../../TxSendModalV2'
 type Props = {
   poolInfo: PoolInfoV2
   trancheType: TrancheType
-  pointsTestnetExperience: boolean
+  networkType: NETWORK_TYPE
   campaign?: Campaign
 }
 
 export function Transfer({
   poolInfo,
   trancheType,
-  pointsTestnetExperience,
+  networkType,
   campaign,
 }: Props): React.ReactElement | null {
   const isDev = checkIsDev()
@@ -49,12 +50,12 @@ export function Transfer({
     async (options?: { txHash: string }) => {
       if (campaign && options?.txHash) {
         try {
-          const result = await CampaignService.updateWalletPoints(
+          const result = await CampaignService.updateHumaAccountPoints(
             account!,
             options.txHash,
             chainId!,
+            networkType,
             isDev,
-            pointsTestnetExperience,
           )
           dispatch(setPointsAccumulated(result.pointsAccumulated))
         } catch (error) {
@@ -63,7 +64,7 @@ export function Transfer({
       }
       dispatch(setStep(WIDGET_STEP.Done))
     },
-    [account, campaign, chainId, dispatch, isDev, pointsTestnetExperience],
+    [account, campaign, chainId, dispatch, isDev, networkType],
   )
 
   if (!trancheVaultContract || !account) {

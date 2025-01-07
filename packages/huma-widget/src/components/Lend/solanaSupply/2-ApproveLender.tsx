@@ -1,5 +1,6 @@
 import {
   CHAIN_TYPE,
+  getSolanaNetworkType,
   SOLANA_CHAIN_INFO,
   SolanaPoolInfo,
   TrancheType,
@@ -27,6 +28,7 @@ export function ApproveLender({
       seniorTrancheVault={poolInfo.seniorTrancheMint}
       isUniTranche={isUniTranche}
       chainType={CHAIN_TYPE.SOLANA}
+      networkType={getSolanaNetworkType(poolInfo.chainId)}
       chainSpecificData={{
         huma_program_id: solanaChainInfo.poolProgram,
         pool_id: poolInfo.poolId,

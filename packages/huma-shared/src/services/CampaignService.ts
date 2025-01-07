@@ -1,8 +1,9 @@
 import { gql } from 'graphql-request'
 
 import { SolanaChainEnum, SolanaPoolInfo } from '../solana'
-import { ChainEnum } from '../utils/chain'
+import { ChainEnum, NETWORK_TYPE } from '../utils/chain'
 import { configUtil } from '../utils/config'
+import { COMMON_ERROR_MESSAGE } from '../utils/const'
 import { requestPost } from '../utils/request'
 import { PoolInfoV2 } from '../v2/utils/pool'
 
@@ -53,30 +54,6 @@ export type SolanaCampaignGroup = {
   partners: CampaignPartner[]
 }
 
-type Wallet = {
-  id: string
-  address: string
-  referralCode: string
-  referrer: {
-    id: string
-    address: string
-  }
-  createdAt: string
-}
-
-type WalletPoint = {
-  id: string
-  rank: number
-  wallet: Wallet
-  totalPoints: number
-  numberOfReferred: number
-}
-
-type WalletRank = {
-  totalCount: number
-  walletPoints: WalletPoint[]
-}
-
 type CampaignPoints = {
   campaignId: string
   juniorTranchePoints: number
@@ -84,12 +61,33 @@ type CampaignPoints = {
   lockupPeriodMonths: number
 }
 
+export type LeaderboardItem = {
+  accountId: string
+  accountName: string
+  points: number
+  ranking: number
+  referredCount: number
+}
+
+export type HumaAccountPoints = {
+  accountId: string
+  totalPoints: number
+  basePoints: number
+  liquidityPoints: number
+  liquidityPointsList: {
+    address: string
+    points: number
+  }[]
+  referralPoints: number
+  bonusPoints: number
+}
+
 function checkWalletOwnership(
   wallet: string,
+  networkType: NETWORK_TYPE,
   isDev: boolean,
-  pointsTestnetExperience: boolean,
 ): Promise<boolean | undefined> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
     query {
@@ -99,211 +97,188 @@ function checkWalletOwnership(
 
   return requestPost<{
     data?: {
-      walletOwnership: boolean
+      walletOwnership: boolean & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return undefined
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
+      }
+      const errMessage = res.data?.walletOwnership?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
       }
       return res.data?.walletOwnership
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
-function getWalletInfo(
-  wallet: string,
-  isDev: boolean,
-  pointsTestnetExperience: boolean,
-): Promise<{ wallet: Wallet; walletPoint: WalletPoint } | undefined> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
-
-  const query = gql`
-    query {
-        wallet(address:"${wallet}") {
-          id
-          address
-          referralCode
-        }
-        walletPoint(address:"${wallet}") {
-          rank
-          numberOfReferred
-          totalPoints
-        }
-      }
-  `
-
-  return requestPost<{
-    data?: { wallet: Wallet; walletPoint: WalletPoint }
-    errors?: unknown
-  }>(url, JSON.stringify({ query }))
-    .then((res) => {
-      if (res.errors) {
-        console.error(res.errors)
-        return undefined
-      }
-      return res.data
-    })
-    .catch((err) => {
-      console.error(err)
-      return undefined
-    })
-}
-
-function getWalletRankList(
+function getLeaderboard(
   seasonId: string,
-  first: number,
-  skip: number,
+  networkType: NETWORK_TYPE,
   isDev: boolean,
-  pointsTestnetExperience: boolean,
-): Promise<WalletRank | undefined> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
+): Promise<LeaderboardItem[] | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
     query {
-        walletPoints(
-          seasonId: "${seasonId}",
-           first: ${first}, 
-           skip: ${skip}
-           ){
-          totalCount
-          walletPoints {
-            id
-            rank
-            wallet {
-              id 
-              address
-            }
-            totalPoints
-            numberOfReferred
+      leaderboard(seasonId: "${seasonId}") {
+        ... on LeaderboardResult {
+          data {
+            accountId
+            accountName
+            points
+            referredCount
+            ranking
           }
         }
+        ... on PointServiceError {
+          errMessage
+        }
       }
+    }
   `
 
   return requestPost<{
-    data?: { walletPoints: WalletRank }
+    data?: { leaderboard: { data: LeaderboardItem[] & { errMessage: string } } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return undefined
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
-      return res.data?.walletPoints
+      const errMessage = res.data?.leaderboard?.data?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+      return res.data?.leaderboard?.data
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
-function getRecentJoins(
+function getHumaAccountRanking(
+  seasonId: string,
+  networkType: NETWORK_TYPE,
   isDev: boolean,
-  pointsTestnetExperience: boolean,
-): Promise<Wallet[] | undefined> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
+): Promise<LeaderboardItem | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+
   const query = gql`
     query {
-      wallets(first: 5, skip: 0, orderBy: "createdAt", orderDirection: "desc") {
-        wallets {
-          id
-          address
-          referrer {
-            id
+      myRankingEntry(seasonId: "${seasonId}") {
+        ... on LeaderboardItem {
+          accountId
+          accountName
+          points
+          referredCount
+          ranking
+        }
+        ... on PointServiceError {
+            errMessage
+        }
+      }
+  }
+  `
+
+  return requestPost<{
+    data?: { myRankingEntry: LeaderboardItem & { errMessage: string } }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
+      }
+      const errMessage = res.data?.myRankingEntry?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
+      return res.data?.myRankingEntry
+    })
+    .catch((err) => {
+      console.error(err)
+      throw new Error(COMMON_ERROR_MESSAGE)
+    })
+}
+
+function getHumaAccountPoints(
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+): Promise<HumaAccountPoints | undefined> {
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+
+  const query = gql`
+    query {
+      accountPoints {
+        ... on AccountPointsResult {
+          accountId
+          basePoints
+          liquidityPoints
+          liquidityPointsList {
             address
+            points
           }
-          createdAt
+          referralPoints
+          bonusPoints
         }
-      }
-    }
-  `
-
-  return (
-    requestPost(url, JSON.stringify({ query }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
-        if (res.errors) {
-          console.error(res.errors)
-          return undefined
-        }
-        return res.data?.wallets?.wallets
-      })
-      .catch((err) => {
-        console.error(err)
-        return undefined
-      })
-  )
-}
-
-function getActiveSeasonAndCampaignGroups(
-  isDev: boolean,
-  pointsTestnetExperience: boolean,
-): Promise<{
-  activeSeason?: CampaignSeason
-  campaignGroups?: CampaignGroup[]
-}> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
-
-  const query = gql`
-    query {
-      activeSeason {
-        id
-        estimatedTotalPoints
-        name
-      }
-      campaignGroups {
-        id
-        name
-        campaigns {
-          id
-          name
-          chainId
-          juniorMultiplier
-          lockupPeriodMonths
-          seniorMultiplier
-          poolAddress
-        }
-        partners {
-          id
-          name
+        ... on PointServiceError {
+          errMessage
         }
       }
     }
   `
 
   return requestPost<{
-    data?: {
-      activeSeason: CampaignSeason
-      campaignGroups: CampaignGroup[]
-    }
+    data?: { accountPoints: HumaAccountPoints & { errMessage: string } }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return {}
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
-      return res.data ?? {}
+      const errMessage = res.data?.accountPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
+      const accountPoints = res.data?.accountPoints
+      if (accountPoints) {
+        accountPoints.totalPoints =
+          accountPoints.basePoints +
+          accountPoints.liquidityPoints +
+          accountPoints.referralPoints +
+          accountPoints.bonusPoints
+      }
+      return accountPoints
     })
     .catch((err) => {
       console.error(err)
-      return {}
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
 function getEstimatedPoints(
   campaignGroupId: string,
   principal: string,
+  networkType: NETWORK_TYPE,
   isDev: boolean,
-  pointsTestnetExperience: boolean,
 ): Promise<CampaignPoints[]> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
     query {
@@ -322,98 +297,52 @@ function getEstimatedPoints(
     data?: {
       calculateEstimatedPoints?: {
         campaignPointsEstimations?: CampaignPoints[]
-      }
+      } & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
         console.error(res.errors)
-        return []
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
+      const errMessage = res.data?.calculateEstimatedPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
       return res.data?.calculateEstimatedPoints?.campaignPointsEstimations ?? []
     })
     .catch((err) => {
       console.error(err)
-      return []
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
 }
 
-function createNewWallet(
-  account: string,
-  referralCode: string | null | undefined,
-  isDev: boolean,
-  pointsTestnetExperience: boolean,
-): Promise<{ wallet: string } | undefined> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
-
-  const query = gql`
-    mutation {
-      createWallet(
-        input: {
-          walletAddress: "${account}"
-          referralCode: "${referralCode}"
-        }
-      ) {
-        ... on CreateWalletResult {
-          wallet {
-            address
-          }
-        }
-        ... on WalletExistsError {
-          message
-        }
-        ... on UnauthorizedError {
-          message
-        }
-      }
-    }
-  `
-
-  return requestPost<{
-    data?: {
-      createWallet?: {
-        wallet: string
-      }
-    }
-    errors?: unknown
-  }>(url, JSON.stringify({ query }))
-    .then((res) => {
-      if (res.errors) {
-        console.error(res.errors)
-        return undefined
-      }
-      return res.data?.createWallet
-    })
-    .catch((err) => {
-      console.error(err)
-      return undefined
-    })
-}
-
-function updateWalletPoints(
-  account: string,
-  hash: string,
+function updateHumaAccountPoints(
+  walletAddress: string,
+  transactionHash: string,
   chainId: ChainEnum | SolanaChainEnum,
+  networkType: NETWORK_TYPE,
   isDev: boolean,
-  pointsTestnetExperience: boolean,
 ): Promise<{ pointsAccumulated?: number }> {
-  const url = configUtil.getCampaignAPIUrl(isDev, pointsTestnetExperience)
+  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
 
   const query = gql`
     mutation {
-      updateWalletPoints(
+      updateAccountPoints(
         input: {
           chainId: ${chainId},
-          walletAddress: "${account}",
-          transactionHash: "${hash}"
+          walletAddress: "${walletAddress}",
+          transactionHash: "${transactionHash}"
         }
       ) {
-        ... on UpdateWalletPointsResult {
+        ... on UpdateAccountPointsResult {
           pointsAccumulated
         }
-        ... on UnauthorizedError {
-          message
+        ... on PointServiceError {
+          errMessage
         }
       }
     }
@@ -421,39 +350,29 @@ function updateWalletPoints(
 
   return requestPost<{
     data?: {
-      updateWalletPoints?: { pointsAccumulated?: number }
+      updateAccountPoints?: { pointsAccumulated?: number } & {
+        errMessage: string
+      }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
     .then((res) => {
       if (res.errors) {
-        console.error(res.errors)
-        return {}
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
       }
-      return res.data?.updateWalletPoints ?? {}
+      const errMessage = res.data?.updateAccountPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
+      return res.data?.updateAccountPoints ?? {}
     })
     .catch((err) => {
       console.error(err)
-      return {}
+      throw new Error(COMMON_ERROR_MESSAGE)
     })
-}
-
-async function checkAndCreateWallet(
-  account: string,
-  referralCode: string | null | undefined,
-  isDev: boolean,
-  pointsTestnetExperience: boolean,
-): Promise<{ wallet: string } | undefined> {
-  const result = await getWalletInfo(account, isDev, pointsTestnetExperience)
-  if (!result?.wallet) {
-    return createNewWallet(
-      account,
-      referralCode,
-      isDev,
-      pointsTestnetExperience,
-    )
-  }
-  return undefined
 }
 
 /**
@@ -462,12 +381,9 @@ async function checkAndCreateWallet(
  */
 export const CampaignService = {
   checkWalletOwnership,
-  getWalletInfo,
-  getWalletRankList,
-  getRecentJoins,
-  getActiveSeasonAndCampaignGroups,
   getEstimatedPoints,
-  createNewWallet,
-  updateWalletPoints,
-  checkAndCreateWallet,
+  getLeaderboard,
+  getHumaAccountRanking,
+  getHumaAccountPoints,
+  updateHumaAccountPoints,
 }
