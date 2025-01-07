@@ -1,12 +1,15 @@
-import { formatMoney, UnderlyingTokenInfo } from '@huma-finance/shared'
-import { BigNumber, ethers } from 'ethers'
+import { BN } from '@coral-xyz/anchor'
+import {
+  formatMoneyFixed,
+  SolanaTokenUtils,
+  UnderlyingTokenInfo,
+} from '@huma-finance/shared'
 import React from 'react'
-
 import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
-  withdrawAmount: BigNumber
+  withdrawAmount: BN
   handleAction: () => void
 }
 
@@ -16,15 +19,13 @@ export function Done({
   handleAction,
 }: Props): React.ReactElement {
   const { symbol } = poolUnderlyingToken
-  const withdrawAmountFormatted = ethers.utils.formatUnits(
-    withdrawAmount,
-    poolUnderlyingToken.decimals,
+  const withdrawAmountFormatted = formatMoneyFixed(
+    SolanaTokenUtils.formatUnits(withdrawAmount, poolUnderlyingToken.decimals),
+    2,
   )
 
   const content = [
-    `You successfully withdrew ${formatMoney(
-      withdrawAmountFormatted,
-    )} ${symbol}.`,
+    `You successfully withdrew ${withdrawAmountFormatted} ${symbol}.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

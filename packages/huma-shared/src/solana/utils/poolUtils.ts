@@ -48,11 +48,3 @@ export const getSolanaUtilizationRate = (
   }
   return 0
 }
-
-export const getSolanaTrancheSharePrice = (
-  totalAssets: BN,
-  totalSupply: BN,
-) => {
-  totalAssets.muln(100000).div(totalSupply).toNumber() / 100000,
-}
-

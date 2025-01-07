@@ -1,14 +1,6 @@
-import {
-  SolanaPoolInfo,
-  TrancheType,
-  UnderlyingTokenInfo,
-  formatAmount,
-  getTrancheVaultContractV2,
-} from '@huma-finance/shared'
-import { LenderStateAccount } from '@huma-finance/web-shared'
+import { UnderlyingTokenInfo } from '@huma-finance/shared'
 import { Box, Divider, css, useTheme } from '@mui/material'
-import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -16,62 +8,19 @@ import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
 
 type Props = {
-  poolInfo: SolanaPoolInfo
-  lenderStateAccount: LenderStateAccount
-  tranche: TrancheType
   poolUnderlyingToken: UnderlyingTokenInfo
-  poolIsClosed: boolean
+  withdrawableAmountFormatted: string | number
+  sharePrice: number
 }
 
 export function ConfirmTransfer({
-  poolInfo,
-  lenderStateAccount,
-  tranche,
   poolUnderlyingToken,
-  poolIsClosed,
+  withdrawableAmountFormatted,
+  sharePrice,
 }: Props): React.ReactElement {
   const theme = useTheme()
   const dispatch = useDispatch()
-  const { provider } = useWeb3React()
-  const { symbol, decimals } = poolUnderlyingToken
-  const { lenderRedemptionRecords, cancellableRedemptionShares } =
-    redemptionStatus
-
-  const { numSharesRequested } = lenderStateAccount.redemptionRecord
-
-  const sharesProcessed = formatAmount(
-    numSharesRequested.sub(cancellableRedemptionShares),
-    decimals,
-  )
-  const withdrawableAmount = formatAmount(
-    redemptionStatus.withdrawableAssets,
-    decimals,
-  )
-  const [sharePrice, setSharePrice] = useState(0)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const vaultContract = await getTrancheVaultContractV2(
-        poolInfo.poolName,
-        tranche,
-        provider,
-      )
-      if (vaultContract) {
-        const shares = await vaultContract.convertToShares(
-          redemptionStatus.withdrawableAssets,
-        )
-        setSharePrice(
-          redemptionStatus.withdrawableAssets.toNumber() / shares.toNumber(),
-        )
-      }
-    }
-    fetchData()
-  }, [
-    poolInfo.poolName,
-    provider,
-    redemptionStatus.withdrawableAssets,
-    tranche,
-  ])
+  const { symbol } = poolUnderlyingToken
 
   const goToWithdraw = () => {
     dispatch(setStep(WIDGET_STEP.Transfer))
@@ -108,12 +57,6 @@ export function ConfirmTransfer({
       subTitle='Withdraw all the available amount'
     >
       <Box css={styles.itemWrapper}>
-        {!poolIsClosed && (
-          <Box css={styles.item}>
-            <Box>Shares processed</Box>
-            <Box css={styles.itemValue}>{sharesProcessed}</Box>
-          </Box>
-        )}
         <Box css={styles.item}>
           <Box>Price Per Share</Box>
           <Box css={styles.itemValue}>
@@ -124,7 +67,7 @@ export function ConfirmTransfer({
         <Box css={styles.item}>
           <Box fontWeight={700}>Available to withdraw</Box>
           <Box css={styles.itemValue}>
-            {withdrawableAmount} {symbol}
+            {withdrawableAmountFormatted} {symbol}
           </Box>
         </Box>
       </Box>
