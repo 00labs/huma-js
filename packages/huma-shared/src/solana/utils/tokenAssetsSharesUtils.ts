@@ -12,3 +12,15 @@ export function convertToShares(
 
   return (assets * totalSupply) / totalAssets
 }
+
+export function convertToAssets(
+  totalAssets: bigint,
+  totalSupply: bigint,
+  shares: bigint,
+): bigint {
+  if (totalSupply === BigInt(0)) {
+    return shares
+  }
+
+  return (shares * totalAssets) / totalSupply
+}

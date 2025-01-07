@@ -1,16 +1,20 @@
 import { BN, utils } from '@coral-xyz/anchor'
 import {
+  convertToAssets,
   getCreditAccounts,
   getHumaProgram,
   getSentinelAddress,
   getSolanaPoolInfo,
   getTokenAccounts,
   SolanaTokenUtils,
+  TrancheType,
 } from '@huma-finance/shared'
 import {
   createApproveCheckedInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
+  getAssociatedTokenAddress,
+  getMint,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
@@ -22,6 +26,8 @@ import { HumaSolanaContext } from './HumaSolanaContext'
 
 export const MPL_CORE_PROGRAM_ID =
   'CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d'
+
+const DEFAULT_DECIMALS_FACTOR = BigInt('1000000000000000000')
 
 export class HumaSolanaProgramHelper {
   #solanaContext: HumaSolanaContext
@@ -126,6 +132,111 @@ export class HumaSolanaProgramHelper {
     )
 
     return tx
+  }
+
+  async getWithdrawableYieldOfTranche(
+    trancheMint: PublicKey,
+    trancheType: TrancheType,
+    trancheAssets: BN[],
+  ): Promise<bigint> {
+    const { connection, chainId, poolName, publicKey } = this.#solanaContext
+    const program = getHumaProgram(chainId, connection)
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error(`Could not find pool ${poolName}`)
+    }
+
+    const mintAccount = await getMint(
+      connection,
+      trancheMint,
+      undefined,
+      TOKEN_2022_PROGRAM_ID,
+    )
+    const trancheATA = await getAssociatedTokenAddress(
+      trancheMint,
+      publicKey,
+      true, // allowOwnerOffCurve
+      TOKEN_2022_PROGRAM_ID,
+    )
+    let trancheTokenAccount
+    try {
+      trancheTokenAccount = await getAccount(
+        connection,
+        trancheATA,
+        undefined, // commitment
+        TOKEN_2022_PROGRAM_ID,
+      )
+    } catch (error) {
+      console.log(
+        `Couldn't find token account for ${trancheATA.toString()} tranche ${trancheType}`,
+      )
+      return BigInt(0)
+    }
+
+    const [lenderStatePDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('lender_state'),
+        trancheMint.toBuffer(),
+        publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
+    const lenderState = await program.account.lenderState.fetchNullable(
+      lenderStatePDA,
+    )
+
+    if (!lenderState) {
+      return BigInt(0)
+    }
+
+    // Scale numbers using `DEFAULT_DECIMALS_FACTOR` to reduce precision loss caused by
+    // integer division.
+    const priceWithDecimals = convertToAssets(
+      BigInt(trancheAssets[trancheType === 'junior' ? 0 : 1].toString()),
+      mintAccount.supply,
+      DEFAULT_DECIMALS_FACTOR,
+    )
+    const assetsWithDecimals =
+      priceWithDecimals * BigInt(trancheTokenAccount.amount.toString())
+    const principalWithDecimals =
+      BigInt(lenderState.depositRecord.principal.toString()) *
+      DEFAULT_DECIMALS_FACTOR
+    const yieldsWithDecimals = assetsWithDecimals - principalWithDecimals
+    return yieldsWithDecimals / DEFAULT_DECIMALS_FACTOR
+  }
+
+  // Returns the withdrawable yields for the lender for the junior and senior tranche, if applicable
+  async getWithdrawableYields(): Promise<[bigint, bigint]> {
+    const { connection, chainId, poolName } = this.#solanaContext
+    const program = getHumaProgram(chainId, connection)
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error('Could not find pool')
+    }
+
+    const poolStateAccountResult = await program.account.poolState.fetch(
+      new PublicKey(poolInfo.poolState),
+    )
+
+    const juniorYield = await this.getWithdrawableYieldOfTranche(
+      new PublicKey(poolInfo.juniorTrancheMint),
+      'junior',
+      poolStateAccountResult.trancheAssets.assets,
+    )
+
+    if (!poolInfo.seniorTrancheMint) {
+      return [juniorYield, BigInt(0)]
+    }
+
+    const seniorYield = await this.getWithdrawableYieldOfTranche(
+      new PublicKey(poolInfo.seniorTrancheMint),
+      'senior',
+      poolStateAccountResult.trancheAssets.assets,
+    )
+
+    return [juniorYield, seniorYield]
   }
 
   async buildWithdrawYieldsTransaction(): Promise<Transaction> {
