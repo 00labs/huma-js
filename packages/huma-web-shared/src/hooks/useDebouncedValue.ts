@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
-export const useDebouncedValue = <T extends number | string | undefined>(
+export const useDebouncedValue = <
+  T extends number | string | boolean | undefined,
+>(
   value: T,
   delay = 500,
 ): T => {

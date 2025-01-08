@@ -6,8 +6,8 @@ import {
   SOLANA_CHAINS,
   SolanaChainEnum,
 } from '@huma-finance/shared'
-import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { WalletSignMessageError } from '@solana/wallet-adapter-base'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import {
   Connection,
   PublicKey,
@@ -74,8 +74,11 @@ const verifyOwnershipSolana = async (
   signTransaction: (transaction: Transaction) => Promise<Transaction>,
   signMessage: (message: Uint8Array) => Promise<Uint8Array>,
   onVerificationComplete: () => void,
+  setLoading: (loading: boolean) => void,
+  reset: () => void,
 ) => {
   try {
+    setLoading(true)
     const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
     const message = createSiwsMessage(address, chainId, nonce, expiresAt)
     const account = new PublicKey(address)
@@ -100,12 +103,19 @@ const verifyOwnershipSolana = async (
         const signedTx = await signTransaction(tx)
         const serializedTx = signedTx.serialize().toString('base64')
         await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
+      } else {
+        reset()
       }
+    } finally {
+      setLoading(false)
     }
 
     onVerificationComplete()
   } catch (error) {
     console.error(error)
+    reset()
+  } finally {
+    setLoading(false)
   }
 }
 
@@ -122,6 +132,8 @@ export const useAuthErrorHandlingSolana = (
   setErrorType: (errorType: ErrorType) => void,
   setIsVerificationRequired: (isVerificationRequired: boolean) => void,
   handleVerificationCompletion: () => void,
+  setLoading: (loading: boolean) => void,
+  reset: () => void,
 ) => {
   const { connection } = useConnection()
   const { publicKey, signMessage, signTransaction } = useWallet()
@@ -159,6 +171,8 @@ export const useAuthErrorHandlingSolana = (
         signTransaction,
         signMessage,
         handleVerificationCompletion,
+        setLoading,
+        reset,
       ).catch((e) => setError(e))
     } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
       setErrorType('UserRejected')
@@ -173,9 +187,11 @@ export const useAuthErrorHandlingSolana = (
     getErrorInfo,
     handleVerificationCompletion,
     isDev,
+    reset,
     setError,
     setErrorType,
     setIsVerificationRequired,
+    setLoading,
     signMessage,
     signTransaction,
   ])
