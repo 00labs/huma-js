@@ -32,13 +32,23 @@ export const verifyOwnershipEvm = async (
   isDev: boolean,
   provider: JsonRpcProvider,
   onVerificationComplete: () => void,
+  setLoading: (loading: boolean) => void,
+  reset: () => void,
 ) => {
-  const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
-  const message = createSiweMessage(address, chainId, nonce, expiresAt)
-  const signer = await provider.getSigner()
-  const signature = await signer.signMessage(message)
-  await AuthService.verifySignature(message, signature, chainId, isDev)
-  onVerificationComplete()
+  try {
+    setLoading(true)
+    const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
+    const message = createSiweMessage(address, chainId, nonce, expiresAt)
+    const signer = await provider.getSigner()
+    const signature = await signer.signMessage(message)
+    await AuthService.verifySignature(message, signature, chainId, isDev)
+    onVerificationComplete()
+  } catch (e) {
+    console.error(e)
+    reset()
+  } finally {
+    setLoading(false)
+  }
 }
 
 export const useAuthErrorHandlingEvm = (
@@ -54,6 +64,8 @@ export const useAuthErrorHandlingEvm = (
   setErrorType: (errorType: ErrorType) => void,
   setIsVerificationRequired: (isVerificationRequired: boolean) => void,
   handleVerificationCompletion: () => void,
+  setLoading: (loading: boolean) => void,
+  reset: () => void,
 ) => {
   const { account, chainId, provider } = useWeb3React()
 
@@ -95,6 +107,8 @@ export const useAuthErrorHandlingEvm = (
         isDev,
         provider,
         handleVerificationCompletion,
+        setLoading,
+        reset,
       ).catch((e) => setError(e))
     } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
       setErrorType('UserRejected')
@@ -110,8 +124,10 @@ export const useAuthErrorHandlingEvm = (
     handleVerificationCompletion,
     isDev,
     provider,
+    reset,
     setError,
     setErrorType,
     setIsVerificationRequired,
+    setLoading,
   ])
 }

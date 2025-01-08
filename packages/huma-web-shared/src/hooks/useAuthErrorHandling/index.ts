@@ -12,6 +12,7 @@ export type AuthState = {
   isWalletOwnershipVerified: boolean
   errorType?: ErrorType
   error: unknown
+  loading: boolean
   setError: React.Dispatch<React.SetStateAction<unknown>>
   reset: () => void
 }
@@ -25,6 +26,7 @@ export const useAuthErrorHandling = (
   const [errorType, setErrorType] = useState<ErrorType | undefined>()
   const [isVerificationRequired, setIsVerificationRequired] =
     useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleVerificationCompletion = useCallback(() => {
     setIsVerified(true)
@@ -51,6 +53,13 @@ export const useAuthErrorHandling = (
     }
   }, [])
 
+  const reset = useCallback(() => {
+    setIsVerificationRequired(false)
+    setIsVerified(false)
+    setError(null)
+    setErrorType(undefined)
+  }, [])
+
   useAuthErrorHandlingEvm(
     chainType,
     isDev,
@@ -60,6 +69,8 @@ export const useAuthErrorHandling = (
     setErrorType,
     setIsVerificationRequired,
     handleVerificationCompletion,
+    setLoading,
+    reset,
   )
   useAuthErrorHandlingSolana(
     chainType,
@@ -70,20 +81,16 @@ export const useAuthErrorHandling = (
     setErrorType,
     setIsVerificationRequired,
     handleVerificationCompletion,
+    setLoading,
+    reset,
   )
-
-  const reset = useCallback(() => {
-    setIsVerificationRequired(false)
-    setIsVerified(false)
-    setError(null)
-    setErrorType(undefined)
-  }, [])
 
   return {
     isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
     errorType,
     error,
+    loading,
     setError,
     reset,
   }
