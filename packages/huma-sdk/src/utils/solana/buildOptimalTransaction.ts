@@ -33,17 +33,17 @@ async function buildOptimalTransactionImpl(
     connection.getLatestBlockhash('confirmed'),
   ])
 
-  let averagePrioritizationFee = recentPrioritizationFees.reduce(
-    (acc: number, fee: RecentPrioritizationFees) => acc + fee.prioritizationFee,
-    0,
+  const recentFees = recentPrioritizationFees.map(
+    (f: RecentPrioritizationFees) => f.prioritizationFee,
   )
-  averagePrioritizationFee = Math.ceil(
-    (averagePrioritizationFee / recentPrioritizationFees.length) * 2000,
-  )
+  const medianFee = recentFees.sort((a, b) => a - b)[
+    Math.floor(recentFees.length / 2)
+  ]
+  const chosenFee = medianFee
 
   tx.instructions.unshift(
     ComputeBudgetProgram.setComputeUnitPrice({
-      microLamports: averagePrioritizationFee,
+      microLamports: chosenFee,
     }),
   )
 
