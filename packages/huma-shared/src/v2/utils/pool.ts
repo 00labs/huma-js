@@ -36,6 +36,7 @@ export type IndustryType =
   | 'Green Financing'
   | 'Invoice Factoring'
   | 'None'
+  | 'DePIN'
 
 export type KYCCopy = {
   title: string
