@@ -1,16 +1,20 @@
 import { BN, utils } from '@coral-xyz/anchor'
 import {
+  convertToAssets,
   getCreditAccounts,
   getHumaProgram,
   getSentinelAddress,
   getSolanaPoolInfo,
   getTokenAccounts,
   SolanaTokenUtils,
+  TrancheType,
 } from '@huma-finance/shared'
 import {
   createApproveCheckedInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
+  getAssociatedTokenAddress,
+  getMint,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
@@ -22,6 +26,8 @@ import { HumaSolanaContext } from './HumaSolanaContext'
 
 export const MPL_CORE_PROGRAM_ID =
   'CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d'
+
+const DEFAULT_DECIMALS_FACTOR = BigInt('1000000000000000000')
 
 export class HumaSolanaProgramHelper {
   #solanaContext: HumaSolanaContext
@@ -128,7 +134,114 @@ export class HumaSolanaProgramHelper {
     return tx
   }
 
-  async buildWithdrawYieldsTransaction(): Promise<Transaction> {
+  async getWithdrawableYieldOfTranche(
+    trancheMint: PublicKey,
+    trancheType: TrancheType,
+    trancheAssets: BN[],
+  ): Promise<bigint> {
+    const { connection, chainId, poolName, publicKey } = this.#solanaContext
+    const program = getHumaProgram(chainId, connection)
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error(`Could not find pool ${poolName}`)
+    }
+
+    const mintAccount = await getMint(
+      connection,
+      trancheMint,
+      undefined,
+      TOKEN_2022_PROGRAM_ID,
+    )
+    const trancheATA = await getAssociatedTokenAddress(
+      trancheMint,
+      publicKey,
+      true, // allowOwnerOffCurve
+      TOKEN_2022_PROGRAM_ID,
+    )
+    let trancheTokenAccount
+    try {
+      trancheTokenAccount = await getAccount(
+        connection,
+        trancheATA,
+        undefined, // commitment
+        TOKEN_2022_PROGRAM_ID,
+      )
+    } catch (error) {
+      console.log(
+        `Couldn't find token account for ${trancheATA.toString()} tranche ${trancheType}`,
+      )
+      return BigInt(0)
+    }
+
+    const [lenderStatePDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('lender_state'),
+        trancheMint.toBuffer(),
+        publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
+    const lenderState = await program.account.lenderState.fetchNullable(
+      lenderStatePDA,
+    )
+
+    if (!lenderState) {
+      return BigInt(0)
+    }
+
+    // Scale numbers using `DEFAULT_DECIMALS_FACTOR` to reduce precision loss caused by
+    // integer division.
+    const priceWithDecimals = convertToAssets(
+      BigInt(trancheAssets[trancheType === 'junior' ? 0 : 1].toString()),
+      mintAccount.supply,
+      DEFAULT_DECIMALS_FACTOR,
+    )
+    const assetsWithDecimals =
+      priceWithDecimals * BigInt(trancheTokenAccount.amount.toString())
+    const principalWithDecimals =
+      BigInt(lenderState.depositRecord.principal.toString()) *
+      DEFAULT_DECIMALS_FACTOR
+    const yieldsWithDecimals = assetsWithDecimals - principalWithDecimals
+    return yieldsWithDecimals / DEFAULT_DECIMALS_FACTOR
+  }
+
+  // Returns the withdrawable yields for the lender for the junior and senior tranche, if applicable
+  async getWithdrawableYields(): Promise<[bigint, bigint]> {
+    const { connection, chainId, poolName } = this.#solanaContext
+    const program = getHumaProgram(chainId, connection)
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error('Could not find pool')
+    }
+
+    const poolStateAccountResult = await program.account.poolState.fetch(
+      new PublicKey(poolInfo.poolState),
+    )
+
+    const juniorYield = await this.getWithdrawableYieldOfTranche(
+      new PublicKey(poolInfo.juniorTrancheMint),
+      'junior',
+      poolStateAccountResult.trancheAssets.assets,
+    )
+
+    if (!poolInfo.seniorTrancheMint) {
+      return [juniorYield, BigInt(0)]
+    }
+
+    const seniorYield = await this.getWithdrawableYieldOfTranche(
+      new PublicKey(poolInfo.seniorTrancheMint),
+      'senior',
+      poolStateAccountResult.trancheAssets.assets,
+    )
+
+    return [juniorYield, seniorYield]
+  }
+
+  async buildWithdrawYieldsTransaction(
+    trancheType: TrancheType,
+  ): Promise<Transaction> {
     const { publicKey, connection, chainId, poolName } = this.#solanaContext
     const program = getHumaProgram(chainId, connection)
     const poolInfo = getSolanaPoolInfo(chainId, poolName)
@@ -141,27 +254,32 @@ export class HumaSolanaProgramHelper {
 
     const { underlyingTokenATA, seniorTrancheATA, juniorTrancheATA } =
       getTokenAccounts(poolInfo, publicKey)
-    const [juniorYieldDistributingLenderAccount] =
-      PublicKey.findProgramAddressSync(
-        [
-          utils.bytes.utf8.encode('yield_distributing_lender'),
-          new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
-          publicKey.toBuffer(),
-        ],
-        program.programId,
-      )
+    const trancheMint =
+      trancheType === 'junior'
+        ? poolInfo.juniorTrancheMint
+        : poolInfo.seniorTrancheMint
+    const lenderTrancheToken =
+      trancheType === 'junior' ? juniorTrancheATA : seniorTrancheATA
+    const [yieldDistributingLenderAccount] = PublicKey.findProgramAddressSync(
+      [
+        utils.bytes.utf8.encode('yield_distributing_lender'),
+        new PublicKey(trancheMint).toBuffer(),
+        publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
     const programTx = await program.methods
       .withdrawYields()
       .accountsPartial({
         lender: publicKey,
         humaConfig: poolInfo.humaConfig,
         poolConfig: poolInfo.poolConfig,
-        yieldDistributingLender: juniorYieldDistributingLenderAccount,
+        yieldDistributingLender: yieldDistributingLenderAccount,
         underlyingMint: poolInfo.underlyingMint.address,
         poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
         lenderUnderlyingToken: underlyingTokenATA,
-        trancheMint: poolInfo.juniorTrancheMint,
-        lenderTrancheToken: juniorTrancheATA,
+        trancheMint,
+        lenderTrancheToken,
         underlyingTokenProgram: TOKEN_PROGRAM_ID,
         trancheTokenProgram: TOKEN_2022_PROGRAM_ID,
       })
@@ -170,52 +288,16 @@ export class HumaSolanaProgramHelper {
       publicKey,
       new PublicKey(poolInfo.humaConfig),
       new PublicKey(poolInfo.poolConfig),
-      juniorYieldDistributingLenderAccount,
+      yieldDistributingLenderAccount,
       new PublicKey(poolInfo.underlyingMint.address),
       new PublicKey(poolInfo.poolUnderlyingTokenAccount),
       underlyingTokenATA,
-      new PublicKey(poolInfo.juniorTrancheMint),
-      juniorTrancheATA,
+      new PublicKey(trancheMint),
+      lenderTrancheToken,
       TOKEN_PROGRAM_ID,
       TOKEN_2022_PROGRAM_ID,
     ]
     tx.add(programTx)
-
-    if (poolInfo.seniorTrancheMint) {
-      const [seniorYieldDistributingLenderAccount] =
-        PublicKey.findProgramAddressSync(
-          [
-            utils.bytes.utf8.encode('yield_distributing_lender'),
-            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
-            publicKey.toBuffer(),
-          ],
-          program.programId,
-        )
-      const programTx = await program.methods
-        .withdrawYields()
-        .accountsPartial({
-          lender: publicKey,
-          humaConfig: poolInfo.humaConfig,
-          poolConfig: poolInfo.poolConfig,
-          yieldDistributingLender: seniorYieldDistributingLenderAccount,
-          underlyingMint: poolInfo.underlyingMint.address,
-          poolUnderlyingToken: poolInfo.poolUnderlyingTokenAccount,
-          lenderUnderlyingToken: underlyingTokenATA,
-          trancheMint: poolInfo.seniorTrancheMint,
-          lenderTrancheToken: seniorTrancheATA,
-          underlyingTokenProgram: TOKEN_PROGRAM_ID,
-          trancheTokenProgram: TOKEN_2022_PROGRAM_ID,
-        })
-        .transaction()
-      txAccounts.push(
-        ...[
-          seniorYieldDistributingLenderAccount,
-          new PublicKey(poolInfo.seniorTrancheMint),
-          seniorTrancheATA,
-        ],
-      )
-      tx.add(programTx)
-    }
 
     await buildOptimalTransaction(tx, txAccounts, this.#solanaContext)
 

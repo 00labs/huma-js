@@ -437,6 +437,7 @@ export type V2PoolData = {
     tranchesRiskAdjustmentInBps: number
     withdrawalLockoutInDays: number
     minDepositAmount: string
+    autoRedemptionAfterLockup: boolean
   }[]
   tranches: {
     pool: {
@@ -488,6 +489,7 @@ function fetchAllPoolsData(
         tranchesRiskAdjustmentInBps
         withdrawalLockoutInDays
         minDepositAmount
+        autoRedemptionAfterLockup
       }
       tranches {
         type
