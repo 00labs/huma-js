@@ -39,7 +39,7 @@ async function buildOptimalTransactionImpl(
   const medianFee = recentFees.sort((a, b) => a - b)[
     Math.floor(recentFees.length / 2)
   ]
-  const chosenFee = medianFee
+  const chosenFee = Math.min(200_000, medianFee)
 
   tx.instructions.unshift(
     ComputeBudgetProgram.setComputeUnitPrice({
