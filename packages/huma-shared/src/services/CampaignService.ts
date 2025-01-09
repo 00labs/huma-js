@@ -1,6 +1,7 @@
 import { gql } from 'graphql-request'
 
 import { SolanaChainEnum, SolanaPoolInfo } from '../solana'
+import { StellarPoolInfo } from '../stellar'
 import { ChainEnum, NETWORK_TYPE } from '../utils/chain'
 import { configUtil } from '../utils/config'
 import { COMMON_ERROR_MESSAGE } from '../utils/const'
@@ -40,6 +41,10 @@ export interface SolanaCampaign extends BaseCampaign {
   solanaPoolInfo: SolanaPoolInfo
 }
 
+export interface StellarCampaign extends BaseCampaign {
+  stellarPoolInfo: StellarPoolInfo
+}
+
 export type CampaignGroup = {
   id: string
   name: string
@@ -51,6 +56,13 @@ export type SolanaCampaignGroup = {
   id: string
   name: string
   campaigns: SolanaCampaign[]
+  partners: CampaignPartner[]
+}
+
+export type StellarCampaignGroup = {
+  id: string
+  name: string
+  campaigns: StellarCampaign[]
   partners: CampaignPartner[]
 }
 
