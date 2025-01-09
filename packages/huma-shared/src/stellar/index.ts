@@ -1,4 +1,4 @@
 export * from './chain'
-export * from './metadata/testnet'
-export * from './metadata/mainnet'
-export * from './types/metadata'
+export * from './metadata'
+export * from './types'
+export * from './utils'
