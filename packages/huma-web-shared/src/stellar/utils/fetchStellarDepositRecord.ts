@@ -40,7 +40,11 @@ export async function fetchStellarDepositRecord(
     // Get the contract data with proper durability
     const response = await server.getLedgerEntries(key)
 
-    const contractData = response.entries[0].val
+    const contractData = response.entries[0]?.val
+
+    if (!contractData) {
+      return null
+    }
 
     if (contractData.switch() === xdr.LedgerEntryType.contractData()) {
       const data = scValToNative(contractData.contractData().val())
