@@ -6,5 +6,6 @@ export const checkIsDev = () =>
     window.location.hostname.startsWith('pr-') ||
     window.location.hostname.startsWith('deploy-preview') ||
     window.location.hostname.startsWith('localhost') ||
+    window.location.hostname.startsWith('testnet') ||
     process.env.NODE_ENV === 'development'
   )
