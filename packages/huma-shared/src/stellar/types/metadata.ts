@@ -29,6 +29,7 @@ export type StellarPoolInfo = {
   extra?: {
     borrower: string
     isClosed?: boolean
+    hidden?: boolean
   }
 }
 

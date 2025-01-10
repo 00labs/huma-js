@@ -26,11 +26,11 @@ export const STELLAR_MAINNET_METADATA: StellarPoolsInfo = {
       icon: 'USDC',
     },
     extra: {
-      borrower: 'GBQ4MIGKASCJG4GNEOQ3G6Z6YDUXCAKYARB3MNJ7QOF54MNMYW7HP62V',
+      borrower: 'GDKMQ74NKGAOUCVPQ26A2IYFVKU5VUKCC364RIHDTG3AQ3GC73B3YTOT',
     },
   },
   Roam: {
-    title: 'Roam - DePIN Financing',
+    title: 'Roam DePIN Financing Pilot',
     poolName: POOL_NAME.Roam,
     poolType: POOL_TYPE.CreditLine,
     chainId: StellarChainEnum.StellarMainnet,
@@ -49,6 +49,10 @@ export const STELLAR_MAINNET_METADATA: StellarPoolsInfo = {
       symbol: 'USDC',
       decimals: 7,
       icon: 'USDC',
+    },
+    extra: {
+      borrower: '',
+      hidden: true,
     },
   },
 }
