@@ -28,6 +28,7 @@ export function StellarTxSendModal({
         handleSuccess()
       } catch (error: unknown) {
         const err = error as Error
+        console.error(err)
         dispatch(setError({ errorMessage: err?.message || '' }))
       }
     }
