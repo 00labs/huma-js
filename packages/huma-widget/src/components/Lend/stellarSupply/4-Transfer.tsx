@@ -54,7 +54,7 @@ export function Transfer({
           selectedTranche === 'senior'
             ? poolInfo.seniorTranche!
             : poolInfo.juniorTranche,
-        ...getClientCommonParams(chainMetadata),
+        ...getClientCommonParams(chainMetadata, stellarAddress),
       })
       const tx = await trancheVaultClient.deposit({
         lender: stellarAddress,
