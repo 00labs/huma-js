@@ -14,13 +14,15 @@ type Props = {
   poolInfo: PoolInfoV2
   networkType: NETWORK_TYPE
   campaign?: Campaign
+  documentHash?: string
   handleClose: (options?: CloseModalOptions) => void
 }
 
 export function Evaluation({
   poolInfo,
-  campaign,
   networkType,
+  campaign,
+  documentHash,
   handleClose,
 }: Props): React.ReactElement | null {
   if (poolInfo.KYC?.Securitize) {
@@ -36,6 +38,7 @@ export function Evaluation({
         campaign={campaign}
         networkType={networkType}
         chainType={CHAIN_TYPE.EVM}
+        documentHash={documentHash}
       />
     )
   }

@@ -133,18 +133,20 @@ export type AccountNameValidity = {
  * Get account's identity verification status.
  *
  * @param {string} networkType Network type.
+ * @param {string} documentHash The subscription file hash.
  * @param {boolean} isDev Is dev environment or not.
  * @returns {Promise<VerificationStatusResultV2>} Promise that returns the verification status result.
  */
 const getVerificationStatusV2 = async (
   networkType: NETWORK_TYPE,
+  documentHash: string = '',
   isDev = false,
 ): Promise<VerificationStatusResultV2> =>
   requestGet<VerificationStatusResultV2>(
     `${configUtil.getIdentityAPIUrlV2(
       networkType,
       isDev,
-    )}/account/verification-status`,
+    )}/account/verification-status?documentHash=${documentHash}`,
   )
 
 /**

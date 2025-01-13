@@ -41,12 +41,14 @@ export interface Campaign {
  * @typedef {Object} LendSupplyPropsV2
  * @property {POOL_NAME} poolName The name of the pool.
  * @property {Campaign} campaign The campaign info.
+ * @param {string|undefined} documentHash The subscription file hash.
  * @property {function((CloseModalOptions|undefined)):void} handleClose Function to notify to close the widget modal when user clicks the 'x' close button.
  * @property {function((number|undefined)):void|undefined} handleSuccess Optional function to notify that the lending pool supply action is successful.
  */
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   campaign?: Campaign
+  documentHash?: string
   handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: (blockNumber?: number) => void
 }
@@ -54,6 +56,7 @@ export interface LendSupplyPropsV2 {
 export function LendSupplyV2({
   poolName: poolNameStr,
   campaign,
+  documentHash,
   handleClose,
   handleSuccess,
 }: LendSupplyPropsV2): React.ReactElement | null {
@@ -171,6 +174,7 @@ export function LendSupplyV2({
           handleClose={handleClose}
           campaign={campaign}
           networkType={getEvmNetworkType(poolInfo.chainId)}
+          documentHash={documentHash}
         />
       )}
       {step === WIDGET_STEP.ApproveLender && (
