@@ -33,6 +33,7 @@ type Props = {
   }
   networkType: NETWORK_TYPE
   chainType: CHAIN_TYPE
+  documentHash: string
   campaign?: Campaign
   handleClose: (options?: CloseModalOptions) => void
 }
@@ -42,6 +43,7 @@ export function PersonaEvaluation({
   campaign,
   networkType,
   chainType,
+  documentHash,
   handleClose,
 }: Props): React.ReactElement | null {
   const theme = useTheme()
@@ -74,7 +76,11 @@ export function PersonaEvaluation({
       isActionOngoingRef.current = true
       setLoadingType('verificationStatus')
       const verificationStatus =
-        await IdentityServiceV2.getVerificationStatusV2(networkType, isDev)
+        await IdentityServiceV2.getVerificationStatusV2(
+          networkType,
+          documentHash,
+          isDev,
+        )
       setVerificationStatus(verificationStatus)
       setInquiryId(verificationStatus.personaInquiryId)
 
@@ -168,7 +174,7 @@ export function PersonaEvaluation({
     } finally {
       isActionOngoingRef.current = false
     }
-  }, [KYCCopies, dispatch, isDev, networkType, setAuthError])
+  }, [KYCCopies, dispatch, isDev, networkType, documentHash, setAuthError])
 
   useEffect(() => {
     checkVerificationStatus()
