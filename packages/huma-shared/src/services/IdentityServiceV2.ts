@@ -139,7 +139,7 @@ export type AccountNameValidity = {
  */
 const getVerificationStatusV2 = async (
   networkType: NETWORK_TYPE,
-  documentHash: string = '',
+  documentHash: string,
   isDev = false,
 ): Promise<VerificationStatusResultV2> =>
   requestGet<VerificationStatusResultV2>(

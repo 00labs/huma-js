@@ -8,7 +8,7 @@ type Props = {
   poolInfo: SolanaPoolInfo
   networkType: NETWORK_TYPE
   campaign?: Campaign
-  documentHash?: string
+  documentHash: string
   handleClose: () => void
 }
 

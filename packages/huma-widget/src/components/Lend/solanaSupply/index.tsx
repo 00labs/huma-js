@@ -44,7 +44,7 @@ export interface Campaign {
 export interface SolanaLendSupplyProps {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
-  documentHash?: string
+  documentHash: string
   handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: () => void
 }

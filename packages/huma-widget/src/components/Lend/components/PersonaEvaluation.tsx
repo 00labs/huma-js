@@ -33,7 +33,7 @@ type Props = {
   }
   networkType: NETWORK_TYPE
   chainType: CHAIN_TYPE
-  documentHash?: string
+  documentHash: string
   campaign?: Campaign
   handleClose: (options?: CloseModalOptions) => void
 }

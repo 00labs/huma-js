@@ -14,7 +14,7 @@ type Props = {
   poolInfo: PoolInfoV2
   networkType: NETWORK_TYPE
   campaign?: Campaign
-  documentHash?: string
+  documentHash: string
   handleClose: (options?: CloseModalOptions) => void
 }
 
