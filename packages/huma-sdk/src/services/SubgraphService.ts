@@ -648,6 +648,61 @@ function fetchAllAccountData(
     })
 }
 
+export type LenderData = {
+  owner: string
+  pool: string
+  withdrawableFunds: string
+  tranche: {
+    type: number
+  }
+  amount: string
+  shares: string
+}
+
+function getLendersStats(
+  chainId: number,
+  accounts: string[],
+): Promise<LenderData[] | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  const QUERY = gql`
+    query {
+      lenders(where: {amount_gt:0, owner_in: ["${accounts.join(',')}"] }){
+        id
+        owner
+        pool
+        withdrawableFunds
+        tranche {
+          type
+        }
+        amount
+        shares
+      }
+    }
+  `
+
+  return requestPost<{
+    errors?: unknown
+    data: { lenders: LenderData[] }
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        return undefined
+      }
+      return res.data.lenders
+    })
+    .catch((err) => {
+      console.error(err)
+      return undefined
+    })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -661,4 +716,5 @@ export const SubgraphService = {
   checkBorrowAndLendHistory,
   fetchAllPoolsData,
   fetchAllAccountData,
+  getLendersStats,
 }
