@@ -1,13 +1,17 @@
-import { BN, Wallet } from '@coral-xyz/anchor'
+/* eslint-disable no-plusplus */
+import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import {
   getHumaProgram,
   getPoolProgramAddress,
   getSolanaPoolInfo,
+  HumaSolanaJson,
   POOL_NAME,
+  SOLANA_CHAIN_POOLS_INFO,
   SolanaChainEnum,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
+import { Huma } from '@huma-finance/shared/src/solana/idl/huma'
 import {
   Account,
   getAccount,
@@ -26,7 +30,6 @@ import {
 import { PublicKey } from '@solana/web3.js'
 import lodash from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-
 import { useForceRefresh } from '../../hooks/useForceRefresh'
 
 export type PoolStateAccount = {
@@ -744,4 +747,104 @@ export const useLenderAccounts = (
     loading,
     refresh,
   }
+}
+
+export type LendersAccounts = {
+  [poolName in POOL_NAME]?: {
+    [lender in string]?: {
+      juniorLenderStateAccount?: LenderStateAccount | null | undefined
+      seniorLenderStateAccount?: LenderStateAccount | null | undefined
+    }
+  }
+}
+
+export const useLendersAccounts = (
+  chainId: SolanaChainEnum,
+  lenders: string[],
+) => {
+  const { connection } = useConnection()
+  const [lendersAccounts, setLendersAccounts] = useState<LendersAccounts>()
+  const lendersStr = lenders.join(',')
+
+  const getLenderStateAccountPDACalcs = useCallback(
+    (poolInfo: SolanaPoolInfo, lenderPublicKey: PublicKey) => {
+      const poolProgram = new PublicKey(getPoolProgramAddress(chainId))
+      const [seniorLenderStateAccountPDACalc] =
+        PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
+            lenderPublicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+      const [juniorLenderStateAccountPDACalc] =
+        PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
+            lenderPublicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+
+      return {
+        seniorLenderStateAccountPDACalc,
+        juniorLenderStateAccountPDACalc,
+      }
+    },
+    [chainId],
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const lenders = lendersStr.split(',')
+      const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
+      if (connection) {
+        const lenderStateAccountPDACalcs: PublicKey[] = []
+        Object.values(pools).forEach((poolInfo) => {
+          lenders.forEach((lender) => {
+            const {
+              seniorLenderStateAccountPDACalc,
+              juniorLenderStateAccountPDACalc,
+            } = getLenderStateAccountPDACalcs(poolInfo, new PublicKey(lender))
+            lenderStateAccountPDACalcs.push(
+              seniorLenderStateAccountPDACalc,
+              juniorLenderStateAccountPDACalc,
+            )
+          })
+        })
+
+        // @ts-ignore
+        const provider = new AnchorProvider(connection, null)
+        const humaProgram = new Program<Huma>(HumaSolanaJson as Huma, provider)
+        const lendersState =
+          await humaProgram.account.lenderState.fetchMultiple(
+            lenderStateAccountPDACalcs,
+          )
+
+        const result: LendersAccounts = {}
+        let currentIndex = 0
+        Object.values(pools).forEach((poolInfo) => {
+          lenders.forEach((lender) => {
+            if (!result[poolInfo.poolName]) {
+              result[poolInfo.poolName] = {}
+            }
+            if (!result[poolInfo.poolName]![lender]) {
+              result[poolInfo.poolName]![lender] = {}
+            }
+            result[poolInfo.poolName]![lender] = {
+              seniorLenderStateAccount: lendersState[currentIndex++],
+              juniorLenderStateAccount: lendersState[currentIndex++],
+            }
+          })
+        })
+
+        setLendersAccounts(result)
+      }
+    }
+    fetchData()
+  }, [connection, getLenderStateAccountPDACalcs, lendersStr, chainId])
+
+  return lendersAccounts
 }
