@@ -712,6 +712,11 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <p>Lend pool supply props</p>
 
 **Kind**: global typedef  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| documentHash | <code>string</code> | <p>The subscription file hash.</p> |
+
 **Properties**
 
 | Name | Type | Description |
@@ -775,6 +780,11 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <p>Lend pool supply props</p>
 
 **Kind**: global typedef  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| documentHash | <code>string</code> | <p>The subscription file hash.</p> |
+
 **Properties**
 
 | Name | Type | Description |
