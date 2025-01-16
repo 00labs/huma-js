@@ -38,6 +38,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
     redirect: REDIRECTS.Arf,
     extra: {
       rwrUploader: '0xEA57a8A51377752fFddaa3db4d13CE8F97677F2D',
+      noTrancheAutoredeemUpdate: true,
     },
   },
   Raincards: {
@@ -70,5 +71,8 @@ export const CELO_METADATA: PoolsInfoV2 = {
     title: 'Rain Receivables Pool',
     desc: 'The Rain Receivables Pool is reshaping spend management for Web3 teams, enabling Web3 entities like DAOs and protocols to effortlessly manage fiat expenses through corporate cards.',
     redirect: REDIRECTS.Rain,
+    extra: {
+      noTrancheAutoredeemUpdate: true,
+    },
   },
 }
