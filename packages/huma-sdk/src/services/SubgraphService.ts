@@ -697,13 +697,13 @@ function getLendersStats(
     .then((res) => {
       if (res.errors) {
         console.error(res.errors)
-        return undefined
+        throw new Error('Failed to fetch lenders stats')
       }
       return res.data.lenders
     })
     .catch((err) => {
       console.error(err)
-      return undefined
+      throw new Error('Failed to fetch lenders stats')
     })
 }
 
