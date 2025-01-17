@@ -654,6 +654,8 @@ export type LenderData = {
   withdrawableFunds: string
   tranche: {
     type: number
+    totalAssets: string
+    totalSupply: string
   }
   amount: string
   shares: string
@@ -677,6 +679,8 @@ function getLendersStats(
         withdrawableFunds
         tranche {
           type
+          totalAssets
+          totalSupply
         }
         amount
         shares

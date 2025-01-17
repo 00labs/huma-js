@@ -761,11 +761,12 @@ export type LendersAccounts = {
 
 export const useLendersAccounts = (
   chainId: SolanaChainEnum,
-  lenders: string[],
+  lenders?: string[],
 ) => {
   const { connection } = useConnection()
   const [lendersAccounts, setLendersAccounts] = useState<LendersAccounts>()
-  const lendersStr = lenders.join(',')
+  const lendersStr =
+    lenders && lenders.length > 0 ? lenders.join(',') : undefined
 
   const getLenderStateAccountPDACalcs = useCallback(
     (poolInfo: SolanaPoolInfo, lenderPublicKey: PublicKey) => {
@@ -799,9 +800,9 @@ export const useLendersAccounts = (
 
   useEffect(() => {
     const fetchData = async () => {
-      const lenders = lendersStr.split(',')
       const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
-      if (connection) {
+      if (connection && lendersStr) {
+        const lenders = lendersStr.split(',')
         const lenderStateAccountPDACalcs: PublicKey[] = []
         Object.values(pools).forEach((poolInfo) => {
           lenders.forEach((lender) => {
@@ -909,24 +910,51 @@ export const usePoolsMintAccounts = (chainId: SolanaChainEnum) => {
 
 export type PoolsTrancheTokenAccounts = {
   [pool in string]?: {
-    seniorTokenAccount?: Account | null | undefined
-    juniorTokenAccount?: Account | null | undefined
+    [lender in string]?: {
+      seniorTokenAccount?: Account | null | undefined
+      juniorTokenAccount?: Account | null | undefined
+    }
   }
 }
 
 export const usePoolsTrancheTokenAccounts = (
   chainId: SolanaChainEnum,
-  lenders: string[],
+  lenders?: string[],
 ) => {
   const { connection } = useConnection()
-  const lendersStr = lenders.join(',')
+  const lendersStr =
+    lenders && lenders.length > 0 ? lenders.join(',') : undefined
+  const [poolsTrancheTokenAccounts, setPoolsTrancheTokenAccounts] =
+    useState<PoolsTrancheTokenAccounts>()
+
+  const getTokenAccount = useCallback(
+    async (trancheATA: PublicKey) => {
+      try {
+        const trancheTokenAccount = await getAccount(
+          connection,
+          trancheATA,
+          undefined,
+          TOKEN_2022_PROGRAM_ID,
+        )
+        return trancheTokenAccount
+      } catch (error) {
+        if (error instanceof TokenAccountNotFoundError) {
+          return undefined
+        }
+
+        console.warn(error)
+        return undefined
+      }
+    },
+    [connection],
+  )
 
   useEffect(() => {
     async function fetchData() {
       const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
-      if (connection) {
+      if (connection && lendersStr) {
         const lenders = lendersStr.split(',')
-        const getTokenAccounts: Promise<Account>[] = []
+        const getTokenAccounts: Promise<Account | undefined>[] = []
         Object.values(pools).forEach((poolInfo) => {
           lenders.forEach((lender) => {
             const seniorATA = getAssociatedTokenAddressSync(
@@ -943,82 +971,33 @@ export const usePoolsTrancheTokenAccounts = (
             )
 
             getTokenAccounts.push(
-              getMint(
-                connection,
-                new PublicKey(poolInfo.seniorTrancheMint),
-                undefined,
-                TOKEN_2022_PROGRAM_ID,
-              ),
-              getMint(
-                connection,
-                new PublicKey(poolInfo.juniorTrancheMint),
-                undefined,
-                TOKEN_2022_PROGRAM_ID,
-              ),
+              getTokenAccount(seniorATA),
+              getTokenAccount(juniorATA),
             )
           })
         })
 
-        const [seniorATA, juniorATA] = await Promise.all([
-          getAssociatedTokenAddress(
-            new PublicKey(poolInfo.seniorTrancheMint),
-            publicKey,
-            true, // allowOwnerOffCurve
-            TOKEN_2022_PROGRAM_ID,
-          ),
-          getAssociatedTokenAddress(
-            new PublicKey(poolInfo.juniorTrancheMint),
-            publicKey,
-            true, // allowOwnerOffCurve
-            TOKEN_2022_PROGRAM_ID,
-          ),
-        ])
+        const tokenAccounts = await Promise.all(getTokenAccounts)
 
-        try {
-          const seniorTokenAccount = await getAccount(
-            connection,
-            seniorATA,
-            undefined,
-            TOKEN_2022_PROGRAM_ID,
-          )
-          setSeniorTokenAccount(seniorTokenAccount)
-        } catch (error) {
-          if (error instanceof TokenAccountNotFoundError) {
-            setSeniorTokenAccount(undefined)
+        const result: PoolsTrancheTokenAccounts = {}
+        let currentIndex = 0
+        Object.values(pools).forEach((poolInfo) => {
+          if (!result[poolInfo.poolId]) {
+            result[poolInfo.poolId] = {}
           }
+          lenders.forEach((lender) => {
+            result[poolInfo.poolId]![lender] = {
+              seniorTokenAccount: tokenAccounts[currentIndex++],
+              juniorTokenAccount: tokenAccounts[currentIndex++],
+            }
+          })
+        })
 
-          console.warn(error)
-        }
-
-        try {
-          const juniorTokenAccount = await getAccount(
-            connection,
-            juniorATA,
-            undefined,
-            TOKEN_2022_PROGRAM_ID,
-          )
-          setJuniorTokenAccount(juniorTokenAccount)
-        } catch (error) {
-          if (error instanceof TokenAccountNotFoundError) {
-            setJuniorTokenAccount(undefined)
-          }
-
-          console.warn(error)
-        }
-
-        setLoading(false)
+        setPoolsTrancheTokenAccounts(result)
       }
     }
     fetchData()
-  }, [
-    publicKey,
-    connection,
-    wallet,
-    poolInfo.underlyingMint.address,
-    poolInfo.seniorTrancheMint,
-    refreshCount,
-    poolInfo.juniorTrancheMint,
-  ])
+  }, [chainId, connection, getTokenAccount, lendersStr])
 
-  return { seniorTokenAccount, juniorTokenAccount, loading, refresh }
+  return poolsTrancheTokenAccounts
 }
