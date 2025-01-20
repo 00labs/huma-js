@@ -95,6 +95,7 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Ethereum',
+    disabled: true,
   },
   [ChainEnum.HumaTestnet]: {
     id: ChainEnum.HumaTestnet,
@@ -105,6 +106,7 @@ export const CHAINS: {
     wait: 1,
     isTestnet: true,
     icon: 'Ethereum',
+    disabled: true,
   },
   [ChainEnum.Mumbai]: {
     id: ChainEnum.Mumbai,
