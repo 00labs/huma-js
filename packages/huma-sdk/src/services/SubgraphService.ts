@@ -670,9 +670,10 @@ function getLendersStats(
     return Promise.resolve(undefined)
   }
 
+  const accountsWithQuotes = accounts.map((account) => `"${account}"`).join(',')
   const QUERY = gql`
     query {
-      lenders(where: {amount_gt:0, owner_in: ["${accounts.join(',')}"] }){
+      lenders(where: {amount_gt:0, owner_in: [${accountsWithQuotes}] }){
         id
         owner
         pool
