@@ -71,9 +71,9 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
       hasReceivables: true,
     },
   },
-  Arf3MonthsCampaign2: {
+  ArfCreditPool3MonthsCampaign2: {
     title: 'Arf - Cross Border Payment Financing (Campaign II)',
-    poolName: POOL_NAME.Arf3MonthsCampaign2,
+    poolName: POOL_NAME.ArfCreditPool3MonthsCampaign2,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaMainnet,
     industry: 'Remittance Financing',
@@ -102,9 +102,9 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
       hasReceivables: true,
     },
   },
-  Arf6MonthsCampaign2: {
+  ArfCreditPool6MonthsCampaign2: {
     title: 'Arf - Cross Border Payment Financing (Campaign II)',
-    poolName: POOL_NAME.Arf6MonthsCampaign2,
+    poolName: POOL_NAME.ArfCreditPool6MonthsCampaign2,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaMainnet,
     industry: 'Remittance Financing',

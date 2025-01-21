@@ -1,9 +1,9 @@
-import { IndustryType } from '../v2'
 import BASE_CREDIT_POOL_ABI from '../abis/BaseCreditPool.json'
 import BASE_POOL_CONFIG_ABI from '../abis/BasePoolConfig.json'
 import HDT_ABI from '../abis/HDT.json'
 import STEAM_FACTORING_POOL_ABI from '../abis/StreamFactoringPool.json'
 import TRADABLE_STREAM_ABI from '../abis/TradableStream.json'
+import { IndustryType } from '../v2'
 import { ChainEnum } from './chain'
 import { configUtil } from './config'
 
@@ -18,9 +18,9 @@ export enum POOL_NAME {
   ArfCreditPoolV2 = 'ArfCreditPoolV2',
   ArfCreditPool3Months = 'ArfCreditPool3Months',
   ArfCreditPool6Months = 'ArfCreditPool6Months',
-  Arf3MonthsCampaign2 = 'Arf3MonthsCampaign2',
-  Arf6MonthsCampaign2 = 'Arf6MonthsCampaign2',
   ArfCreditPool12Months = 'ArfCreditPool12Months',
+  ArfCreditPool3MonthsCampaign2 = 'ArfCreditPool3MonthsCampaign2',
+  ArfCreditPool6MonthsCampaign2 = 'ArfCreditPool6MonthsCampaign2',
   ArfPoolUSDC = 'ArfPoolUSDC',
   ArfPoolPYUSD = 'ArfPoolPYUSD',
   BSOS = 'BSOS',
