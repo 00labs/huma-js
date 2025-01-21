@@ -18,8 +18,6 @@ export enum POOL_NAME {
   ArfCreditPoolV2 = 'ArfCreditPoolV2',
   ArfCreditPool3Months = 'ArfCreditPool3Months',
   ArfCreditPool6Months = 'ArfCreditPool6Months',
-  Arf3MonthsCampaign2 = 'Arf3MonthsCampaign2',
-  Arf6MonthsCampaign2 = 'Arf6MonthsCampaign2',
   ArfCreditPool12Months = 'ArfCreditPool12Months',
   ArfCreditPool3MonthsCampaign2 = 'ArfCreditPool3MonthsCampaign2',
   ArfCreditPool6MonthsCampaign2 = 'ArfCreditPool6MonthsCampaign2',
