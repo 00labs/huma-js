@@ -245,6 +245,7 @@ const approveLender = async (
   walletAddress: string,
   chainId: number,
   contractAddress: string,
+  documentHash: string,
   isDev = false,
   chainSpecificData?: Record<string, unknown>,
 ): Promise<void> =>
@@ -253,7 +254,7 @@ const approveLender = async (
       networkType,
       isDev,
     )}/account/wallets/${chainId}/${walletAddress}`,
-    { trancheAddress: contractAddress, chainSpecificData },
+    { trancheAddress: contractAddress, documentHash, chainSpecificData },
   )
 
 /**
