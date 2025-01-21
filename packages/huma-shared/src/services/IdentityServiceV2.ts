@@ -146,7 +146,9 @@ const getVerificationStatusV2 = async (
     `${configUtil.getIdentityAPIUrlV2(
       networkType,
       isDev,
-    )}/account/verification-status?documentHash=${documentHash}`,
+    )}/account/verification-status?documentHash=${encodeURIComponent(
+      documentHash,
+    )}`,
   )
 
 /**
