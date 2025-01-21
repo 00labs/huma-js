@@ -139,6 +139,7 @@ export function SolanaLendSupply({
         <ApproveLender
           poolInfo={poolInfo}
           isUniTranche={!!isUniTranche}
+          documentHash={documentHash}
           changeTranche={setSelectedTranche}
         />
       )}

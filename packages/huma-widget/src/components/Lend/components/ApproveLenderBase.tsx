@@ -21,6 +21,7 @@ type Props = {
   chainType: CHAIN_TYPE
   networkType: NETWORK_TYPE
   isUniTranche: boolean
+  documentHash: string
   chainSpecificData?: Record<string, unknown>
   changeTranche: (tranche: TrancheType) => void
 }
@@ -32,6 +33,7 @@ export function ApproveLenderBase({
   chainType,
   networkType,
   chainSpecificData,
+  documentHash,
   changeTranche,
 }: Props): React.ReactElement | null {
   const isDev = checkIsDev()
@@ -50,6 +52,7 @@ export function ApproveLenderBase({
             account!,
             chainId!,
             trancheVault,
+            documentHash,
             isDev,
             chainSpecificData,
           )
@@ -68,7 +71,15 @@ export function ApproveLenderBase({
         }
       }
     },
-    [account, chainId, chainSpecificData, dispatch, isDev, networkType],
+    [
+      account,
+      chainId,
+      chainSpecificData,
+      dispatch,
+      documentHash,
+      isDev,
+      networkType,
+    ],
   )
 
   useEffect(() => {

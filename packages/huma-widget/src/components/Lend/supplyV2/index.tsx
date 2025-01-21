@@ -180,6 +180,7 @@ export function LendSupplyV2({
         <ApproveLender
           poolInfo={poolInfo}
           isUniTranche={isUniTranche}
+          documentHash={documentHash}
           changeTranche={setSelectedTranche}
         />
       )}
