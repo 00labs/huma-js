@@ -295,11 +295,16 @@ function getEstimatedPoints(
   const query = gql`
     query {
       calculateEstimatedPoints(input: {campaignGroupId:"${campaignGroupId}", principal:"${principal}"}){
-        campaignPointsEstimations {
-          campaignId
-          juniorTranchePoints
-          seniorTranchePoints
-          lockupPeriodMonths
+          ... on CalculatePointsResult {
+          campaignPointsEstimations {
+            campaignId
+            juniorTranchePoints
+            lockupPeriodMonths
+            seniorTranchePoints
+          }
+        }
+        ... on PointServiceError {
+          errMessage
         }
       }
     }
