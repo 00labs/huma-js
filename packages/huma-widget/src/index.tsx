@@ -31,6 +31,14 @@ import {
   CreditLinePaymentV2,
 } from './components/CreditLine/paymentV2'
 import {
+  SolanaBorrow,
+  SolanaBorrowProps,
+} from './components/CreditLine/solanaBorrow'
+import {
+  SolanaPayment,
+  SolanaPaymentProps,
+} from './components/CreditLine/solanaPayment'
+import {
   SupplyFirstLossCover,
   SupplyFirstLossCoverProps,
 } from './components/CreditLine/supplyFLC'
@@ -50,6 +58,30 @@ import {
   CancelRedemptionPropsV2,
   CancelRedemptionV2,
 } from './components/Lend/cancelRedemptionV2 '
+import {
+  SolanaLendAddRedemption,
+  SolanaLendAddRedemptionProps,
+} from './components/Lend/solanaAddRedemption'
+import {
+  SolanaLendCancelRedemption,
+  SolanaLendCancelRedemptionProps,
+} from './components/Lend/solanaCancelRedemption'
+import {
+  SolanaEnableAutoRedemption,
+  SolanaEnableAutoRedemptionProps,
+} from './components/Lend/solanaEnableAutoRedemption'
+import {
+  SolanaLendSupply,
+  SolanaLendSupplyProps,
+} from './components/Lend/solanaSupply'
+import {
+  SolanaLendWithdraw,
+  SolanaLendWithdrawProps,
+} from './components/Lend/solanaWithdraw'
+import {
+  StellarLendSupply,
+  StellarLendSupplyProps,
+} from './components/Lend/stellarSupply'
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
 import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
@@ -57,6 +89,7 @@ import {
   LendWithdrawPropsV2,
   LendWithdrawV2,
 } from './components/Lend/withdrawV2'
+import { NotifiContextWrapper } from './components/Notifi/NotifiContextWrapper'
 import {
   ReceivableBackedCreditLineBorrowPropsV2,
   ReceivableBackedCreditLineBorrowV2,
@@ -69,35 +102,6 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
-import {
-  SolanaLendSupply,
-  SolanaLendSupplyProps,
-} from './components/Lend/solanaSupply'
-import {
-  SolanaLendAddRedemption,
-  SolanaLendAddRedemptionProps,
-} from './components/Lend/solanaAddRedemption'
-import {
-  SolanaLendCancelRedemption,
-  SolanaLendCancelRedemptionProps,
-} from './components/Lend/solanaCancelRedemption'
-import {
-  SolanaBorrow,
-  SolanaBorrowProps,
-} from './components/CreditLine/solanaBorrow'
-import {
-  SolanaPayment,
-  SolanaPaymentProps,
-} from './components/CreditLine/solanaPayment'
-import { NotifiContextWrapper } from './components/Notifi/NotifiContextWrapper'
-import {
-  StellarLendSupply,
-  StellarLendSupplyProps,
-} from './components/Lend/stellarSupply'
-import {
-  SolanaEnableAutoRedemption,
-  SolanaEnableAutoRedemptionProps,
-} from './components/Lend/solanaEnableAutoRedemption'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -671,6 +675,20 @@ export function SolanaPaymentWidget(props: SolanaPaymentWidgetProps) {
   return (
     <GenericWidget {...props}>
       <SolanaPayment {...props} />
+    </GenericWidget>
+  )
+}
+
+/**
+ * Solana lend withdraw widget
+ *
+ * @param {SolanaLendWithdrawProps} props - The solana lend pool withdraw widget props.
+ * @returns Solana lend pool withdraw widget component
+ */
+export function SolanaLendWithdrawWidget(props: SolanaLendWithdrawProps) {
+  return (
+    <GenericWidget {...props}>
+      <SolanaLendWithdraw {...props} />
     </GenericWidget>
   )
 }

@@ -38,6 +38,8 @@ export const formatMoneyFixed = (
     return num
   }
 
+  toFixed = Number(num) === 0 ? 0 : toFixed
+
   const numCast = Number(num)
   const moneyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -76,6 +78,8 @@ export const formatNumberFixed = (
   if (isEmpty(num) || Number.isNaN(num)) {
     return num
   }
+
+  toFixed = Number(num) === 0 ? 0 : toFixed
 
   const numberFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: toFixed,

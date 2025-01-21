@@ -48,6 +48,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply widget for Solana pools</p></dd>
 <dt><a href="#SolanaPaymentWidget">SolanaPaymentWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Solana pools</p></dd>
+<dt><a href="#SolanaLendWithdrawWidget">SolanaLendWithdrawWidget(props)</a> ⇒</dt>
+<dd><p>Solana lend withdraw widget</p></dd>
 <dt><a href="#StellarLendSupplyWidget">StellarLendSupplyWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Stellar pools</p></dd>
 <dt><a href="#SolanaEnableAutoRedemptionWidget">SolanaEnableAutoRedemptionWidget(props)</a></dt>
@@ -91,6 +93,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#SolanaLendSupplyProps">SolanaLendSupplyProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
+<dt><a href="#SolanaLendWithdrawProps">SolanaLendWithdrawProps</a> : <code>Object</code></dt>
+<dd><p>Solana lend pool withdraw props</p></dd>
 <dt><a href="#StellarLendSupplyProps">StellarLendSupplyProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#LendSupplyProps">LendSupplyProps</a> : <code>Object</code></dt>
@@ -433,6 +437,18 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | props | [<code>SolanaPaymentWidgetProps</code>](#SolanaPaymentWidgetProps) | <p>Widget props</p> |
 
+<a name="SolanaLendWithdrawWidget"></a>
+
+## SolanaLendWithdrawWidget(props) ⇒
+<p>Solana lend withdraw widget</p>
+
+**Kind**: global function  
+**Returns**: <p>Solana lend pool withdraw widget component</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>SolanaLendWithdrawProps</code>](#SolanaLendWithdrawProps) | <p>The solana lend pool withdraw widget props.</p> |
+
 <a name="StellarLendSupplyWidget"></a>
 
 ## StellarLendSupplyWidget(props)
@@ -696,6 +712,11 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <p>Lend pool supply props</p>
 
 **Kind**: global typedef  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| documentHash | <code>string</code> | <p>The subscription file hash.</p> |
+
 **Properties**
 
 | Name | Type | Description |
@@ -704,6 +725,24 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool.</p> |
 | handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="SolanaLendWithdrawProps"></a>
+
+## SolanaLendWithdrawProps : <code>Object</code>
+<p>Solana lend pool withdraw props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>SolanaPoolState</code> | <p>The current state config of the pool.</p> |
+| lenderStateAccount | <code>LenderStateAccount</code> | <p>The lender state account of the user.</p> |
+| trancheMintAccount | <code>Mint</code> | <p>The mint account of the tranche.</p> |
+| trancheType | <code>TrancheType</code> | <p>The type of the tranche.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool withdraw action is successful.</p> |
 
 <a name="StellarLendSupplyProps"></a>
 
@@ -741,6 +780,11 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <p>Lend pool supply props</p>
 
 **Kind**: global typedef  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| documentHash | <code>string</code> | <p>The subscription file hash.</p> |
+
 **Properties**
 
 | Name | Type | Description |

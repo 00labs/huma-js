@@ -8,6 +8,7 @@ type Props = {
   poolInfo: SolanaPoolInfo
   networkType: NETWORK_TYPE
   campaign?: Campaign
+  documentHash: string
   handleClose: () => void
 }
 
@@ -15,6 +16,7 @@ export function Evaluation({
   poolInfo,
   networkType,
   campaign,
+  documentHash,
   handleClose,
 }: Props): React.ReactElement | null {
   if (poolInfo.KYC?.Persona) {
@@ -29,6 +31,7 @@ export function Evaluation({
         networkType={networkType}
         chainType={CHAIN_TYPE.SOLANA}
         campaign={campaign}
+        documentHash={documentHash}
       />
     )
   }

@@ -1,8 +1,13 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { CHAIN_TYPE, SolanaChainEnum } from '@huma-finance/shared'
+import {
+  CHAIN_TYPE,
+  SolanaChainEnum,
+  StellarChainEnum,
+} from '@huma-finance/shared'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWeb3React } from '@web3-react/core'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { StellarConnectionContext } from '../stellar'
 
 export const useChainInfo = (
   isDev: boolean,
@@ -18,6 +23,7 @@ export const useChainInfo = (
     provider: evmProvider,
   } = useWeb3React()
   const { publicKey: solanaPublicKey } = useWallet()
+  const { address: stellarAccount } = useContext(StellarConnectionContext)
 
   useEffect(() => {
     if (chainType === CHAIN_TYPE.EVM) {
@@ -33,7 +39,24 @@ export const useChainInfo = (
         isDev ? SolanaChainEnum.SolanaDevnet : SolanaChainEnum.SolanaMainnet,
       )
     }
-  }, [chainType, evmAccount, evmChainId, evmProvider, isDev, solanaPublicKey])
+
+    if (chainType === CHAIN_TYPE.STELLAR) {
+      setAccount(stellarAccount?.toString())
+      setChainId(
+        isDev
+          ? StellarChainEnum.StellarTestnet
+          : StellarChainEnum.StellarMainnet,
+      )
+    }
+  }, [
+    chainType,
+    evmAccount,
+    evmChainId,
+    evmProvider,
+    isDev,
+    solanaPublicKey,
+    stellarAccount,
+  ])
 
   return {
     account,
@@ -51,12 +74,18 @@ export const useChainsInfo = (isDev: boolean) => {
     isDev,
     CHAIN_TYPE.SOLANA,
   )
+  const { account: stellarAccount, chainId: stellarChainId } = useChainInfo(
+    isDev,
+    CHAIN_TYPE.STELLAR,
+  )
 
   return {
     evmAccount,
     evmChainId,
     solanaAccount,
     solanaChainId,
+    stellarAccount,
+    stellarChainId,
   }
 }
 
@@ -66,13 +95,34 @@ export const useActiveChainInfo = (
 ) => {
   const evmChainInfo = useChainInfo(isDev, CHAIN_TYPE.EVM)
   const solanaChainInfo = useChainInfo(isDev, CHAIN_TYPE.SOLANA)
+  const stellarChainInfo = useChainInfo(isDev, CHAIN_TYPE.STELLAR)
 
   switch (activeNetwork) {
     case CHAIN_TYPE.EVM:
       return evmChainInfo
     case CHAIN_TYPE.SOLANA:
       return solanaChainInfo
+    case CHAIN_TYPE.STELLAR:
+      return stellarChainInfo
     default:
       return null
   }
+}
+
+export const useActiveAccountChain = (isDev: boolean): CHAIN_TYPE | null => {
+  const evmChainInfo = useChainInfo(isDev, CHAIN_TYPE.EVM)
+  const solanaChainInfo = useChainInfo(isDev, CHAIN_TYPE.SOLANA)
+  const stellarChainInfo = useChainInfo(isDev, CHAIN_TYPE.STELLAR)
+
+  if (evmChainInfo.account) {
+    return CHAIN_TYPE.EVM
+  }
+  if (solanaChainInfo.account) {
+    return CHAIN_TYPE.SOLANA
+  }
+  if (stellarChainInfo.account) {
+    return CHAIN_TYPE.STELLAR
+  }
+
+  return null
 }
