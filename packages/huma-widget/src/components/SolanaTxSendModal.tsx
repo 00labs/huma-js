@@ -24,24 +24,26 @@ export function SolanaTxSendModal({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { sendTransaction } = useWallet()
+  const { publicKey, sendTransaction } = useWallet()
   const { connection } = useConnection()
   const [signature, setSignature] = useState<string>('')
 
   useEffect(() => {
     async function sendTx() {
-      if (!connection || !tx) {
+      if (!connection || !tx || !publicKey) {
         return
       }
 
       let signatureResult = ''
       try {
         // Optimize transaction
-        const lockedWritableAccounts = extractWritableAccounts(tx)
+        const writableAccounts = extractWritableAccounts(tx)
         const optimizedTx = await buildOptimalTransactionFromConnection(
           tx,
-          lockedWritableAccounts,
+          writableAccounts,
           connection,
+          chainId,
+          publicKey,
         )
         signatureResult = await sendTransaction(optimizedTx, connection, {
           preflightCommitment: 'confirmed',
@@ -78,11 +80,21 @@ export function SolanaTxSendModal({
         }
 
         const err = error as Error
+
+        console.log(err)
         dispatch(setError({ errorMessage: err?.message || '' }))
       }
     }
     sendTx()
-  }, [connection, dispatch, handleSuccess, sendTransaction, tx])
+  }, [
+    chainId,
+    connection,
+    dispatch,
+    handleSuccess,
+    publicKey,
+    sendTransaction,
+    tx,
+  ])
 
   return (
     <LoadingModal

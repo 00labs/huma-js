@@ -35,12 +35,14 @@ async function main() {
     solanaContext: solanaHumaContext,
   })
 
-  const tx = await humaSolanaProgramHelper.buildWithdrawYieldsTransaction()
+  const tx = await humaSolanaProgramHelper.buildWithdrawYieldsTransaction(
+    'junior',
+  )
 
-  console.log(tx)
+  // console.log(tx)
 
-  const txResult = await sendAndConfirmTransaction(connection, tx, [keypair])
-  console.log(txResult)
+  // const txResult = await sendAndConfirmTransaction(connection, tx, [keypair])
+  // console.log(txResult)
 }
 
 main()
