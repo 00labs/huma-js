@@ -60,14 +60,12 @@ async function getPriorityFeeEstimate(
             options: {
               priorityLevel,
               evaluateEmptySlotAsZero: true,
-              recommended: true,
             },
           },
         ],
       }),
     })
     const data = await response.json()
-    console.log(data)
     return data.result
   } catch (err) {
     console.warn(err)
@@ -108,7 +106,7 @@ async function buildOptimalTransactionImpl(
 
   // Calculate compute unit priority fee
   const heliusPriorityFeeEstimateRes = await getPriorityFeeEstimate(
-    'High',
+    'Medium',
     tx,
     txAccounts,
     chainEnum,
