@@ -29,7 +29,7 @@ async function buildOptimalTransactionImpl(
 
   tx.instructions.unshift(
     ComputeBudgetProgram.setComputeUnitPrice({
-      microLamports: 5_000,
+      microLamports: 200_000,
     }),
   )
 
