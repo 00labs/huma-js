@@ -103,9 +103,7 @@ async function buildOptimalTransactionImpl(
     const medianFee = recentFees.sort((a, b) => a - b)[
       Math.floor(recentFees.length / 2)
     ]
-    console.log(medianFee)
     chosenFee = medianFee === 0 ? 500_000 : medianFee // Set a baseline fee of 500_000
-    console.log(chosenFee)
   }
 
   tx.instructions.unshift(
