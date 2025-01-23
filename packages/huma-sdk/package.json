@@ -1,6 +1,6 @@
 {
   "name": "@huma-finance/sdk",
-  "version": "0.0.69",
+  "version": "0.0.70",
   "types": "./dist/index.d.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
@@ -29,7 +29,7 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.6.0",
-    "@huma-finance/shared": "^0.0.69",
+    "@huma-finance/shared": "^0.0.70",
     "@irys/sdk": "^0.2.11",
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.1",
