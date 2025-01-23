@@ -9,3 +9,14 @@ export const checkIsDev = () =>
     window.location.hostname.startsWith('testnet') ||
     process.env.NODE_ENV === 'development'
   )
+
+export const checkIsTestnet = () => {
+  if (
+    window.location.hostname.startsWith('pr-') ||
+    window.location.hostname.startsWith('testnet')
+  ) {
+    return true
+  }
+
+  return checkIsDev()
+}
