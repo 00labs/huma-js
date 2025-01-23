@@ -57,16 +57,16 @@ async function main() {
 
   console.log(tx)
 
-  // const txResult = await sendAndConfirmTransaction(
-  //   connection,
-  //   tx,
-  //   [newAsset, keypair],
-  //   {
-  //     preflightCommitment: 'confirmed',
-  //   },
-  // )
+  const txResult = await sendAndConfirmTransaction(
+    connection,
+    tx,
+    [newAsset, keypair],
+    {
+      preflightCommitment: 'confirmed',
+    },
+  )
 
-  // console.log(txResult)
+  console.log(txResult)
 }
 
 main()

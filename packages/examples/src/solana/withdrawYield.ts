@@ -39,10 +39,10 @@ async function main() {
     'junior',
   )
 
-  // console.log(tx)
+  console.log(tx)
 
-  // const txResult = await sendAndConfirmTransaction(connection, tx, [keypair])
-  // console.log(txResult)
+  const txResult = await sendAndConfirmTransaction(connection, tx, [keypair])
+  console.log(txResult)
 }
 
 main()
