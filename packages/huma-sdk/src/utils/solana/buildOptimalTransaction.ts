@@ -2,7 +2,6 @@ import {
   ComputeBudgetProgram,
   Connection,
   PublicKey,
-  RecentPrioritizationFees,
   Transaction,
 } from '@solana/web3.js'
 import { HumaSolanaContext } from '../../helpers'
@@ -26,24 +25,11 @@ async function buildOptimalTransactionImpl(
   txAccounts: PublicKey[],
   connection: Connection,
 ): Promise<Transaction> {
-  const [recentPrioritizationFees, recentBlockhash] = await Promise.all([
-    connection.getRecentPrioritizationFees({
-      lockedWritableAccounts: txAccounts,
-    }),
-    connection.getLatestBlockhash('confirmed'),
-  ])
-
-  const recentFees = recentPrioritizationFees.map(
-    (f: RecentPrioritizationFees) => f.prioritizationFee,
-  )
-  const medianFee = recentFees.sort((a, b) => a - b)[
-    Math.floor(recentFees.length / 2)
-  ]
-  const chosenFee = Math.min(200_000, medianFee)
+  const recentBlockhash = await connection.getLatestBlockhash('confirmed')
 
   tx.instructions.unshift(
     ComputeBudgetProgram.setComputeUnitPrice({
-      microLamports: chosenFee,
+      microLamports: 200_000,
     }),
   )
 

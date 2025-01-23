@@ -12,12 +12,14 @@ import { ApproveLenderBase } from '../components/ApproveLenderBase'
 type Props = {
   poolInfo: SolanaPoolInfo
   isUniTranche: boolean
+  documentHash: string
   changeTranche: (tranche: TrancheType) => void
 }
 
 export function ApproveLender({
   poolInfo,
   isUniTranche,
+  documentHash,
   changeTranche,
 }: Props): React.ReactElement | null {
   const solanaChainInfo = SOLANA_CHAIN_INFO[poolInfo.chainId]
@@ -33,6 +35,7 @@ export function ApproveLender({
         huma_program_id: solanaChainInfo.poolProgram,
         pool_id: poolInfo.poolId,
       }}
+      documentHash={documentHash}
       changeTranche={changeTranche}
     />
   )

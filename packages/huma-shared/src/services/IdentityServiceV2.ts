@@ -146,7 +146,9 @@ const getVerificationStatusV2 = async (
     `${configUtil.getIdentityAPIUrlV2(
       networkType,
       isDev,
-    )}/account/verification-status?documentHash=${documentHash}`,
+    )}/account/verification-status?documentHash=${encodeURIComponent(
+      documentHash,
+    )}`,
   )
 
 /**
@@ -243,6 +245,7 @@ const approveLender = async (
   walletAddress: string,
   chainId: number,
   contractAddress: string,
+  documentHash: string,
   isDev = false,
   chainSpecificData?: Record<string, unknown>,
 ): Promise<void> =>
@@ -251,7 +254,7 @@ const approveLender = async (
       networkType,
       isDev,
     )}/account/wallets/${chainId}/${walletAddress}`,
-    { trancheAddress: contractAddress, chainSpecificData },
+    { trancheAddress: contractAddress, documentHash, chainSpecificData },
   )
 
 /**
