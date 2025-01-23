@@ -24,26 +24,31 @@ export function SolanaTxSendModal({
   handleSuccess,
 }: Props): React.ReactElement | null {
   const dispatch = useAppDispatch()
-  const { publicKey, sendTransaction } = useWallet()
+  const { publicKey, signTransaction, sendTransaction } = useWallet()
   const { connection } = useConnection()
   const [signature, setSignature] = useState<string>('')
 
   useEffect(() => {
     async function sendTx() {
-      if (!connection || !tx || !publicKey) {
+      if (!connection || !tx || !publicKey || !signTransaction) {
         return
       }
 
       let signatureResult = ''
       try {
         // Optimize transaction
-        const writableAccounts = extractWritableAccounts(tx)
+        const recentBlockhash = await connection.getLatestBlockhash('confirmed')
+        tx.recentBlockhash = recentBlockhash.blockhash
+        tx.lastValidBlockHeight = recentBlockhash.lastValidBlockHeight
+        tx.feePayer = publicKey
+        const txAccounts = extractWritableAccounts(tx)
         const optimizedTx = await buildOptimalTransactionFromConnection(
           tx,
-          writableAccounts,
+          txAccounts,
           connection,
           chainId,
           publicKey,
+          process.env.REACT_APP_HELIUS_API_KEY,
         )
         signatureResult = await sendTransaction(optimizedTx, connection, {
           preflightCommitment: 'confirmed',
@@ -56,6 +61,19 @@ export function SolanaTxSendModal({
           lastValidBlockHeight: optimizedTx.lastValidBlockHeight!,
           signature: signatureResult,
         })
+        const txResult = await connection.getParsedTransaction(
+          signatureResult,
+          'confirmed',
+        )
+        if (txResult?.meta?.err) {
+          dispatch(
+            setError({
+              errorMessage:
+                'Your transaction was confirmed but had errors. Please check the transaction details on the explorer for more information.',
+            }),
+          )
+          return
+        }
         handleSuccess({ signature: signatureResult })
       } catch (error: unknown) {
         let signatureStatusRetries = 0
@@ -72,6 +90,15 @@ export function SolanaTxSendModal({
             result?.value?.confirmationStatus === 'finalized' ||
             result?.value?.confirmationStatus === 'confirmed'
           ) {
+            if (result?.value?.err) {
+              dispatch(
+                setError({
+                  errorMessage:
+                    'Your transaction was confirmed but had errors. Please check the transaction details on the explorer for more information.',
+                }),
+              )
+              return
+            }
             handleSuccess({ signature: signatureResult })
             return
           }
@@ -93,6 +120,7 @@ export function SolanaTxSendModal({
     handleSuccess,
     publicKey,
     sendTransaction,
+    signTransaction,
     tx,
   ])
 

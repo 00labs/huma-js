@@ -31,7 +31,6 @@
     "@ethersproject/providers": "^5.6.0",
     "@huma-finance/shared": "^0.0.69",
     "@irys/sdk": "^0.2.11",
-    "@solana-developers/helpers": "^2.5.6",
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.1",
     "ethers": "^5.7.2",
