@@ -20,7 +20,6 @@ import {
   TokenAccountNotFoundError,
 } from '@solana/spl-token'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { buildOptimalTransaction } from '../../utils/solana/buildOptimalTransaction'
 import { getReceivableReferenceData } from '../../utils/solana/getReceivableReferenceAccount'
 import { HumaSolanaContext } from './HumaSolanaContext'
 
@@ -115,21 +114,6 @@ export class HumaSolanaProgramHelper {
       })
       .transaction()
     tx.add(programTx)
-
-    await buildOptimalTransaction(
-      tx,
-      [
-        publicKey,
-        receivableReferenceData.asset,
-        new PublicKey(poolInfo.humaConfig),
-        new PublicKey(poolInfo.poolConfig),
-        new PublicKey(poolInfo.poolState),
-        creditConfigAccount,
-        creditStateAccount,
-        new PublicKey(MPL_CORE_PROGRAM_ID),
-      ],
-      this.#solanaContext,
-    )
 
     return tx
   }
@@ -284,22 +268,7 @@ export class HumaSolanaProgramHelper {
         trancheTokenProgram: TOKEN_2022_PROGRAM_ID,
       })
       .transaction()
-    const txAccounts: PublicKey[] = [
-      publicKey,
-      new PublicKey(poolInfo.humaConfig),
-      new PublicKey(poolInfo.poolConfig),
-      yieldDistributingLenderAccount,
-      new PublicKey(poolInfo.underlyingMint.address),
-      new PublicKey(poolInfo.poolUnderlyingTokenAccount),
-      underlyingTokenATA,
-      new PublicKey(trancheMint),
-      lenderTrancheToken,
-      TOKEN_PROGRAM_ID,
-      TOKEN_2022_PROGRAM_ID,
-    ]
     tx.add(programTx)
-
-    await buildOptimalTransaction(tx, txAccounts, this.#solanaContext)
 
     return tx
   }
@@ -387,24 +356,6 @@ export class HumaSolanaProgramHelper {
       .transaction()
     tx.add(programTx)
 
-    await buildOptimalTransaction(
-      tx,
-      [
-        publicKey,
-        new PublicKey(poolInfo.humaConfig),
-        new PublicKey(poolInfo.poolConfig),
-        new PublicKey(poolInfo.poolState),
-        creditConfigAccount,
-        creditStateAccount,
-        new PublicKey(poolInfo.poolAuthority),
-        new PublicKey(poolInfo.underlyingMint.address),
-        new PublicKey(poolInfo.poolUnderlyingTokenAccount),
-        borrowerUnderlyingTokenAccountAddress,
-        TOKEN_PROGRAM_ID,
-      ],
-      this.#solanaContext,
-    )
-
     return tx
   }
 
@@ -453,24 +404,6 @@ export class HumaSolanaProgramHelper {
         .transaction()
     }
 
-    await buildOptimalTransaction(
-      tx,
-      [
-        publicKey,
-        new PublicKey(poolInfo.humaConfig),
-        new PublicKey(poolInfo.poolConfig),
-        new PublicKey(poolInfo.poolState),
-        creditConfigAccount,
-        creditStateAccount,
-        new PublicKey(poolInfo.poolAuthority),
-        new PublicKey(poolInfo.underlyingMint.address),
-        new PublicKey(poolInfo.poolUnderlyingTokenAccount),
-        borrowerUnderlyingTokenAccount,
-        TOKEN_PROGRAM_ID,
-      ],
-      this.#solanaContext,
-    )
-
     return tx
   }
 
@@ -501,18 +434,6 @@ export class HumaSolanaProgramHelper {
         undefined,
         TOKEN_PROGRAM_ID,
       ),
-    )
-
-    await buildOptimalTransaction(
-      tx,
-      [
-        publicKey,
-        borrowerUnderlyingTokenAccount,
-        new PublicKey(poolInfo.underlyingMint.address),
-        new PublicKey(getSentinelAddress(chainId)),
-        TOKEN_PROGRAM_ID,
-      ],
-      this.#solanaContext,
     )
 
     return tx

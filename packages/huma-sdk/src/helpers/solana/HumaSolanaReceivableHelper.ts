@@ -8,7 +8,6 @@ import {
 } from '../../utils/solana/getReceivableReferenceAccount'
 import { HumaSolanaContext } from './HumaSolanaContext'
 import { MPL_CORE_PROGRAM_ID } from './HumaSolanaProgramHelper'
-import { buildOptimalTransaction } from '../../utils/solana/buildOptimalTransaction'
 
 export type ReceivableState =
   | 'deleted'
@@ -90,17 +89,6 @@ export class HumaSolanaReceivableHelper {
     tx.add(programTx)
     tx.feePayer = publicKey
 
-    await buildOptimalTransaction(
-      tx,
-      [
-        publicKey,
-        newAsset.publicKey,
-        new PublicKey(MPL_CORE_PROGRAM_ID),
-        receivableReferencePDA,
-      ],
-      this.#solanaContext,
-    )
-
     return tx
   }
 
@@ -134,16 +122,6 @@ export class HumaSolanaReceivableHelper {
       })
       .transaction()
     tx.add(programTx)
-
-    await buildOptimalTransaction(
-      tx,
-      [
-        publicKey,
-        receivableReferenceData.asset,
-        new PublicKey(MPL_CORE_PROGRAM_ID),
-      ],
-      this.#solanaContext,
-    )
 
     return tx
   }
