@@ -2,14 +2,15 @@
 import {
   CHAIN_TYPE,
   checkIsDev,
+  COMMON_ERROR_MESSAGE,
   IdentityServiceV2,
   NETWORK_TYPE,
+  SOLANA_TRANSACTION_EXPIRED_BLOCKHEIGHT_EXCEEDED_ERROR,
   timeUtil,
   TrancheType,
 } from '@huma-finance/shared'
 import { useChainInfo } from '@huma-finance/web-shared'
 import React, { useCallback, useEffect } from 'react'
-
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError, setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
@@ -59,11 +60,7 @@ export function ApproveLenderBase({
           tryAttempts = 0
         } catch (e: unknown) {
           if (tryAttempts === 0) {
-            dispatch(
-              setError({
-                errorMessage: 'Something went wrong, please try again later.',
-              }),
-            )
+            throw e
           } else {
             await timeUtil.sleep(3000)
             console.error(e)
@@ -71,28 +68,38 @@ export function ApproveLenderBase({
         }
       }
     },
-    [
-      account,
-      chainId,
-      chainSpecificData,
-      dispatch,
-      documentHash,
-      isDev,
-      networkType,
-    ],
+    [account, chainId, chainSpecificData, documentHash, isDev, networkType],
   )
 
   useEffect(() => {
     const approveLenderAsync = async () => {
       if (account && chainId) {
-        if (isUniTranche) {
-          await approveLender(juniorTrancheVault)
-          changeTranche('junior')
-          dispatch(setStep(WIDGET_STEP.ChooseAmount))
-        } else {
-          await approveLender(juniorTrancheVault)
-          await approveLender(seniorTrancheVault)
-          dispatch(setStep(WIDGET_STEP.ChooseTranche))
+        try {
+          if (isUniTranche) {
+            await approveLender(juniorTrancheVault)
+            changeTranche('junior')
+            dispatch(setStep(WIDGET_STEP.ChooseAmount))
+          } else {
+            await approveLender(juniorTrancheVault)
+            await approveLender(seniorTrancheVault)
+            dispatch(setStep(WIDGET_STEP.ChooseTranche))
+          }
+        } catch (e: unknown) {
+          console.error(e)
+          // @ts-ignore
+          let errorMessage = e.message ?? COMMON_ERROR_MESSAGE
+          if (
+            errorMessage.indexOf(
+              SOLANA_TRANSACTION_EXPIRED_BLOCKHEIGHT_EXCEEDED_ERROR,
+            ) >= 0
+          ) {
+            errorMessage = `Due to network congestion, the transaction has expired. Please try again.`
+          }
+          dispatch(
+            setError({
+              errorMessage,
+            }),
+          )
         }
       }
     }

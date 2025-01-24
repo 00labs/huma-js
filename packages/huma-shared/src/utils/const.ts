@@ -6,6 +6,9 @@ export const EARejectMessage =
 export const COMMON_ERROR_MESSAGE =
   'Sorry, there was an error. Please try again.'
 
+export const SOLANA_TRANSACTION_EXPIRED_BLOCKHEIGHT_EXCEEDED_ERROR =
+  'TransactionExpiredBlockheightExceededError'
+
 export enum CURRENCY_CODE {
   USD = 840,
 }
