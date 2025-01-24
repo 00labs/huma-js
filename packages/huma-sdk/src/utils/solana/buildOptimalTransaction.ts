@@ -79,6 +79,7 @@ async function buildOptimalTransactionImpl(
   connection: Connection,
   chainEnum: SolanaChainEnum,
   signer: PublicKey,
+  heliusPriority: HeliusPriorityLevel = 'Medium',
   heliusApiKey?: string | null,
 ): Promise<Transaction> {
   // Calculate compute unit limit
@@ -106,7 +107,7 @@ async function buildOptimalTransactionImpl(
 
   // Calculate compute unit priority fee
   const heliusPriorityFeeEstimateRes = await getPriorityFeeEstimate(
-    'Medium',
+    heliusPriority,
     tx,
     txAccounts,
     chainEnum,
@@ -128,6 +129,7 @@ export async function buildOptimalTransaction(
   tx: Transaction,
   txAccounts: PublicKey[],
   context: HumaSolanaContext,
+  heliusPriorityLevel?: HeliusPriorityLevel,
 ): Promise<Transaction> {
   return buildOptimalTransactionImpl(
     tx,
@@ -135,6 +137,7 @@ export async function buildOptimalTransaction(
     context.connection,
     context.chainId,
     context.publicKey,
+    heliusPriorityLevel,
     context.heliusApiKey,
   )
 }
@@ -145,6 +148,7 @@ export async function buildOptimalTransactionFromConnection(
   connection: Connection,
   chainId: SolanaChainEnum,
   signer: PublicKey,
+  heliusPriorityLevel?: HeliusPriorityLevel,
   heliusApiKey?: string | null,
 ): Promise<Transaction> {
   return buildOptimalTransactionImpl(
@@ -153,6 +157,7 @@ export async function buildOptimalTransactionFromConnection(
     connection,
     chainId,
     signer,
+    heliusPriorityLevel,
     heliusApiKey,
   )
 }
