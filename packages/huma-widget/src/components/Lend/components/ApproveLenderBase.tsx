@@ -93,7 +93,7 @@ export function ApproveLenderBase({
               SOLANA_TRANSACTION_EXPIRED_BLOCKHEIGHT_EXCEEDED_ERROR,
             ) >= 0
           ) {
-            errorMessage = `Due to network congestion, the transaction has expired. Please try again.`
+            errorMessage = `Transaction failed due to blockchain congestion. Please try again.`
           }
           dispatch(
             setError({
