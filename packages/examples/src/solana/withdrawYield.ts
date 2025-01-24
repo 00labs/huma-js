@@ -35,7 +35,9 @@ async function main() {
     solanaContext: solanaHumaContext,
   })
 
-  const tx = await humaSolanaProgramHelper.buildWithdrawYieldsTransaction()
+  const tx = await humaSolanaProgramHelper.buildWithdrawYieldsTransaction(
+    'junior',
+  )
 
   console.log(tx)
 

@@ -9,10 +9,10 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { setStep } from '../../../store/widgets.reducers'
-import { ErrorModal } from '../../ErrorModal'
 import { Transfer } from './2-Transfer'
 import { ChooseTranche } from './1-ChooseTranche'
 import { Done } from './3-Done'
+import { SolanaErrorModal } from '../../SolanaErrorModal'
 
 /**
  * Lend pool supply props
@@ -150,7 +150,8 @@ export function SolanaLendCancelRedemption({
         />
       )}
       {step === WIDGET_STEP.Error && (
-        <ErrorModal
+        <SolanaErrorModal
+          chainId={poolInfo.chainId}
           title={title}
           errorReason='Sorry there was an error'
           errorMessage={errorMessage}

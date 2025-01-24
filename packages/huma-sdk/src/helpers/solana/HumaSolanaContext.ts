@@ -10,16 +10,20 @@ export class HumaSolanaContext {
 
   #poolName: POOL_NAME
 
+  #heliusApiKey: string | null
+
   constructor({
     publicKey,
     connection,
     chainId,
     poolName,
+    heliusApiKey,
   }: {
     publicKey: PublicKey
     connection: Connection
     chainId: SolanaChainEnum
     poolName: POOL_NAME
+    heliusApiKey?: string
   }) {
     if (!publicKey || !connection || !chainId || !poolName) {
       throw new Error('All parameters are required')
@@ -29,6 +33,7 @@ export class HumaSolanaContext {
     this.#connection = connection
     this.#chainId = chainId
     this.#poolName = poolName
+    this.#heliusApiKey = heliusApiKey || null
   }
 
   get publicKey(): PublicKey {
@@ -61,5 +66,9 @@ export class HumaSolanaContext {
 
   set poolName(value: POOL_NAME) {
     this.#poolName = value
+  }
+
+  get heliusApiKey(): string | null {
+    return this.#heliusApiKey
   }
 }

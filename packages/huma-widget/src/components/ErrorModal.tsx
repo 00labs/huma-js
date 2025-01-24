@@ -4,6 +4,7 @@ import { txAtom } from '@huma-finance/web-shared'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 
+import { openInNewTab } from '@huma-finance/shared'
 import { useAppDispatch } from '../hooks/useRedux'
 import { resetState } from '../store/widgets.reducers'
 import { SorryImg } from './images'
@@ -12,6 +13,7 @@ type Props = {
   title: string
   errorReason?: string
   errorMessage?: string
+  errorUrl?: string
   handleOk: () => void
   okText?: string
   shouldResetState?: boolean
@@ -21,6 +23,7 @@ export function ErrorModal({
   title,
   errorReason,
   errorMessage,
+  errorUrl,
   handleOk,
   okText = 'OKAY',
   shouldResetState = true,
@@ -85,11 +88,17 @@ export function ErrorModal({
       text-overflow: ellipsis;
       margin-right: ${theme.spacing(2)};
     `,
-    okButton: css`
-      & .MuiButtonBase-root {
-        width: 100%;
-        position: absolute;
-        bottom: 0;
+    bottomButtonGroup: css`
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      row-gap: ${theme.spacing(1)};
+      column-gap: ${theme.spacing(1)};
+
+      button {
+        height: 40px;
+        margin-top: ${theme.spacing(1)};
       }
     `,
   }
@@ -119,8 +128,17 @@ export function ErrorModal({
           </Tooltip>
         </Box>
       </Box>
-      <Box css={styles.okButton}>
-        <Button variant='contained' onClick={handleCloseModal}>
+      <Box css={styles.bottomButtonGroup}>
+        {errorUrl && (
+          <Button
+            variant='outlined'
+            fullWidth
+            onClick={() => openInNewTab(errorUrl)}
+          >
+            SEE DETAILS
+          </Button>
+        )}
+        <Button variant='contained' fullWidth onClick={handleCloseModal}>
           {okText}
         </Button>
       </Box>
