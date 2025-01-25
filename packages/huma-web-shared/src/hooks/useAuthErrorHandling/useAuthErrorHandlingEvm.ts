@@ -4,7 +4,7 @@ import { AuthService, CHAIN_TYPE, CHAINS } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { SiweMessage } from 'siwe'
-import { ErrorType } from '.'
+import { AUTH_ERROR_TYPE } from '.'
 
 const createSiweMessage = (
   address: string,
@@ -46,6 +46,7 @@ export const verifyOwnershipEvm = async (
   } catch (e) {
     console.error(e)
     reset()
+    throw e
   } finally {
     setLoading(false)
   }
@@ -60,8 +61,9 @@ export const useAuthErrorHandlingEvm = (
     isWalletNotCreatedError: boolean
     isWalletNotSignInError: boolean
   },
-  setError: (error: any) => void,
-  setErrorType: (errorType: ErrorType) => void,
+  setAuthError: (authError: any) => void,
+  setAuthErrorType: (authErrorType: AUTH_ERROR_TYPE) => void,
+  setServerError: (serverError: any) => void,
   setIsVerificationRequired: (isVerificationRequired: boolean) => void,
   handleVerificationCompletion: () => void,
   setLoading: (loading: boolean) => void,
@@ -99,7 +101,7 @@ export const useAuthErrorHandlingEvm = (
       isWalletNotCreatedError ||
       isWalletNotSignInError
     ) {
-      setErrorType('NotSignedIn')
+      setAuthErrorType(AUTH_ERROR_TYPE.NotSignedIn)
       setIsVerificationRequired(true)
       verifyOwnershipEvm(
         account,
@@ -109,11 +111,13 @@ export const useAuthErrorHandlingEvm = (
         handleVerificationCompletion,
         setLoading,
         reset,
-      ).catch((e) => setError(e))
+      ).catch((e) => {
+        setServerError(e)
+      })
     } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
-      setErrorType('UserRejected')
+      setAuthErrorType(AUTH_ERROR_TYPE.UserRejected)
     } else {
-      setErrorType('Other')
+      setAuthErrorType(AUTH_ERROR_TYPE.Other)
     }
   }, [
     account,
@@ -125,9 +129,10 @@ export const useAuthErrorHandlingEvm = (
     isDev,
     provider,
     reset,
-    setError,
-    setErrorType,
+    setAuthError,
+    setAuthErrorType,
     setIsVerificationRequired,
     setLoading,
+    setServerError,
   ])
 }
