@@ -14,14 +14,14 @@ Install all the dependencies and devDependencies
 
 ### `yarn start`
 
-Runs the package in the development mode.\
+Runs the package in the development mode.
 
-The page will reload if you make edits.\
+The page will reload if you make edits.
 You will also see any lint errors in the console.
 
 ### `yarn build`
 
-Builds the package for production to the `build` folder.\
+Builds the package for production to the `build` folder.
 
 ### `yarn abi-type`
 
