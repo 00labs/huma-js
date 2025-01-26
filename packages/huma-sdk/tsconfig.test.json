@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig",
-  "compilerOptions": {
-    "paths": {
-      "@huma-finance/shared": ["../huma-shared/src"]
-    }
-  },
-  "include": ["src/**/*", "src/**/*.json", "tests/**/*"]
-}

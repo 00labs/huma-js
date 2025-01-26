@@ -1,6 +1,0 @@
-schema: schema.graphql
-generates:
-  ./src/graphql/generatedTypes.ts:
-    plugins:
-      - typescript
-      - typescript-graphql-request
