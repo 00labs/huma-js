@@ -11,6 +11,11 @@ export enum AUTH_ERROR_TYPE {
   Other = 'Other',
 }
 
+export enum AUTH_STATUS {
+  SignMessage = 'Please sign the message in wallet',
+  SignOffChainTx = 'Please sign the off-chain transaction in wallet',
+}
+
 export type AuthState = {
   isWalletOwnershipVerificationRequired: boolean
   isWalletOwnershipVerified: boolean
@@ -18,6 +23,7 @@ export type AuthState = {
   authError: unknown
   serverError: unknown
   loading: boolean
+  authStatus: AUTH_STATUS | undefined
   setAuthError: React.Dispatch<React.SetStateAction<unknown>>
   reset: () => void
 }
@@ -30,6 +36,7 @@ export const useAuthErrorHandling = (
   const [authErrorType, setAuthErrorType] = useState<
     AUTH_ERROR_TYPE | undefined
   >()
+  const [authStatus, setAuthStatus] = useState<AUTH_STATUS>()
   const [serverError, setServerError] = useState<unknown>(null)
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const [isVerificationRequired, setIsVerificationRequired] =
@@ -74,6 +81,7 @@ export const useAuthErrorHandling = (
     isDev,
     authError,
     getErrorInfo,
+    setAuthStatus,
     setAuthError,
     setAuthErrorType,
     setServerError,
@@ -87,6 +95,7 @@ export const useAuthErrorHandling = (
     isDev,
     authError,
     getErrorInfo,
+    setAuthStatus,
     setAuthError,
     setAuthErrorType,
     setServerError,
@@ -99,6 +108,7 @@ export const useAuthErrorHandling = (
   return {
     isWalletOwnershipVerificationRequired: isVerificationRequired,
     isWalletOwnershipVerified: isVerified,
+    authStatus,
     authErrorType,
     authError,
     serverError,

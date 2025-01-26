@@ -4,7 +4,7 @@ import { AuthService, CHAIN_TYPE, CHAINS } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { SiweMessage } from 'siwe'
-import { AUTH_ERROR_TYPE } from '.'
+import { AUTH_ERROR_TYPE, AUTH_STATUS } from '.'
 
 const createSiweMessage = (
   address: string,
@@ -32,15 +32,18 @@ export const verifyOwnershipEvm = async (
   isDev: boolean,
   provider: JsonRpcProvider,
   onVerificationComplete: () => void,
+  setAuthStatus: (authStatus?: AUTH_STATUS) => void,
   setLoading: (loading: boolean) => void,
   reset: () => void,
 ) => {
   try {
     setLoading(true)
+    setAuthStatus(AUTH_STATUS.SignMessage)
     const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
     const message = createSiweMessage(address, chainId, nonce, expiresAt)
     const signer = await provider.getSigner()
     const signature = await signer.signMessage(message)
+    setAuthStatus(undefined)
     await AuthService.verifySignature(message, signature, chainId, isDev)
     onVerificationComplete()
   } catch (e) {
@@ -49,6 +52,7 @@ export const verifyOwnershipEvm = async (
     throw e
   } finally {
     setLoading(false)
+    setAuthStatus(undefined)
   }
 }
 
@@ -61,6 +65,7 @@ export const useAuthErrorHandlingEvm = (
     isWalletNotCreatedError: boolean
     isWalletNotSignInError: boolean
   },
+  setAuthStatus: (authStatus?: AUTH_STATUS) => void,
   setAuthError: (authError: any) => void,
   setAuthErrorType: (authErrorType: AUTH_ERROR_TYPE) => void,
   setServerError: (serverError: any) => void,
@@ -109,6 +114,7 @@ export const useAuthErrorHandlingEvm = (
         isDev,
         provider,
         handleVerificationCompletion,
+        setAuthStatus,
         setLoading,
         reset,
       ).catch((e) => {
@@ -132,7 +138,8 @@ export const useAuthErrorHandlingEvm = (
     setAuthError,
     setAuthErrorType,
     setIsVerificationRequired,
-    setLoading,
+    setAuthStatus,
     setServerError,
+    setLoading,
   ])
 }
