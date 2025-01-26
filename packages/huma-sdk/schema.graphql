@@ -1,0 +1,14 @@
+type Receivable {
+  id: String
+  lastUpdate: String
+  owner: String
+  tokenId: String
+  pool: String
+  currencyCode: String
+  receivableAmount: String
+  paidAmount: String
+  uri: String
+  creationDate: String
+  maturityDate: String
+  status: String
+}

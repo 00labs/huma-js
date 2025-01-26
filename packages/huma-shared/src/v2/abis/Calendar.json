@@ -1,0 +1,194 @@
+[
+  {
+    "inputs": [],
+    "name": "StartDateLaterThanEndDate",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "startDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endDate",
+        "type": "uint256"
+      }
+    ],
+    "name": "getDaysDiff",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "daysDiff",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum PayPeriodDuration",
+        "name": "periodDuration",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "numPeriodsPassed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "getDaysDiffSincePreviousPeriodStart",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "daysDiff",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "endDate",
+        "type": "uint256"
+      }
+    ],
+    "name": "getDaysRemainingInPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "daysRemaining",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum PayPeriodDuration",
+        "name": "periodDuration",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endDate",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNumPeriodsPassed",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "numPeriodsPassed",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum PayPeriodDuration",
+        "name": "periodDuration",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "getStartDateOfNextPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "startOfNextPeriod",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum PayPeriodDuration",
+        "name": "periodDuration",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "getStartDateOfPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "startOfPeriod",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "getStartOfNextDay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "startOfNextDay",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum PayPeriodDuration",
+        "name": "periodDuration",
+        "type": "uint8"
+      }
+    ],
+    "name": "getTotalDaysInFullPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "totalDaysInPeriod",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]
