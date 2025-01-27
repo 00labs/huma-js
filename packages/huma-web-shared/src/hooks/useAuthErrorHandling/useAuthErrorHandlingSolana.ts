@@ -132,9 +132,8 @@ export const useAuthErrorHandlingSolana = (
     isWalletNotSignInError: boolean
   },
   setAuthStatus: (authStatus?: AUTH_STATUS) => void,
-  setError: (error: any) => void,
   setErrorType: (errorType: AUTH_ERROR_TYPE) => void,
-  setServerError: (serverError: any) => void,
+  setServerReturnedError: (serverReturnedError: any) => void,
   setIsVerificationRequired: (isVerificationRequired: boolean) => void,
   handleVerificationCompletion: () => void,
   setLoading: (loading: boolean) => void,
@@ -180,7 +179,7 @@ export const useAuthErrorHandlingSolana = (
         setLoading,
         reset,
       ).catch((e) => {
-        setServerError(e)
+        setServerReturnedError(e)
       })
     } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
       setErrorType(AUTH_ERROR_TYPE.UserRejected)
@@ -197,11 +196,10 @@ export const useAuthErrorHandlingSolana = (
     isDev,
     reset,
     setAuthStatus,
-    setError,
     setErrorType,
     setIsVerificationRequired,
     setLoading,
-    setServerError,
+    setServerReturnedError,
     signMessage,
     signTransaction,
   ])

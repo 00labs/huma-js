@@ -12,8 +12,8 @@ export enum AUTH_ERROR_TYPE {
 }
 
 export enum AUTH_STATUS {
-  SignMessage = 'Please sign the message in wallet',
-  SignOffChainTx = 'Please sign the off-chain transaction in wallet',
+  SignMessage = 'Please sign the message in your wallet to continue',
+  SignOffChainTx = 'Please sign the off-chain transaction in your wallet to continue',
 }
 
 export type AuthState = {
@@ -21,7 +21,7 @@ export type AuthState = {
   isWalletOwnershipVerified: boolean
   authErrorType?: AUTH_ERROR_TYPE
   authError: unknown
-  serverError: unknown
+  serverReturnedError: unknown
   loading: boolean
   authStatus: AUTH_STATUS | undefined
   setAuthError: React.Dispatch<React.SetStateAction<unknown>>
@@ -37,7 +37,7 @@ export const useAuthErrorHandling = (
     AUTH_ERROR_TYPE | undefined
   >()
   const [authStatus, setAuthStatus] = useState<AUTH_STATUS>()
-  const [serverError, setServerError] = useState<unknown>(null)
+  const [serverReturnedError, setServerReturnedError] = useState<unknown>(null)
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const [isVerificationRequired, setIsVerificationRequired] =
     useState<boolean>(false)
@@ -73,7 +73,7 @@ export const useAuthErrorHandling = (
     setIsVerified(false)
     setAuthError(null)
     setAuthErrorType(undefined)
-    setServerError(undefined)
+    setServerReturnedError(undefined)
   }, [])
 
   useAuthErrorHandlingEvm(
@@ -82,9 +82,8 @@ export const useAuthErrorHandling = (
     authError,
     getErrorInfo,
     setAuthStatus,
-    setAuthError,
     setAuthErrorType,
-    setServerError,
+    setServerReturnedError,
     setIsVerificationRequired,
     handleVerificationCompletion,
     setLoading,
@@ -96,9 +95,8 @@ export const useAuthErrorHandling = (
     authError,
     getErrorInfo,
     setAuthStatus,
-    setAuthError,
     setAuthErrorType,
-    setServerError,
+    setServerReturnedError,
     setIsVerificationRequired,
     handleVerificationCompletion,
     setLoading,
@@ -111,7 +109,7 @@ export const useAuthErrorHandling = (
     authStatus,
     authErrorType,
     authError,
-    serverError,
+    serverReturnedError,
     loading,
     setAuthError,
     reset,
