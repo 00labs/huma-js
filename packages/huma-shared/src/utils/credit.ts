@@ -43,6 +43,9 @@ export enum CreditEvent {
   CreditLineApproved = 14,
   PaymentMadeWithReceivable = 15,
   PrincipalPaymentMadeWithReceivable = 16,
+  AddApprovedLender = 17,
+  RemoveApprovedLender = 18,
+  PaymentMadeOnBehalfOfWithReceivable = 19,
 }
 
 export enum LenderEvent {
@@ -64,6 +67,7 @@ export const CreditEventText = {
   [String(CreditEvent.PaymentMadeWithReceivable)]: 'Pay',
   [String(CreditEvent.PrincipalPaymentMade)]: 'Pay',
   [String(CreditEvent.PrincipalPaymentMadeWithReceivable)]: 'Pay',
+  [String(CreditEvent.PaymentMadeOnBehalfOfWithReceivable)]: 'Pay',
   [String(CreditEvent.ReceivedPaymentProcessed)]: 'Pay',
   [String(CreditEvent.LiquidityDeposited)]: 'Supply',
   [String(CreditEvent.LiquidityWithdrawn)]: 'Withdraw',
