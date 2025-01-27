@@ -20,7 +20,7 @@ const useEA = () => {
   const {
     isWalletOwnershipVerificationRequired,
     isWalletOwnershipVerified,
-    setError: setAuthError,
+    setAuthError,
   } = useAuthErrorHandling(checkIsDev())
 
   const checkingEA = useCallback(
