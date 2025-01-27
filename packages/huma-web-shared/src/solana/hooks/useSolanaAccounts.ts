@@ -873,26 +873,38 @@ export const usePoolsMintAccounts = (chainId: SolanaChainEnum) => {
     useState<PoolsMintAccounts>()
   const [error, setError] = useState<unknown>()
 
+  const getMintAccount = useCallback(
+    async (trancheMint: PublicKey) => {
+      try {
+        const trancheMintAccount = await getMint(
+          connection,
+          trancheMint,
+          undefined,
+          TOKEN_2022_PROGRAM_ID,
+        )
+        return trancheMintAccount
+      } catch (error) {
+        if (error instanceof TokenAccountNotFoundError) {
+          return undefined
+        }
+
+        console.warn(error)
+        throw error
+      }
+    },
+    [connection],
+  )
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
         if (connection) {
-          const getMintAccounts: Promise<Mint>[] = []
+          const getMintAccounts: Promise<Mint | undefined>[] = []
           Object.values(pools).forEach((poolInfo) => {
             getMintAccounts.push(
-              getMint(
-                connection,
-                new PublicKey(poolInfo.seniorTrancheMint),
-                undefined,
-                TOKEN_2022_PROGRAM_ID,
-              ),
-              getMint(
-                connection,
-                new PublicKey(poolInfo.juniorTrancheMint),
-                undefined,
-                TOKEN_2022_PROGRAM_ID,
-              ),
+              getMintAccount(new PublicKey(poolInfo.seniorTrancheMint)),
+              getMintAccount(new PublicKey(poolInfo.juniorTrancheMint)),
             )
           })
 
@@ -918,7 +930,7 @@ export const usePoolsMintAccounts = (chainId: SolanaChainEnum) => {
       }
     }
     fetchData()
-  }, [chainId, connection])
+  }, [chainId, connection, getMintAccount])
 
   return [poolsMintAccounts, error] as const
 }
