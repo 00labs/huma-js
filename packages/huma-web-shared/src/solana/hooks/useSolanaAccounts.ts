@@ -1,17 +1,22 @@
-import { BN, Wallet } from '@coral-xyz/anchor'
+/* eslint-disable no-plusplus */
+import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import {
   getHumaProgram,
   getPoolProgramAddress,
   getSolanaPoolInfo,
+  HumaSolanaJson,
   POOL_NAME,
+  SOLANA_CHAIN_POOLS_INFO,
   SolanaChainEnum,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
+import { Huma } from '@huma-finance/shared/src/solana/idl/huma'
 import {
   Account,
   getAccount,
   getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
   getMint,
   Mint,
   TOKEN_2022_PROGRAM_ID,
@@ -26,7 +31,6 @@ import {
 import { PublicKey } from '@solana/web3.js'
 import lodash from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-
 import { useForceRefresh } from '../../hooks/useForceRefresh'
 
 export type PoolStateAccount = {
@@ -744,4 +748,289 @@ export const useLenderAccounts = (
     loading,
     refresh,
   }
+}
+
+export type LendersAccounts = {
+  [pool in string]?: {
+    [lender in string]?: {
+      juniorLenderStateAccount?: LenderStateAccount | null | undefined
+      seniorLenderStateAccount?: LenderStateAccount | null | undefined
+    }
+  }
+}
+
+export const useLendersAccounts = (
+  chainId: SolanaChainEnum,
+  lenders?: string[],
+) => {
+  const { connection } = useConnection()
+  const [lendersAccounts, setLendersAccounts] = useState<LendersAccounts>()
+  const [error, setError] = useState<unknown>()
+  const lendersStr =
+    lenders && lenders.length > 0 ? lenders.join(',') : undefined
+
+  const getLenderStateAccountPDACalcs = useCallback(
+    (poolInfo: SolanaPoolInfo, lenderPublicKey: PublicKey) => {
+      const poolProgram = new PublicKey(getPoolProgramAddress(chainId))
+      const [seniorLenderStateAccountPDACalc] =
+        PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
+            lenderPublicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+      const [juniorLenderStateAccountPDACalc] =
+        PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
+            lenderPublicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+
+      return {
+        seniorLenderStateAccountPDACalc,
+        juniorLenderStateAccountPDACalc,
+      }
+    },
+    [chainId],
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
+        if (connection && lendersStr) {
+          const lenders = lendersStr.split(',')
+          const lenderStateAccountPDACalcs: PublicKey[] = []
+          Object.values(pools).forEach((poolInfo) => {
+            lenders.forEach((lender) => {
+              const {
+                seniorLenderStateAccountPDACalc,
+                juniorLenderStateAccountPDACalc,
+              } = getLenderStateAccountPDACalcs(poolInfo, new PublicKey(lender))
+              lenderStateAccountPDACalcs.push(
+                seniorLenderStateAccountPDACalc,
+                juniorLenderStateAccountPDACalc,
+              )
+            })
+          })
+
+          // @ts-ignore
+          const provider = new AnchorProvider(connection, null)
+          const humaProgram = new Program<Huma>(
+            HumaSolanaJson as Huma,
+            provider,
+          )
+          const lendersState =
+            await humaProgram.account.lenderState.fetchMultiple(
+              lenderStateAccountPDACalcs,
+            )
+
+          const result: LendersAccounts = {}
+          let currentIndex = 0
+          Object.values(pools).forEach((poolInfo) => {
+            lenders.forEach((lender) => {
+              if (!result[poolInfo.poolId]) {
+                result[poolInfo.poolId] = {}
+              }
+              if (!result[poolInfo.poolId]![lender]) {
+                result[poolInfo.poolId]![lender] = {}
+              }
+              result[poolInfo.poolId]![lender] = {
+                seniorLenderStateAccount: lendersState[currentIndex++],
+                juniorLenderStateAccount: lendersState[currentIndex++],
+              }
+            })
+          })
+
+          setLendersAccounts(result)
+        }
+      } catch (e) {
+        console.error(e)
+        setError(e)
+      }
+    }
+    fetchData()
+  }, [connection, getLenderStateAccountPDACalcs, lendersStr, chainId])
+
+  return [lendersAccounts, error] as const
+}
+
+export type PoolsMintAccounts = {
+  [pool in string]?: {
+    seniorMintAccount?: Mint | null | undefined
+    juniorMintAccount?: Mint | null | undefined
+  }
+}
+
+export const usePoolsMintAccounts = (chainId: SolanaChainEnum) => {
+  const { connection } = useConnection()
+  const [poolsMintAccounts, setPoolsMintAccounts] =
+    useState<PoolsMintAccounts>()
+  const [error, setError] = useState<unknown>()
+
+  const getMintAccount = useCallback(
+    async (trancheMint: PublicKey) => {
+      try {
+        const trancheMintAccount = await getMint(
+          connection,
+          trancheMint,
+          undefined,
+          TOKEN_2022_PROGRAM_ID,
+        )
+        return trancheMintAccount
+      } catch (error) {
+        if (error instanceof TokenAccountNotFoundError) {
+          return undefined
+        }
+
+        console.warn(error)
+        throw error
+      }
+    },
+    [connection],
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
+        if (connection) {
+          const getMintAccounts: Promise<Mint | undefined>[] = []
+          Object.values(pools).forEach((poolInfo) => {
+            getMintAccounts.push(
+              getMintAccount(new PublicKey(poolInfo.seniorTrancheMint)),
+              getMintAccount(new PublicKey(poolInfo.juniorTrancheMint)),
+            )
+          })
+
+          const mintAccounts = await Promise.all(getMintAccounts)
+
+          const result: PoolsMintAccounts = {}
+          let currentIndex = 0
+          Object.values(pools).forEach((poolInfo) => {
+            if (!result[poolInfo.poolId]) {
+              result[poolInfo.poolId] = {}
+            }
+            result[poolInfo.poolId] = {
+              seniorMintAccount: mintAccounts[currentIndex++],
+              juniorMintAccount: mintAccounts[currentIndex++],
+            }
+          })
+
+          setPoolsMintAccounts(result)
+        }
+      } catch (e) {
+        console.error(e)
+        setError(e)
+      }
+    }
+    fetchData()
+  }, [chainId, connection, getMintAccount])
+
+  return [poolsMintAccounts, error] as const
+}
+
+export type PoolsTrancheTokenAccounts = {
+  [pool in string]?: {
+    [lender in string]?: {
+      seniorTokenAccount?: Account | null | undefined
+      juniorTokenAccount?: Account | null | undefined
+    }
+  }
+}
+
+export const usePoolsTrancheTokenAccounts = (
+  chainId: SolanaChainEnum,
+  lenders?: string[],
+) => {
+  const { connection } = useConnection()
+  const lendersStr =
+    lenders && lenders.length > 0 ? lenders.join(',') : undefined
+  const [poolsTrancheTokenAccounts, setPoolsTrancheTokenAccounts] =
+    useState<PoolsTrancheTokenAccounts>()
+  const [error, setError] = useState<unknown>()
+
+  const getTokenAccount = useCallback(
+    async (trancheATA: PublicKey) => {
+      try {
+        const trancheTokenAccount = await getAccount(
+          connection,
+          trancheATA,
+          undefined,
+          TOKEN_2022_PROGRAM_ID,
+        )
+        return trancheTokenAccount
+      } catch (error) {
+        if (error instanceof TokenAccountNotFoundError) {
+          return undefined
+        }
+
+        console.warn(error)
+        throw error
+      }
+    },
+    [connection],
+  )
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const pools = SOLANA_CHAIN_POOLS_INFO[chainId]
+        if (connection && lendersStr) {
+          const lenders = lendersStr.split(',')
+          const getTokenAccounts: Promise<Account | undefined>[] = []
+          Object.values(pools).forEach((poolInfo) => {
+            lenders.forEach((lender) => {
+              const seniorATA = getAssociatedTokenAddressSync(
+                new PublicKey(poolInfo.seniorTrancheMint),
+                new PublicKey(lender),
+                true, // allowOwnerOffCurve
+                TOKEN_2022_PROGRAM_ID,
+              )
+              const juniorATA = getAssociatedTokenAddressSync(
+                new PublicKey(poolInfo.juniorTrancheMint),
+                new PublicKey(lender),
+                true, // allowOwnerOffCurve
+                TOKEN_2022_PROGRAM_ID,
+              )
+
+              getTokenAccounts.push(
+                getTokenAccount(seniorATA),
+                getTokenAccount(juniorATA),
+              )
+            })
+          })
+
+          const tokenAccounts = await Promise.all(getTokenAccounts)
+
+          const result: PoolsTrancheTokenAccounts = {}
+          let currentIndex = 0
+          Object.values(pools).forEach((poolInfo) => {
+            if (!result[poolInfo.poolId]) {
+              result[poolInfo.poolId] = {}
+            }
+            lenders.forEach((lender) => {
+              result[poolInfo.poolId]![lender] = {
+                seniorTokenAccount: tokenAccounts[currentIndex++],
+                juniorTokenAccount: tokenAccounts[currentIndex++],
+              }
+            })
+          })
+
+          setPoolsTrancheTokenAccounts(result)
+        }
+      } catch (e) {
+        console.error(e)
+        setError(e)
+      }
+    }
+    fetchData()
+  }, [chainId, connection, getTokenAccount, lendersStr])
+
+  return [poolsTrancheTokenAccounts, error] as const
 }

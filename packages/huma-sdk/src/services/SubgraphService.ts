@@ -648,6 +648,66 @@ function fetchAllAccountData(
     })
 }
 
+export type LenderData = {
+  owner: string
+  pool: string
+  withdrawableFunds: string
+  tranche: {
+    type: number
+    totalAssets: string
+    totalSupply: string
+  }
+  amount: string
+  shares: string
+}
+
+function getLendersStats(
+  chainId: number,
+  accounts: string[],
+): Promise<LenderData[] | undefined> {
+  const url = PoolSubgraphMap[chainId]?.subgraph
+  if (!url) {
+    return Promise.resolve(undefined)
+  }
+
+  const accountsWithQuotes = accounts.map((account) => `"${account}"`).join(',')
+  const QUERY = gql`
+    query {
+      lenders(where: {amount_gt:0, owner_in: [${accountsWithQuotes}] }){
+        id
+        owner
+        pool
+        withdrawableFunds
+        tranche {
+          type
+          totalAssets
+          totalSupply
+        }
+        amount
+        shares
+      }
+    }
+  `
+
+  return requestPost<{
+    errors?: unknown
+    data: { lenders: LenderData[] }
+  }>(url, JSON.stringify({ query: QUERY }), {
+    withCredentials: false,
+  })
+    .then((res) => {
+      if (res.errors) {
+        console.error(res.errors)
+        throw new Error('Failed to fetch lenders stats')
+      }
+      return res.data.lenders
+    })
+    .catch((err) => {
+      console.error(err)
+      throw new Error('Failed to fetch lenders stats')
+    })
+}
+
 /**
  * An object that contains functions to interact with Huma's Subgraph storage.
  * @namespace SubgraphService
@@ -661,4 +721,5 @@ export const SubgraphService = {
   checkBorrowAndLendHistory,
   fetchAllPoolsData,
   fetchAllAccountData,
+  getLendersStats,
 }
