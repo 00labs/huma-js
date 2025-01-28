@@ -8,18 +8,24 @@ The Huma Shared includes utilities/services/hooks for shared logics.
 
 In the project directory, you can run:
 
-### `yarn install`
+```
+yarn install
+```
 
 Install all the dependencies and devDependencies
 
-### `yarn start`
+```
+yarn start
+```
 
 Runs the package in the development mode.\
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn build`
+```
+yarn build
+```
 
 Builds the package for production to the `build` folder.\
 
