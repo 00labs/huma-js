@@ -1,9 +1,11 @@
 import { BN, Wallet } from '@coral-xyz/anchor'
 import {
+  calculateAvailablePoolBalance,
   getHumaProgram,
   getPoolProgramAddress,
   getSolanaPoolInfo,
   POOL_NAME,
+  PoolStateAccount,
   SolanaChainEnum,
   SolanaPoolInfo,
   TrancheType,
@@ -28,17 +30,6 @@ import lodash from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useForceRefresh } from '../../hooks/useForceRefresh'
-
-export type PoolStateAccount = {
-  accruedIncomes: { protocolIncome: BN; poolOwnerIncome: BN; eaIncome: BN }
-  incomeWithdrawn: {
-    eaIncomeWithdrawn: BN
-    poolOwnerIncomeWithdrawn: BN
-    protocolIncomeWithdrawn: BN
-  }
-  disbursementReserve: BN
-  trancheAssets: BN[]
-}
 
 export const usePoolStateAccount = (
   chainId: SolanaChainEnum,
@@ -387,6 +378,7 @@ export const useBorrowerAccounts = (
     () => getSolanaPoolInfo(chainId, poolName),
     [chainId, poolName],
   )
+  const { poolStateAccount } = usePoolStateAccount(chainId, poolName)
   const {
     account: poolUnderlyingTokenAccount,
     refresh: refreshPoolUnderlyingTokenAccount,
@@ -401,7 +393,8 @@ export const useBorrowerAccounts = (
         !publicKey ||
         !connection ||
         !wallet ||
-        !poolUnderlyingTokenAccount
+        !poolUnderlyingTokenAccount ||
+        !poolStateAccount
       ) {
         setLoading(false)
         return
@@ -506,15 +499,16 @@ export const useBorrowerAccounts = (
           .sub(yieldDueBN)
           .add(principalPastDueBN)
         const unusedCredit = creditLimitBN.sub(principalAmount)
-        const poolTokenBalanceBN = new BN(
-          poolUnderlyingTokenAccount?.amount?.toString(),
+        const availablePoolBalanceBN = calculateAvailablePoolBalance(
+          poolUnderlyingTokenAccount,
+          poolStateAccount,
         )
         // Set available credit to the minimum of the pool balance or the credit available amount,
         // since both are upper bounds on the amount of credit that can be borrowed.
         // If either is negative, cap the available credit to 0.
-        let creditAvailable = unusedCredit.lt(poolTokenBalanceBN)
+        let creditAvailable = unusedCredit.lt(availablePoolBalanceBN)
           ? unusedCredit
-          : poolTokenBalanceBN
+          : availablePoolBalanceBN
         creditAvailable = creditAvailable.ltn(0) ? new BN(0) : creditAvailable
         setCreditConfigAccount({
           creditLimit: creditLimitBN,
@@ -541,6 +535,7 @@ export const useBorrowerAccounts = (
     refreshCount,
     poolUnderlyingTokenAccount,
     poolInfo,
+    poolStateAccount,
   ])
 
   const refreshAll = useCallback(() => {
