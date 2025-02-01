@@ -9,7 +9,7 @@ import {
   NETWORK_TYPE,
   VerificationStatusResultV2,
 } from '@huma-finance/shared'
-import { useAuthErrorHandling } from '@huma-finance/web-shared'
+import { AUTH_ERROR_TYPE, useAuthErrorHandling } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -50,8 +50,8 @@ export function PersonaEvaluation({
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const {
-    errorType,
-    setError: setAuthError,
+    authErrorType,
+    setAuthError,
     isWalletOwnershipVerified,
     isWalletOwnershipVerificationRequired,
   } = useAuthErrorHandling(isDev, chainType)
@@ -207,23 +207,23 @@ export function PersonaEvaluation({
   }, [checkVerificationStatus, verificationStatus?.status])
 
   useEffect(() => {
-    if (errorType === 'NotSignedIn') {
+    if (authErrorType === AUTH_ERROR_TYPE.NotSignedIn) {
       setLoadingType(undefined)
       setKYCCopy(KYCCopies.signInRequired)
-    } else if (errorType === 'UserRejected') {
+    } else if (authErrorType === AUTH_ERROR_TYPE.UserRejected) {
       dispatch(
         setError({
           errorMessage: 'User has rejected the transaction.',
         }),
       )
-    } else if (errorType === 'Other') {
+    } else if (authErrorType === AUTH_ERROR_TYPE.Other) {
       dispatch(
         setError({
           errorMessage: 'Something went wrong. Please try again later.',
         }),
       )
     }
-  }, [KYCCopies.signInRequired, dispatch, errorType])
+  }, [KYCCopies.signInRequired, dispatch, authErrorType])
 
   useEffect(() => {
     const modalElement = document.getElementById('huma-modal')

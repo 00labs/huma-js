@@ -4,7 +4,7 @@ import { AuthService, CHAIN_TYPE, CHAINS } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { SiweMessage } from 'siwe'
-import { ErrorType } from '.'
+import { AUTH_ERROR_TYPE, AUTH_STATUS } from '.'
 
 const createSiweMessage = (
   address: string,
@@ -32,13 +32,28 @@ export const verifyOwnershipEvm = async (
   isDev: boolean,
   provider: JsonRpcProvider,
   onVerificationComplete: () => void,
+  setAuthStatus: (authStatus?: AUTH_STATUS) => void,
+  setLoading: (loading: boolean) => void,
+  reset: () => void,
 ) => {
-  const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
-  const message = createSiweMessage(address, chainId, nonce, expiresAt)
-  const signer = await provider.getSigner()
-  const signature = await signer.signMessage(message)
-  await AuthService.verifySignature(message, signature, chainId, isDev)
-  onVerificationComplete()
+  try {
+    setLoading(true)
+    setAuthStatus(AUTH_STATUS.SignMessage)
+    const { nonce, expiresAt } = await AuthService.createSession(chainId, isDev)
+    const message = createSiweMessage(address, chainId, nonce, expiresAt)
+    const signer = await provider.getSigner()
+    const signature = await signer.signMessage(message)
+    setAuthStatus(undefined)
+    await AuthService.verifySignature(message, signature, chainId, isDev)
+    onVerificationComplete()
+  } catch (e) {
+    console.error(e)
+    reset()
+    throw e
+  } finally {
+    setLoading(false)
+    setAuthStatus(undefined)
+  }
 }
 
 export const useAuthErrorHandlingEvm = (
@@ -50,10 +65,13 @@ export const useAuthErrorHandlingEvm = (
     isWalletNotCreatedError: boolean
     isWalletNotSignInError: boolean
   },
-  setError: (error: any) => void,
-  setErrorType: (errorType: ErrorType) => void,
+  setAuthStatus: (authStatus?: AUTH_STATUS) => void,
+  setAuthErrorType: (authErrorType: AUTH_ERROR_TYPE) => void,
+  setServerReturnedError: (serverReturnedError: any) => void,
   setIsVerificationRequired: (isVerificationRequired: boolean) => void,
   handleVerificationCompletion: () => void,
+  setLoading: (loading: boolean) => void,
+  reset: () => void,
 ) => {
   const { account, chainId, provider } = useWeb3React()
 
@@ -87,7 +105,7 @@ export const useAuthErrorHandlingEvm = (
       isWalletNotCreatedError ||
       isWalletNotSignInError
     ) {
-      setErrorType('NotSignedIn')
+      setAuthErrorType(AUTH_ERROR_TYPE.NotSignedIn)
       setIsVerificationRequired(true)
       verifyOwnershipEvm(
         account,
@@ -95,11 +113,16 @@ export const useAuthErrorHandlingEvm = (
         isDev,
         provider,
         handleVerificationCompletion,
-      ).catch((e) => setError(e))
+        setAuthStatus,
+        setLoading,
+        reset,
+      ).catch((e) => {
+        setServerReturnedError(e)
+      })
     } else if ([4001, 'ACTION_REJECTED'].includes((error as any).code)) {
-      setErrorType('UserRejected')
+      setAuthErrorType(AUTH_ERROR_TYPE.UserRejected)
     } else {
-      setErrorType('Other')
+      setAuthErrorType(AUTH_ERROR_TYPE.Other)
     }
   }, [
     account,
@@ -110,8 +133,11 @@ export const useAuthErrorHandlingEvm = (
     handleVerificationCompletion,
     isDev,
     provider,
-    setError,
-    setErrorType,
+    reset,
+    setAuthErrorType,
     setIsVerificationRequired,
+    setAuthStatus,
+    setServerReturnedError,
+    setLoading,
   ])
 }

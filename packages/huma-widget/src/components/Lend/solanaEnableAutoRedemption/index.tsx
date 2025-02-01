@@ -7,11 +7,11 @@ import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { Transfer } from './2-Transfer'
 import { Success } from './3-Success'
 import { ApproveAllowance } from './1-ApproveAllowance'
+import { SolanaErrorModal } from '../../SolanaErrorModal'
 
 /**
  * Lend pool supply props
@@ -64,7 +64,8 @@ export function SolanaEnableAutoRedemption({
         />
       )}
       {step === WIDGET_STEP.Error && (
-        <ErrorModal
+        <SolanaErrorModal
+          chainId={poolInfo.chainId}
           title='Auto-Redemption'
           errorReason='Sorry there was an error'
           errorMessage={errorMessage}

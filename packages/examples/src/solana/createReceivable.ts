@@ -16,6 +16,7 @@ require('dotenv').config()
 
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
+  const HELIUS_API_KEY = process.env.HELIUS_API_KEY
   const connection = new Connection(
     'https://api.devnet.solana.com',
     'confirmed',
@@ -32,6 +33,7 @@ async function main() {
     connection: connection,
     chainId: SolanaChainEnum.SolanaDevnet,
     poolName: POOL_NAME.ArfCreditPool3Months,
+    heliusApiKey: HELIUS_API_KEY,
   })
 
   const humaReceivableHelper = new HumaSolanaReceivableHelper({
@@ -49,7 +51,7 @@ async function main() {
       currencyCode: '840',
       receivableAmount: new BN(100),
       maturityDate: new BN(oneWeekFromNow),
-      referenceId: 'test-reference-id6',
+      referenceId: 'test-reference-id9',
     },
   )
 

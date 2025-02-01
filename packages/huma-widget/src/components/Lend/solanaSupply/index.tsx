@@ -16,7 +16,6 @@ import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { ErrorModal } from '../../ErrorModal'
 import { PointsEarned } from '../../PointsEarned'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { Evaluation } from './1-Evaluation'
@@ -26,6 +25,7 @@ import { ChooseAmount } from './4-ChooseAmount'
 import { ApproveAllowance } from './5-ApproveAllowance'
 import { Transfer } from './6-Transfer'
 import { Success } from './7-Success'
+import { SolanaErrorModal } from '../../SolanaErrorModal'
 
 export interface Campaign {
   id: string
@@ -182,7 +182,8 @@ export function SolanaLendSupply({
         <PointsEarned lpConfig={poolState} handleAction={handleClose} />
       )}
       {step === WIDGET_STEP.Error && (
-        <ErrorModal
+        <SolanaErrorModal
+          chainId={poolInfo.chainId}
           title='Supply'
           errorReason='Sorry there was an error'
           errorMessage={errorMessage}

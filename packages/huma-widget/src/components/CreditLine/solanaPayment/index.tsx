@@ -8,10 +8,10 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { setStep } from '../../../store/widgets.reducers'
-import { ErrorModal } from '../../ErrorModal'
 import { ChooseAmount } from './1-ChooseAmount'
 import { Transfer } from './2-Transfer'
 import { Done } from './3-Done'
+import { SolanaErrorModal } from '../../SolanaErrorModal'
 
 /**
  * Lend pool supply props
@@ -74,7 +74,8 @@ export function SolanaPayment({
         <Done poolInfo={poolInfo} handleAction={handleClose} />
       )}
       {step === WIDGET_STEP.Error && (
-        <ErrorModal
+        <SolanaErrorModal
+          chainId={poolInfo.chainId}
           title={title}
           errorReason='Sorry there was an error'
           errorMessage={errorMessage}

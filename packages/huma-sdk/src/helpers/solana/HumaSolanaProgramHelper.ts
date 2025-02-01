@@ -1,5 +1,6 @@
 import { BN, utils } from '@coral-xyz/anchor'
 import {
+  calculateAvailablePoolBalance,
   convertToAssets,
   getCreditAccounts,
   getHumaProgram,
@@ -58,6 +59,7 @@ export class HumaSolanaProgramHelper {
       undefined,
       TOKEN_PROGRAM_ID,
     )
+    const poolStateAccount = await this.getPoolState()
 
     const { creditConfig, creditState } = accountInfo
     const principalAmount = creditState.creditRecord.unbilledPrincipal
@@ -65,13 +67,16 @@ export class HumaSolanaProgramHelper {
       .sub(creditState.creditRecord.yieldDue)
       .add(creditState.dueDetail.principalPastDue)
     const unusedCredit = creditConfig.creditLimit.sub(principalAmount)
-    const poolTokenBalanceBN = new BN(tokenAccount.amount.toString())
+    const availablePoolBalanceBN = calculateAvailablePoolBalance(
+      tokenAccount,
+      poolStateAccount,
+    )
     // Set available credit to the minimum of the pool balance or the credit available amount,
     // since both are upper bounds on the amount of credit that can be borrowed.
     // If either is negative, cap the available credit to 0.
-    const creditAvailable = unusedCredit.lt(poolTokenBalanceBN)
+    const creditAvailable = unusedCredit.lt(availablePoolBalanceBN)
       ? unusedCredit
-      : poolTokenBalanceBN
+      : availablePoolBalanceBN
     return creditAvailable.ltn(0) ? new BN(0) : creditAvailable
   }
 
@@ -439,7 +444,36 @@ export class HumaSolanaProgramHelper {
     return tx
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getPoolState(): Promise<{
+    accruedIncomes: { protocolIncome: BN; poolOwnerIncome: BN; eaIncome: BN }
+    incomeWithdrawn: {
+      eaIncomeWithdrawn: BN
+      poolOwnerIncomeWithdrawn: BN
+      protocolIncomeWithdrawn: BN
+    }
+    disbursementReserve: BN
+    trancheAssets: BN[]
+  }> {
+    const { chainId, poolName } = this.#solanaContext
+    const program = getHumaProgram(chainId, this.#solanaContext.connection)
+    const poolInfo = getSolanaPoolInfo(chainId, poolName)
+
+    if (!poolInfo) {
+      throw new Error('Could not find pool')
+    }
+
+    const poolStateAccountResult = await program.account.poolState.fetch(
+      new PublicKey(poolInfo.poolState),
+    )
+
+    return {
+      accruedIncomes: poolStateAccountResult.accruedIncomes,
+      incomeWithdrawn: poolStateAccountResult.incomeWithdrawn,
+      disbursementReserve: poolStateAccountResult.disbursementReserve,
+      trancheAssets: poolStateAccountResult.trancheAssets.assets,
+    }
+  }
+
   async getAccountInfo(): Promise<{
     creditConfig: {
       creditLimit: BN
