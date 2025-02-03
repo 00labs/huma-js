@@ -39,6 +39,7 @@ export const CELO_METADATA: PoolsInfoV2 = {
     extra: {
       rwrUploader: '0xEA57a8A51377752fFddaa3db4d13CE8F97677F2D',
     },
+    isClosed: true,
   },
   Raincards: {
     chainId: ChainEnum.Celo,
