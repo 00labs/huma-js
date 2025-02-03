@@ -61,6 +61,14 @@ const getPoolApyV2Base = (
   const totalDeployedAssetsBN = seniorDeployedAssetsBN.add(
     juniorDeployedAssetsBN,
   )
+  if (totalDeployedAssetsBN.eq(0)) {
+    return {
+      flcConfigsWithApy: [],
+      blendedApy: 0,
+      seniorTrancheApy: 0,
+      juniorTrancheApy: 0,
+    }
+  }
   if (liquidityCapBN.eq(0)) {
     liquidityCapBN = totalDeployedAssetsBN
   }
