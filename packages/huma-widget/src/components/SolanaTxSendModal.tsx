@@ -77,7 +77,6 @@ export function SolanaTxSendModal({
         return
       }
 
-      let signatureResult = ''
       try {
         // Optimize transaction
         // Make a copy of the tx so we can use the original tx for retries
