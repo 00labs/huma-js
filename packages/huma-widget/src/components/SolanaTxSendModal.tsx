@@ -77,15 +77,14 @@ export function SolanaTxSendModal({
         return
       }
 
-      let signatureResult = ''
       try {
         // Optimize transaction
         // Make a copy of the tx so we can use the original tx for retries
         const txCopy = new Transaction()
         txCopy.instructions = [...tx.instructions]
-        const recentBlockhash = await connection.getLatestBlockhash('confirmed')
-        txCopy.recentBlockhash = recentBlockhash.blockhash
-        txCopy.lastValidBlockHeight = recentBlockhash.lastValidBlockHeight
+        const txBlockhashData = await connection.getLatestBlockhash('confirmed')
+        txCopy.recentBlockhash = txBlockhashData.blockhash
+        txCopy.lastValidBlockHeight = txBlockhashData.lastValidBlockHeight
         txCopy.feePayer = publicKey
         // Extract writable accounts
         const txAccounts = extractWritableAccounts(txCopy)
@@ -99,39 +98,22 @@ export function SolanaTxSendModal({
           useHighPriority ? 'High' : undefined,
           process.env.REACT_APP_HELIUS_API_KEY,
         )
-        signatureResult = await sendTransaction(optimizedTx, connection, {
-          preflightCommitment: 'confirmed',
-          skipPreflight: true,
-        })
+        const signedTx = await signTransaction(optimizedTx)
+        const signatureResult = await connection.sendRawTransaction(
+          signedTx.serialize(),
+          {
+            preflightCommitment: 'confirmed',
+            skipPreflight: true,
+            maxRetries: 0,
+          },
+        )
         setSignature(signatureResult)
         dispatch(setSolanaSignature(signatureResult))
-        await connection.confirmTransaction({
-          blockhash: optimizedTx.recentBlockhash!,
-          lastValidBlockHeight: optimizedTx.lastValidBlockHeight!,
-          signature: signatureResult,
-        })
-        const txResult = await connection.getParsedTransaction(
-          signatureResult,
-          'confirmed',
-        )
-        if (txResult?.meta?.err) {
-          dispatch(
-            setError({
-              errorMessage:
-                'Your transaction was confirmed but had errors. Please check the transaction details on the explorer for more information.',
-            }),
-          )
-          return
-        }
-        handleSuccess({ signature: signatureResult })
-      } catch (error: unknown) {
-        console.log(error)
 
-        let signatureStatusRetries = 0
-        while (signatureStatusRetries < 5) {
-          // Attempt to load the signature status using transaction history
-          // eslint-disable-next-line no-await-in-loop
-          await sleep(1000)
+        // Loop and poll the transaction continuously until it is either confirmed or
+        // the block height has been exceeded
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
           // eslint-disable-next-line no-await-in-loop
           const result = await connection.getSignatureStatus(signatureResult, {
             searchTransactionHistory: true,
@@ -153,16 +135,27 @@ export function SolanaTxSendModal({
             return
           }
 
-          signatureStatusRetries += 1
+          // eslint-disable-next-line no-await-in-loop
+          const latestBlockhash = await connection.getLatestBlockhash(
+            'confirmed',
+          )
+          if (
+            latestBlockhash.lastValidBlockHeight -
+              optimizedTx.lastValidBlockHeight! >
+            100
+          ) {
+            setShowRetryScreen(true)
+            return
+          }
+
+          // eslint-disable-next-line no-await-in-loop
+          await sleep(1000)
         }
+      } catch (error: unknown) {
+        console.log(error)
 
         const err = error as Error
-        if (err?.message?.includes('block height exceeded')) {
-          // Allow the user to retry the transaction
-          setShowRetryScreen(true)
-        } else {
-          dispatch(setError({ errorMessage: err?.message || '' }))
-        }
+        dispatch(setError({ errorMessage: err?.message || '' }))
       }
     }
     sendTx()
