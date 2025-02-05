@@ -32,7 +32,7 @@ export function SolanaTxSendModal({
   const { connection } = useConnection()
   const [signature, setSignature] = useState<string>('')
   const [showRetryScreen, setShowRetryScreen] = useState<boolean>(false)
-  const [useHighPriority, setUseHighPriority] = useState<boolean>(false)
+  const [useHighPriority, setUseHighPriority] = useState<boolean>(true)
   const [refreshCount, refresh] = useForceRefresh()
 
   const styles = {
