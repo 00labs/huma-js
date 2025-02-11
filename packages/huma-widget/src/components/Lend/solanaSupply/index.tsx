@@ -56,6 +56,9 @@ export function SolanaLendSupply({
   handleClose,
   handleSuccess,
 }: SolanaLendSupplyProps): React.ReactElement | null {
+  console.log(import.meta.env.DEV)
+  console.log(import.meta.env.VITE_NOTIFI_CONFIG_ID)
+  console.log('test')
   const dispatch = useDispatch()
   const { isUniTranche } = poolState
   const {

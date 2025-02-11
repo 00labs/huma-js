@@ -37,6 +37,7 @@
     "postCommit": "bash .husky/post-commit"
   },
   "devDependencies": {
-    "lerna": "^6.6.1"
+    "lerna": "^6.6.1",
+    "vite": "6.0.11"
   }
 }
