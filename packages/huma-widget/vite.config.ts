@@ -17,7 +17,7 @@ export default defineConfig({
         'react',
         '@solana/wallet-adapter-react',
         '@solana/wallet-adapter-base',
-        '@ethersproject/providers',
+        '@huma-finance/web-shared',
       ], // Mark dependencies as external
       output: {
         globals: {
@@ -31,10 +31,6 @@ export default defineConfig({
   // between the monorepo packages: https://github.com/vitejs/vite/discussions/13410
   resolve: {
     alias: {
-      '@ethersproject/providers': path.resolve(
-        __dirname,
-        '../../../../node_modules/@ethersproject/providers',
-      ),
       '@solana/wallet-adapter-react': path.resolve(
         __dirname,
         '../../../../node_modules/@solana/wallet-adapter-react',
@@ -42,6 +38,10 @@ export default defineConfig({
       '@solana/wallet-adapter-base': path.resolve(
         __dirname,
         '../../../../node_modules/@solana/wallet-adapter-base',
+      ),
+      '@huma-finance/web-shared': path.resolve(
+        __dirname,
+        '../huma-web-shared/src',
       ),
     },
   },
