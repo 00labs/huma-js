@@ -61,7 +61,7 @@ describe.skip('useAuthErrorHandling', () => {
 
     const { result } = renderHook(() => useAuthErrorHandling(true))
     act(() => {
-      result.current.setError(authError)
+      result.current.setAuthError(authError)
     })
     await waitFor(() =>
       expect(result.current.isWalletOwnershipVerificationRequired).toBeTruthy(),
@@ -80,7 +80,7 @@ describe.skip('useAuthErrorHandling', () => {
 
     const { result } = renderHook(() => useAuthErrorHandling(true))
     act(() => {
-      result.current.setError(otherError)
+      result.current.setAuthError(otherError)
     })
     await waitFor(() =>
       expect(result.current.isWalletOwnershipVerificationRequired).toBeFalsy(),
@@ -99,7 +99,7 @@ describe.skip('useAuthErrorHandling', () => {
 
     const { result } = renderHook(() => useAuthErrorHandling(true))
     act(() => {
-      result.current.setError(otherError)
+      result.current.setAuthError(otherError)
     })
     await waitFor(() =>
       expect(result.current.isWalletOwnershipVerificationRequired).toBeFalsy(),
@@ -118,7 +118,7 @@ describe.skip('useAuthErrorHandling', () => {
 
     const { result } = renderHook(() => useAuthErrorHandling(true))
     act(() => {
-      result.current.setError(otherError)
+      result.current.setAuthError(otherError)
     })
     await waitFor(() =>
       expect(result.current.isWalletOwnershipVerificationRequired).toBeFalsy(),
@@ -154,7 +154,7 @@ describe.skip('useAuthErrorHandling', () => {
     try {
       const { result } = renderHook(() => useAuthErrorHandling(true))
       act(() => {
-        result.current.setError(otherError)
+        result.current.setAuthError(otherError)
       })
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -180,7 +180,7 @@ describe.skip('useAuthErrorHandling', () => {
     try {
       const { result } = renderHook(() => useAuthErrorHandling(true))
       act(() => {
-        result.current.setError(authError)
+        result.current.setAuthError(authError)
       })
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect

@@ -325,6 +325,7 @@ export const PoolContractMap: PoolContractMapType = {
           disableBorrow: true,
           detailsPage: true,
         },
+        isClosed: true,
       },
       [POOL_NAME.BSOS]: {
         chainId: ChainEnum.Polygon,

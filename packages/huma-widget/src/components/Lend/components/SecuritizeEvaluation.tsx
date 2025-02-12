@@ -19,11 +19,11 @@ import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError } from '../../../store/widgets.reducers'
+import { BottomButton } from '../../BottomButton'
 import { HumaSnackBar } from '../../HumaSnackBar'
+import { LoadingModal } from '../../LoadingModal'
 import { WrapperModal } from '../../WrapperModal'
 import { ApproveLenderImg } from '../../images'
-import { BottomButton } from '../../BottomButton'
-import { LoadingModal } from '../../LoadingModal'
 
 const LoadingCopiesByType: {
   [key: string]: {
@@ -52,11 +52,8 @@ export function SecuritizeEvaluation({
   const dispatch = useAppDispatch()
   const { account, chainId } = useWeb3React()
   const { kycProvider, code, kycPool } = useParamsSearch()
-  const {
-    isWalletOwnershipVerified,
-    setError: setAuthError,
-    error: authError,
-  } = useAuthErrorHandling(isDev)
+  const { isWalletOwnershipVerified, setAuthError, authError } =
+    useAuthErrorHandling(isDev)
   const [loadingType, setLoadingType] = useState<
     'verificationStatus' | 'sendDocSignatureLink'
   >()

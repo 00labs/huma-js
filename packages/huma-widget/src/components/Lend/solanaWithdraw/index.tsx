@@ -63,6 +63,16 @@ export function SolanaLendWithdraw({
     SolanaTokenUtils.formatUnits(withdrawableAmount, decimals),
     2,
   )
+  const [withdrawnAmount, setWithdrawnAmount] = useState<BN>()
+
+  // After withdrawn success, the handleSuccess will refresh
+  // the lenderStateAccount which will update the withdrawableAmount to 0
+  // so we need to keep the withdrawnAmount to show in the Done step
+  useEffect(() => {
+    if (!withdrawnAmount) {
+      setWithdrawnAmount(withdrawableAmount)
+    }
+  }, [withdrawableAmount, withdrawnAmount])
 
   useEffect(() => {
     if (!step) {
@@ -118,10 +128,10 @@ export function SolanaLendWithdraw({
           poolIsClosed={poolIsClosed}
         />
       )}
-      {step === WIDGET_STEP.Done && (
+      {step === WIDGET_STEP.Done && withdrawnAmount && (
         <Done
           poolUnderlyingToken={poolInfo.underlyingMint}
-          withdrawAmount={withdrawableAmount}
+          withdrawAmount={withdrawnAmount}
           handleAction={handleClose}
         />
       )}
