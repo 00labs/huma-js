@@ -4,15 +4,23 @@ import {
   SolanaTokenUtils,
   TrancheType,
 } from '@huma-finance/shared'
-import { LenderStateAccount, SolanaPoolState } from '@huma-finance/web-shared'
+import {
+  LenderStateAccount,
+  LoggingContext,
+  LoggingContextHelper,
+  SolanaPoolState,
+} from '@huma-finance/web-shared'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { BN } from '@coral-xyz/anchor'
 import { Mint } from '@solana/spl-token'
 import { useAppSelector } from '../../../hooks/useRedux'
-import { setStep } from '../../../store/widgets.reducers'
-import { selectWidgetState } from '../../../store/widgets.selectors'
+import { setLoggingContext, setStep } from '../../../store/widgets.reducers'
+import {
+  selectWidgetLoggingContext,
+  selectWidgetState,
+} from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
@@ -64,6 +72,12 @@ export function SolanaLendWithdraw({
     2,
   )
   const [withdrawnAmount, setWithdrawnAmount] = useState<BN>()
+  const loggingHelper = useAppSelector(selectWidgetLoggingContext)
+
+  const handleCloseFlow = () => {
+    loggingHelper.logAction('ExitFlow', {})
+    handleClose()
+  }
 
   // After withdrawn success, the handleSuccess will refresh
   // the lenderStateAccount which will update the withdrawableAmount to 0
@@ -76,9 +90,20 @@ export function SolanaLendWithdraw({
 
   useEffect(() => {
     if (!step) {
+      // Set initial logging context
+      const context: LoggingContext = {
+        flow: 'Withdraw',
+        chainId: poolInfo.chainId,
+        poolName: poolInfo.poolName,
+        poolType: poolInfo.poolType,
+      }
+      const loggingHelperInit = new LoggingContextHelper(context)
+      loggingHelperInit.logAction('StartFlow', {})
+      dispatch(setLoggingContext(context))
+
       dispatch(setStep(WIDGET_STEP.ConfirmTransfer))
     }
-  }, [dispatch, step])
+  }, [dispatch, poolInfo.chainId, poolInfo.poolName, poolInfo.poolType, step])
 
   useEffect(() => {
     const trancheAssets =
@@ -111,7 +136,7 @@ export function SolanaLendWithdraw({
     <WidgetWrapper
       isOpen
       loadingTitle={title}
-      handleClose={handleClose}
+      handleClose={handleCloseFlow}
       handleSuccess={handleWithdrawSuccess}
     >
       {step === WIDGET_STEP.ConfirmTransfer && (
@@ -132,7 +157,7 @@ export function SolanaLendWithdraw({
         <Done
           poolUnderlyingToken={poolInfo.underlyingMint}
           withdrawAmount={withdrawnAmount}
-          handleAction={handleClose}
+          handleAction={handleCloseFlow}
         />
       )}
       {step === WIDGET_STEP.Error && (
@@ -140,7 +165,7 @@ export function SolanaLendWithdraw({
           title={title}
           errorReason='Sorry there was an error'
           errorMessage={errorMessage}
-          handleOk={handleClose}
+          handleOk={handleCloseFlow}
         />
       )}
     </WidgetWrapper>
