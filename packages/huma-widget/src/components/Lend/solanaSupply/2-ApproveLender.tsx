@@ -8,6 +8,7 @@ import {
 import React from 'react'
 
 import { ApproveLenderBase } from '../components/ApproveLenderBase'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -22,6 +23,8 @@ export function ApproveLender({
   documentHash,
   changeTranche,
 }: Props): React.ReactElement | null {
+  useLogOnFirstMount('ApproveLender', {})
+
   const solanaChainInfo = SOLANA_CHAIN_INFO[poolInfo.chainId]
 
   return (

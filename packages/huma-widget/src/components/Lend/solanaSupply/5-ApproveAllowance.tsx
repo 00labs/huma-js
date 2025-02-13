@@ -8,12 +8,14 @@ import { WIDGET_STEP } from '../../../store/widgets.store'
 import { setStep } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { AutoPaybackImg } from '../../images'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolState: SolanaPoolState
 }
 
 export function ApproveAllowance({ poolState }: Props): React.ReactElement {
+  useLogOnFirstMount('ApproveAllowance', {})
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const handleNext = useCallback(() => {
