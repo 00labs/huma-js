@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  checkIsDev,
   doesChainSupportNotifi,
   getBlockchainConfigFromChain,
 } from '@huma-finance/shared'
@@ -13,6 +12,7 @@ import {
   useNotifiFrontendClientContext,
   useNotifiUserSettingContext,
 } from '@notifi-network/notifi-react'
+import { checkIsDev } from '@huma-finance/web-shared'
 
 export const useDoesChainSupportNotifi = (chainId: number | undefined) => {
   const [notifiChainSupported, setNotifiChainSupported] = useState(false)

@@ -47,7 +47,7 @@ export interface Campaign {
 export interface LendSupplyPropsV2 {
   poolName: keyof typeof POOL_NAME
   campaign?: Campaign
-  documentHash: string
+  documentHash?: string
   handleClose: (options?: CloseModalOptions) => void
   handleSuccess?: (blockNumber?: number) => void
 }

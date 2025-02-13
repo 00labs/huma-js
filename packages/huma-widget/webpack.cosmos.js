@@ -41,7 +41,7 @@ module.exports = (webpackConfig) => {
         ...Object.entries(dotenv.config().parsed).reduce(
           (acc, curr) => ({
             ...acc,
-            [`process.env.${curr[0]}`]: JSON.stringify(curr[1]),
+            [`import.meta.env.${curr[0]}`]: JSON.stringify(curr[1]),
           }),
           {},
         ),
