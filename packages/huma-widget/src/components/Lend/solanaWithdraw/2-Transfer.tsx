@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { SolanaTxSendModal } from '../../SolanaTxSendModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -24,6 +25,7 @@ export function Transfer({
   selectedTranche,
   poolIsClosed,
 }: Props): React.ReactElement | null {
+  useLogOnFirstMount('Transaction', {})
   const { publicKey } = useWallet()
   const dispatch = useAppDispatch()
   const program = useHumaProgram(poolInfo.chainId)

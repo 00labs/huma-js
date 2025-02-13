@@ -1,4 +1,5 @@
 import { Approval } from '@huma-finance/shared'
+import { LoggingContext } from '@huma-finance/web-shared'
 
 export enum WIDGET_TYPE {
   BORROW = 'BORROW',
@@ -62,6 +63,7 @@ export type WidgetState = {
   solanaSignature?: string
   pointsAccumulated?: number
   txHash?: string
+  loggingContext?: LoggingContext
 }
 
 export const initialWidgetState: WidgetState = {}
