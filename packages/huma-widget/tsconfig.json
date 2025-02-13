@@ -17,7 +17,11 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2020"
+    "target": "ES2020",
+    "paths": {
+      "@huma-finance/web-shared": ["../huma-web-shared/src"],
+      "@huma-finance/shared": ["../huma-shared/src"]
+    }
   },
   "include": ["src/**/*", "src/**/*.json", "./*.ts", "./*.d.ts"],
   "references": [
