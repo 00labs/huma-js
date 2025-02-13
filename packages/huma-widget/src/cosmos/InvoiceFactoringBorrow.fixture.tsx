@@ -64,7 +64,7 @@ function Fixture() {
           type='link'
           variant='contained'
           href={
-            process.env.REACT_APP_CREATE_INVOICE_URL ??
+            import.meta.env.VITE_CREATE_INVOICE_URL ??
             'https://huma-request-apps-create.netlify.app/'
           }
           target='_blank'
