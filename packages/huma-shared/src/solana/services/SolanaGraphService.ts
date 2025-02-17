@@ -44,7 +44,7 @@ function getRecentActivities(
   | undefined
 > {
   const { owner, events } = filters || {}
-  const url = configUtil.getSolanaGraphAPIUrl(isDev, isTestnet)
+  const url = configUtil.getSolanaGraphAPIUrl(isTestnet, isDev)
 
   let options = `
         poolConfigPDA: "${poolConfig}", 
@@ -113,7 +113,7 @@ function getReceivableLivestream(
     }
   | undefined
 > {
-  const url = configUtil.getSolanaGraphAPIUrl(isDev, isTestnet)
+  const url = configUtil.getSolanaGraphAPIUrl(isTestnet, isDev)
 
   const query = gql`
     query {

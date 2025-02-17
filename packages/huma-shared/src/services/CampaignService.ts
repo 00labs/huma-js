@@ -99,7 +99,7 @@ function checkWalletOwnership(
   networkType: NETWORK_TYPE,
   isDev: boolean,
 ): Promise<boolean | undefined> {
-  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
 
   const query = gql`
     query {
@@ -136,7 +136,7 @@ function getLeaderboard(
   networkType: NETWORK_TYPE,
   isDev: boolean,
 ): Promise<LeaderboardItem[] | undefined> {
-  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
 
   const query = gql`
     query {
@@ -184,7 +184,7 @@ function getHumaAccountRanking(
   networkType: NETWORK_TYPE,
   isDev: boolean,
 ): Promise<LeaderboardItem | undefined> {
-  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
 
   const query = gql`
     query {
@@ -230,7 +230,7 @@ function getHumaAccountPoints(
   networkType: NETWORK_TYPE,
   isDev: boolean,
 ): Promise<HumaAccountPoints | undefined> {
-  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
 
   const query = gql`
     query {
@@ -290,7 +290,7 @@ function getEstimatedPoints(
   networkType: NETWORK_TYPE,
   isDev: boolean,
 ): Promise<CampaignPoints[]> {
-  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
 
   const query = gql`
     query {
@@ -344,7 +344,7 @@ function updateHumaAccountPoints(
   networkType: NETWORK_TYPE,
   isDev: boolean,
 ): Promise<{ pointsAccumulated?: number }> {
-  const url = configUtil.getCampaignAPIUrlV2(networkType, isDev)
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
 
   const query = gql`
     mutation {
