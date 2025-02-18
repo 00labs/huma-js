@@ -1,7 +1,9 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AuthService, CHAIN_TYPE, CHAINS } from '@huma-finance/shared'
+import { AuthService, CHAIN_TYPE, CHAINS, timeUtil } from '@huma-finance/shared'
 import { useWeb3React } from '@web3-react/core'
+import { AxiosError, HttpStatusCode } from 'axios'
 import { useEffect } from 'react'
 import { SiweMessage } from 'siwe'
 import { AUTH_ERROR_TYPE, AUTH_STATUS } from '.'
@@ -26,6 +28,37 @@ const createSiweMessage = (
   return message.prepareMessage()
 }
 
+// Reference: https://docs.safe.global/sdk-protocol-kit/guides/signatures/messages#on-chain
+// For gnosis safe signature verification, we need to check the signature from on-chain
+// As there is no easy way to get the tx hash, so we loop and check the signature from on-chain multiple times
+const verifyGnosisSafeSignature = async (
+  message: string,
+  signature: string,
+  chainId: number,
+  isDev: boolean,
+) => {
+  const TEN_SECONDS = 10000
+  await timeUtil.sleep(TEN_SECONDS)
+  let tryAttempts = 4
+  while (tryAttempts > 0) {
+    try {
+      tryAttempts -= 1
+      await AuthService.verifySignature(message, signature, chainId, isDev)
+      tryAttempts = 0
+    } catch (e: unknown) {
+      if (tryAttempts === 0) {
+        throw e
+      }
+
+      if (e instanceof AxiosError && e.status === HttpStatusCode.Unauthorized) {
+        await timeUtil.sleep(TEN_SECONDS)
+      } else {
+        throw e
+      }
+    }
+  }
+}
+
 export const verifyOwnershipEvm = async (
   address: string,
   chainId: number,
@@ -44,7 +77,14 @@ export const verifyOwnershipEvm = async (
     const signer = await provider.getSigner()
     const signature = await signer.signMessage(message)
     setAuthStatus(undefined)
-    await AuthService.verifySignature(message, signature, chainId, isDev)
+
+    // If the signature is empty, it means the user is using gnosis safe
+    if (signature === '0x') {
+      await verifyGnosisSafeSignature(message, signature, chainId, isDev)
+    } else {
+      await AuthService.verifySignature(message, signature, chainId, isDev)
+    }
+
     onVerificationComplete()
   } catch (e) {
     console.error(e)
