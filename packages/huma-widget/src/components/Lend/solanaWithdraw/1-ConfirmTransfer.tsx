@@ -6,6 +6,7 @@ import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
@@ -18,6 +19,7 @@ export function ConfirmTransfer({
   withdrawableAmountFormatted,
   sharePrice,
 }: Props): React.ReactElement {
+  useLogOnFirstMount('ConfirmTransfer', {})
   const theme = useTheme()
   const dispatch = useDispatch()
   const { symbol } = poolUnderlyingToken

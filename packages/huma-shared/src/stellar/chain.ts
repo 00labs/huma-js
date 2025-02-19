@@ -3,15 +3,17 @@ export enum StellarChainEnum {
   StellarTestnet = 1501,
 }
 
-export const STELLAR_CHAINS = {
+export const STELLAR_CHAINS: {
+  [chainId: number]: { id: number; name: string; isTestnet: boolean }
+} = {
   [StellarChainEnum.StellarTestnet]: {
     id: StellarChainEnum.StellarTestnet,
-    name: 'testnet',
+    name: 'StellarTestnet',
     isTestnet: true,
   },
   [StellarChainEnum.StellarMainnet]: {
     id: StellarChainEnum.StellarMainnet,
-    name: 'mainnet',
+    name: 'StellarMainnet',
     isTestnet: false,
   },
 }

@@ -1,5 +1,6 @@
 import { Approval } from '@huma-finance/shared'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { LoggingContext } from '@huma-finance/web-shared'
 
 import {
   initialWidgetState,
@@ -34,6 +35,7 @@ export const widgetSlice = createSlice({
       state.redeemShares = undefined
       state.solanaSignature = undefined
       state.txHash = undefined
+      state.loggingContext = undefined
     },
     setStep: (state, { payload }: PayloadAction<WIDGET_STEP>) => {
       state.step = payload
@@ -116,6 +118,9 @@ export const widgetSlice = createSlice({
     ) => {
       state.pointsAccumulated = payload
     },
+    setLoggingContext: (state, { payload }: PayloadAction<LoggingContext>) => {
+      state.loggingContext = payload
+    },
     setError: (
       state,
       {
@@ -147,6 +152,7 @@ export const {
   setSolanaSignature,
   setTxHash,
   setPointsAccumulated,
+  setLoggingContext,
 } = widgetSlice.actions
 
 export default widgetSlice.reducer

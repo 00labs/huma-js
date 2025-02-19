@@ -9,11 +9,12 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { useForceRefresh } from '@huma-finance/web-shared'
 import { Box, Button, css, Typography, useTheme } from '@mui/material'
-import { useAppDispatch } from '../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { setError, setSolanaSignature } from '../store/widgets.reducers'
 import { LoadingModal } from './LoadingModal'
 import { SolanaViewOnExplorer } from './SolanaViewOnExplorer'
 import { SorryImg } from './images'
+import { selectWidgetLoggingContext } from '../store/widgets.selectors'
 
 type Props = {
   chainId: SolanaChainEnum
@@ -33,6 +34,7 @@ export function SolanaTxSendModal({
   const [signature, setSignature] = useState<string>('')
   const [showRetryScreen, setShowRetryScreen] = useState<boolean>(false)
   const [useHighPriority, setUseHighPriority] = useState<boolean>(true)
+  const loggingHelper = useAppSelector(selectWidgetLoggingContext)
   const [refreshCount, refresh] = useForceRefresh()
 
   const styles = {
@@ -98,7 +100,14 @@ export function SolanaTxSendModal({
           useHighPriority ? 'High' : undefined,
           process.env.REACT_APP_HELIUS_API_KEY,
         )
+        loggingHelper.logAction('SigningTransaction', {
+          priceData: optimizedTx.instructions[0].data,
+          unitsData: optimizedTx.instructions[1].data,
+          recentBlockhash: optimizedTx.recentBlockhash,
+          lastValidBlockHeight: optimizedTx.lastValidBlockHeight,
+        })
         const signedTx = await signTransaction(optimizedTx)
+        loggingHelper.logAction('SendingTransaction', {})
         const signatureResult = await connection.sendRawTransaction(
           signedTx.serialize(),
           {
@@ -123,6 +132,9 @@ export function SolanaTxSendModal({
             result?.value?.confirmationStatus === 'confirmed'
           ) {
             if (result?.value?.err) {
+              loggingHelper.logAction('TransactionError', {
+                signature: signatureResult,
+              })
               dispatch(
                 setError({
                   errorMessage:
@@ -131,6 +143,10 @@ export function SolanaTxSendModal({
               )
               return
             }
+
+            loggingHelper.logAction('TransactionSuccess', {
+              signature: signatureResult,
+            })
             handleSuccess({ signature: signatureResult })
             return
           }
@@ -144,6 +160,9 @@ export function SolanaTxSendModal({
               optimizedTx.lastValidBlockHeight! >
             100
           ) {
+            loggingHelper.logAction('ShowRetryScreenDueToExpiration', {
+              signature: signatureResult,
+            })
             setShowRetryScreen(true)
             return
           }
@@ -155,6 +174,8 @@ export function SolanaTxSendModal({
         console.log(error)
 
         const err = error as Error
+        loggingHelper.logAction('UnknownError', { error: err?.message })
+        loggingHelper.logError(err)
         dispatch(setError({ errorMessage: err?.message || '' }))
       }
     }
@@ -170,6 +191,7 @@ export function SolanaTxSendModal({
     tx,
     refreshCount,
     useHighPriority,
+    loggingHelper,
   ])
 
   const handleRetry = useCallback(

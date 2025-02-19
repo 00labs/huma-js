@@ -14,6 +14,7 @@ import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { SolanaTxDoneModal } from '../../SolanaTxDoneModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -28,6 +29,7 @@ export function Success({
   campaign,
   handleAction,
 }: Props): React.ReactElement {
+  useLogOnFirstMount('Success', {})
   const dispatch = useDispatch()
   const { supplyAmount, solanaSignature } = useAppSelector(selectWidgetState)
   const { symbol } = poolInfo.underlyingMint
