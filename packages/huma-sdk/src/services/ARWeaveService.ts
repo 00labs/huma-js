@@ -6,7 +6,7 @@ import {
   UploadResponse,
 } from '@irys/sdk/build/cjs/common/types'
 import axios from 'axios'
-import request, { gql } from 'graphql-request'
+import { request, gql } from 'graphql-request'
 
 /**
  * The configuration for Bundlr network instances

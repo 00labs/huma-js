@@ -1,6 +1,5 @@
 import {
   CampaignService,
-  checkIsDev,
   convertToShares,
   getTokenAccounts,
   NETWORK_TYPE,
@@ -13,6 +12,7 @@ import {
   useHumaProgram,
   useLenderAccounts,
   useTrancheTokenAccounts,
+  checkIsDev,
 } from '@huma-finance/web-shared'
 import {
   createApproveCheckedInstruction,

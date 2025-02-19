@@ -5,7 +5,6 @@ import STEAM_FACTORING_POOL_ABI from '../abis/StreamFactoringPool.json'
 import TRADABLE_STREAM_ABI from '../abis/TradableStream.json'
 import { IndustryType } from '../v2'
 import { ChainEnum } from './chain'
-import { configUtil } from './config'
 
 export enum POOL_NAME {
   HumaCreditLine = 'HumaCreditLine',
@@ -741,46 +740,6 @@ export function getPoolInfo(
     return undefined
   }
   return PoolContractMap[chainId]?.[poolType]?.[poolName]
-}
-
-export function usePools(
-  chainId: number | undefined,
-): Array<{ poolName: POOL_NAME; poolType: POOL_TYPE }> {
-  if (chainId === undefined) {
-    chainId = configUtil.DEFAULT_CHAIN_ID
-  }
-
-  const chainPools = PoolContractMap[chainId] || {}
-  const pools: Array<{
-    poolName: POOL_NAME
-    poolType: POOL_TYPE
-    order: number
-  }> = []
-  Object.values(POOL_TYPE).forEach((poolType: POOL_TYPE) => {
-    const poolConfig = chainPools[poolType]
-    if (poolConfig) {
-      Object.keys(poolConfig).forEach((poolName) => {
-        const enumPoolName = poolName as POOL_NAME
-        pools.push({
-          poolName: enumPoolName,
-          poolType,
-          order: poolConfig[enumPoolName]?.extra?.order ?? 0,
-        })
-      })
-    }
-  })
-
-  const poolOrderingCompare = (
-    poolA: { poolName: POOL_NAME; order: number },
-    poolB: { poolName: POOL_NAME; order: number },
-  ): number => poolB.order - poolA.order
-
-  pools.sort(poolOrderingCompare)
-
-  return pools.map((pool) => ({
-    poolName: pool.poolName,
-    poolType: pool.poolType,
-  }))
 }
 
 export function getPoolInfoForPoolAddress(

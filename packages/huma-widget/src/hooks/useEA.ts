@@ -1,12 +1,11 @@
 import {
-  checkIsDev,
   EAPayload,
   EARejectionError,
   EARejectMessage,
   EARejectReason,
   EAService,
 } from '@huma-finance/shared'
-import { useAuthErrorHandling } from '@huma-finance/web-shared'
+import { useAuthErrorHandling, checkIsDev } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 

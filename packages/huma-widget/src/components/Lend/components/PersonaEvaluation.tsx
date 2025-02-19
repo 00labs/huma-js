@@ -1,6 +1,5 @@
 import {
   CHAIN_TYPE,
-  checkIsDev,
   CloseModalOptions,
   IdentityServiceV2,
   IdentityVerificationStatusV2,
@@ -9,7 +8,11 @@ import {
   NETWORK_TYPE,
   VerificationStatusResultV2,
 } from '@huma-finance/shared'
-import { AUTH_ERROR_TYPE, useAuthErrorHandling } from '@huma-finance/web-shared'
+import {
+  AUTH_ERROR_TYPE,
+  useAuthErrorHandling,
+  checkIsDev,
+} from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import Persona, { Client } from 'persona'
 import React, { useCallback, useEffect, useRef, useState } from 'react'

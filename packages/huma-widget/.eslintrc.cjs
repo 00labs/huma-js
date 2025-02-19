@@ -36,7 +36,7 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-uses-react': 'off',
-    'react/jsx-props-no-spreading': 'warn',
+    'react/jsx-props-no-spreading': 'off',
     'react/no-unescaped-entities': 'off',
     'jsx-quotes': 'off',
     semi: 'off',
@@ -48,7 +48,6 @@ module.exports = {
     'react/require-default-props': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
-    'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/no-explicit-any': 'error',
     'no-console': 'off',
     '@typescript-eslint/naming-convention': [
