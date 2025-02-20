@@ -8,6 +8,9 @@ import { useEffect } from 'react'
 import { SiweMessage } from 'siwe'
 import { AUTH_ERROR_TYPE, AUTH_STATUS } from '.'
 
+const TEN_SECONDS = 10000
+const MAX_RETRY_COUNT = 4
+
 const createSiweMessage = (
   address: string,
   chainId: number,
@@ -37,21 +40,20 @@ const verifyGnosisSafeSignature = async (
   chainId: number,
   isDev: boolean,
 ) => {
-  const TEN_SECONDS = 10000
   await timeUtil.sleep(TEN_SECONDS)
-  let tryAttempts = 4
-  while (tryAttempts > 0) {
+  let retryCount = 0
+  while (retryCount < MAX_RETRY_COUNT) {
     try {
-      tryAttempts -= 1
+      retryCount += 1
       await AuthService.verifySignature(message, signature, chainId, isDev)
-      tryAttempts = 0
+      break
     } catch (e: unknown) {
-      if (tryAttempts === 0) {
+      if (retryCount >= MAX_RETRY_COUNT) {
         throw e
       }
 
       if (e instanceof AxiosError && e.status === HttpStatusCode.Unauthorized) {
-        await timeUtil.sleep(TEN_SECONDS)
+        await timeUtil.sleep(TEN_SECONDS * retryCount)
       } else {
         throw e
       }
