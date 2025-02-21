@@ -6,7 +6,7 @@ module.exports = {
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
   coverageReporters: ['json-summary', 'text', 'lcov'],
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!graphql-request)'],
   moduleNameMapper: {
     '^@huma-finance/shared$': '<rootDir>/../huma-shared/src',
     // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451

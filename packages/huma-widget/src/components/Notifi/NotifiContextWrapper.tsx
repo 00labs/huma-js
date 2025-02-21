@@ -29,14 +29,14 @@ export function NotifiContextWrapper({
 
   let cardId = ''
   if (chainId === ChainEnum.Celo || chainId === ChainEnum.Alfajores) {
-    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_CELO ?? ''
+    cardId = import.meta.env.VITE_NOTIFI_CONFIG_ID_CELO ?? ''
   } else if (chainId === ChainEnum.Polygon || chainId === ChainEnum.Amoy) {
-    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_POLYGON ?? ''
+    cardId = import.meta.env.VITE_NOTIFI_CONFIG_ID_POLYGON ?? ''
   } else if (
     chainId === ChainEnum.Scroll ||
     chainId === ChainEnum.ScrollSepolia
   ) {
-    cardId = process.env.REACT_APP_NOTIFI_CONFIG_ID_SCROLL ?? ''
+    cardId = import.meta.env.VITE_NOTIFI_CONFIG_ID_SCROLL ?? ''
   }
 
   if (!cardId) {

@@ -14,7 +14,7 @@ type Props = {
   poolInfo: PoolInfoV2
   networkType: NETWORK_TYPE
   campaign?: Campaign
-  documentHash: string
+  documentHash?: string
   handleClose: (options?: CloseModalOptions) => void
 }
 
@@ -30,7 +30,7 @@ export function Evaluation({
       <SecuritizeEvaluation poolInfo={poolInfo} handleClose={handleClose} />
     )
   }
-  if (poolInfo.KYC?.Persona) {
+  if (poolInfo.KYC?.Persona && documentHash) {
     return (
       <PersonaEvaluation
         poolInfo={poolInfo}

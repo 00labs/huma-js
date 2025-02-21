@@ -6,14 +6,14 @@ require('dotenv').config()
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.VITE_ALCHEMY_API_KEY}`,
     {
       name: 'Mumbai',
       chainId: ChainEnum.Mumbai,
     },
   )
   //   const provider = new ethers.providers.JsonRpcProvider(
-  //     `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
+  //     `https://goerli.infura.io/v3/${process.env.VITE_INFURA_API_KEY}`,
   //     {
   //       name: "Goerli",
   //       chainId: ChainEnum.Goerli,

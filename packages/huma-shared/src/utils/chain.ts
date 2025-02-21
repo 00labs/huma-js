@@ -36,6 +36,7 @@ export interface BasicChainInformation {
   name: string
   explorer: string
   wait: number
+  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
   requestAPIUrl?: string | undefined
   isTestnet: boolean
   icon: string
@@ -43,7 +44,6 @@ export interface BasicChainInformation {
 }
 
 interface ExtendedChainInformation extends BasicChainInformation {
-  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
   blockExplorerUrls: AddEthereumChainParameter['blockExplorerUrls']
 }
 

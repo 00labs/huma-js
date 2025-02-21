@@ -878,7 +878,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | desiredChainId | <code>desiredChainId</code> \| <code>undefined</code> | <p>Optional desired chain id, will trigger the switch network action if different from the current chain id</p> |
 | jsonRpcUrlMap | [<code>JsonRpcConnectionMap</code>](#JsonRpcConnectionMap) \| <code>undefined</code> | <p>Optional mapping of your JSON-RPC connections indexed by chainId</p> |
-| provider | <code>Eip1193Provider</code> \| <code>JsonRpcProvider</code> | <p>EIP-1193 provider or JsonRpc Provider</p> |
+| provider | <code>JsonRpcProvider</code> | <p>EIP-1193 provider or JsonRpc Provider</p> |
 
 <a name="InvoiceFactoringBorrowWidgetProps"></a>
 

@@ -3,7 +3,7 @@ import { CHAINS, NETWORK_TYPE } from './chain'
 
 const getDevPrefix = (isDev = false) => (isDev ? 'dev.' : '')
 
-const getNetworkType = (chainId: number) => {
+const getNetworkTypePrefix = (chainId: number) => {
   if (CHAINS[chainId]) {
     return CHAINS[chainId].isTestnet ? 'testnet' : 'mainnet'
   }
@@ -15,7 +15,7 @@ const getNetworkType = (chainId: number) => {
 }
 
 const getNetworkAgnosticServiceUrlPrefix = (chainId: number, isDev: boolean) =>
-  `${getDevPrefix(isDev)}${getNetworkType(chainId)}`
+  `${getDevPrefix(isDev)}${getNetworkTypePrefix(chainId)}`
 
 const getEAVerseUrl = (chainId: number, isDev = false) => {
   const network = CHAINS[chainId].name
@@ -25,17 +25,6 @@ const getEAVerseUrl = (chainId: number, isDev = false) => {
 const getEABaseUrlV1 = (chainId: number) => {
   const network = CHAINS[chainId].name
   return `https://${network}.risk.huma.finance`
-}
-
-const getRequestAPIUrl = (chainId: number, isDev = false) => {
-  // Get optional override
-  const url = CHAINS[chainId].requestAPIUrl
-  if (url) {
-    return url
-  }
-
-  const network = CHAINS[chainId].name
-  return `https://${getDevPrefix(isDev)}${network}.rnreader.huma.finance`
 }
 
 const getIdentityAPIUrl = (chainId: number, isDev = false) =>
@@ -55,6 +44,16 @@ const getAuthServiceUrl = (chainId: number, isDev = false) =>
     isDev,
   )}.auth.huma.finance`
 
+const getCampaignAPIUrl = (networkType: NETWORK_TYPE, isDev: boolean) =>
+  `https://${getDevPrefix(
+    isDev,
+  )}${networkType}.campaign-points.huma.finance/graphql`
+
+const getSolanaGraphAPIUrl = (isTestnet: boolean, isDev: boolean) =>
+  `https://${getDevPrefix(isDev)}${
+    isTestnet ? 'devnet.' : 'mainnet.'
+  }sol-graph.huma.finance/graphql`
+
 const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
   switch (provider) {
     case 'Securitize': {
@@ -66,27 +65,6 @@ const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
       throw new Error(`Unknown KYC provider: ${provider}`)
   }
 }
-
-const getCampaignAPIUrl = (isDev: boolean, pointsTestnetExperience: boolean) =>
-  `https://${getDevPrefix(isDev)}${
-    pointsTestnetExperience ? 'testnet.' : 'mainnet.'
-  }campaign-points.huma.finance/graphql`
-
-const getCampaignAPIUrlV2 = (networkType: NETWORK_TYPE, isDev: boolean) =>
-  `https://${getDevPrefix(
-    isDev,
-  )}${networkType}.campaign-points.huma.finance/graphql`
-
-const getSolanaGraphAPIUrl = (
-  isDev: boolean,
-  pointsTestnetExperience: boolean,
-) =>
-  `https://${getDevPrefix(isDev)}${
-    pointsTestnetExperience ? 'devnet.' : 'mainnet.'
-  }sol-graph.huma.finance/graphql`
-
-// @todo: ReferenceError: Cannot access 'ChainEnum' before initialization
-const DEFAULT_CHAIN_ID = 137
 
 export const configUtil = {
   dappLink: 'https://app.huma.finance/#',
@@ -116,13 +94,10 @@ export const configUtil = {
     'https://github.com/00labs/huma-contracts-v2/blob/develop/audit/spearbit.pdf',
   getEAVerseUrl,
   getEABaseUrlV1,
-  getRequestAPIUrl,
   getIdentityAPIUrl,
   getIdentityAPIUrlV2,
   getAuthServiceUrl,
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,
-  getCampaignAPIUrlV2,
   getSolanaGraphAPIUrl,
-  DEFAULT_CHAIN_ID,
 }

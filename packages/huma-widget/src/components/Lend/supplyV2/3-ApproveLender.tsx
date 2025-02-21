@@ -11,7 +11,7 @@ import { ApproveLenderBase } from '../components/ApproveLenderBase'
 type Props = {
   poolInfo: PoolInfoV2
   isUniTranche: boolean
-  documentHash: string
+  documentHash?: string
   changeTranche: (tranche: TrancheType) => void
 }
 

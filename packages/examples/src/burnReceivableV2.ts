@@ -11,7 +11,7 @@ require('dotenv').config()
 async function main() {
   const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`,
+    `https://polygon-mumbai.g.alchemy.com/v2/${process.env.VITE_ALCHEMY_API_KEY}`,
     {
       name: 'Mumbai',
       chainId: ChainEnum.Mumbai,

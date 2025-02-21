@@ -1,6 +1,5 @@
 import {
   CHAINS,
-  checkIsDev,
   configUtil,
   DocSignatureStatus,
   IdentityService,
@@ -10,7 +9,11 @@ import {
   timeUtil,
   VerificationStatusResult,
 } from '@huma-finance/shared'
-import { useAuthErrorHandling, useParamsSearch } from '@huma-finance/web-shared'
+import {
+  useAuthErrorHandling,
+  useParamsSearch,
+  checkIsDev,
+} from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
