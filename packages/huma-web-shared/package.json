@@ -1,7 +1,7 @@
 {
   "name": "@huma-finance/web-shared",
   "version": "0.0.72",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "type": "module",
@@ -109,7 +109,6 @@
     "vite": "6.0.11",
     "vite-plugin-commonjs": "0.10.4",
     "vite-plugin-node-polyfills": "0.23.0",
-    "vite-plugin-svgr": "4.3.0",
     "vite-tsconfig-paths": "5.1.4",
     "ws": "^8.18.0"
   },

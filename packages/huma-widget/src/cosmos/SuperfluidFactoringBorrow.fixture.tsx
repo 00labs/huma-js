@@ -1,11 +1,9 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { SuperfluidFactoringWidget } from '..'
-import { initEnv } from './utils/env'
 import { WalletWrapper } from './WalletWrapper'
 
-initEnv()
-
 function Fixture() {
-  return <SuperfluidFactoringWidget />
+  return <SuperfluidFactoringWidget provider={new JsonRpcProvider()} />
 }
 
 export default (
