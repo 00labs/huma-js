@@ -25,7 +25,7 @@ export function Transfer({
   selectedTranche,
   poolIsClosed,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('Transaction', {})
+  useLogOnFirstMount('Transaction')
   const { publicKey } = useWallet()
   const dispatch = useAppDispatch()
   const program = useHumaProgram(poolInfo.chainId)

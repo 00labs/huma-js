@@ -29,7 +29,7 @@ export function Success({
   campaign,
   handleAction,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('Success', {})
+  useLogOnFirstMount('Success')
   const dispatch = useDispatch()
   const { supplyAmount, solanaSignature } = useAppSelector(selectWidgetState)
   const { symbol } = poolInfo.underlyingMint

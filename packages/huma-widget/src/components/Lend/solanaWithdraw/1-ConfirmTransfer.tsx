@@ -19,7 +19,7 @@ export function ConfirmTransfer({
   withdrawableAmountFormatted,
   sharePrice,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('ConfirmTransfer', {})
+  useLogOnFirstMount('ConfirmTransfer')
   const theme = useTheme()
   const dispatch = useDispatch()
   const { symbol } = poolUnderlyingToken

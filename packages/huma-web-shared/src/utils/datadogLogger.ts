@@ -138,19 +138,4 @@ export const setSessionInfo = (info: {
   if (stellarAddress) {
     datadogRum.setUserProperty('stellarAddress', stellarAddress)
   }
-
-  if (chainId) {
-    if (Object.values(StellarChainEnum).includes(chainId as number)) {
-      datadogRum.setUserProperty('network', STELLAR_CHAINS[chainId]?.name)
-    } else if (Object.values(ChainEnum).includes(chainId as number)) {
-      datadogRum.setUserProperty('network', CHAINS[chainId]?.name)
-    } else if (Object.values(SolanaChainEnum).includes(chainId as number)) {
-      datadogRum.setUserProperty(
-        'network',
-        chainId === SolanaChainEnum.SolanaMainnet // The name on the SolanaChainEnum doesn't include "Solana"
-          ? 'SolanaMainnet'
-          : 'SolanaTestnet',
-      )
-    }
-  }
 }

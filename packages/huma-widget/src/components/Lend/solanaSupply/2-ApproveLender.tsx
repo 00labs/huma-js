@@ -23,7 +23,7 @@ export function ApproveLender({
   documentHash,
   changeTranche,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('ApproveLender', {})
+  useLogOnFirstMount('ApproveLender')
 
   const solanaChainInfo = SOLANA_CHAIN_INFO[poolInfo.chainId]
 

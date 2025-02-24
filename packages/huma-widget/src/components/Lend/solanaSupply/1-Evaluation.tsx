@@ -20,7 +20,7 @@ export function Evaluation({
   documentHash,
   handleClose,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('Evaluation', {})
+  useLogOnFirstMount('Evaluation')
 
   if (poolInfo.KYC?.Persona) {
     return (

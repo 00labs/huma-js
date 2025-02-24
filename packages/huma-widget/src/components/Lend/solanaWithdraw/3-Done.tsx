@@ -19,7 +19,7 @@ export function Done({
   withdrawAmount,
   handleAction,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('Success', {})
+  useLogOnFirstMount('Success')
   const { symbol } = poolUnderlyingToken
   const withdrawAmountFormatted = formatMoneyFixed(
     SolanaTokenUtils.formatUnits(withdrawAmount, poolUnderlyingToken.decimals),

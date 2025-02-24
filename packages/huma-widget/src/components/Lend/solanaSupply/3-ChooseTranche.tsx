@@ -28,7 +28,7 @@ export function ChooseTranche({
   selectedTranche,
   changeTranche,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('ChooseTranche', {})
+  useLogOnFirstMount('ChooseTranche')
   const theme = useTheme()
   const dispatch = useAppDispatch()
 

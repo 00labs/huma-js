@@ -43,7 +43,7 @@ export function PointsEarned({
   networkType,
   handleAction,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('PointsEarned', {})
+  useLogOnFirstMount('PointsEarned')
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useDispatch()

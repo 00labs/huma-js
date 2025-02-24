@@ -15,7 +15,7 @@ type Props = {
 }
 
 export function ApproveAllowance({ poolState }: Props): React.ReactElement {
-  useLogOnFirstMount('ApproveAllowance', {})
+  useLogOnFirstMount('ApproveAllowance')
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const handleNext = useCallback(() => {

@@ -43,7 +43,7 @@ export function Transfer({
   selectedTranche,
   networkType,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('Transaction', {})
+  useLogOnFirstMount('Transaction')
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()

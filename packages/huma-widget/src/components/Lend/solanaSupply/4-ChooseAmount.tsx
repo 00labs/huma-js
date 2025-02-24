@@ -29,7 +29,7 @@ export function ChooseAmount({
   selectedTranche,
   isUniTranche,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('ChooseAmount', {})
+  useLogOnFirstMount('ChooseAmount')
   const dispatch = useAppDispatch()
   const { symbol, decimals } = poolInfo.underlyingMint
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)
