@@ -1,11 +1,9 @@
 import { datadogRum } from '@datadog/browser-rum'
 import {
   ChainEnum,
-  CHAINS,
   POOL_NAME,
   POOL_TYPE,
   SolanaChainEnum,
-  STELLAR_CHAINS,
   StellarChainEnum,
 } from '@huma-finance/shared'
 
@@ -117,7 +115,7 @@ export const setSessionInfo = (info: {
   stellarAddress?: string
   chainId?: number
 }) => {
-  const { account, evmAddress, solanaAddress, stellarAddress, chainId } = info
+  const { account, evmAddress, solanaAddress, stellarAddress } = info
   if (!ddLoggerEnabled) {
     return
   }
