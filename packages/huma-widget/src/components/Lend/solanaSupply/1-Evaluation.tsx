@@ -3,6 +3,7 @@ import React from 'react'
 
 import { PersonaEvaluation } from '../components/PersonaEvaluation'
 import { Campaign } from '../supplyV2'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -19,6 +20,8 @@ export function Evaluation({
   documentHash,
   handleClose,
 }: Props): React.ReactElement | null {
+  useLogOnFirstMount('Evaluation')
+
   if (poolInfo.KYC?.Persona) {
     return (
       <PersonaEvaluation

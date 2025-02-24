@@ -22,6 +22,7 @@ import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
 import { SignIn } from '../../SignIn'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 enum STATE {
   Loading = 'Loading',
@@ -42,6 +43,7 @@ export function PointsEarned({
   networkType,
   handleAction,
 }: Props): React.ReactElement {
+  useLogOnFirstMount('PointsEarned')
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useDispatch()

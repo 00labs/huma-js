@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../../hooks/useRedux'
 import { setStep, setSupplyAmount } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { InputAmountModal } from '../../InputAmountModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -28,6 +29,7 @@ export function ChooseAmount({
   selectedTranche,
   isUniTranche,
 }: Props): React.ReactElement | null {
+  useLogOnFirstMount('ChooseAmount')
   const dispatch = useAppDispatch()
   const { symbol, decimals } = poolInfo.underlyingMint
   const [currentAmount, setCurrentAmount] = useState<number | string>(0)

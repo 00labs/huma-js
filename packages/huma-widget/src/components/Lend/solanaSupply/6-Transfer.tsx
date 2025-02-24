@@ -28,6 +28,7 @@ import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { LoadingModal } from '../../LoadingModal'
 import { SolanaTxSendModal } from '../../SolanaTxSendModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -42,6 +43,7 @@ export function Transfer({
   selectedTranche,
   networkType,
 }: Props): React.ReactElement | null {
+  useLogOnFirstMount('Transaction')
   const isDev = checkIsDev()
   const dispatch = useAppDispatch()
   const { publicKey } = useWallet()
