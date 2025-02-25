@@ -14,6 +14,5 @@ export async function fetchStellarPoolSentinel(
   })
   const sentinel = await humaConfigClient.get_sentinel()
   const sentinelVal = sentinel.result
-  console.log(sentinelVal)
   return sentinelVal
 }
