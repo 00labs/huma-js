@@ -9,7 +9,7 @@ import { SiweMessage } from 'siwe'
 import { AUTH_ERROR_TYPE, AUTH_STATUS } from '.'
 
 const TEN_SECONDS = 10000
-const MAX_RETRY_COUNT = 4
+const MAX_NUM_ATTEMPS = 4
 
 const createSiweMessage = (
   address: string,
@@ -41,19 +41,19 @@ const verifyGnosisSafeSignature = async (
   isDev: boolean,
 ) => {
   await timeUtil.sleep(TEN_SECONDS)
-  let retryCount = 0
-  while (retryCount < MAX_RETRY_COUNT) {
+  let numAttempts = 0
+  while (numAttempts < MAX_NUM_ATTEMPS) {
     try {
-      retryCount += 1
+      numAttempts += 1
       await AuthService.verifySignature(message, signature, chainId, isDev)
       break
     } catch (e: unknown) {
-      if (retryCount >= MAX_RETRY_COUNT) {
+      if (numAttempts >= MAX_NUM_ATTEMPS) {
         throw e
       }
 
       if (e instanceof AxiosError && e.status === HttpStatusCode.Unauthorized) {
-        await timeUtil.sleep(TEN_SECONDS * retryCount)
+        await timeUtil.sleep(TEN_SECONDS * numAttempts)
       } else {
         throw e
       }
