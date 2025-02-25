@@ -101,6 +101,10 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  StellarBorrow,
+  StellarBorrowProps,
+} from './components/CreditLine/stellarBorrow'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -705,6 +709,25 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
   return (
     <GenericWidget {...props}>
       <StellarLendSupply {...props} />
+    </GenericWidget>
+  )
+}
+
+/**
+ * Borrow widget props for Stellar pools
+ * @typedef {Object} StellarLendSupplyWidgetProps
+ */
+type StellarBorrowWidgetProps = StellarBorrowProps & GenericWidgetProps
+
+/**
+ * Lend pool supply widget for Stellar pools
+ *
+ * @param {StellarBorrowWidgetProps} props - Widget props
+ */
+export function StellarBorrowWidget(props: StellarBorrowWidgetProps) {
+  return (
+    <GenericWidget {...props}>
+      <StellarBorrow {...props} />
     </GenericWidget>
   )
 }

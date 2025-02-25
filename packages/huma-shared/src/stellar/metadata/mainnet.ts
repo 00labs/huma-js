@@ -26,7 +26,7 @@ export const STELLAR_MAINNET_METADATA: StellarPoolsInfo = {
       icon: 'USDC',
     },
     extra: {
-      borrower: 'GDKMQ74NKGAOUCVPQ26A2IYFVKU5VUKCC364RIHDTG3AQ3GC73B3YTOT',
+      borrower: 'GAPEI72LLOS43GQKPNJPS7BQL44UTZPAS472MTGAYQ4O3H5CUNNT7MOJ',
     },
   },
   Roam: {
