@@ -53,7 +53,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dt><a href="#StellarLendSupplyWidget">StellarLendSupplyWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Stellar pools</p></dd>
 <dt><a href="#StellarBorrowWidget">StellarBorrowWidget(props)</a></dt>
-<dd><p>Lend pool supply widget for Stellar pools</p></dd>
+<dd><p>Borrow widget for Stellar pools</p></dd>
 <dt><a href="#SolanaEnableAutoRedemptionWidget">SolanaEnableAutoRedemptionWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Solana pools</p></dd>
 </dl>
@@ -78,7 +78,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dt><a href="#SolanaPaymentProps">SolanaPaymentProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#StellarBorrowProps">StellarBorrowProps</a> : <code>Object</code></dt>
-<dd><p>Lend pool supply props</p></dd>
+<dd><p>Stellar pool borrow widget props</p></dd>
 <dt><a href="#SupplyFirstLossCoverProps">SupplyFirstLossCoverProps</a> : <code>Object</code></dt>
 <dd><p>Supply first loss cover props</p></dd>
 <dt><a href="#InvoiceFactoringBorrowProps">InvoiceFactoringBorrowProps</a> : <code>Object</code></dt>
@@ -469,7 +469,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <a name="StellarBorrowWidget"></a>
 
 ## StellarBorrowWidget(props)
-<p>Lend pool supply widget for Stellar pools</p>
+<p>Borrow widget for Stellar pools</p>
 
 **Kind**: global function  
 
@@ -607,7 +607,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <a name="StellarBorrowProps"></a>
 
 ## StellarBorrowProps : <code>Object</code>
-<p>Lend pool supply props</p>
+<p>Stellar pool borrow widget props</p>
 
 **Kind**: global typedef  
 **Properties**

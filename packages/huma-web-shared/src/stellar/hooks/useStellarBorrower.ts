@@ -1,7 +1,7 @@
 import {
-  downScale,
   STELLAR_CHAINS_INFO,
   StellarPoolInfo,
+  tokenDecimalUtils,
 } from '@huma-finance/shared'
 import {
   CreditConfig,
@@ -96,10 +96,7 @@ export const useStellarBorrower = (
           unbilledPrincipalBN + nextDueBN - yieldDueBN + totalPastDueBN
         setCreditAvailable(availableForDrawdownVal)
         setPrincipal(principalAmountBN)
-        setTotalDue(
-          BigInt(creditRecordVal.next_due) +
-            BigInt(creditRecordVal.total_past_due),
-        )
+        setTotalDue(nextDueBN + totalPastDueBN)
       } catch (error) {
         console.error('Error fetching Stellar borrower data:', error)
       } finally {
@@ -115,12 +112,24 @@ export const useStellarBorrower = (
     creditRecord,
     creditConfig,
     dueDetail,
-    principal: downScale<number>(principal, poolInfo.underlyingToken.decimals),
-    creditAvailable: downScale<number>(
-      creditAvailable,
-      poolInfo.underlyingToken.decimals,
+    principal: Number(
+      tokenDecimalUtils.formatUnits(
+        principal,
+        poolInfo.underlyingToken.decimals,
+      ),
     ),
-    totalDue: downScale<number>(totalDue, poolInfo.underlyingToken.decimals),
+    creditAvailable: Number(
+      tokenDecimalUtils.formatUnits(
+        creditAvailable,
+        poolInfo.underlyingToken.decimals,
+      ),
+    ),
+    totalDue: Number(
+      tokenDecimalUtils.formatUnits(
+        totalDue,
+        poolInfo.underlyingToken.decimals,
+      ),
+    ),
     refresh,
   }
 }

@@ -19,7 +19,7 @@ import { Transfer } from './3-Transfer'
 import { Success } from './4-Success'
 
 /**
- * Lend pool supply props
+ * Stellar pool borrow widget props
  * @typedef {Object} StellarBorrowProps
  * @property {StellarPoolInfo} poolInfo The metadata of the pool.
  * @property {StellarPoolState} poolState The current state config of the pool.

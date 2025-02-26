@@ -720,7 +720,7 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
 type StellarBorrowWidgetProps = StellarBorrowProps & GenericWidgetProps
 
 /**
- * Lend pool supply widget for Stellar pools
+ * Borrow widget for Stellar pools
  *
  * @param {StellarBorrowWidgetProps} props - Widget props
  */

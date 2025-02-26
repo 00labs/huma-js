@@ -12,7 +12,5 @@ export async function fetchStellarPoolSentinel(
     contractId: chainInfo.humaConfig,
     rpcUrl: chainInfo.rpc,
   })
-  const sentinel = await humaConfigClient.get_sentinel()
-  const sentinelVal = sentinel.result
-  return sentinelVal
+  return (await humaConfigClient.get_sentinel()).result
 }
