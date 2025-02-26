@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChainEnum } from '../../src/utils/chain'
-import {
-  doesChainSupportNotifi,
-  getBlockchainConfigFromChain,
-} from '../../src/utils/notifi'
+import { getBlockchainConfigFromChain } from '../../src/utils/notifi'
 
 describe('getBlockchainConfigFromChain', () => {
   it('returns POLYGON for Polygon and Mumbai chains', () => {
@@ -19,25 +16,5 @@ describe('getBlockchainConfigFromChain', () => {
     expect(() => getBlockchainConfigFromChain(-1 as any)).toThrow(
       'Invalid chain',
     )
-  })
-})
-
-describe('doesChainSupportNotifi', () => {
-  it('returns true for Polygon chain', () => {
-    expect(doesChainSupportNotifi(ChainEnum.Polygon, false)).toBe(true)
-  })
-
-  it('returns true for Mumbai and Goerli chains in development', () => {
-    expect(doesChainSupportNotifi(ChainEnum.Mumbai, true)).toBe(true)
-    expect(doesChainSupportNotifi(ChainEnum.Goerli, true)).toBe(true)
-  })
-
-  it('returns false for Mumbai and Goerli chains in production', () => {
-    expect(doesChainSupportNotifi(ChainEnum.Mumbai, false)).toBe(false)
-    expect(doesChainSupportNotifi(ChainEnum.Goerli, false)).toBe(false)
-  })
-
-  it('returns false for an invalid chain', () => {
-    expect(doesChainSupportNotifi(-1 as any, false)).toBe(false)
   })
 })
