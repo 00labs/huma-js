@@ -3,10 +3,18 @@ import {
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
-import { useHumaProgram, useLenderAccounts } from '@huma-finance/web-shared'
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { Transaction } from '@solana/web3.js'
+import { useHumaProgram } from '@huma-finance/web-shared'
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  getAccount,
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+} from '@solana/spl-token'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -28,19 +36,13 @@ export function Transfer({
   useLogOnFirstMount('Transaction')
   const { publicKey } = useWallet()
   const dispatch = useAppDispatch()
+  const { connection } = useConnection()
   const program = useHumaProgram(poolInfo.chainId)
   const [transaction, setTransaction] = useState<Transaction>()
-  const {
-    juniorLenderApprovedAccountPDA,
-    seniorLenderApprovedAccountPDA,
-    seniorLenderStateAccount,
-    juniorLenderStateAccount,
-    loading: isLoadingLenderAccounts,
-  } = useLenderAccounts(poolInfo.chainId, poolInfo.poolName)
 
   useEffect(() => {
     async function getTx() {
-      if (!publicKey || transaction || isLoadingLenderAccounts) {
+      if (!publicKey || transaction || !connection) {
         return
       }
 
@@ -54,31 +56,34 @@ export function Transfer({
       const lenderTrancheToken =
         selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA
 
-      const approvedLender =
-        selectedTranche === 'senior'
-          ? seniorLenderApprovedAccountPDA!
-          : juniorLenderApprovedAccountPDA!
-
-      if (
-        (selectedTranche === 'senior' && !seniorLenderStateAccount) ||
-        (selectedTranche === 'junior' && !juniorLenderStateAccount)
-      ) {
-        const createLenderAccountsTx = await program.methods
-          .createLenderAccounts()
-          .accountsPartial({
-            lender: publicKey,
-            humaConfig: poolInfo.humaConfig,
-            poolConfig: poolInfo.poolConfig,
-            approvedLender,
-            trancheMint:
-              selectedTranche === 'senior'
-                ? poolInfo.seniorTrancheMint
-                : poolInfo.juniorTrancheMint,
-            lenderTrancheToken,
-            tokenProgram: TOKEN_2022_PROGRAM_ID,
-          })
-          .transaction()
-        tx.add(createLenderAccountsTx)
+      // Create user token account if it doesn't exist
+      try {
+        await getAccount(
+          connection,
+          underlyingTokenATA,
+          undefined,
+          TOKEN_PROGRAM_ID,
+        )
+      } catch (error: unknown) {
+        // TokenAccountNotFoundError can be possible if the associated address has already received some lamports,
+        // becoming a system account. Assuming program derived addressing is safe, this is the only case for the
+        // TokenInvalidAccountOwnerError in this code path.
+        if (
+          error instanceof TokenAccountNotFoundError ||
+          error instanceof TokenInvalidAccountOwnerError
+        ) {
+          // As this isn't atomic, it's possible others can create associated accounts meanwhile.
+          tx.add(
+            createAssociatedTokenAccountInstruction(
+              publicKey,
+              underlyingTokenATA,
+              publicKey,
+              new PublicKey(poolInfo.underlyingMint.address),
+              TOKEN_PROGRAM_ID,
+              ASSOCIATED_TOKEN_PROGRAM_ID,
+            ),
+          )
+        }
       }
 
       if (!poolIsClosed) {
@@ -119,16 +124,12 @@ export function Transfer({
     }
     getTx()
   }, [
-    isLoadingLenderAccounts,
-    juniorLenderApprovedAccountPDA,
-    juniorLenderStateAccount,
+    connection,
     poolInfo,
     poolIsClosed,
     program.methods,
     publicKey,
     selectedTranche,
-    seniorLenderApprovedAccountPDA,
-    seniorLenderStateAccount,
     transaction,
   ])
 
