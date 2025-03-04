@@ -68,6 +68,7 @@ export function Transfer({
         // TokenAccountNotFoundError can be possible if the associated address has already received some lamports,
         // becoming a system account. Assuming program derived addressing is safe, this is the only case for the
         // TokenInvalidAccountOwnerError in this code path.
+        // Source: https://solana.stackexchange.com/questions/802/checking-to-see-if-a-token-account-exists-using-anchor-ts
         if (
           error instanceof TokenAccountNotFoundError ||
           error instanceof TokenInvalidAccountOwnerError
