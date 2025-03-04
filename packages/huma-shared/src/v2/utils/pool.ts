@@ -37,6 +37,7 @@ export type IndustryType =
   | 'Invoice Factoring'
   | 'None'
   | 'DePIN'
+  | 'Instant Settlements'
 
 export type KYCCopy = {
   title: string
