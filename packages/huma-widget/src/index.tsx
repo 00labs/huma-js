@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ThemeProvider } from '@mui/material'
-import { Provider as Eip1193Provider } from '@web3-react/types'
 import { Provider as AtomProvider } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -102,6 +101,10 @@ import { SuperfluidFactoring } from './components/SuperfluidFactoring'
 import { store } from './store'
 import { themeHuma } from './theme'
 import { WCProps } from './utilTypes'
+import {
+  StellarBorrow,
+  StellarBorrowProps,
+} from './components/CreditLine/stellarBorrow'
 
 /**
  * Mapping of your JSON-RPC connections indexed by chainId
@@ -117,13 +120,13 @@ type JsonRpcConnectionMap = {
  * @typedef {Object} WidgetProps
  * @property {desiredChainId|undefined} desiredChainId Optional desired chain id, will trigger the switch network action if different from the current chain id
  * @property {JsonRpcConnectionMap|undefined} jsonRpcUrlMap Optional mapping of your JSON-RPC connections indexed by chainId
- * @property {Eip1193Provider|JsonRpcProvider} provider EIP-1193 provider or JsonRpc Provider
+ * @property {JsonRpcProvider} provider EIP-1193 provider or JsonRpc Provider
  */
 type WidgetProps = {
   handleClose?: () => void
   desiredChainId?: number
   jsonRpcUrlMap?: JsonRpcConnectionMap
-  provider: Eip1193Provider | JsonRpcProvider
+  provider: JsonRpcProvider
 }
 
 function Widget(props: WCProps<WidgetProps>) {
@@ -132,10 +135,8 @@ function Widget(props: WCProps<WidgetProps>) {
 
   useEffect(() => {
     const getChainId = async () => {
-      if (provider instanceof JsonRpcProvider) {
-        const network = await provider.getNetwork()
-        setChainId(network?.chainId)
-      }
+      const network = await provider.getNetwork()
+      setChainId(network?.chainId)
     }
     getChainId()
   }, [provider])
@@ -708,6 +709,25 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
   return (
     <GenericWidget {...props}>
       <StellarLendSupply {...props} />
+    </GenericWidget>
+  )
+}
+
+/**
+ * Borrow widget props for Stellar pools
+ * @typedef {Object} StellarLendSupplyWidgetProps
+ */
+type StellarBorrowWidgetProps = StellarBorrowProps & GenericWidgetProps
+
+/**
+ * Borrow widget for Stellar pools
+ *
+ * @param {StellarBorrowWidgetProps} props - Widget props
+ */
+export function StellarBorrowWidget(props: StellarBorrowWidgetProps) {
+  return (
+    <GenericWidget {...props}>
+      <StellarBorrow {...props} />
     </GenericWidget>
   )
 }

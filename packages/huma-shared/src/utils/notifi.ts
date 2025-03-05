@@ -22,18 +22,10 @@ export function getBlockchainConfigFromChain(
 
 export function doesChainSupportNotifi(
   chainEnum: ChainEnum,
-  isDev: boolean,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _isDev: boolean,
 ): boolean {
   switch (chainEnum) {
-    case ChainEnum.Celo:
-    case ChainEnum.Polygon:
-    case ChainEnum.Scroll:
-      return true
-    case ChainEnum.Alfajores:
-    case ChainEnum.Mumbai:
-    case ChainEnum.Goerli:
-    case ChainEnum.ScrollSepolia:
-      return isDev
     default:
       return false
   }

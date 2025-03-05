@@ -1,13 +1,17 @@
 import {
   CampaignService,
   CHAIN_TYPE,
-  checkIsDev,
   CloseModalOptions,
   formatNumber,
   isEmpty,
   NETWORK_TYPE,
 } from '@huma-finance/shared'
-import { SolanaPoolState, txAtom, useChainInfo } from '@huma-finance/web-shared'
+import {
+  SolanaPoolState,
+  txAtom,
+  useChainInfo,
+  checkIsDev,
+} from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -18,6 +22,7 @@ import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
 import { SignIn } from '../../SignIn'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 enum STATE {
   Loading = 'Loading',
@@ -38,6 +43,7 @@ export function PointsEarned({
   networkType,
   handleAction,
 }: Props): React.ReactElement {
+  useLogOnFirstMount('PointsEarned')
   const theme = useTheme()
   const isDev = checkIsDev()
   const dispatch = useDispatch()

@@ -1,4 +1,4 @@
-import { formatNumber, isEmpty } from '@huma-finance/shared'
+import { CloseModalOptions, formatNumber, isEmpty } from '@huma-finance/shared'
 import { txAtom } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
@@ -13,7 +13,7 @@ import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from './icons'
 
 type Props = {
   lpConfig: { withdrawalLockupPeriodDays?: number }
-  handleAction: () => void
+  handleAction: (options?: CloseModalOptions) => void
 }
 
 export function PointsEarned({
@@ -35,7 +35,7 @@ export function PointsEarned({
   const handleCloseModal = useCallback(() => {
     reset()
     dispatch(resetState())
-    handleAction()
+    handleAction({ isSuccess: true })
   }, [dispatch, handleAction, reset])
 
   const styles = {

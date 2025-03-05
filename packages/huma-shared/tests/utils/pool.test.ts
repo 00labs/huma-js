@@ -6,7 +6,6 @@ import {
   getPoolInfo,
   getPoolInfoForPoolAddress,
   isPoolName,
-  usePools,
 } from '../../src/utils/pool'
 
 describe('getPoolInfo', () => {
@@ -40,24 +39,6 @@ describe('getPoolInfo', () => {
       POOL_TYPE.CreditLine,
     )
     expect(poolInfo?.pool).toBe('0xe8926aDbFADb5DA91CD56A7d5aCC31AA3FDF47E5')
-  })
-})
-
-describe('usePools', () => {
-  it('returns default chain pools if chainId is undefined', () => {
-    const pools = usePools(undefined)
-    expect(Array.isArray(pools)).toBe(true)
-    expect(pools.length).toBeGreaterThan(0)
-  })
-
-  it('returns an array of pool objects sorted by order', () => {
-    const chainId = ChainEnum.Polygon
-    const pools = usePools(chainId)
-    expect(pools).toBeDefined()
-    expect(Array.isArray(pools)).toBe(true)
-    expect(pools.length).toBeGreaterThan(0)
-    expect(pools[0].poolName).toBeDefined()
-    expect(pools[0].poolType).toBeDefined()
   })
 })
 

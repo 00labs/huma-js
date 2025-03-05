@@ -1,7 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import {
   CHAIN_TYPE,
-  checkIsDev,
   COMMON_ERROR_MESSAGE,
   IdentityServiceV2,
   NETWORK_TYPE,
@@ -9,7 +8,7 @@ import {
   timeUtil,
   TrancheType,
 } from '@huma-finance/shared'
-import { useChainInfo } from '@huma-finance/web-shared'
+import { useChainInfo, checkIsDev } from '@huma-finance/web-shared'
 import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { setError, setStep } from '../../../store/widgets.reducers'
@@ -22,7 +21,7 @@ type Props = {
   chainType: CHAIN_TYPE
   networkType: NETWORK_TYPE
   isUniTranche: boolean
-  documentHash: string
+  documentHash?: string
   chainSpecificData?: Record<string, unknown>
   changeTranche: (tranche: TrancheType) => void
 }
@@ -43,6 +42,10 @@ export function ApproveLenderBase({
 
   const approveLender = useCallback(
     async (trancheVault: string) => {
+      if (!documentHash) {
+        throw new Error('No document hash provided')
+      }
+
       let tryAttempts = 2
 
       while (tryAttempts > 0) {

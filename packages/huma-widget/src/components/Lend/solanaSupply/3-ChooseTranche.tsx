@@ -15,6 +15,7 @@ import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
@@ -27,6 +28,7 @@ export function ChooseTranche({
   selectedTranche,
   changeTranche,
 }: Props): React.ReactElement | null {
+  useLogOnFirstMount('ChooseTranche')
   const theme = useTheme()
   const dispatch = useAppDispatch()
 

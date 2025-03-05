@@ -52,6 +52,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Solana lend withdraw widget</p></dd>
 <dt><a href="#StellarLendSupplyWidget">StellarLendSupplyWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Stellar pools</p></dd>
+<dt><a href="#StellarBorrowWidget">StellarBorrowWidget(props)</a></dt>
+<dd><p>Borrow widget for Stellar pools</p></dd>
 <dt><a href="#SolanaEnableAutoRedemptionWidget">SolanaEnableAutoRedemptionWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Solana pools</p></dd>
 </dl>
@@ -75,6 +77,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply props</p></dd>
 <dt><a href="#SolanaPaymentProps">SolanaPaymentProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply props</p></dd>
+<dt><a href="#StellarBorrowProps">StellarBorrowProps</a> : <code>Object</code></dt>
+<dd><p>Stellar pool borrow widget props</p></dd>
 <dt><a href="#SupplyFirstLossCoverProps">SupplyFirstLossCoverProps</a> : <code>Object</code></dt>
 <dd><p>Supply first loss cover props</p></dd>
 <dt><a href="#InvoiceFactoringBorrowProps">InvoiceFactoringBorrowProps</a> : <code>Object</code></dt>
@@ -161,6 +165,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply widget props for Solana pools</p></dd>
 <dt><a href="#StellarLendSupplyWidgetProps">StellarLendSupplyWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props for Stellar pools</p></dd>
+<dt><a href="#StellarLendSupplyWidgetProps">StellarLendSupplyWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Borrow widget props for Stellar pools</p></dd>
 <dt><a href="#SolanaEnableAutoRedemptionWidgetProps">SolanaEnableAutoRedemptionWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props for Solana pools</p></dd>
 </dl>
@@ -460,6 +466,17 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | props | [<code>StellarLendSupplyWidgetProps</code>](#StellarLendSupplyWidgetProps) | <p>Widget props</p> |
 
+<a name="StellarBorrowWidget"></a>
+
+## StellarBorrowWidget(props)
+<p>Borrow widget for Stellar pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | <code>StellarBorrowWidgetProps</code> | <p>Widget props</p> |
+
 <a name="SolanaEnableAutoRedemptionWidget"></a>
 
 ## SolanaEnableAutoRedemptionWidget(props)
@@ -585,6 +602,21 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Name | Type | Description |
 | --- | --- | --- |
 | poolInfo | <code>SolanaPoolInfo</code> | <p>The metadata of the pool.</p> |
+| handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
+
+<a name="StellarBorrowProps"></a>
+
+## StellarBorrowProps : <code>Object</code>
+<p>Stellar pool borrow widget props</p>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>StellarPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>StellarPoolState</code> | <p>The current state config of the pool.</p> |
+| handleClose | <code>function</code> | <p>Function to notify to close the widget modal when user clicks the 'x' close button.</p> |
 | handleSuccess | <code>function</code> | <p>Optional function to notify that the lending pool supply action is successful.</p> |
 
 <a name="SupplyFirstLossCoverProps"></a>
@@ -878,7 +910,7 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | --- | --- | --- |
 | desiredChainId | <code>desiredChainId</code> \| <code>undefined</code> | <p>Optional desired chain id, will trigger the switch network action if different from the current chain id</p> |
 | jsonRpcUrlMap | [<code>JsonRpcConnectionMap</code>](#JsonRpcConnectionMap) \| <code>undefined</code> | <p>Optional mapping of your JSON-RPC connections indexed by chainId</p> |
-| provider | <code>Eip1193Provider</code> \| <code>JsonRpcProvider</code> | <p>EIP-1193 provider or JsonRpc Provider</p> |
+| provider | <code>JsonRpcProvider</code> | <p>EIP-1193 provider or JsonRpc Provider</p> |
 
 <a name="InvoiceFactoringBorrowWidgetProps"></a>
 
@@ -1141,6 +1173,12 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 
 ## StellarLendSupplyWidgetProps : <code>Object</code>
 <p>Lend pool supply widget props for Stellar pools</p>
+
+**Kind**: global typedef  
+<a name="StellarLendSupplyWidgetProps"></a>
+
+## StellarLendSupplyWidgetProps : <code>Object</code>
+<p>Borrow widget props for Stellar pools</p>
 
 **Kind**: global typedef  
 <a name="SolanaEnableAutoRedemptionWidgetProps"></a>

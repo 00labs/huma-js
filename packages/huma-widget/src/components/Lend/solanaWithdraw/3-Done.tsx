@@ -6,6 +6,7 @@ import {
 } from '@huma-finance/shared'
 import React from 'react'
 import { TxDoneModal } from '../../TxDoneModal'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
@@ -18,6 +19,7 @@ export function Done({
   withdrawAmount,
   handleAction,
 }: Props): React.ReactElement {
+  useLogOnFirstMount('Success')
   const { symbol } = poolUnderlyingToken
   const withdrawAmountFormatted = formatMoneyFixed(
     SolanaTokenUtils.formatUnits(withdrawAmount, poolUnderlyingToken.decimals),

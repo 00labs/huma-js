@@ -104,6 +104,7 @@ const verifyOwnershipSolana = async (
         const signedTx = await signTransaction(tx)
         const serializedTx = signedTx.serialize().toString('base64')
         await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
+        onVerificationComplete()
       } catch (e) {
         console.error(e)
         reset()

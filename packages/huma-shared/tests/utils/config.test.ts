@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CHAINS, ChainEnum } from '../../src/utils/chain'
+import { ChainEnum } from '../../src/utils/chain'
 import { configUtil } from '../../src/utils/config'
 
 describe('getEAVerseUrl', () => {
@@ -21,35 +21,6 @@ describe('getEABaseUrlV1', () => {
     const result = configUtil.getEABaseUrlV1(ChainEnum.Polygon)
 
     expect(result).toBe('https://Polygon.risk.huma.finance')
-  })
-})
-
-describe('getRequestAPIUrl', () => {
-  it('returns the override URL if it is provided', () => {
-    const mockChainId = 123
-    const mockUrl = 'https://override.url'
-    CHAINS[mockChainId] = {
-      ...CHAINS[ChainEnum.Polygon],
-      requestAPIUrl: mockUrl,
-    }
-
-    const result = configUtil.getRequestAPIUrl(mockChainId)
-
-    expect(result).toBe(mockUrl)
-
-    delete CHAINS[mockChainId]
-  })
-
-  it('returns the correct URL for a given chain id in production', () => {
-    const result = configUtil.getRequestAPIUrl(ChainEnum.Polygon)
-
-    expect(result).toBe('https://Polygon.rnreader.huma.finance')
-  })
-
-  it('returns the correct URL for a given chain id in development', () => {
-    const result = configUtil.getRequestAPIUrl(ChainEnum.Polygon, true)
-
-    expect(result).toBe('https://dev.Polygon.rnreader.huma.finance')
   })
 })
 
