@@ -1924,6 +1924,26 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@datadog/browser-core@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-core/-/browser-core-6.2.1.tgz#10fe0d6e03901199179048feca9db3239a863825"
+  integrity sha512-D+nGzkp0m9f384bPoXkQKBg2aBeZkPAu6+E4m07Z4tn6z8QeZ9PBi0+CtsfmTvIBPGXk4LRDA7n+nVPwaZnDJQ==
+
+"@datadog/browser-rum-core@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum-core/-/browser-rum-core-6.2.1.tgz#4beb58f537f5d4366cb4baab5cfc24a7dd2ba083"
+  integrity sha512-9FL9B3pZH0WvKQIxn2gJhdGtdtmq92i+gFCIHooaGc5sOw6G2mol098PuGxcIbm3Vfn4odIed5nYNp/eZkipKA==
+  dependencies:
+    "@datadog/browser-core" "6.2.1"
+
+"@datadog/browser-rum@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum/-/browser-rum-6.2.1.tgz#69480dcae80ab4b1ed756037b1b17cdb71df9ef1"
+  integrity sha512-Z/GE3FWvMpLyUhpzUCFBKykimHBH862x1AG94GYNU65HAB7LV0MFpS0bhh9HSBp3/6jobUjMTOZ/Qmt6H0yADg==
+  dependencies:
+    "@datadog/browser-core" "6.2.1"
+    "@datadog/browser-rum-core" "6.2.1"
+
 "@date-io/core@^2.15.0", "@date-io/core@^2.17.0":
   version "2.17.0"
   resolved "https://registry.yarnpkg.com/@date-io/core/-/core-2.17.0.tgz#360a4d0641f069776ed22e457876e8a8a58c205e"
@@ -3169,94 +3189,94 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
-"@huma-finance/soroban-credit-manager@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-credit-manager/-/soroban-credit-manager-0.0.18.tgz#e38bf0d8c647feb5f5c4691c47b1936c7c1f3952"
-  integrity sha512-fjujwb9O0ryFjwuuKYaxCosW9rhG4CsJ0lNyB540yJZezTa31elHPV1Tjt0yp6cWUt176K848VhvYEs/y9ulFQ==
+"@huma-finance/soroban-credit-manager@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-credit-manager/-/soroban-credit-manager-0.0.23.tgz#5a99b5c19ca7947031e42f388078a7330f5c24da"
+  integrity sha512-9Nh1nEAkMhwi+MugRVmPmhegDpBeYhpEt9YtB2eRXvnLdQPTf8oBJcAH8yTACEDj1pQaeGjxQjiJhHVKB80bIg==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-credit-storage@0.0.18", "@huma-finance/soroban-credit-storage@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-credit-storage/-/soroban-credit-storage-0.0.18.tgz#71d28c1800a4790db85bb197f2237361de97295d"
-  integrity sha512-xbsmloDE82ZDPp52frIwkv7vWD8HgBTwU6YNY0fqtpPkgJPwAa3xJX5GyYWXhL/QNu6D6k2i+jqJblZ633CRLg==
+"@huma-finance/soroban-credit-storage@0.0.23", "@huma-finance/soroban-credit-storage@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-credit-storage/-/soroban-credit-storage-0.0.23.tgz#73f8aae73b0dc413d4786504c27a1eabdaea24a0"
+  integrity sha512-v1vxL35aVqbKOvPa+LgH90A9gBHsaKPpN84alNi9MxDYVbuvOQ1ocG45oah2rPf8yPu2TQhrpew/rMlG9wYFXg==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-huma-config@0.0.18", "@huma-finance/soroban-huma-config@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-huma-config/-/soroban-huma-config-0.0.18.tgz#7614724c3269ef57197ddda44ac16c984fff67d2"
-  integrity sha512-w8p3J1cEb5stfemCq0GgkBOn+fyO/VNzWl4tMbz5w1Zqr0YphqsoY0ovFZrkLwBvQcAET6lgxXg2bYIf9nOSiw==
+"@huma-finance/soroban-huma-config@0.0.23", "@huma-finance/soroban-huma-config@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-huma-config/-/soroban-huma-config-0.0.23.tgz#b93d5645f9e14bbf103c2bf60d2bbc84c2f12915"
+  integrity sha512-YcPPS/102Wi5OU59AsB5FjmjA/XmeI0m6sm3tHLC3kFE0MBvdgXZerqVXotv8cbyZQx+SLKQbJmWg5Sjn98UCQ==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-pool-credit@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-credit/-/soroban-pool-credit-0.0.18.tgz#11b456378f9cce552fd7afdc81df7ae39921def3"
-  integrity sha512-pVpC7yR0GDdTSCLvvx7To7tLdeVgddSs/FYm2MVFXnkqGTx6A7S9wT5Zl2CuvtXmmbvHHqTOqfduKsEaCfqSMA==
+"@huma-finance/soroban-pool-credit@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-credit/-/soroban-pool-credit-0.0.23.tgz#08d2719aa132460ad7f571875d9c376396d2ad91"
+  integrity sha512-klRDyzc9FcYBdyqEz0f283VcugSx8fNyZVR2Lh+Dk9T754W6Oa57EC/2Os77QuX+qxEFzGw+ijMRHYJT2A/ldg==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-pool-manager@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-manager/-/soroban-pool-manager-0.0.18.tgz#45e565e67e36a427203799c0fd2ac024903cc4c9"
-  integrity sha512-0cJ2AL7HwsWsx9NchFfUADSa6Bp1TcKSvMqRm/Xas2GWXydhzoyBxH3UJlmSjh86e5ajAC0DY3DyHSYyi7TKcA==
+"@huma-finance/soroban-pool-manager@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-manager/-/soroban-pool-manager-0.0.23.tgz#776e7f8fdb07d69a58a803504e990a2b3654fd03"
+  integrity sha512-xWlL9mAw3XSh1Qi5VgxIHpJioNHBhGKzHIiT3xF6SzozgLnAdvHdQUzMntK/wvNvqrkBh7XJMZB3UT/1ms1Yvg==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-pool-storage@0.0.18", "@huma-finance/soroban-pool-storage@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-storage/-/soroban-pool-storage-0.0.18.tgz#612f7fce2cf6407e4205275d79fb9319942a98f4"
-  integrity sha512-hogDT5K4tl9DmhztFywdRTLkC67S8vzzAauSZUn8dEAB+vYhxiQHbdB9U0nSp6NOwSP38Bh7oAy0NXDx9ozdUA==
+"@huma-finance/soroban-pool-storage@0.0.23", "@huma-finance/soroban-pool-storage@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool-storage/-/soroban-pool-storage-0.0.23.tgz#04607f0602745ae76059666da3e4ec3fb2807679"
+  integrity sha512-JxwGxGDZn56mweQT1lE/0XeyoDutAZpuCoV7U3/v34VBN/KZPVrKfo96y3rhrpG03f5WwhK3y6370pHapGlA2Q==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-pool@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool/-/soroban-pool-0.0.18.tgz#3cb8bdc3c8c8a88ae48d8e19df3896bd0b481d12"
-  integrity sha512-wELbzPUYIR8Tg3AzwnQ/nteze9QCIYeSyyF0/9H/B+jv9xtX2ao5PtI/O99bzlfwVcVi6VjEWcA7FLzkhhoOtA==
+"@huma-finance/soroban-pool@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-pool/-/soroban-pool-0.0.23.tgz#2ffc92836cfed4a85dd9c4a6ab69b6791ef95cb3"
+  integrity sha512-BHME/ukmc80dhR8srbTDTLY26/hppb0jp/0shcOM9nGnmOT1Hq/lmRIEY8weBmQuSFt1M4y7agJAGw6Yjzj67A==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-sdk@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-sdk/-/soroban-sdk-0.0.18.tgz#11f3e90d0f4442e2e6773a8d578ee105d885523a"
-  integrity sha512-2V4vBMTg3dEt2H7NJO9IVQuawEUYAzY9t3pHyDlzAAZAPRWEix6fpUXkZuooE/FZWANUtSrVo9CpgNrgDguekQ==
+"@huma-finance/soroban-sdk@0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-sdk/-/soroban-sdk-0.0.23.tgz#483e3986496923efdb31826ec82af71468634423"
+  integrity sha512-qGNvzj6Xy8k863YmB7d7lZ5J1Tze4ZJgCBXLdrW9hdx0iQRY+bEzWGw7jr7stlILpo3cEdi8bRe+CUEXjzOJSg==
   dependencies:
-    "@huma-finance/soroban-credit-manager" "^0.0.18"
-    "@huma-finance/soroban-credit-storage" "^0.0.18"
-    "@huma-finance/soroban-huma-config" "^0.0.18"
-    "@huma-finance/soroban-pool" "^0.0.18"
-    "@huma-finance/soroban-pool-credit" "^0.0.18"
-    "@huma-finance/soroban-pool-manager" "^0.0.18"
-    "@huma-finance/soroban-pool-storage" "^0.0.18"
-    "@huma-finance/soroban-sep41" "^0.0.18"
-    "@huma-finance/soroban-tranche-vault" "^0.0.18"
+    "@huma-finance/soroban-credit-manager" "^0.0.23"
+    "@huma-finance/soroban-credit-storage" "^0.0.23"
+    "@huma-finance/soroban-huma-config" "^0.0.23"
+    "@huma-finance/soroban-pool" "^0.0.23"
+    "@huma-finance/soroban-pool-credit" "^0.0.23"
+    "@huma-finance/soroban-pool-manager" "^0.0.23"
+    "@huma-finance/soroban-pool-storage" "^0.0.23"
+    "@huma-finance/soroban-sep41" "^0.0.23"
+    "@huma-finance/soroban-tranche-vault" "^0.0.23"
     "@stellar/stellar-sdk" "13.0.0"
     dotenv "^16.0.3"
     ts-node "^10.9.1"
     tslib "^2.5.0"
     typescript "^4.8.4"
 
-"@huma-finance/soroban-sep41@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-sep41/-/soroban-sep41-0.0.18.tgz#ed64c842d817747b0ecac8cf04b30b178534ea00"
-  integrity sha512-+vqS4BABdqqH+0jCwZMkcbzhlm9LJfvmntHbxdtunrtfSnaXTl2tJKNSNIOtkM7tOyuO5mKon4ZigPgMrbYrUA==
+"@huma-finance/soroban-sep41@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-sep41/-/soroban-sep41-0.0.23.tgz#7ce3fe8c1c5f82d5a704cea122582b5ca6c02d04"
+  integrity sha512-S2Gy+An9LKO7YwxAdtawvwPH0p/EDotdXJHr7A3FQCySl2iav5mYGbSf6v/VKB4K3017PfHLyQ8ZL+g0segJgg==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
 
-"@huma-finance/soroban-tranche-vault@0.0.18", "@huma-finance/soroban-tranche-vault@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-tranche-vault/-/soroban-tranche-vault-0.0.18.tgz#6fa54ad49025a8bc57c42dd37ed60f362defa785"
-  integrity sha512-CcpZ+/wUiGKtxxElXJjXVY7CPgU9s1jsXWWQd03sVjHmAZNEazjQJ8ABHchaf4vaMN9maf3Ht2WCplWaR0VjHA==
+"@huma-finance/soroban-tranche-vault@0.0.23", "@huma-finance/soroban-tranche-vault@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@huma-finance/soroban-tranche-vault/-/soroban-tranche-vault-0.0.23.tgz#762d5734d7b74488124430c73e5e702b43569ca6"
+  integrity sha512-P4QoZfpKrp/QMwb5Cd0LWgpyjTPIm81dhPvIhN82xMzgJ9KMMQvwwZpucrDUx2yGX7ytzEsMn33HOVSVfr67Wg==
   dependencies:
     "@stellar/stellar-sdk" "13.0.0"
     buffer "6.0.3"
@@ -14224,6 +14244,11 @@ extract-files@^11.0.0:
   resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-11.0.0.tgz#b72d428712f787eef1f5193aff8ab5351ca8469a"
   integrity sha512-FuoE1qtbJ4bBVvv94CC7s0oTnKUGvQs+Rjf1L2SJFfS+HTVVjhPFtehPdQ0JiGPqVNfSSZvL5yzHHQq2Z4WNhQ==
 
+extract-files@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-9.0.0.tgz#8a7744f2437f81f5ed3250ed9f1550de902fe54a"
+  integrity sha512-CvdFfHkC95B4bBBk36hcEmvdR2awOdhhVUYH6S/zrVj3477zven/fJMYg7121h4T1xHZC+tetUpubpAhxwI7hQ==
+
 extract-zip@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/extract-zip/-/extract-zip-2.0.1.tgz#663dca56fe46df890d5f131ef4a06d22bb8ba13a"
@@ -15184,12 +15209,15 @@ graphql-config@^4.5.0:
     string-env-interpolation "1.0.1"
     tslib "^2.4.0"
 
-graphql-request@7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-7.1.2.tgz#52d7fd6d8d08c9f0b00c84a091376ce9fbdfa945"
-  integrity sha512-+XE3iuC55C2di5ZUrB4pjgwe+nIQBuXVIK9J98wrVwojzDW3GMdSBZfxUk8l4j9TieIpjpggclxhNEU9ebGF8w==
+graphql-request@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-5.1.0.tgz#dbc8feee27d21b993cd5da2d3af67821827b240a"
+  integrity sha512-0OeRVYigVwIiXhNmqnPDt+JhMzsjinxHE7TVy3Lm6jUzav0guVcL0lfSbi6jVTRAxcbwgyr6yrZioSHxf9gHzw==
   dependencies:
-    "@graphql-typed-document-node/core" "^3.2.0"
+    "@graphql-typed-document-node/core" "^3.1.1"
+    cross-fetch "^3.1.5"
+    extract-files "^9.0.0"
+    form-data "^3.0.0"
 
 graphql-request@^6.0.0:
   version "6.1.0"
