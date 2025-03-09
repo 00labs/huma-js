@@ -73,9 +73,9 @@ export function SolanaLendSupply({
   const loggingHelper = useAppSelector(selectWidgetLoggingContext)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
 
-  const handleCloseFlow = () => {
+  const handleCloseFlow = (options?: CloseModalOptions) => {
     loggingHelper.logAction('ExitFlow', {})
-    handleClose()
+    handleClose(options)
   }
 
   useEffect(() => {
