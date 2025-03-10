@@ -20,7 +20,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { ComputeBudgetProgram, PublicKey, Transaction } from '@solana/web3.js'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
@@ -119,10 +119,12 @@ export function Transfer({
           ? seniorLenderApprovedAccountPDA!
           : juniorLenderApprovedAccountPDA!
 
+      let createdLenderAccounts = false
       if (
         (selectedTranche === 'senior' && !seniorLenderStateAccount) ||
         (selectedTranche === 'junior' && !juniorLenderStateAccount)
       ) {
+        createdLenderAccounts = true
         const createLenderAccountsTx = await program.methods
           .createLenderAccounts()
           .accountsPartial({
@@ -202,6 +204,14 @@ export function Transfer({
         })
         .transaction()
       tx.add(depositTx)
+
+      // Hardcode the limit here due to a race condition where CreateLenderAccounts aren't available
+      // when simulating the Deposit instruction, so simulated transaction CUs are not computed correctly
+      tx.instructions.unshift(
+        ComputeBudgetProgram.setComputeUnitLimit({
+          units: createdLenderAccounts ? 150_000 : 80_000,
+        }),
+      )
 
       setTransaction(tx)
     }

@@ -72,6 +72,9 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 <dd><p>Get the chain ID from a signer or provider object.</p></dd>
 <dt><a href="#getPoolInfo">getPoolInfo(poolName, poolType)</a> ⇒ <code>PoolInfoType</code> | <code>undefined</code></dt>
 <dd><p>Returns the pool info based on the provided pool name and type, using the same chain ID as the provider/signer given</p></dd>
+<dt><a href="#isSetComputeLimitInstruction">isSetComputeLimitInstruction()</a></dt>
+<dd><p>Check if a given instruction is a SetComputeUnitLimit instruction
+See https://github.com/solana-program/compute-budget/blob/main/clients/js/src/generated/programs/computeBudget.ts#L29</p></dd>
 </dl>
 
 ## Typedefs
@@ -919,6 +922,13 @@ Note that this does not approve a creditline in Huma's pools and an approve call
 | poolName | <code>POOL\_NAME</code> | <p>The name of the pool.</p> |
 | poolType | <code>POOL\_TYPE</code> | <p>The type of the pool.</p> |
 
+<a name="isSetComputeLimitInstruction"></a>
+
+## isSetComputeLimitInstruction()
+<p>Check if a given instruction is a SetComputeUnitLimit instruction
+See https://github.com/solana-program/compute-budget/blob/main/clients/js/src/generated/programs/computeBudget.ts#L29</p>
+
+**Kind**: global function  
 <a name="IrysConstructorArgs"></a>
 
 ## IrysConstructorArgs : <code>Object</code>

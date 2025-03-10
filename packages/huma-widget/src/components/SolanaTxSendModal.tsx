@@ -91,18 +91,22 @@ export function SolanaTxSendModal({
         // Extract writable accounts
         const txAccounts = extractWritableAccounts(txCopy)
         // Add on compute unit limit + price instructions
-        const optimizedTx = await buildOptimalTransactionFromConnection(
+        const {
+          tx: optimizedTx,
+          unitsConsumed,
+          fee,
+        } = await buildOptimalTransactionFromConnection(
           txCopy,
           txAccounts,
           connection,
           chainId,
           publicKey,
           useHighPriority ? 'High' : undefined,
-          process.env.REACT_APP_HELIUS_API_KEY,
+          import.meta.env.REACT_APP_HELIUS_API_KEY,
         )
         loggingHelper.logAction('SigningTransaction', {
-          priceData: optimizedTx.instructions[0].data,
-          unitsData: optimizedTx.instructions[1].data,
+          priorityFee: fee,
+          computeUnitLimit: unitsConsumed,
           recentBlockhash: optimizedTx.recentBlockhash,
           lastValidBlockHeight: optimizedTx.lastValidBlockHeight,
         })
