@@ -20,6 +20,7 @@ type Props = {
   poolInfo: SolanaPoolInfo
   poolState: SolanaPoolState
   campaign?: Campaign
+  isExistingUser: boolean
   handleAction: (options?: CloseModalOptions) => void
 }
 
@@ -27,6 +28,7 @@ export function Success({
   poolInfo,
   poolState,
   campaign,
+  isExistingUser,
   handleAction,
 }: Props): React.ReactElement {
   useLogOnFirstMount('Success')
@@ -53,12 +55,12 @@ export function Success({
   }
 
   const handleUserAction = useCallback(() => {
-    if (campaign) {
+    if (campaign && !isExistingUser) {
       dispatch(setStep(WIDGET_STEP.PointsEarned))
     } else {
       handleAction({ isSuccess: true })
     }
-  }, [campaign, dispatch, handleAction])
+  }, [campaign, dispatch, handleAction, isExistingUser])
 
   return (
     <SolanaTxDoneModal
@@ -67,7 +69,7 @@ export function Success({
       subContent={getSubContent()}
       chainId={poolInfo.chainId}
       solanaSignature={solanaSignature}
-      buttonText={campaign ? 'VIEW POINTS' : 'DONE'}
+      buttonText={campaign && !isExistingUser ? 'VIEW POINTS' : 'DONE'}
     />
   )
 }
