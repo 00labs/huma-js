@@ -127,7 +127,10 @@ export function SolanaTxSendModal({
           const result = await connection.getSignatureStatus(signatureResult, {
             searchTransactionHistory: true,
           })
-          if (result?.value?.confirmationStatus === 'finalized') {
+          if (
+            result?.value?.confirmationStatus === 'finalized' ||
+            result?.value?.confirmationStatus === 'confirmed'
+          ) {
             if (result?.value?.err) {
               loggingHelper.logAction('TransactionError', {
                 signature: signatureResult,
@@ -193,6 +196,7 @@ export function SolanaTxSendModal({
 
   const handleRetry = useCallback(
     (highPriority: boolean) => {
+      console.log('handleRetry')
       setUseHighPriority(highPriority)
       setShowRetryScreen(false)
       refresh()
