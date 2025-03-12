@@ -30,34 +30,7 @@ export const initRUMLogger = () => {
   }
 }
 
-// Explicitly defining the actions type so we can funnel
-// based on expected values and avoid typos
-export type LoggingActions =
-  | 'StartFlow'
-  | 'ExitFlow'
-  | 'Evaluation'
-  | 'ApproveLender'
-  | 'ChooseTranche'
-  | 'ChooseAmount'
-  | 'ApproveAllowance'
-  | 'Transaction'
-  | 'SigningTransaction'
-  | 'SendingTransaction'
-  | 'TransactionError'
-  | 'TransactionSuccess'
-  | 'ConfirmTransfer'
-  | 'ShowRetryScreenDueToExpiration'
-  | 'UnknownError'
-  | 'Success'
-  | 'PointsEarned'
-  | 'SetInitialStep'
-  | 'ConnectWallet'
-  | 'KYCKYBApproved'
-  | 'AgreementAccepted'
-  | 'Accredited'
-  | 'CloseNotifi'
-  | 'OpenNotifi'
-export const logActionRaw = (action: LoggingActions, context?: Object) => {
+export const logActionRaw = (action: string, context?: Object) => {
   if (ddLoggerEnabled) {
     datadogRum.addAction(action, { ...context })
   }
@@ -82,7 +55,31 @@ export type LoggingContext = {
   poolName: POOL_NAME
   poolType: POOL_TYPE
   chainId: ChainEnum | SolanaChainEnum | StellarChainEnum
+  chainType: 'EVM' | 'Solana' | 'Stellar'
 }
+
+// Explicitly defining the actions type so we can funnel
+// based on expected values and avoid typos
+export type LoggingActions =
+  | 'StartFlow'
+  | 'ExitFlow'
+  | 'Evaluation'
+  | 'ApproveLender'
+  | 'ChooseTranche'
+  | 'ChooseAmount'
+  | 'ApproveAllowance'
+  | 'Transaction'
+  | 'SigningTransaction'
+  | 'SendingTransaction'
+  | 'TransactionError'
+  | 'TransactionSuccess'
+  | 'ConfirmTransfer'
+  | 'ShowRetryScreenDueToExpiration'
+  | 'UnknownError'
+  | 'Success'
+  | 'PointsEarned'
+  | 'SetInitialStep'
+
 export class LoggingContextHelper {
   #context: LoggingContext | null
 
@@ -92,7 +89,9 @@ export class LoggingContextHelper {
 
   logAction(action: LoggingActions, additionalContext: Object) {
     logActionRaw(
-      action,
+      this.#context
+        ? `${this.#context.chainType}-${this.#context.flow}-${action}`
+        : action,
       this.#context
         ? { ...this.#context, ...additionalContext }
         : additionalContext,

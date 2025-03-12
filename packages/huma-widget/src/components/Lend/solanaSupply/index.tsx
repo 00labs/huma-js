@@ -105,6 +105,7 @@ export function SolanaLendSupply({
         chainId: poolInfo.chainId,
         poolName: poolInfo.poolName,
         poolType: poolInfo.poolType,
+        chainType: 'Solana',
       }
       const loggingHelperInit = new LoggingContextHelper(context)
       loggingHelperInit.logAction('StartFlow', {})
