@@ -156,17 +156,11 @@ export function Transfer({
           : BigInt(juniorTrancheMintSupply?.toString() ?? 0),
         BigInt(supplyBigNumber.toString()),
       )
-      const existingShares = convertToShares(
-        selectedTranche === 'senior'
-          ? BigInt(poolState.seniorTrancheAssets ?? 0)
-          : BigInt(poolState.juniorTrancheAssets ?? 0),
-        selectedTranche === 'senior'
-          ? BigInt(seniorTrancheMintSupply?.toString() ?? 0)
-          : BigInt(juniorTrancheMintSupply?.toString() ?? 0),
+      const existingShares =
         selectedTranche === 'senior'
           ? BigInt(seniorTokenAccount?.amount.toString() ?? '0')
-          : BigInt(juniorTokenAccount?.amount.toString() ?? '0'),
-      )
+          : BigInt(juniorTokenAccount?.amount.toString() ?? '0')
+
       tx.add(
         createApproveCheckedInstruction(
           selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA,
