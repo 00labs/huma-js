@@ -14,7 +14,7 @@ import {
   TokenInvalidAccountOwnerError,
 } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { ComputeBudgetProgram, PublicKey, Transaction } from '@solana/web3.js'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { useAppDispatch } from '../../../hooks/useRedux'
@@ -102,6 +102,12 @@ export function Transfer({
           })
           .transaction()
         tx.add(disburseTx)
+
+        tx.instructions.unshift(
+          ComputeBudgetProgram.setComputeUnitLimit({
+            units: 60_000,
+          }),
+        )
       } else {
         const withdrawAfterPoolClosureTx = await program.methods
           .withdrawAfterPoolClosure()
