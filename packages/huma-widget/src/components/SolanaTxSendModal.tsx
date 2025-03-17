@@ -156,14 +156,8 @@ export function SolanaTxSendModal({
           }
 
           // eslint-disable-next-line no-await-in-loop
-          const latestBlockhash = await connection.getLatestBlockhash(
-            'confirmed',
-          )
-          if (
-            latestBlockhash.lastValidBlockHeight -
-              optimizedTx.lastValidBlockHeight! >
-            100
-          ) {
+          const latestBlockheight = await connection.getBlockHeight('confirmed')
+          if (latestBlockheight > optimizedTx.lastValidBlockHeight!) {
             loggingHelper.logAction('ShowRetryScreenDueToExpiration', {
               signature: signatureResult,
             })
