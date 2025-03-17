@@ -33,6 +33,7 @@ import {
   PoolSafe,
   Receivable,
   TrancheVault,
+  TrancheVaultNoAutoredemptionUpgrade,
 } from '@huma-finance/shared/src/v2/abis/types'
 import { CreditManager } from '@huma-finance/shared/src/v2/abis/types/CreditManager'
 import {
@@ -113,9 +114,11 @@ export function useTrancheVaultContractV2(
   const chainId = provider?.network?.chainId
   const poolInfo = usePoolInfoV2(poolName, chainId)
   const contractAddr = poolInfo?.[`${trancheType}TrancheVault`]
-  return useContract<TrancheVault>(
+  return useContract<TrancheVault | TrancheVaultNoAutoredemptionUpgrade>(
     contractAddr,
-    POOL_ABI_V2.trancheVaultAbi,
+    poolInfo?.extra?.noTrancheAutoredeemUpdate
+      ? POOL_ABI_V2.trancheVaultNoAutoredemptionUpgradeAbi
+      : POOL_ABI_V2.trancheVaultAbi,
     provider,
     account,
   )
