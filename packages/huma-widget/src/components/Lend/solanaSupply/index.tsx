@@ -1,10 +1,12 @@
 import {
+  CampaignService,
   CloseModalOptions,
   getSolanaNetworkType,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
 import {
+  checkIsDev,
   LoggingContext,
   LoggingContextHelper,
   SolanaPoolState,
@@ -62,6 +64,7 @@ export function SolanaLendSupply({
   handleSuccess,
 }: SolanaLendSupplyProps): React.ReactElement | null {
   const dispatch = useDispatch()
+  const isDev = checkIsDev()
   const { isUniTranche } = poolState
   const {
     seniorLenderApproved,
@@ -72,11 +75,27 @@ export function SolanaLendSupply({
   const { step, errorMessage } = useAppSelector(selectWidgetState)
   const loggingHelper = useAppSelector(selectWidgetLoggingContext)
   const [selectedTranche, setSelectedTranche] = useState<TrancheType>()
+  const [isExistingUser, setIsExistingUser] = useState<boolean>(false)
 
-  const handleCloseFlow = () => {
+  const handleCloseFlow = (options?: CloseModalOptions) => {
     loggingHelper.logAction('ExitFlow', {})
-    handleClose()
+    handleClose(options)
   }
+
+  useEffect(() => {
+    async function fetchPoints() {
+      const points = await CampaignService.getHumaAccountPoints(
+        import.meta.env.VITE_NETWORK_TYPE,
+        isDev,
+      )
+
+      if (points && points?.totalPoints > 0) {
+        setIsExistingUser(true)
+      }
+    }
+    fetchPoints()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!step && !isLoadingLenderAccounts && !isLoadingTokenAccount) {
@@ -86,6 +105,7 @@ export function SolanaLendSupply({
         chainId: poolInfo.chainId,
         poolName: poolInfo.poolName,
         poolType: poolInfo.poolType,
+        chainType: 'Solana',
       }
       const loggingHelperInit = new LoggingContextHelper(context)
       loggingHelperInit.logAction('StartFlow', {})
@@ -215,6 +235,7 @@ export function SolanaLendSupply({
           poolState={poolState}
           campaign={poolState.campaign}
           handleAction={handleCloseFlow}
+          isExistingUser={isExistingUser}
         />
       )}
       {step === WIDGET_STEP.PointsEarned && (

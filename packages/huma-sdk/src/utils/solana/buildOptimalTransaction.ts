@@ -3,6 +3,7 @@ import {
   Connection,
   PublicKey,
   Transaction,
+  TransactionInstruction,
   TransactionMessage,
   VersionedTransaction,
 } from '@solana/web3.js'
@@ -73,6 +74,16 @@ async function getPriorityFeeEstimate(
   }
 }
 
+/**
+ * Check if a given instruction is a SetComputeUnitLimit instruction
+ * See https://github.com/solana-program/compute-budget/blob/main/clients/js/src/generated/programs/computeBudget.ts#L29
+ */
+function isSetComputeLimitInstruction(ix: TransactionInstruction): boolean {
+  return (
+    ix.programId.equals(ComputeBudgetProgram.programId) && ix.data[0] === 2 // opcode for setComputeUnitLimit is 2
+  )
+}
+
 async function buildOptimalTransactionImpl(
   tx: Transaction,
   txAccounts: PublicKey[],
@@ -81,28 +92,41 @@ async function buildOptimalTransactionImpl(
   signer: PublicKey,
   heliusPriority: HeliusPriorityLevel = 'Medium',
   heliusApiKey?: string | null,
-): Promise<Transaction> {
-  // Calculate compute unit limit
-  const testInstructions = [
-    ComputeBudgetProgram.setComputeUnitLimit({ units: 1_400_000 }),
-    ...tx.instructions,
-  ]
-  const testTransaction = new VersionedTransaction(
-    new TransactionMessage({
-      instructions: testInstructions,
-      payerKey: signer,
-      recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
-    }).compileToV0Message([]),
+): Promise<{
+  tx: Transaction
+  unitsConsumed: number | undefined
+  fee: number | undefined
+}> {
+  let unitsConsumed: number | undefined
+  const computeLimitIndex = tx.instructions.findIndex(
+    isSetComputeLimitInstruction,
   )
-  const rpcResponse = await connection.simulateTransaction(testTransaction, {
-    replaceRecentBlockhash: true,
-    sigVerify: false,
-  })
-  const { unitsConsumed } = rpcResponse.value
-  if (unitsConsumed) {
-    tx.instructions.unshift(
-      ComputeBudgetProgram.setComputeUnitLimit({ units: unitsConsumed * 1.2 }),
+
+  // Calculate compute unit limit if it doesn't exist
+  if (computeLimitIndex === -1) {
+    const testInstructions = [
+      ComputeBudgetProgram.setComputeUnitLimit({ units: 1_400_000 }),
+      ...tx.instructions,
+    ]
+    const testTransaction = new VersionedTransaction(
+      new TransactionMessage({
+        instructions: testInstructions,
+        payerKey: signer,
+        recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
+      }).compileToV0Message([]),
     )
+    const rpcResponse = await connection.simulateTransaction(testTransaction, {
+      replaceRecentBlockhash: true,
+      sigVerify: false,
+    })
+    unitsConsumed = rpcResponse.value.unitsConsumed
+    if (unitsConsumed) {
+      tx.instructions.unshift(
+        ComputeBudgetProgram.setComputeUnitLimit({
+          units: unitsConsumed * 1.2,
+        }),
+      )
+    }
   }
 
   // Calculate compute unit priority fee
@@ -122,7 +146,7 @@ async function buildOptimalTransactionImpl(
     }),
   )
 
-  return tx
+  return { tx, unitsConsumed, fee: chosenFee }
 }
 
 export async function buildOptimalTransaction(
@@ -130,7 +154,11 @@ export async function buildOptimalTransaction(
   txAccounts: PublicKey[],
   context: HumaSolanaContext,
   heliusPriorityLevel?: HeliusPriorityLevel,
-): Promise<Transaction> {
+): Promise<{
+  tx: Transaction
+  unitsConsumed: number | undefined
+  fee: number | undefined
+}> {
   return buildOptimalTransactionImpl(
     tx,
     txAccounts,
@@ -150,7 +178,11 @@ export async function buildOptimalTransactionFromConnection(
   signer: PublicKey,
   heliusPriorityLevel?: HeliusPriorityLevel,
   heliusApiKey?: string | null,
-): Promise<Transaction> {
+): Promise<{
+  tx: Transaction
+  unitsConsumed: number | undefined
+  fee: number | undefined
+}> {
   return buildOptimalTransactionImpl(
     tx,
     txAccounts,
