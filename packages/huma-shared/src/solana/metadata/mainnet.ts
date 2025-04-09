@@ -219,6 +219,9 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
       decimals: 6,
       icon: 'USDC',
     },
+    KYC: {
+      Persona: ARF_PERSONA_KYC_COPY,
+    },
     extra: {
       hasReceivables: true,
     },
