@@ -10,8 +10,8 @@ import {
 } from '@huma-finance/shared'
 import {
   AUTH_ERROR_TYPE,
-  useAuthErrorHandling,
   checkIsDev,
+  useAuthErrorHandling,
 } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import Persona, { Client } from 'persona'
@@ -345,7 +345,7 @@ export function PersonaEvaluation({
         {campaign && kycCopy === KYCCopies.verifyIdentity ? (
           <Box css={styles.description}>
             <span>
-              You'll be rewarded with Huma points after completing KYC/KYB and
+              You'll be rewarded with Huma Feathers after completing KYC/KYB and
               your first investment.
             </span>
           </Box>

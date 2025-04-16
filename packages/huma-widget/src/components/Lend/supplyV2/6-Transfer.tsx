@@ -4,7 +4,7 @@ import {
   PoolInfoV2,
   TrancheType,
 } from '@huma-finance/shared'
-import { useTrancheVaultContractV2, checkIsDev } from '@huma-finance/web-shared'
+import { checkIsDev, useTrancheVaultContractV2 } from '@huma-finance/web-shared'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { useCallback } from 'react'
@@ -58,7 +58,7 @@ export function Transfer({
           )
           dispatch(setPointsAccumulated(result.pointsAccumulated))
         } catch (error) {
-          console.error('Failed to update wallet points', error)
+          console.error('Failed to update wallet Feathers', error)
         }
       }
       dispatch(setStep(WIDGET_STEP.Done))

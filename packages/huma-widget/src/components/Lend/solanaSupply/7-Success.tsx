@@ -9,12 +9,12 @@ import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Campaign } from '.'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { SolanaTxDoneModal } from '../../SolanaTxDoneModal'
-import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -69,7 +69,7 @@ export function Success({
       subContent={getSubContent()}
       chainId={poolInfo.chainId}
       solanaSignature={solanaSignature}
-      buttonText={campaign && !isExistingUser ? 'VIEW POINTS' : 'DONE'}
+      buttonText={campaign && !isExistingUser ? 'VIEW FEATHERS' : 'DONE'}
     />
   )
 }

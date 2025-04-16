@@ -8,11 +8,11 @@ import {
   TrancheType,
 } from '@huma-finance/shared'
 import {
+  checkIsDev,
   SolanaPoolState,
   useHumaProgram,
   useLenderAccounts,
   useTrancheTokenAccounts,
-  checkIsDev,
 } from '@huma-finance/web-shared'
 import {
   createApproveCheckedInstruction,
@@ -22,13 +22,13 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ComputeBudgetProgram, PublicKey, Transaction } from '@solana/web3.js'
 import React, { useCallback, useEffect, useState } from 'react'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { setPointsAccumulated, setStep } from '../../../store/widgets.reducers'
 import { selectWidgetState } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { LoadingModal } from '../../LoadingModal'
 import { SolanaTxSendModal } from '../../SolanaTxSendModal'
-import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolInfo: SolanaPoolInfo
@@ -83,7 +83,7 @@ export function Transfer({
           )
           dispatch(setPointsAccumulated(result.pointsAccumulated))
         } catch (error) {
-          console.error('Failed to update wallet points', error)
+          console.error('Failed to update wallet Feathers', error)
         }
       }
       dispatch(setStep(WIDGET_STEP.Done))

@@ -7,22 +7,22 @@ import {
   NETWORK_TYPE,
 } from '@huma-finance/shared'
 import {
+  checkIsDev,
   SolanaPoolState,
   txAtom,
   useChainInfo,
-  checkIsDev,
 } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { resetState } from '../../../store/widgets.reducers'
 import { BottomButton } from '../../BottomButton'
 import { CongratulationsIcon, HumaPointsIcon, RibbonIcon } from '../../icons'
 import { LoadingModal } from '../../LoadingModal'
 import { SignIn } from '../../SignIn'
-import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 enum STATE {
   Loading = 'Loading',
@@ -74,7 +74,7 @@ export function PointsEarned({
         setPointsAccumulated(result.pointsAccumulated)
         setState(STATE.Congrats)
       } catch (error) {
-        console.error('Failed to update wallet points', error)
+        console.error('Failed to update wallet Feathers', error)
       }
     }
     updateWalletPoints()
@@ -138,7 +138,7 @@ export function PointsEarned({
 
   if (state === STATE.SignIn) {
     return (
-      <SignIn description='Please sign in to check the points that you earned.' />
+      <SignIn description='Please sign in to check the Feathers that you earned.' />
     )
   }
 
@@ -154,8 +154,8 @@ export function PointsEarned({
             <HumaPointsIcon />
             <Box>
               {hasPointsAccumulated
-                ? `${formatNumber(pointsAccumulated)} Points`
-                : 'Points earned'}
+                ? `${formatNumber(pointsAccumulated)} Feathers`
+                : 'Feathers earned'}
             </Box>
           </Box>
         </Box>
@@ -163,14 +163,14 @@ export function PointsEarned({
           {hasPointsAccumulated ? (
             <>
               <Box>Congratulations,</Box>
-              <Box>you've earned {pointsAccumulated} points</Box>
+              <Box>you've earned {pointsAccumulated} Feathers</Box>
             </>
           ) : (
             <Box>Congratulations on joining the Huma Protocol!</Box>
           )}
         </Box>
         <Box css={styles.entirePointsDetails}>
-          You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
+          You'll earn Feathers <span css={styles.everyday}>everyday</span> for{' '}
           {monthText} straight.
         </Box>
         <BottomButton variant='contained' onClick={handleCloseModal}>
