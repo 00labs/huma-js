@@ -1,6 +1,6 @@
 {
   "name": "@huma-finance/widgets",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "publishConfig": {
     "access": "public"
   },
@@ -22,9 +22,9 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/experimental": "^5.7.0",
     "@ethersproject/units": "^5.6.0",
-    "@huma-finance/sdk": "^0.0.75",
-    "@huma-finance/shared": "^0.0.75",
-    "@huma-finance/web-shared": "^0.0.75",
+    "@huma-finance/sdk": "^0.0.76",
+    "@huma-finance/shared": "^0.0.76",
+    "@huma-finance/web-shared": "^0.0.76",
     "@mui/x-date-pickers": "^5.0.7",
     "@notifi-network/notifi-frontend-client": "^1.1.2",
     "@notifi-network/notifi-react": "^1.1.2",
