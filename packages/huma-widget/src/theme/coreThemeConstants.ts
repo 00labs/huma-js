@@ -4,6 +4,7 @@ export const coreThemeConstants = {
   },
   fontFamily: [
     'Red-Hat-Display',
+    'Red-Hat-Mono',
     '-apple-system',
     'BlinkMacSystemFont',
     '"Segoe UI"',
