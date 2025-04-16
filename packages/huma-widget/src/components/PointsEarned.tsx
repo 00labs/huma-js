@@ -99,8 +99,8 @@ export function PointsEarned({
           <HumaPointsIcon />
           <Box>
             {hasPointsAccumulated
-              ? `${formatNumber(pointsAccumulated)} Points`
-              : 'Points earned'}
+              ? `${formatNumber(pointsAccumulated)} Feathers`
+              : 'Feathers earned'}
           </Box>
         </Box>
       </Box>
@@ -108,14 +108,14 @@ export function PointsEarned({
         {hasPointsAccumulated ? (
           <>
             <Box>Congratulations,</Box>
-            <Box>you've earned {pointsAccumulated} points</Box>
+            <Box>you've earned {pointsAccumulated} Feathers</Box>
           </>
         ) : (
           <Box>Congratulations on joining the Huma Protocol!</Box>
         )}
       </Box>
       <Box css={styles.entirePointsDetails}>
-        You'll earn points <span css={styles.everyday}>everyday</span> for{' '}
+        You'll earn Feathers <span css={styles.everyday}>everyday</span> for{' '}
         {monthText} straight.
       </Box>
       <BottomButton variant='contained' onClick={handleCloseModal}>
