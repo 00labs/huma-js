@@ -57,6 +57,7 @@ export function Transfer({
         selectedTranche === 'senior' ? seniorTrancheATA : juniorTrancheATA
 
       // Create user token account if it doesn't exist
+      let createdAccounts = false
       try {
         await getAccount(
           connection,
@@ -74,6 +75,7 @@ export function Transfer({
           error instanceof TokenInvalidAccountOwnerError
         ) {
           // As this isn't atomic, it's possible others can create associated accounts meanwhile.
+          createdAccounts = true
           tx.add(
             createAssociatedTokenAccountInstruction(
               publicKey,
@@ -105,7 +107,7 @@ export function Transfer({
 
         tx.instructions.unshift(
           ComputeBudgetProgram.setComputeUnitLimit({
-            units: 60_000,
+            units: createdAccounts ? 85_000 : 60_000,
           }),
         )
       } else {
@@ -125,6 +127,12 @@ export function Transfer({
           })
           .transaction()
         tx.add(withdrawAfterPoolClosureTx)
+
+        tx.instructions.unshift(
+          ComputeBudgetProgram.setComputeUnitLimit({
+            units: createdAccounts ? 145_000 : 120_000,
+          }),
+        )
       }
 
       setTransaction(tx)
