@@ -94,6 +94,16 @@ export type HumaAccountPoints = {
   bonusPoints: number
 }
 
+export type SeasonPoints = {
+  seasonName: string
+  endsAt: string
+  totalPoints: number
+  basePoints: number
+  liquidityPoints: number
+  referralPoints: number
+  bonusPoints: number
+}
+
 function checkWalletOwnership(
   wallet: string,
   networkType: NETWORK_TYPE,
@@ -284,6 +294,56 @@ function getHumaAccountPoints(
     })
 }
 
+function getSeasonPoints(
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+): Promise<SeasonPoints[] | undefined> {
+  const url = configUtil.getCampaignAPIUrl(networkType, isDev)
+
+  const query = gql`
+    query {
+      seasonPoints {
+        ... on SeasonPointsResult {
+          data {
+            seasonName
+            endsAt
+            totalPoints
+            basePoints
+            liquidityPoints
+            referralPoints
+            bonusPoints
+          }
+        }
+        ... on PointServiceError {
+          errMessage
+        }
+      }
+    }
+  `
+
+  return requestPost<{
+    data?: { seasonPoints: { data: SeasonPoints[] } & { errMessage: string } }
+    errors?: unknown
+  }>(url, JSON.stringify({ query }))
+    .then((res) => {
+      if (res.errors) {
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
+      }
+      const errMessage = res.data?.seasonPoints?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
+      return res.data?.seasonPoints.data
+    })
+    .catch((err) => {
+      console.error(err)
+      throw new Error(COMMON_ERROR_MESSAGE)
+    })
+}
+
 function getEstimatedPoints(
   campaignGroupId: string,
   principal: string,
@@ -403,4 +463,5 @@ export const CampaignService = {
   getHumaAccountRanking,
   getHumaAccountPoints,
   updateHumaAccountPoints,
+  getSeasonPoints,
 }
