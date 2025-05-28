@@ -68,6 +68,11 @@ export const secondsToDays = (seconds: number | undefined) => {
   }
 }
 
+const formatDate = (
+  timestamp: number,
+  format: string = 'MMM D, YYYY',
+): string => moment(timestamp).format(format)
+
 // eslint-disable-next-line no-promise-executor-return
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
@@ -77,4 +82,5 @@ export const timeUtil = {
   getUnixTimestamp,
   secondsToDays,
   sleep,
+  formatDate,
 }
