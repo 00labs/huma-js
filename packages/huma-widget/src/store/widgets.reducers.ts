@@ -36,6 +36,7 @@ export const widgetSlice = createSlice({
       state.solanaSignature = undefined
       state.txHash = undefined
       state.loggingContext = undefined
+      state.withdrawDestination = undefined
     },
     setStep: (state, { payload }: PayloadAction<WIDGET_STEP>) => {
       state.step = payload
@@ -131,6 +132,9 @@ export const widgetSlice = createSlice({
       state.errorReason = payload.errorReason
       state.step = WIDGET_STEP.Error
     },
+    setWithdrawDestination: (state, { payload }: PayloadAction<string>) => {
+      state.withdrawDestination = payload
+    },
   },
 })
 
@@ -153,6 +157,7 @@ export const {
   setTxHash,
   setPointsAccumulated,
   setLoggingContext,
+  setWithdrawDestination,
 } = widgetSlice.actions
 
 export default widgetSlice.reducer
