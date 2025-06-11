@@ -59,13 +59,17 @@ export function ConfirmTransfer({
       subTitle='Withdraw all the available amount'
     >
       <Box css={styles.itemWrapper}>
-        <Box css={styles.item}>
-          <Box>Price Per Share</Box>
-          <Box css={styles.itemValue}>
-            {sharePrice.toFixed(1)} {symbol}
-          </Box>
-        </Box>
-        <Divider css={styles.divider} orientation='horizontal' />
+        {sharePrice !== 0 && (
+          <>
+            <Box css={styles.item}>
+              <Box>Price Per Share</Box>
+              <Box css={styles.itemValue}>
+                {sharePrice.toFixed(1)} {symbol}
+              </Box>
+            </Box>
+            <Divider css={styles.divider} orientation='horizontal' />
+          </>
+        )}
         <Box css={styles.item}>
           <Box fontWeight={700}>Available to withdraw</Box>
           <Box css={styles.itemValue}>
