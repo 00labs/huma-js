@@ -113,7 +113,11 @@ export function SolanaLendWithdraw({
         : poolState.juniorTrancheAssets
 
     const trancheAssetsVal = new BN(trancheAssets ?? 1)
-    const trancheSupplyVal = new BN(trancheMintAccount.supply.toString() ?? 1)
+    const trancheSupplyVal = new BN(
+      trancheMintAccount.supply.toString(),
+    ).isZero()
+      ? new BN(1)
+      : new BN(trancheMintAccount.supply.toString())
     const sharePrice =
       trancheAssetsVal.muln(100000).div(trancheSupplyVal).toNumber() / 100000
     setSharePrice(sharePrice)

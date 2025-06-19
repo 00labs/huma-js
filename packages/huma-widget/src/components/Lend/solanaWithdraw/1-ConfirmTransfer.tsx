@@ -73,12 +73,17 @@ export function ConfirmTransfer({
             onChange={(e) => setWithdrawDestinationValue(e.target.value)}
           />
         </Box>
-        <Box css={styles.item}>
-          <Box>Price Per Share</Box>
-          <Box css={styles.itemValue}>
-            {sharePrice.toFixed(1)} {symbol}
-          </Box>
-        </Box>
+        {sharePrice !== 0 && (
+          <>
+            <Box css={styles.item}>
+              <Box>Price Per Share</Box>
+              <Box css={styles.itemValue}>
+                {sharePrice.toFixed(1)} {symbol}
+              </Box>
+            </Box>
+            <Divider css={styles.divider} orientation='horizontal' />
+          </>
+        )}
         <Divider css={styles.divider} orientation='horizontal' />
         <Box css={styles.item}>
           <Box fontWeight={700}>Available to withdraw</Box>
