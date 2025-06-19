@@ -191,10 +191,27 @@ export function Transfer({
           })
           .transaction()
         tx.add(withdrawAfterPoolClosureTx)
+        const transferTx = await createTransferCheckedInstruction(
+          underlyingTokenATA,
+          new PublicKey(poolInfo.underlyingMint.address),
+          withdrawalDestinationTokenATA,
+          publicKey,
+          BigInt(withdrawableAmount.toString()),
+          decimals,
+        )
+        tx.add(transferTx)
+
+        let txFee = 120_000
+        if (createdAccounts) {
+          txFee += 25_000
+        }
+        if (createdWithdrawalTokenAccounts) {
+          txFee += 25_000
+        }
 
         tx.instructions.unshift(
           ComputeBudgetProgram.setComputeUnitLimit({
-            units: createdAccounts ? 145_000 : 120_000,
+            units: txFee,
           }),
         )
       }
