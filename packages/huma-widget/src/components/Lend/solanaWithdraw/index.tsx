@@ -153,6 +153,7 @@ export function SolanaLendWithdraw({
       )}
       {step === WIDGET_STEP.Transfer && (
         <Transfer
+          withdrawableAmount={withdrawableAmount}
           poolInfo={poolInfo}
           selectedTranche={trancheType}
           poolIsClosed={poolIsClosed}

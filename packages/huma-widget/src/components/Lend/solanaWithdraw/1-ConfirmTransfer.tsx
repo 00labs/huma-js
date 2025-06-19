@@ -1,8 +1,11 @@
 import { UnderlyingTokenInfo } from '@huma-finance/shared'
-import { Box, Divider, css, useTheme } from '@mui/material'
-import React from 'react'
+import { Box, Divider, Input, css, useTheme } from '@mui/material'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setStep } from '../../../store/widgets.reducers'
+import {
+  setStep,
+  setWithdrawDestination,
+} from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
@@ -23,8 +26,11 @@ export function ConfirmTransfer({
   const theme = useTheme()
   const dispatch = useDispatch()
   const { symbol } = poolUnderlyingToken
+  const [withdrawDestinationValue, setWithdrawDestinationValue] =
+    useState<string>('')
 
   const goToWithdraw = () => {
+    dispatch(setWithdrawDestination(withdrawDestinationValue))
     dispatch(setStep(WIDGET_STEP.Transfer))
   }
 
@@ -59,6 +65,14 @@ export function ConfirmTransfer({
       subTitle='Withdraw all the available amount'
     >
       <Box css={styles.itemWrapper}>
+        <Box css={styles.item}>
+          <Box>Destination Address</Box>
+          <Input
+            placeholder='Enter your destination address'
+            value={withdrawDestinationValue}
+            onChange={(e) => setWithdrawDestinationValue(e.target.value)}
+          />
+        </Box>
         {sharePrice !== 0 && (
           <>
             <Box css={styles.item}>
@@ -70,6 +84,7 @@ export function ConfirmTransfer({
             <Divider css={styles.divider} orientation='horizontal' />
           </>
         )}
+        <Divider css={styles.divider} orientation='horizontal' />
         <Box css={styles.item}>
           <Box fontWeight={700}>Available to withdraw</Box>
           <Box css={styles.itemValue}>
@@ -77,7 +92,11 @@ export function ConfirmTransfer({
           </Box>
         </Box>
       </Box>
-      <BottomButton variant='contained' onClick={goToWithdraw}>
+      <BottomButton
+        variant='contained'
+        onClick={goToWithdraw}
+        disabled={withdrawDestinationValue === ''}
+      >
         WITHDRAW
       </BottomButton>
     </WrapperModal>
