@@ -64,7 +64,7 @@ export const STELLAR_CHAINS_INFO: StellarChainsInfo = {
   },
   [StellarChainEnum.StellarMainnet]: {
     rpc: 'https://mainnet.sorobanrpc.com',
-    humaConfig: 'CAVRWN3JYHZLKREHPDXFRCMEXPLPF2LIYRWKBHIRWSE62OCRTELBLQ4O',
+    humaConfig: 'CAXZGMU3EHOHGXGXDJWVPG5PIVC2DCZQ2JO2YI3RGSM4OQK7ZIQ46FV5',
     networkPassphrase: 'Public Global Stellar Network ; September 2015',
   },
 }
