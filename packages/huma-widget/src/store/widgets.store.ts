@@ -64,6 +64,7 @@ export type WidgetState = {
   pointsAccumulated?: number
   txHash?: string
   loggingContext?: LoggingContext
+  withdrawDestination?: string
 }
 
 export const initialWidgetState: WidgetState = {}
