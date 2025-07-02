@@ -107,7 +107,7 @@ export function Transfer({
 
         tx.instructions.unshift(
           ComputeBudgetProgram.setComputeUnitLimit({
-            units: createdAccounts ? 85_000 : 60_000,
+            units: createdAccounts ? 105_000 : 80_000,
           }),
         )
       } else {

@@ -127,11 +127,6 @@ async function buildOptimalTransactionImpl(
         }),
       )
     }
-  } else {
-    tx.instructions[computeLimitIndex] =
-      ComputeBudgetProgram.setComputeUnitLimit({
-        units: 1_400_000,
-      })
   }
 
   // Calculate compute unit priority fee
