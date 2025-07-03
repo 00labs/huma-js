@@ -105,11 +105,13 @@ export function Transfer({
           .transaction()
         tx.add(disburseTx)
 
-        tx.instructions.unshift(
-          ComputeBudgetProgram.setComputeUnitLimit({
-            units: createdAccounts ? 85_000 : 60_000,
-          }),
-        )
+        if (createdAccounts) {
+          tx.instructions.unshift(
+            ComputeBudgetProgram.setComputeUnitLimit({
+              units: 105_000,
+            }),
+          )
+        }
       } else {
         const withdrawAfterPoolClosureTx = await program.methods
           .withdrawAfterPoolClosure()
@@ -128,11 +130,13 @@ export function Transfer({
           .transaction()
         tx.add(withdrawAfterPoolClosureTx)
 
-        tx.instructions.unshift(
-          ComputeBudgetProgram.setComputeUnitLimit({
-            units: createdAccounts ? 145_000 : 120_000,
-          }),
-        )
+        if (createdAccounts) {
+          tx.instructions.unshift(
+            ComputeBudgetProgram.setComputeUnitLimit({
+              units: 145_000,
+            }),
+          )
+        }
       }
 
       setTransaction(tx)
