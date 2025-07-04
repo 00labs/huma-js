@@ -776,49 +776,45 @@ export const useLenderInvestedPools = (
         // To avoid rate limiting, we sleep for 1 seconds between each pool
         await timeUtil.sleep(1000)
         const poolName = poolNameStr as POOL_NAME
-        if (!SOLANA_CHAIN_POOLS_INFO[chainId][poolName]?.extra?.isClosed) {
-          const poolInfo = getSolanaPoolInfo(chainId, poolName)!
-          const [juniorLenderStateAccountPDACalc] =
-            PublicKey.findProgramAddressSync(
-              [
-                Buffer.from('lender_state'),
-                new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
-                publicKey.toBuffer(),
-              ],
-              poolProgram,
-            )
-          const [seniorLenderStateAccountPDACalc] =
-            PublicKey.findProgramAddressSync(
-              [
-                Buffer.from('lender_state'),
-                new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
-                publicKey.toBuffer(),
-              ],
-              poolProgram,
-            )
+        const poolInfo = getSolanaPoolInfo(chainId, poolName)!
+        const [juniorLenderStateAccountPDA] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
+            publicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+        const [seniorLenderStateAccountPDA] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
+            publicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
 
-          const [seniorLenderStateAccount, juniorLenderStateAccount] =
-            await program.account.lenderState.fetchMultiple([
-              seniorLenderStateAccountPDACalc,
-              juniorLenderStateAccountPDACalc,
-            ])
-          const seniorPosition =
-            seniorLenderStateAccount?.depositRecord?.principal || new BN(0)
-          const juniorPosition =
-            juniorLenderStateAccount?.depositRecord?.principal || new BN(0)
-          const totalPosition = seniorPosition
-            .add(juniorPosition)
-            .add(
-              seniorLenderStateAccount?.redemptionRecord?.principalRequested ??
-                new BN(0),
-            )
-            .add(
-              juniorLenderStateAccount?.redemptionRecord?.principalRequested ??
-                new BN(0),
-            )
-          if (totalPosition.gt(new BN(0))) {
-            lenderInvestedPools[poolName] = true
-          }
+        const [seniorLenderStateAccount, juniorLenderStateAccount] =
+          await program.account.lenderState.fetchMultiple([
+            seniorLenderStateAccountPDA,
+            juniorLenderStateAccountPDA,
+          ])
+        const seniorPosition =
+          seniorLenderStateAccount?.depositRecord?.principal || new BN(0)
+        const juniorPosition =
+          juniorLenderStateAccount?.depositRecord?.principal || new BN(0)
+        const totalPosition = seniorPosition
+          .add(juniorPosition)
+          .add(
+            seniorLenderStateAccount?.redemptionRecord?.principalRequested ??
+              new BN(0),
+          )
+          .add(
+            juniorLenderStateAccount?.redemptionRecord?.principalRequested ??
+              new BN(0),
+          )
+        if (totalPosition.gt(new BN(0))) {
+          lenderInvestedPools[poolName] = true
         }
       }
 
