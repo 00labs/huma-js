@@ -6,7 +6,6 @@ import {
   SOLANA_CHAINS,
   SolanaChainEnum,
 } from '@huma-finance/shared'
-import { WalletSignMessageError } from '@solana/wallet-adapter-base'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import {
   Connection,
@@ -94,28 +93,23 @@ const verifyOwnershipSolana = async (
     onVerificationComplete()
   } catch (e) {
     console.error(e)
-    if (e instanceof WalletSignMessageError) {
-      try {
-        setAuthStatus(AUTH_STATUS.SignOffChainTx)
-        // If the wallet does not support message signing, try to sign a transaction
-        const tx = await buildAuthTx(account, message)
-        tx.feePayer = account
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-        const signedTx = await signTransaction(tx)
-        const serializedTx = signedTx.serialize().toString('base64')
-        await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
-        onVerificationComplete()
-      } catch (e) {
-        console.error(e)
-        reset()
-        throw e
-      } finally {
-        setLoading(false)
-        setAuthStatus(undefined)
-      }
-    } else {
+    try {
+      setAuthStatus(AUTH_STATUS.SignOffChainTx)
+      // If the wallet does not support message signing, try to sign a transaction
+      const tx = await buildAuthTx(account, message)
+      tx.feePayer = account
+      tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+      const signedTx = await signTransaction(tx)
+      const serializedTx = signedTx.serialize().toString('base64')
+      await AuthService.verifySolanaTx(message, serializedTx, chainId, isDev)
+      onVerificationComplete()
+    } catch (e) {
+      console.error(e)
       reset()
       throw e
+    } finally {
+      setLoading(false)
+      setAuthStatus(undefined)
     }
   } finally {
     setLoading(false)
