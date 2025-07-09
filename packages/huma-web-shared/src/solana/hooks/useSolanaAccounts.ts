@@ -803,16 +803,33 @@ export const useLenderInvestedPools = (
           seniorLenderStateAccount?.depositRecord?.principal || new BN(0)
         const juniorPosition =
           juniorLenderStateAccount?.depositRecord?.principal || new BN(0)
+        const seniorWithdrawable = (
+          seniorLenderStateAccount?.redemptionRecord?.totalAmountProcessed ||
+          new BN(0)
+        ).sub(
+          seniorLenderStateAccount?.redemptionRecord?.totalAmountWithdrawn ||
+            new BN(0),
+        )
+        const juniorWithdrawable = (
+          juniorLenderStateAccount?.redemptionRecord?.totalAmountProcessed ||
+          new BN(0)
+        ).sub(
+          juniorLenderStateAccount?.redemptionRecord?.totalAmountWithdrawn ||
+            new BN(0),
+        )
+        const seniorRedemptionRequested =
+          seniorLenderStateAccount?.redemptionRecord?.principalRequested ||
+          new BN(0)
+        const juniorRedemptionRequested =
+          juniorLenderStateAccount?.redemptionRecord?.principalRequested ||
+          new BN(0)
+
         const totalPosition = seniorPosition
           .add(juniorPosition)
-          .add(
-            seniorLenderStateAccount?.redemptionRecord?.principalRequested ??
-              new BN(0),
-          )
-          .add(
-            juniorLenderStateAccount?.redemptionRecord?.principalRequested ??
-              new BN(0),
-          )
+          .add(seniorWithdrawable)
+          .add(juniorWithdrawable)
+          .add(seniorRedemptionRequested)
+          .add(juniorRedemptionRequested)
         if (totalPosition.gt(new BN(0))) {
           lenderInvestedPools[poolName] = true
         }
