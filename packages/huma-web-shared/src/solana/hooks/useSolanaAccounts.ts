@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { BN, Wallet } from '@coral-xyz/anchor'
 import {
   calculateAvailablePoolBalance,
@@ -6,8 +7,10 @@ import {
   getSolanaPoolInfo,
   POOL_NAME,
   PoolStateAccount,
+  SOLANA_CHAIN_POOLS_INFO,
   SolanaChainEnum,
   SolanaPoolInfo,
+  timeUtil,
   TrancheType,
 } from '@huma-finance/shared'
 import {
@@ -738,5 +741,109 @@ export const useLenderAccounts = (
     juniorTrancheMintSupply,
     loading,
     refresh,
+  }
+}
+
+export type LenderInvestedPools = {
+  [poolName: string]: boolean
+}
+
+export const useLenderInvestedPools = (
+  chainId: SolanaChainEnum,
+): {
+  lenderInvestedPools: LenderInvestedPools
+  loading: boolean
+} => {
+  const { publicKey } = useWallet()
+  const wallet = useAnchorWallet()
+  const { connection } = useConnection()
+  const [loading, setLoading] = useState<boolean>(true)
+  const [lenderInvestedPools, setLenderInvestedPools] =
+    useState<LenderInvestedPools>({})
+
+  useEffect(() => {
+    async function fetchLenderInvested() {
+      const lenderInvestedPools: LenderInvestedPools = {}
+
+      if (!publicKey || !connection || !wallet) {
+        return
+      }
+      setLoading(true)
+      const program = getHumaProgram(chainId, connection, wallet as Wallet)
+      const poolProgram = new PublicKey(getPoolProgramAddress(chainId))
+      const poolNames = Object.keys(SOLANA_CHAIN_POOLS_INFO[chainId])
+      for (const poolNameStr of poolNames) {
+        // To avoid rate limiting, we sleep for 1 seconds between each pool
+        await timeUtil.sleep(1000)
+        const poolName = poolNameStr as POOL_NAME
+        const poolInfo = getSolanaPoolInfo(chainId, poolName)!
+        const [juniorLenderStateAccountPDA] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.juniorTrancheMint).toBuffer(),
+            publicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+        const [seniorLenderStateAccountPDA] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(poolInfo.seniorTrancheMint).toBuffer(),
+            publicKey.toBuffer(),
+          ],
+          poolProgram,
+        )
+
+        const [seniorLenderStateAccount, juniorLenderStateAccount] =
+          await program.account.lenderState.fetchMultiple([
+            seniorLenderStateAccountPDA,
+            juniorLenderStateAccountPDA,
+          ])
+        const seniorPosition =
+          seniorLenderStateAccount?.depositRecord?.principal || new BN(0)
+        const juniorPosition =
+          juniorLenderStateAccount?.depositRecord?.principal || new BN(0)
+        const seniorWithdrawable = (
+          seniorLenderStateAccount?.redemptionRecord?.totalAmountProcessed ||
+          new BN(0)
+        ).sub(
+          seniorLenderStateAccount?.redemptionRecord?.totalAmountWithdrawn ||
+            new BN(0),
+        )
+        const juniorWithdrawable = (
+          juniorLenderStateAccount?.redemptionRecord?.totalAmountProcessed ||
+          new BN(0)
+        ).sub(
+          juniorLenderStateAccount?.redemptionRecord?.totalAmountWithdrawn ||
+            new BN(0),
+        )
+        const seniorRedemptionRequested =
+          seniorLenderStateAccount?.redemptionRecord?.principalRequested ||
+          new BN(0)
+        const juniorRedemptionRequested =
+          juniorLenderStateAccount?.redemptionRecord?.principalRequested ||
+          new BN(0)
+
+        const totalPosition = seniorPosition
+          .add(juniorPosition)
+          .add(seniorWithdrawable)
+          .add(juniorWithdrawable)
+          .add(seniorRedemptionRequested)
+          .add(juniorRedemptionRequested)
+        if (totalPosition.gt(new BN(0))) {
+          lenderInvestedPools[poolName] = true
+        }
+      }
+
+      setLenderInvestedPools(lenderInvestedPools)
+      setLoading(false)
+    }
+
+    fetchLenderInvested()
+  }, [chainId, connection, publicKey, wallet])
+
+  return {
+    lenderInvestedPools,
+    loading,
   }
 }
