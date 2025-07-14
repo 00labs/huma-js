@@ -1,3 +1,4 @@
+import { SolanaChainEnum } from '@huma-finance/shared'
 import {
   ComputeBudgetProgram,
   Connection,
@@ -7,7 +8,6 @@ import {
   TransactionMessage,
   VersionedTransaction,
 } from '@solana/web3.js'
-import { SolanaChainEnum } from '@huma-finance/shared'
 import { HumaSolanaContext } from '../../helpers'
 
 export function extractWritableAccounts(tx: Transaction): PublicKey[] {
