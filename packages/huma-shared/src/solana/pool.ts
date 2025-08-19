@@ -36,6 +36,15 @@ export type SolanaPoolInfo = {
     isClosed?: boolean
     hidden?: boolean
     hasReceivables?: boolean
+    hasEscrowPayments?: boolean
+  }
+  escrow?: {
+    accountId: string
+    asset: {
+      address: string
+      symbol: string
+      decimals: number
+    }[]
   }
 }
 

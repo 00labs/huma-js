@@ -66,6 +66,11 @@ const getKYCProviderBaseUrl = (provider: 'Securitize', chainId: number) => {
   }
 }
 
+const getEscrowServiceUrl = (isTestnet: boolean, isDev: boolean) =>
+  `https://${getDevPrefix(isDev)}${
+    isTestnet ? 'testnet.' : 'mainnet.'
+  }escrow.huma.finance/graphql`
+
 export const configUtil = {
   dappLink: 'https://app.huma.finance/#',
   linkedInLink: 'https://www.linkedin.com/company/huma-finance',
@@ -100,4 +105,5 @@ export const configUtil = {
   getKYCProviderBaseUrl,
   getCampaignAPIUrl,
   getSolanaGraphAPIUrl,
+  getEscrowServiceUrl,
 }
