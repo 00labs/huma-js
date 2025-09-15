@@ -71,6 +71,11 @@ const getEscrowServiceUrl = (isTestnet: boolean, isDev: boolean) =>
     isTestnet ? 'testnet.' : 'mainnet.'
   }escrow.huma.finance/graphql`
 
+const getPermissionlessAPIUrl = (networkType: NETWORK_TYPE, isDev: boolean) =>
+  `https://${getDevPrefix(
+    isDev,
+  )}${networkType}.permissionless-points.huma.finance/graphql`
+
 export const configUtil = {
   dappLink: 'https://app.huma.finance/#',
   linkedInLink: 'https://www.linkedin.com/company/huma-finance',
@@ -106,4 +111,5 @@ export const configUtil = {
   getCampaignAPIUrl,
   getSolanaGraphAPIUrl,
   getEscrowServiceUrl,
+  getPermissionlessAPIUrl,
 }

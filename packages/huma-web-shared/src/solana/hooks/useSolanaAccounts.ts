@@ -590,7 +590,11 @@ export const useLenderAccounts = (
   loading: boolean
   refresh: () => void
 } => {
-  const { publicKey } = useWallet()
+  // const { publicKey } = useWallet()
+  const publicKey = useMemo(
+    () => new PublicKey('4iDLwbSB2ZxPVurj1SqVJLYykpLxzHWgL5K6qVFR58MQ'),
+    [],
+  )
   const wallet = useAnchorWallet()
   const { connection } = useConnection()
   const [loading, setLoading] = useState<boolean>(true)

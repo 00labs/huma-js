@@ -1,5 +1,7 @@
 import {
   formatNumberFixed,
+  PermissionlessDepositCommitment,
+  PermissionlessDepositMode,
   SolanaPoolInfo,
   SolanaTokenUtils,
   TrancheType,
@@ -14,6 +16,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { BN } from '@coral-xyz/anchor'
+import { SubgraphService } from '@huma-finance/sdk'
 import { Mint } from '@solana/spl-token'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setLoggingContext, setStep } from '../../../store/widgets.reducers'
@@ -22,11 +25,37 @@ import {
   selectWidgetState,
 } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
+import { ApolloWrapper } from '../../ApolloWrapper'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { ConfirmTransfer } from './1-ConfirmTransfer'
-import { Transfer } from './2-Transfer'
-import { Done } from './3-Done'
+import { Option } from './1-Option'
+import { WithdrawAndDepositConfirm } from './2-WithdrawAndDepositConfirm'
+import { WithdrawOnlyConfirm } from './3-WithdrawOnlyConfirm'
+import { Transfer } from './4-Transfer'
+import { Done } from './5-Done'
+
+export type ClaimAndStakeOption = {
+  label: string
+  description?: string[]
+  id: string
+}
+
+export const ClaimAndStakeOptions: ClaimAndStakeOption[] = [
+  {
+    label: 'Withdraw and redeposit to Permissionless',
+    description: [
+      'Earn more with OG status',
+      'Choose your own investment lockup periods',
+      'Earn incentives for longer commitments',
+      'Earn Vanguard status',
+    ],
+    id: 'claim-and-stake',
+  },
+  {
+    label: `Withdraw only`,
+    id: 'claim-only',
+  },
+]
 
 /**
  * Solana lend pool withdraw props
@@ -73,6 +102,13 @@ export function SolanaLendWithdraw({
   )
   const [withdrawnAmount, setWithdrawnAmount] = useState<BN>()
   const loggingHelper = useAppSelector(selectWidgetLoggingContext)
+  const [selectedOption, setSelectedOption] = useState(ClaimAndStakeOptions[0])
+  const [selectedDepositMode, setSelectedDepositMode] = useState(
+    PermissionlessDepositMode.CLASSIC,
+  )
+  const [selectedDepositCommitment, setSelectedDepositCommitment] = useState(
+    PermissionlessDepositCommitment.INITIAL_COMMITMENT_SIX_MONTHS,
+  )
 
   const handleCloseFlow = () => {
     loggingHelper.logAction('ExitFlow', {})
@@ -102,7 +138,7 @@ export function SolanaLendWithdraw({
       loggingHelperInit.logAction('StartFlow', {})
       dispatch(setLoggingContext(context))
 
-      dispatch(setStep(WIDGET_STEP.ConfirmTransfer))
+      dispatch(setStep(WIDGET_STEP.ConfirmWithdrawAndDeposit))
     }
   }, [dispatch, poolInfo.chainId, poolInfo.poolName, poolInfo.poolType, step])
 
@@ -128,6 +164,14 @@ export function SolanaLendWithdraw({
     trancheType,
   ])
 
+  const handleConfirmOption = useCallback(() => {
+    if (selectedOption.id === 'claim-and-stake') {
+      dispatch(setStep(WIDGET_STEP.ConfirmWithdrawAndDeposit))
+    } else {
+      dispatch(setStep(WIDGET_STEP.ConfirmWithdrawOnly))
+    }
+  }, [])
+
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
       if (handleSuccess) {
@@ -140,12 +184,44 @@ export function SolanaLendWithdraw({
   return (
     <WidgetWrapper
       isOpen
+      width={step === WIDGET_STEP.ConfirmWithdrawAndDeposit ? '520px' : '480px'}
       loadingTitle={title}
       handleClose={handleCloseFlow}
       handleSuccess={handleWithdrawSuccess}
     >
-      {step === WIDGET_STEP.ConfirmTransfer && (
-        <ConfirmTransfer
+      {step === WIDGET_STEP.Option && (
+        <Option
+          poolUnderlyingToken={poolInfo.underlyingMint}
+          withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          handleConfirmOption={handleConfirmOption}
+        />
+      )}
+      {step === WIDGET_STEP.ConfirmWithdrawAndDeposit && (
+        <ApolloWrapper
+          uri={SubgraphService.getSubgraphUrlForChainId(
+            poolInfo.chainId!,
+            import.meta.env.VITE_SUBGRAPH_API_KEY,
+          )}
+        >
+          <WithdrawAndDepositConfirm
+            poolUnderlyingToken={poolInfo.underlyingMint}
+            withdrawableAmount={withdrawableAmount}
+            withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
+            selectedOption={selectedOption}
+            chainId={poolInfo.chainId}
+            selectedDepositMode={selectedDepositMode}
+            setSelectedDepositMode={setSelectedDepositMode}
+            selectedDepositCommitment={selectedDepositCommitment}
+            setSelectedDepositCommitment={setSelectedDepositCommitment}
+            setSelectedOption={setSelectedOption}
+            handleConfirmOption={handleConfirmOption}
+          />
+        </ApolloWrapper>
+      )}
+      {step === WIDGET_STEP.ConfirmWithdrawOnly && (
+        <WithdrawOnlyConfirm
           poolUnderlyingToken={poolInfo.underlyingMint}
           withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
           sharePrice={sharePrice}

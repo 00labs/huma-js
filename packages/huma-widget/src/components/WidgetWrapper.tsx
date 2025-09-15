@@ -17,6 +17,7 @@ type Props = {
   isOpen: boolean
   isLoading?: boolean
   loadingTitle?: string
+  width?: string
   handleClose: () => void
   handleSuccess?: (blockNumber: number) => void
 }
@@ -25,6 +26,7 @@ export function WidgetWrapper({
   isOpen,
   isLoading = false,
   loadingTitle = '',
+  width = '480px',
   handleClose,
   handleSuccess,
   children,
@@ -67,7 +69,7 @@ export function WidgetWrapper({
       isOpen={isOpen}
       overflowY='auto'
       onClose={handleCloseModal}
-      width='480px'
+      width={width}
       padding={theme.spacing(4, 5)}
       disableBackdropClick
     >
