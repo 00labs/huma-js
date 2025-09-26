@@ -135,6 +135,14 @@ export function CommitSwitcher({
       width: 80px;
       height: 32px;
     `,
+    title: css`
+      color: #ececec;
+      font-weight: 700;
+    `,
+    apy: css`
+      color: #ececec;
+      font-weight: 700;
+    `,
   }
 
   const renderCommitmentOption = (
@@ -145,11 +153,11 @@ export function CommitSwitcher({
     return (
       <Box key={commitment} css={styles.item}>
         <Box css={styles.info}>
-          <Typography variant={isXsSize ? 'body2' : 'h6'} color='textSecondary'>
+          <Typography variant={isXsSize ? 'body2' : 'h6'} css={styles.title}>
             {option.title}
           </Typography>
         </Box>
-        <Typography variant={isXsSize ? 'body2' : 'h6'} color='textSecondary'>
+        <Typography variant={isXsSize ? 'body2' : 'h6'} css={styles.apy}>
           {toPercentage(totalApy!, 1)}
         </Typography>
       </Box>

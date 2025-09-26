@@ -3,53 +3,44 @@ import {
   PermissionlessDepositCommitment,
   PermissionlessDepositMode,
   SolanaChainEnum,
-  UnderlyingTokenInfo,
 } from '@huma-finance/shared'
-import { useMQ, usePermissionlessApy } from '@huma-finance/web-shared'
+import { usePermissionlessApy } from '@huma-finance/web-shared'
 import InfoOutlineIcon from '@mui/icons-material/InfoOutlined'
-import { Box, css, Tooltip, useTheme } from '@mui/material'
+import { Box, Button, css, Divider, Tooltip, useTheme } from '@mui/material'
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { ClaimAndStakeOption } from '.'
 import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { WrapperModal } from '../../WrapperModal'
+import { Apy } from './components/Apy'
+import { Benefit } from './components/Benefit'
 import { CommitSwitcher } from './components/CommitSwitcher'
 import { ModeSelector } from './components/ModeSelector'
+import { SelectModeTitle } from './components/SelectModeTitle'
 
 type Props = {
   chainId: SolanaChainEnum
-  poolUnderlyingToken: UnderlyingTokenInfo
   withdrawableAmount: BN
   withdrawableAmountFormatted: string | number
-  selectedOption: ClaimAndStakeOption
   selectedDepositMode: PermissionlessDepositMode
   selectedDepositCommitment: PermissionlessDepositCommitment
-  setSelectedOption: (option: ClaimAndStakeOption) => void
   setSelectedDepositMode: (mode: PermissionlessDepositMode) => void
   setSelectedDepositCommitment: (
     commitment: PermissionlessDepositCommitment,
   ) => void
-  handleConfirmOption: () => void
+  withdrawAndDeposit: () => void
 }
 
 export function WithdrawAndDepositConfirm({
   chainId,
-  poolUnderlyingToken,
   withdrawableAmount,
   withdrawableAmountFormatted,
-  selectedOption,
   selectedDepositMode,
   selectedDepositCommitment,
-  setSelectedOption,
   setSelectedDepositMode,
   setSelectedDepositCommitment,
-  handleConfirmOption,
+  withdrawAndDeposit,
 }: Props): React.ReactElement {
   useLogOnFirstMount('ConfirmTransfer')
   const theme = useTheme()
-  const { isSmSize } = useMQ()
-  const dispatch = useDispatch()
-  const { symbol } = poolUnderlyingToken
 
   const {
     modeTargetApy: classicModeTargetApy,
@@ -57,7 +48,7 @@ export function WithdrawAndDepositConfirm({
   } = usePermissionlessApy(
     chainId,
     PermissionlessDepositMode.CLASSIC,
-    PermissionlessDepositCommitment.INITIAL_COMMITMENT_SIX_MONTHS,
+    selectedDepositCommitment,
     withdrawableAmount,
   )
   const {
@@ -66,7 +57,7 @@ export function WithdrawAndDepositConfirm({
   } = usePermissionlessApy(
     chainId,
     PermissionlessDepositMode.MAXI,
-    PermissionlessDepositCommitment.INITIAL_COMMITMENT_SIX_MONTHS,
+    selectedDepositCommitment,
     withdrawableAmount,
   )
 
@@ -78,6 +69,7 @@ export function WithdrawAndDepositConfirm({
       font-weight: 700;
       line-height: 160%;
       letter-spacing: 0.15px;
+      margin-top: ${theme.spacing(-1)};
     `,
     description: css`
       font-weight: 400;
@@ -96,7 +88,7 @@ export function WithdrawAndDepositConfirm({
       background: #1b1b1b;
       padding: ${theme.spacing(2)};
       border-radius: 8px;
-      height: 80px;
+      height: 60px;
     `,
     availableToWithdrawTitle: css`
       font-weight: 500;
@@ -134,51 +126,35 @@ export function WithdrawAndDepositConfirm({
       font-weight: 700;
       line-height: 150%;
       letter-spacing: 0.15px;
-      margin-top: ${theme.spacing(3)};
+      margin-top: ${theme.spacing(2)};
+    `,
+    commitSwitcher: css`
+      margin-top: ${theme.spacing(2)};
+    `,
+    divider: css`
+      margin-top: ${theme.spacing(2)};
+      border-color: #222;
+    `,
+    buttonContainer: css`
+      width: 100%;
+      margin-top: ${theme.spacing(2)};
+
+      button {
+        width: 100%;
+      }
     `,
   }
 
   return (
     <WrapperModal title=''>
       <Box css={styles.title}>Withdraw and redeposit to Permissionless</Box>
-      <Box css={styles.description}>Withdraw all the available amount</Box>
       <Box css={styles.availableToWithdraw}>
         <Box css={styles.availableToWithdrawTitle}>Available to withdraw</Box>
         <Box css={styles.availableToWithdrawAmount}>
           ${withdrawableAmountFormatted}
         </Box>
       </Box>
-      <Box css={styles.selectDepositMode}>
-        <Box css={styles.selectDepositModeTitle}>Select deposit mode</Box>
-        <Tooltip
-          title={
-            <Box>
-              <Box>
-                Huma Permissionless offers two modes to match different LP
-                strategies. You can switch between them anytime, as often as you
-                like.
-              </Box>
-              <ul>
-                <li>
-                  <strong>Classic Mode:</strong> Provides stable yield with
-                  moderate Huma Feather rewards. The current APY is 10%, updated
-                  monthly based on market conditions. This mode is ideal for LPs
-                  who prioritize consistent income.
-                </li>
-                <li>
-                  <strong>Maxi Mode:</strong> Offers maximum Huma rewards by
-                  trading away stable yield. LPs in this mode earn only Huma
-                  rewards, making it the go-to choice for Huma-maximizing
-                  believers—aka the Huma maxis.
-                </li>
-              </ul>
-            </Box>
-          }
-          placement='top'
-        >
-          <InfoOutlineIcon css={styles.infoIcon} />
-        </Tooltip>
-      </Box>
+      <SelectModeTitle />
       <ModeSelector
         classicModeTargetApy={classicModeTargetApy}
         maxiModeTargetApy={maxiModeTargetApy}
@@ -202,12 +178,31 @@ export function WithdrawAndDepositConfirm({
           commitments={Object.values(PermissionlessDepositCommitment)}
           totalApy={
             selectedDepositMode === PermissionlessDepositMode.CLASSIC
-              ? classicModeTargetApy
-              : maxiModeTargetApy
+              ? (classicModeTargetApy ?? 0) + (classicHumaRewardsApy ?? 0)
+              : (maxiModeTargetApy ?? 0) + (maxiHumaRewardsApy ?? 0)
           }
           onCommitmentChange={setSelectedDepositCommitment}
         />
       </Box>
+      <Divider css={styles.divider} />
+      <Apy
+        usdcApy={
+          selectedDepositMode === PermissionlessDepositMode.CLASSIC
+            ? classicModeTargetApy
+            : maxiModeTargetApy
+        }
+        humaRewardsApy={
+          selectedDepositMode === PermissionlessDepositMode.CLASSIC
+            ? classicHumaRewardsApy
+            : maxiHumaRewardsApy
+        }
+      />
+      <Box css={styles.buttonContainer}>
+        <Button variant='contained' onClick={withdrawAndDeposit}>
+          WITHDRAW AND DEPOSIT
+        </Button>
+      </Box>
+      <Benefit />
     </WrapperModal>
   )
 }

@@ -9,6 +9,7 @@ import CongratulationsSvg from './congratulations.svg?react'
 import DonutSvg from './donut.svg?react'
 import EthereumSvg from './ethereum.svg?react'
 import HumaFullLogoSvg from './huma-full.svg?react'
+import HumaNoEmptySpaceSvg from './huma-no-empty-space.svg?react'
 import HumaPointsSvg from './huma-points.svg?react'
 import HumaLogoSvg from './huma.svg?react'
 import LoaderSvg from './loader.svg?react'
@@ -33,6 +34,10 @@ export function HumaIcon(props: SvgIconProps): React.ReactElement {
 
 export function HumaFullIcon(props: SvgIconProps): React.ReactElement {
   return <HumaFullLogoSvg {...props} />
+}
+
+export function HumaNoEmptySpaceIcon(props: SvgIconProps): React.ReactElement {
+  return <HumaNoEmptySpaceSvg {...props} />
 }
 
 export function MetamaskIcon(props: SvgIconProps): React.ReactElement {

@@ -60,7 +60,7 @@ function getPermissionlessRewardsMetadata(
     .catch((err) => {
       return {
         feathersPerHumaToken: '30.00',
-        usdPerFeather: '0.000912540183751',
+        usdPerFeather: '0.000973086493476',
       }
 
       console.error(err)

@@ -34,6 +34,11 @@ export function ModeSelector({
       padding: ${theme.spacing(0.125)};
       width: 100%;
     `,
+    modeContainerSelected: css`
+      border-radius: 8px;
+      background: linear-gradient(190deg, #d157ff 4.58%, #74deff 100%);
+      box-shadow: 2px 2px 24px 1px #272727;
+    `,
     mode: css`
       display: flex;
       flex-direction: column;
@@ -44,9 +49,7 @@ export function ModeSelector({
       border-radius: 8px;
     `,
     modeSelected: css`
-      border-radius: 8px;
-      background: linear-gradient(190deg, #d157ff 4.58%, #74deff 100%);
-      box-shadow: 2px 2px 24px 1px #272727;
+      color: #ececec;
     `,
     modeTitle: css`
       display: flex;
@@ -65,13 +68,13 @@ export function ModeSelector({
     modeApy: css`
       font-size: 16px;
       font-weight: 500;
-      color: #ececec;
+      color: #848484;
       margin-top: ${theme.spacing(1)};
     `,
     modeHumaRewardsApy: css`
       font-size: 16px;
       font-weight: 500;
-      color: #ececec;
+      color: #848484;
       margin-top: ${theme.spacing(-1)};
     `,
   }
@@ -98,7 +101,7 @@ export function ModeSelector({
       <Box
         css={[
           styles.modeContainer,
-          selectedDepositMode === mode && styles.modeSelected,
+          selectedDepositMode === mode && styles.modeContainerSelected,
         ]}
         onClick={() => setSelectedDepositMode(mode)}
       >
@@ -115,10 +118,20 @@ export function ModeSelector({
               {modeInfo.title}
             </Box>
           </Box>
-          <Box css={styles.modeApy}>
+          <Box
+            css={[
+              styles.modeApy,
+              selectedDepositMode === mode && styles.modeSelected,
+            ]}
+          >
             {toPercentage(modeInfo.apy, 1)} USDC APY
           </Box>
-          <Box css={styles.modeHumaRewardsApy}>
+          <Box
+            css={[
+              styles.modeHumaRewardsApy,
+              selectedDepositMode === mode && styles.modeSelected,
+            ]}
+          >
             {toPercentage(modeInfo.humaRewardsApy, 1)} Est. $HUMA
           </Box>
         </Box>

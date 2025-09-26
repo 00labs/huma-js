@@ -107,7 +107,7 @@ export function SolanaLendWithdraw({
     PermissionlessDepositMode.CLASSIC,
   )
   const [selectedDepositCommitment, setSelectedDepositCommitment] = useState(
-    PermissionlessDepositCommitment.INITIAL_COMMITMENT_SIX_MONTHS,
+    PermissionlessDepositCommitment.INITIAL_COMMITMENT_THREE_MONTHS,
   )
 
   const handleCloseFlow = () => {
@@ -170,7 +170,11 @@ export function SolanaLendWithdraw({
     } else {
       dispatch(setStep(WIDGET_STEP.ConfirmWithdrawOnly))
     }
-  }, [])
+  }, [dispatch, selectedOption.id])
+
+  const withdrawAndDeposit = useCallback(() => {
+    dispatch(setStep(WIDGET_STEP.Transfer))
+  }, [dispatch])
 
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
@@ -206,17 +210,14 @@ export function SolanaLendWithdraw({
           )}
         >
           <WithdrawAndDepositConfirm
-            poolUnderlyingToken={poolInfo.underlyingMint}
             withdrawableAmount={withdrawableAmount}
             withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
-            selectedOption={selectedOption}
             chainId={poolInfo.chainId}
             selectedDepositMode={selectedDepositMode}
             setSelectedDepositMode={setSelectedDepositMode}
             selectedDepositCommitment={selectedDepositCommitment}
             setSelectedDepositCommitment={setSelectedDepositCommitment}
-            setSelectedOption={setSelectedOption}
-            handleConfirmOption={handleConfirmOption}
+            withdrawAndDeposit={withdrawAndDeposit}
           />
         </ApolloWrapper>
       )}
