@@ -4,7 +4,7 @@ import {
   configUtil,
   NETWORK_TYPE,
   requestPost,
-} from 'src/utils'
+} from '../../utils'
 
 export interface PermissionlessRewardsMetadata {
   feathersPerHumaToken: string

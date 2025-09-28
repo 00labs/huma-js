@@ -5,18 +5,21 @@ import {
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
 import React from 'react'
-import { TxDoneModal } from '../../TxDoneModal'
+import { ClaimAndStakeOption } from '.'
 import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
+import { TxDoneModal } from '../../TxDoneModal'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
   withdrawAmount: BN
+  option: ClaimAndStakeOption
   handleAction: () => void
 }
 
 export function Done({
   poolUnderlyingToken,
   withdrawAmount,
+  option,
   handleAction,
 }: Props): React.ReactElement {
   useLogOnFirstMount('Success')
@@ -27,7 +30,9 @@ export function Done({
   )
 
   const content = [
-    `You successfully withdrew ${withdrawAmountFormatted} ${symbol}.`,
+    option.id === 'claim-and-stake'
+      ? `You have withdrawn ${withdrawAmountFormatted} ${symbol} and redeposited to Permissionless.`
+      : `You successfully withdrew ${withdrawAmountFormatted} ${symbol}.`,
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

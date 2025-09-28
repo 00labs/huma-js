@@ -39,7 +39,7 @@ export function WithdrawAndDepositConfirm({
   setSelectedDepositCommitment,
   withdrawAndDeposit,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('ConfirmTransfer')
+  useLogOnFirstMount('ConfirmTransferAndRedeposit')
   const theme = useTheme()
 
   const {

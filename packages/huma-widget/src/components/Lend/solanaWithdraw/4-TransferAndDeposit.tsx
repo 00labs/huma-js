@@ -1,11 +1,21 @@
+import { BN } from '@coral-xyz/anchor'
 import {
   getTokenAccounts,
+  PermissionlessDepositCommitment,
+  PermissionlessDepositMode,
+  SOLANA_CHAIN_INFO_PERMISSIONLESS,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
-import { useHumaProgram } from '@huma-finance/web-shared'
+import {
+  useHumaProgram,
+  usePermissionlessLenderModeATA,
+  usePermissionlessLenderStateAccount,
+  usePermissionlessProgram,
+} from '@huma-finance/web-shared'
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountIdempotentInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
   TOKEN_2022_PROGRAM_ID,
@@ -26,23 +36,43 @@ type Props = {
   poolInfo: SolanaPoolInfo
   selectedTranche: TrancheType
   poolIsClosed: boolean
+  permissionlessMode: PermissionlessDepositMode
+  withdrawableAmount: BN
+  depositCommitment: PermissionlessDepositCommitment
 }
 
-export function Transfer({
+export function TransferAndDeposit({
   poolInfo,
   selectedTranche,
   poolIsClosed,
+  permissionlessMode,
+  withdrawableAmount,
+  depositCommitment,
 }: Props): React.ReactElement | null {
   useLogOnFirstMount('Transaction')
   const { publicKey } = useWallet()
   const dispatch = useAppDispatch()
   const { connection } = useConnection()
   const program = useHumaProgram(poolInfo.chainId)
+  const programPermissionless = usePermissionlessProgram()
   const [transaction, setTransaction] = useState<Transaction>()
+  const { lenderStateAccount, isLoaded: isLoadedLenderStateAccount } =
+    usePermissionlessLenderStateAccount(poolInfo.chainId, permissionlessMode)
+  const solanaChainInfoPermissionless =
+    SOLANA_CHAIN_INFO_PERMISSIONLESS[poolInfo.chainId]
+  const { lenderClassicModeTokenATA, lenderMaxiModeTokenATA } =
+    usePermissionlessLenderModeATA(poolInfo.chainId)
 
   useEffect(() => {
     async function getTx() {
-      if (!publicKey || transaction || !connection) {
+      if (
+        !publicKey ||
+        transaction ||
+        !connection ||
+        !isLoadedLenderStateAccount ||
+        !lenderClassicModeTokenATA ||
+        !lenderMaxiModeTokenATA
+      ) {
         return
       }
 
@@ -104,14 +134,6 @@ export function Transfer({
           })
           .transaction()
         tx.add(disburseTx)
-
-        if (createdAccounts) {
-          tx.instructions.unshift(
-            ComputeBudgetProgram.setComputeUnitLimit({
-              units: 105_000,
-            }),
-          )
-        }
       } else {
         const withdrawAfterPoolClosureTx = await program.methods
           .withdrawAfterPoolClosure()
@@ -129,14 +151,67 @@ export function Transfer({
           })
           .transaction()
         tx.add(withdrawAfterPoolClosureTx)
+      }
 
-        if (createdAccounts) {
-          tx.instructions.unshift(
-            ComputeBudgetProgram.setComputeUnitLimit({
-              units: 145_000,
-            }),
-          )
-        }
+      const permissionlessModeConfig =
+        permissionlessMode === PermissionlessDepositMode.CLASSIC
+          ? solanaChainInfoPermissionless.classicModeConfig
+          : solanaChainInfoPermissionless.maxiModeConfig
+      const permissonlessLenderModeTokenATA =
+        permissionlessMode === PermissionlessDepositMode.CLASSIC
+          ? lenderClassicModeTokenATA
+          : lenderMaxiModeTokenATA
+
+      if (!lenderStateAccount) {
+        const createLenderAccountInstruction =
+          await programPermissionless.methods
+            .createLenderAccounts()
+            .accountsPartial({
+              lender: publicKey,
+              humaConfig: solanaChainInfoPermissionless.humaConfig,
+              poolConfig: solanaChainInfoPermissionless.poolConfig,
+              modeConfig: permissionlessModeConfig,
+              lenderModeToken: permissonlessLenderModeTokenATA,
+              tokenProgram: TOKEN_PROGRAM_ID,
+            })
+            .transaction()
+        tx.add(createLenderAccountInstruction)
+      }
+
+      tx.add(
+        createAssociatedTokenAccountIdempotentInstruction(
+          publicKey,
+          permissonlessLenderModeTokenATA,
+          publicKey,
+          new PublicKey(
+            permissionlessMode === PermissionlessDepositMode.CLASSIC
+              ? solanaChainInfoPermissionless.classicModeMint
+              : solanaChainInfoPermissionless.maxiModeMint,
+          ),
+          TOKEN_PROGRAM_ID,
+        ),
+      )
+
+      const depositTx = await programPermissionless.methods
+        .deposit(withdrawableAmount, depositCommitment, false)
+        .accountsPartial({
+          depositor: publicKey,
+          humaConfig: solanaChainInfoPermissionless.humaConfig,
+          poolConfig: solanaChainInfoPermissionless.poolConfig,
+          modeConfig: permissionlessModeConfig,
+          underlyingMint: solanaChainInfoPermissionless.underlyingMint,
+          underlyingTokenProgram: TOKEN_PROGRAM_ID,
+          modeTokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .transaction()
+      tx.add(depositTx)
+
+      if (createdAccounts) {
+        tx.instructions.unshift(
+          ComputeBudgetProgram.setComputeUnitLimit({
+            units: poolIsClosed ? 145_000 : 105_000,
+          }),
+        )
       }
 
       setTransaction(tx)
@@ -144,12 +219,21 @@ export function Transfer({
     getTx()
   }, [
     connection,
+    depositCommitment,
+    isLoadedLenderStateAccount,
+    lenderClassicModeTokenATA,
+    lenderMaxiModeTokenATA,
+    lenderStateAccount,
+    permissionlessMode,
     poolInfo,
     poolIsClosed,
     program.methods,
+    programPermissionless.methods,
     publicKey,
     selectedTranche,
+    solanaChainInfoPermissionless,
     transaction,
+    withdrawableAmount,
   ])
 
   const handleSuccess = useCallback(() => {

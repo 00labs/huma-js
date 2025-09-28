@@ -74,6 +74,7 @@ export type LoggingActions =
   | 'TransactionError'
   | 'TransactionSuccess'
   | 'ConfirmTransfer'
+  | 'ConfirmTransferAndRedeposit'
   | 'ShowRetryScreenDueToExpiration'
   | 'UnknownError'
   | 'Success'
