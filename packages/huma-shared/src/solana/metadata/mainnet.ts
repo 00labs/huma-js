@@ -1,7 +1,23 @@
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { ARF_PERSONA_KYC_COPY } from '../../v2'
 import { SolanaChainEnum } from '../chain'
-import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
+import {
+  SolanaChainInfo,
+  SolanaChainInfoPermissionless,
+  SolanaPoolsInfo,
+} from '../pool'
+
+export const SOLANA_MAINNET_PERMISSIONLESS: SolanaChainInfoPermissionless = {
+  poolProgram: 'HumaXepHnjaRCpjYTokxY4UtaJcmx41prQ8cxGmFC5fn',
+  humaConfig: 'Fh2WKYCJfota6k76gDGnhTELUuhPa7FHQvVza4cE11ja',
+  poolConfig: '28hFhD21Nka3stL27a8zZ4nRLgaDVxRYwJgeEVgeakzS',
+  poolState: 'iFgP2EbzHUZzMjqbjaagJQ8zmn6as3Hw95aVUKm67od',
+  classicModeConfig: '3FhoMDyKzQqxtGxnz9DfysfoGQKvgDnSFjoDGgguDCQN',
+  classicModeMint: '59obFNBzyTBGowrkif5uK7ojS58vsuWz3ZCvg6tfZAGw',
+  maxiModeConfig: 'AcHvC47rpoMAY22CbHRpp7vsAskRyhyZGYQCqdm4BWcH',
+  maxiModeMint: 'HUPfpnsaJtJGpJxAPNX1vXah7BgYiQYt1c2JMgMumvPs',
+  underlyingMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+}
 
 export const SOLANA_MAINNET_INFO: SolanaChainInfo = {
   poolProgram: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9',

@@ -7,7 +7,7 @@ import {
   PermissionlessService,
   PermissionlessUserFeathersBoosters,
   SOLANA_BP_FACTOR_NUMBER,
-  SOLANA_CHAINS,
+  SOLANA_CHAIN_INFO_PERMISSIONLESS,
   SOLANA_DECIMALS,
   SOLANA_SHARE_PRICE_SCALING_FACTOR_BN,
   SolanaChainEnum,
@@ -95,7 +95,8 @@ export function usePermissionlessModeConfig(chainId: SolanaChainEnum) {
     undefined,
   )
   const [isLoaded, setIsLoaded] = useState(false)
-  const solanaChainInfo = SOLANA_CHAINS[chainId]
+  const solanaChainInfoPermissionless =
+    SOLANA_CHAIN_INFO_PERMISSIONLESS[chainId]
 
   const getApy = useCallback((apyBps?: number) => {
     if (apyBps === undefined || apyBps === null) {
@@ -109,15 +110,15 @@ export function usePermissionlessModeConfig(chainId: SolanaChainEnum) {
     const fetchModeConfig = async () => {
       const [classicModeConfig, maxiModeConfig] =
         await program.account.modeConfig.fetchMultiple([
-          new PublicKey(solanaChainInfo.classicModeConfig),
-          new PublicKey(solanaChainInfo.maxiModeConfig),
+          new PublicKey(solanaChainInfoPermissionless.classicModeConfig),
+          new PublicKey(solanaChainInfoPermissionless.maxiModeConfig),
         ])
       setClassicTargetApyBps(classicModeConfig?.targetApyBps)
       setMaxiTargetApyBps(maxiModeConfig?.targetApyBps)
       setIsLoaded(true)
     }
     fetchModeConfig()
-  }, [program, solanaChainInfo])
+  }, [program, solanaChainInfoPermissionless])
 
   return {
     classicTargetApy: getApy(classicTargetApyBps),
@@ -152,13 +153,51 @@ export function usePermissionlessVoter() {
   }
 }
 
+export const usePermissionlessLenderModeATA = (chainId: SolanaChainEnum) => {
+  const { publicKey } = useWallet()
+  const solanaChainInfoPermissionless =
+    SOLANA_CHAIN_INFO_PERMISSIONLESS[chainId]
+  const [lenderClassicModeTokenATA, setLenderClassicModeTokenATA] =
+    useState<PublicKey>()
+  const [lenderMaxiModeTokenATA, setLenderMaxiModeTokenATA] =
+    useState<PublicKey>()
+
+  useEffect(() => {
+    if (!publicKey) {
+      return
+    }
+
+    const lenderClassicModeTokenATA = getAssociatedTokenAddressSync(
+      new PublicKey(solanaChainInfoPermissionless.classicModeMint),
+      publicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+    )
+
+    const lenderMaxiModeTokenATA = getAssociatedTokenAddressSync(
+      new PublicKey(solanaChainInfoPermissionless.maxiModeMint),
+      publicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+    )
+
+    setLenderClassicModeTokenATA(lenderClassicModeTokenATA)
+    setLenderMaxiModeTokenATA(lenderMaxiModeTokenATA)
+  }, [publicKey, solanaChainInfoPermissionless])
+
+  return {
+    lenderClassicModeTokenATA,
+    lenderMaxiModeTokenATA,
+  }
+}
+
 export function usePermissionlessLenderInfo(chainId: SolanaChainEnum) {
   const { publicKey } = useWallet()
   const { connection } = useConnection()
-  const program = usePermissionlessStakeProgram()
   const [totalShares, setTotalShares] = useState<BN>(new BN(0))
   const [isLoaded, setIsLoaded] = useState(false)
-  const solanaChainInfo = SOLANA_CHAINS[chainId]
+  const { lenderClassicModeTokenATA, lenderMaxiModeTokenATA } =
+    usePermissionlessLenderModeATA(chainId)
 
   const getLenderModeTokenAccount = useCallback(
     async (lenderModeTokenATA: PublicKey, mode: string) => {
@@ -181,23 +220,9 @@ export function usePermissionlessLenderInfo(chainId: SolanaChainEnum) {
   )
 
   useEffect(() => {
-    if (!publicKey) {
+    if (!publicKey || !lenderClassicModeTokenATA || !lenderMaxiModeTokenATA) {
       return
     }
-
-    const lenderClassicModeTokenATA = getAssociatedTokenAddressSync(
-      new PublicKey(solanaChainInfo.classicModeMint),
-      publicKey,
-      true,
-      TOKEN_PROGRAM_ID,
-    )
-
-    const lenderMaxiModeTokenATA = getAssociatedTokenAddressSync(
-      new PublicKey(solanaChainInfo.maxiModeMint),
-      publicKey,
-      true,
-      TOKEN_PROGRAM_ID,
-    )
 
     const fetchLenderInfo = async () => {
       const [lenderClassicModeTokenAccount, lenderMaxiModeTokenAccount] =
@@ -220,10 +245,9 @@ export function usePermissionlessLenderInfo(chainId: SolanaChainEnum) {
     fetchLenderInfo()
   }, [
     getLenderModeTokenAccount,
-    program,
+    lenderClassicModeTokenATA,
+    lenderMaxiModeTokenATA,
     publicKey,
-    solanaChainInfo.classicModeMint,
-    solanaChainInfo.maxiModeMint,
   ])
 
   return {
@@ -235,7 +259,6 @@ export function usePermissionlessLenderInfo(chainId: SolanaChainEnum) {
 export const useModeSharePrice = (chainId: SolanaChainEnum) => {
   const { connection } = useConnection()
   const program = usePermissionlessProgram()
-  const solanaChainInfo = SOLANA_CHAINS[chainId]
   const [classicModeAssets, setClassicModeAssets] = useState<number>()
   const [maxiModeAssets, setMaxiModeAssets] = useState<number>()
   const [classicTotalSupply, setClassicTotalSupply] = useState<bigint>()
@@ -243,6 +266,8 @@ export const useModeSharePrice = (chainId: SolanaChainEnum) => {
   const [classicSharePriceBN, setClassicSharePriceBN] = useState<BN>()
   const [maxiSharePriceBN, setApeSharePriceBN] = useState<BN>()
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
+  const solanaChainInfoPermissionless =
+    SOLANA_CHAIN_INFO_PERMISSIONLESS[chainId]
 
   const getPerSharePriceBN = useCallback(
     (totalAssets: bigint, totalSupply: bigint): BN => {
@@ -284,7 +309,7 @@ export const useModeSharePrice = (chainId: SolanaChainEnum) => {
   useEffect(() => {
     const fetchPoolStateAccount = async () => {
       const poolStateAccount = await program.account.poolState.fetch(
-        solanaChainInfo.poolState,
+        solanaChainInfoPermissionless.poolState,
       )
       const { modeStates } = poolStateAccount
       const classicModeAssets = modeStates[0].assets.toNumber()
@@ -293,19 +318,19 @@ export const useModeSharePrice = (chainId: SolanaChainEnum) => {
       setMaxiModeAssets(maxiModeAssets)
     }
     fetchPoolStateAccount()
-  }, [program.account.poolState, solanaChainInfo.poolState])
+  }, [program.account.poolState, solanaChainInfoPermissionless.poolState])
 
   useEffect(() => {
     const fetchModeMintAccount = async () => {
       const classicModeMintAccount = await getMint(
         connection,
-        new PublicKey(solanaChainInfo.classicModeMint),
+        new PublicKey(solanaChainInfoPermissionless.classicModeMint),
         undefined,
         TOKEN_PROGRAM_ID,
       )
       const maxiModeMintAccount = await getMint(
         connection,
-        new PublicKey(solanaChainInfo.maxiModeMint),
+        new PublicKey(solanaChainInfoPermissionless.maxiModeMint),
         undefined,
         TOKEN_PROGRAM_ID,
       )
@@ -315,8 +340,8 @@ export const useModeSharePrice = (chainId: SolanaChainEnum) => {
     fetchModeMintAccount()
   }, [
     connection,
-    solanaChainInfo.classicModeMint,
-    solanaChainInfo.maxiModeMint,
+    solanaChainInfoPermissionless.classicModeMint,
+    solanaChainInfoPermissionless.maxiModeMint,
   ])
 
   useEffect(() => {
@@ -450,6 +475,81 @@ export function usePermissionlessApy(
   return {
     modeTargetApy,
     humaRewardsApy,
+    isLoaded,
+  }
+}
+
+export type PermissionlessLenderStateAccount = {
+  lender: PublicKey
+  redemptionRecord: {
+    totalAmountProcessed: BN
+    totalAmountWithdrawn: BN
+    padding: number[]
+  }
+  padding: number[]
+}
+
+export function usePermissionlessLenderStateAccount(
+  chainId: SolanaChainEnum,
+  permissionlessMode: PermissionlessDepositMode,
+) {
+  const { publicKey } = useWallet()
+  const program = usePermissionlessProgram()
+  const [classicLenderStateAccount, setClassicLenderStateAccount] =
+    useState<PermissionlessLenderStateAccount | null>(null)
+  const [maxiLenderStateAccount, setMaxiLenderStateAccount] =
+    useState<PermissionlessLenderStateAccount | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const solanaChainInfoPermissonless = SOLANA_CHAIN_INFO_PERMISSIONLESS[chainId]
+
+  useEffect(() => {
+    if (!publicKey) {
+      return
+    }
+
+    const fetchLenderStateAccount = async () => {
+      const poolProgramPublicKey = new PublicKey(
+        solanaChainInfoPermissonless.poolProgram,
+      )
+      const { classicModeConfig, maxiModeConfig } = solanaChainInfoPermissonless
+
+      const [classicLenderStateAccountPDACalc] =
+        PublicKey.findProgramAddressSync(
+          [
+            Buffer.from('lender_state'),
+            new PublicKey(classicModeConfig).toBuffer(),
+            publicKey.toBuffer(),
+          ],
+          poolProgramPublicKey,
+        )
+      const [maxiLenderStateAccountPDACalc] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from('lender_state'),
+          new PublicKey(maxiModeConfig).toBuffer(),
+          publicKey.toBuffer(),
+        ],
+        poolProgramPublicKey,
+      )
+
+      const lenderStateAccounts =
+        await program.account.lenderState.fetchMultiple([
+          classicLenderStateAccountPDACalc,
+          maxiLenderStateAccountPDACalc,
+        ])
+
+      setClassicLenderStateAccount(lenderStateAccounts[0])
+      setMaxiLenderStateAccount(lenderStateAccounts[1])
+      setIsLoaded(true)
+    }
+
+    fetchLenderStateAccount()
+  }, [program.account.lenderState, publicKey, solanaChainInfoPermissonless])
+
+  return {
+    lenderStateAccount:
+      permissionlessMode === PermissionlessDepositMode.CLASSIC
+        ? classicLenderStateAccount
+        : maxiLenderStateAccount,
     isLoaded,
   }
 }

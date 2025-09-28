@@ -31,8 +31,9 @@ import { WidgetWrapper } from '../../WidgetWrapper'
 import { Option } from './1-Option'
 import { WithdrawAndDepositConfirm } from './2-WithdrawAndDepositConfirm'
 import { WithdrawOnlyConfirm } from './3-WithdrawOnlyConfirm'
-import { Transfer } from './4-Transfer'
-import { Done } from './5-Done'
+import { TransferAndDeposit } from './4-TransferAndDeposit'
+import { Transfer } from './5-Transfer'
+import { Done } from './6-Done'
 
 export type ClaimAndStakeOption = {
   label: string
@@ -107,7 +108,7 @@ export function SolanaLendWithdraw({
     PermissionlessDepositMode.CLASSIC,
   )
   const [selectedDepositCommitment, setSelectedDepositCommitment] = useState(
-    PermissionlessDepositCommitment.INITIAL_COMMITMENT_THREE_MONTHS,
+    PermissionlessDepositCommitment.INITIAL_COMMITMENT_SIX_MONTHS,
   )
 
   const handleCloseFlow = () => {
@@ -138,7 +139,7 @@ export function SolanaLendWithdraw({
       loggingHelperInit.logAction('StartFlow', {})
       dispatch(setLoggingContext(context))
 
-      dispatch(setStep(WIDGET_STEP.ConfirmWithdrawAndDeposit))
+      dispatch(setStep(WIDGET_STEP.Option))
     }
   }, [dispatch, poolInfo.chainId, poolInfo.poolName, poolInfo.poolType, step])
 
@@ -228,7 +229,18 @@ export function SolanaLendWithdraw({
           sharePrice={sharePrice}
         />
       )}
-      {step === WIDGET_STEP.Transfer && (
+      {step === WIDGET_STEP.Transfer &&
+        selectedOption.id === 'claim-and-stake' && (
+          <TransferAndDeposit
+            poolInfo={poolInfo}
+            selectedTranche={trancheType}
+            poolIsClosed={poolIsClosed}
+            permissionlessMode={selectedDepositMode}
+            withdrawableAmount={withdrawableAmount}
+            depositCommitment={selectedDepositCommitment}
+          />
+        )}
+      {step === WIDGET_STEP.Transfer && selectedOption.id === 'claim-only' && (
         <Transfer
           poolInfo={poolInfo}
           selectedTranche={trancheType}
@@ -239,6 +251,7 @@ export function SolanaLendWithdraw({
         <Done
           poolUnderlyingToken={poolInfo.underlyingMint}
           withdrawAmount={withdrawnAmount}
+          option={selectedOption}
           handleAction={handleCloseFlow}
         />
       )}
