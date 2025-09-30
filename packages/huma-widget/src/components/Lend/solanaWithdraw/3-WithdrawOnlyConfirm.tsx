@@ -2,11 +2,11 @@ import { UnderlyingTokenInfo } from '@huma-finance/shared'
 import { Box, Divider, css, useTheme } from '@mui/material'
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { setStep } from '../../../store/widgets.reducers'
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
-import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 
 type Props = {
   poolUnderlyingToken: UnderlyingTokenInfo
@@ -14,7 +14,7 @@ type Props = {
   sharePrice: number
 }
 
-export function ConfirmTransfer({
+export function WithdrawOnlyConfirm({
   poolUnderlyingToken,
   withdrawableAmountFormatted,
   sharePrice,

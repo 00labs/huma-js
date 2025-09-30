@@ -1,4 +1,5 @@
 export * from './accountUtils'
+export * from './permissionlessUtils'
 export * from './poolUtils'
 export * from './programUtils'
 export * from './siwsUtils'

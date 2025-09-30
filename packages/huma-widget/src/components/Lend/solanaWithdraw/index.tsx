@@ -1,5 +1,7 @@
 import {
   formatNumberFixed,
+  PermissionlessDepositCommitment,
+  PermissionlessDepositMode,
   SolanaPoolInfo,
   SolanaTokenUtils,
   TrancheType,
@@ -24,9 +26,43 @@ import {
 import { WIDGET_STEP } from '../../../store/widgets.store'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
-import { ConfirmTransfer } from './1-ConfirmTransfer'
-import { Transfer } from './2-Transfer'
-import { Done } from './3-Done'
+import { Option } from './1-Option'
+import { WithdrawAndDepositConfirm } from './2-WithdrawAndDepositConfirm'
+import { WithdrawOnlyConfirm } from './3-WithdrawOnlyConfirm'
+import { TransferAndDeposit } from './4-TransferAndDeposit'
+import { Transfer } from './5-Transfer'
+import { Done } from './6-Done'
+
+export enum WithdrawOption {
+  WITHDRAW_AND_REDEPOSIT = 'withdraw-and-redeposit',
+  WITHDRAW_ONLY = 'withdraw-only',
+}
+
+export type ClaimAndStakeOption = {
+  label: string
+  description?: string[]
+  id: string
+}
+
+export const ClaimAndStakeOptions: ClaimAndStakeOption[] = [
+  {
+    label: 'Withdraw and redeposit to Permissionless',
+    description: [
+      'Keep your OG status and unlock boosted yield forever',
+      'Choose your own investment lockup periods',
+      'Earn incentives for longer commitments',
+      'Earn Vanguard status',
+    ],
+    id: WithdrawOption.WITHDRAW_AND_REDEPOSIT,
+  },
+  {
+    label: `Withdraw only`,
+    id: WithdrawOption.WITHDRAW_ONLY,
+    description: [
+      'You need to have at least $100 USDC in Permissionless to keep your OG status',
+    ],
+  },
+]
 
 /**
  * Solana lend pool withdraw props
@@ -73,6 +109,13 @@ export function SolanaLendWithdraw({
   )
   const [withdrawnAmount, setWithdrawnAmount] = useState<BN>()
   const loggingHelper = useAppSelector(selectWidgetLoggingContext)
+  const [selectedOption, setSelectedOption] = useState(ClaimAndStakeOptions[0])
+  const [selectedDepositMode, setSelectedDepositMode] = useState(
+    PermissionlessDepositMode.CLASSIC,
+  )
+  const [selectedDepositCommitment, setSelectedDepositCommitment] = useState(
+    PermissionlessDepositCommitment.INITIAL_COMMITMENT_SIX_MONTHS,
+  )
 
   const handleCloseFlow = () => {
     loggingHelper.logAction('ExitFlow', {})
@@ -102,7 +145,7 @@ export function SolanaLendWithdraw({
       loggingHelperInit.logAction('StartFlow', {})
       dispatch(setLoggingContext(context))
 
-      dispatch(setStep(WIDGET_STEP.ConfirmTransfer))
+      dispatch(setStep(WIDGET_STEP.Option))
     }
   }, [dispatch, poolInfo.chainId, poolInfo.poolName, poolInfo.poolType, step])
 
@@ -128,6 +171,18 @@ export function SolanaLendWithdraw({
     trancheType,
   ])
 
+  const handleConfirmOption = useCallback(() => {
+    if (selectedOption.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT) {
+      dispatch(setStep(WIDGET_STEP.ConfirmWithdrawAndDeposit))
+    } else {
+      dispatch(setStep(WIDGET_STEP.ConfirmWithdrawOnly))
+    }
+  }, [dispatch, selectedOption.id])
+
+  const withdrawAndDeposit = useCallback(() => {
+    dispatch(setStep(WIDGET_STEP.Transfer))
+  }, [dispatch])
+
   const handleWithdrawSuccess = useCallback(
     (blockNumber: number) => {
       if (handleSuccess) {
@@ -140,28 +195,63 @@ export function SolanaLendWithdraw({
   return (
     <WidgetWrapper
       isOpen
+      width={step === WIDGET_STEP.ConfirmWithdrawAndDeposit ? '520px' : '480px'}
       loadingTitle={title}
       handleClose={handleCloseFlow}
       handleSuccess={handleWithdrawSuccess}
     >
-      {step === WIDGET_STEP.ConfirmTransfer && (
-        <ConfirmTransfer
+      {step === WIDGET_STEP.Option && (
+        <Option
+          poolUnderlyingToken={poolInfo.underlyingMint}
+          withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          handleConfirmOption={handleConfirmOption}
+        />
+      )}
+      {step === WIDGET_STEP.ConfirmWithdrawAndDeposit && (
+        <WithdrawAndDepositConfirm
+          withdrawableAmount={withdrawableAmount}
+          withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
+          chainId={poolInfo.chainId}
+          selectedDepositMode={selectedDepositMode}
+          setSelectedDepositMode={setSelectedDepositMode}
+          selectedDepositCommitment={selectedDepositCommitment}
+          setSelectedDepositCommitment={setSelectedDepositCommitment}
+          withdrawAndDeposit={withdrawAndDeposit}
+        />
+      )}
+      {step === WIDGET_STEP.ConfirmWithdrawOnly && (
+        <WithdrawOnlyConfirm
           poolUnderlyingToken={poolInfo.underlyingMint}
           withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
           sharePrice={sharePrice}
         />
       )}
-      {step === WIDGET_STEP.Transfer && (
-        <Transfer
-          poolInfo={poolInfo}
-          selectedTranche={trancheType}
-          poolIsClosed={poolIsClosed}
-        />
-      )}
+      {step === WIDGET_STEP.Transfer &&
+        selectedOption.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT && (
+          <TransferAndDeposit
+            poolInfo={poolInfo}
+            selectedTranche={trancheType}
+            poolIsClosed={poolIsClosed}
+            permissionlessMode={selectedDepositMode}
+            withdrawableAmount={withdrawableAmount}
+            depositCommitment={selectedDepositCommitment}
+          />
+        )}
+      {step === WIDGET_STEP.Transfer &&
+        selectedOption.id === WithdrawOption.WITHDRAW_ONLY && (
+          <Transfer
+            poolInfo={poolInfo}
+            selectedTranche={trancheType}
+            poolIsClosed={poolIsClosed}
+          />
+        )}
       {step === WIDGET_STEP.Done && withdrawnAmount && (
         <Done
           poolUnderlyingToken={poolInfo.underlyingMint}
           withdrawAmount={withdrawnAmount}
+          option={selectedOption}
           handleAction={handleCloseFlow}
         />
       )}
