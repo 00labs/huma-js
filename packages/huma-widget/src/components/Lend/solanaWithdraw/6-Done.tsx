@@ -35,13 +35,13 @@ export function Done({
     option.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT ? (
       <>
         You have withdrawn {withdrawAmountFormatted} {symbol} and redeposited to
-        Permissionless.{' '}
+        Huma Permissionless.{' '}
         <Link
           href={configUtil.dappLink}
           target='_blank'
           rel='noopener noreferrer'
         >
-          Go to Permissionless
+          Go to Huma Permissionless
         </Link>{' '}
         to view your deposit.
       </>
