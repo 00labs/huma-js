@@ -16,7 +16,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { BN } from '@coral-xyz/anchor'
-import { SubgraphService } from '@huma-finance/sdk'
 import { Mint } from '@solana/spl-token'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { setLoggingContext, setStep } from '../../../store/widgets.reducers'
@@ -25,7 +24,6 @@ import {
   selectWidgetState,
 } from '../../../store/widgets.selectors'
 import { WIDGET_STEP } from '../../../store/widgets.store'
-import { ApolloWrapper } from '../../ApolloWrapper'
 import { ErrorModal } from '../../ErrorModal'
 import { WidgetWrapper } from '../../WidgetWrapper'
 import { Option } from './1-Option'
@@ -34,6 +32,11 @@ import { WithdrawOnlyConfirm } from './3-WithdrawOnlyConfirm'
 import { TransferAndDeposit } from './4-TransferAndDeposit'
 import { Transfer } from './5-Transfer'
 import { Done } from './6-Done'
+
+export enum WithdrawOption {
+  WITHDRAW_AND_REDEPOSIT = 'withdraw-and-redeposit',
+  WITHDRAW_ONLY = 'withdraw-only',
+}
 
 export type ClaimAndStakeOption = {
   label: string
@@ -45,16 +48,19 @@ export const ClaimAndStakeOptions: ClaimAndStakeOption[] = [
   {
     label: 'Withdraw and redeposit to Permissionless',
     description: [
-      'Earn more with OG status',
+      'Keep your OG status and unlock boosted yield forever',
       'Choose your own investment lockup periods',
       'Earn incentives for longer commitments',
       'Earn Vanguard status',
     ],
-    id: 'claim-and-stake',
+    id: WithdrawOption.WITHDRAW_AND_REDEPOSIT,
   },
   {
     label: `Withdraw only`,
-    id: 'claim-only',
+    id: WithdrawOption.WITHDRAW_ONLY,
+    description: [
+      'You need to have at least $100 USDC in Permissionless to keep your OG status',
+    ],
   },
 ]
 
@@ -166,7 +172,7 @@ export function SolanaLendWithdraw({
   ])
 
   const handleConfirmOption = useCallback(() => {
-    if (selectedOption.id === 'claim-and-stake') {
+    if (selectedOption.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT) {
       dispatch(setStep(WIDGET_STEP.ConfirmWithdrawAndDeposit))
     } else {
       dispatch(setStep(WIDGET_STEP.ConfirmWithdrawOnly))
@@ -204,23 +210,16 @@ export function SolanaLendWithdraw({
         />
       )}
       {step === WIDGET_STEP.ConfirmWithdrawAndDeposit && (
-        <ApolloWrapper
-          uri={SubgraphService.getSubgraphUrlForChainId(
-            poolInfo.chainId!,
-            import.meta.env.VITE_SUBGRAPH_API_KEY,
-          )}
-        >
-          <WithdrawAndDepositConfirm
-            withdrawableAmount={withdrawableAmount}
-            withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
-            chainId={poolInfo.chainId}
-            selectedDepositMode={selectedDepositMode}
-            setSelectedDepositMode={setSelectedDepositMode}
-            selectedDepositCommitment={selectedDepositCommitment}
-            setSelectedDepositCommitment={setSelectedDepositCommitment}
-            withdrawAndDeposit={withdrawAndDeposit}
-          />
-        </ApolloWrapper>
+        <WithdrawAndDepositConfirm
+          withdrawableAmount={withdrawableAmount}
+          withdrawableAmountFormatted={withdrawableAmountFormatted ?? '--'}
+          chainId={poolInfo.chainId}
+          selectedDepositMode={selectedDepositMode}
+          setSelectedDepositMode={setSelectedDepositMode}
+          selectedDepositCommitment={selectedDepositCommitment}
+          setSelectedDepositCommitment={setSelectedDepositCommitment}
+          withdrawAndDeposit={withdrawAndDeposit}
+        />
       )}
       {step === WIDGET_STEP.ConfirmWithdrawOnly && (
         <WithdrawOnlyConfirm
@@ -230,7 +229,7 @@ export function SolanaLendWithdraw({
         />
       )}
       {step === WIDGET_STEP.Transfer &&
-        selectedOption.id === 'claim-and-stake' && (
+        selectedOption.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT && (
           <TransferAndDeposit
             poolInfo={poolInfo}
             selectedTranche={trancheType}
@@ -240,13 +239,14 @@ export function SolanaLendWithdraw({
             depositCommitment={selectedDepositCommitment}
           />
         )}
-      {step === WIDGET_STEP.Transfer && selectedOption.id === 'claim-only' && (
-        <Transfer
-          poolInfo={poolInfo}
-          selectedTranche={trancheType}
-          poolIsClosed={poolIsClosed}
-        />
-      )}
+      {step === WIDGET_STEP.Transfer &&
+        selectedOption.id === WithdrawOption.WITHDRAW_ONLY && (
+          <Transfer
+            poolInfo={poolInfo}
+            selectedTranche={trancheType}
+            poolIsClosed={poolIsClosed}
+          />
+        )}
       {step === WIDGET_STEP.Done && withdrawnAmount && (
         <Done
           poolUnderlyingToken={poolInfo.underlyingMint}

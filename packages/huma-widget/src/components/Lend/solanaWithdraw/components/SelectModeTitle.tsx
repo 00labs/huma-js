@@ -39,9 +39,9 @@ export function SelectModeTitle(): React.ReactElement {
             <ul>
               <li>
                 <strong>Classic Mode:</strong> Provides stable yield with
-                moderate Huma Feather rewards. The current APY is 10%, updated
-                monthly based on market conditions. This mode is ideal for LPs
-                who prioritize consistent income.
+                moderate Huma rewards. The current APY is 10%, updated monthly
+                based on market conditions. This mode is ideal for LPs who
+                prioritize consistent income.
               </li>
               <li>
                 <strong>Maxi Mode:</strong> Offers maximum Huma rewards by

@@ -80,6 +80,8 @@ export type LoggingActions =
   | 'Success'
   | 'PointsEarned'
   | 'SetInitialStep'
+  | 'SelectWithdrawOption'
+  | 'RedepositTransaction'
 
 export class LoggingContextHelper {
   #context: LoggingContext | null

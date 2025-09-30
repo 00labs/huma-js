@@ -1,5 +1,5 @@
-import { Box, Button, css, Typography, useTheme } from '@mui/material'
 import { txAtom } from '@huma-finance/web-shared'
+import { Box, Button, css, Typography, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 
@@ -8,7 +8,7 @@ import { resetState } from '../store/widgets.reducers'
 import { CheckIcon } from './icons'
 
 type Props = {
-  content: string[]
+  content: (string | React.ReactNode)[]
   subContent?: string[]
   buttonText?: string
   handleAction: () => void
@@ -77,7 +77,7 @@ export function TxDoneModal({
       </Box>
       <Box css={styles.content}>
         {content.map((item) => (
-          <Box sx={{ marginTop: theme.spacing(1) }} key={item}>
+          <Box sx={{ marginTop: theme.spacing(1) }} key={item?.toString()}>
             {item}
           </Box>
         ))}

@@ -1,13 +1,16 @@
 import { BN } from '@coral-xyz/anchor'
 import {
+  getSolanaNetworkType,
   getTokenAccounts,
   PermissionlessDepositCommitment,
   PermissionlessDepositMode,
+  PermissionlessService,
   SOLANA_CHAIN_INFO_PERMISSIONLESS,
   SolanaPoolInfo,
   TrancheType,
 } from '@huma-finance/shared'
 import {
+  checkIsDev,
   useHumaProgram,
   usePermissionlessLenderModeATA,
   usePermissionlessLenderStateAccount,
@@ -49,7 +52,7 @@ export function TransferAndDeposit({
   withdrawableAmount,
   depositCommitment,
 }: Props): React.ReactElement | null {
-  useLogOnFirstMount('Transaction')
+  useLogOnFirstMount('RedepositTransaction')
   const { publicKey } = useWallet()
   const dispatch = useAppDispatch()
   const { connection } = useConnection()
@@ -236,9 +239,26 @@ export function TransferAndDeposit({
     withdrawableAmount,
   ])
 
-  const handleSuccess = useCallback(() => {
-    dispatch(setStep(WIDGET_STEP.Done))
-  }, [dispatch])
+  const handleSuccess = useCallback(
+    async (options?: { signature: string }) => {
+      const isDev = checkIsDev()
+      if (publicKey && options?.signature) {
+        try {
+          await PermissionlessService.updatePermissionlessDeposit(
+            getSolanaNetworkType(poolInfo.chainId),
+            isDev,
+            publicKey.toString(),
+            poolInfo.chainId,
+            options?.signature,
+          )
+        } catch (error) {
+          console.error('Failed to update permissionless deposit', error)
+        }
+      }
+      dispatch(setStep(WIDGET_STEP.Done))
+    },
+    [dispatch, poolInfo.chainId, publicKey],
+  )
 
   return (
     <SolanaTxSendModal

@@ -1,11 +1,13 @@
 import { BN } from '@coral-xyz/anchor'
 import {
+  configUtil,
   formatMoneyFixed,
   SolanaTokenUtils,
   UnderlyingTokenInfo,
 } from '@huma-finance/shared'
+import { Link } from '@mui/material'
 import React from 'react'
-import { ClaimAndStakeOption } from '.'
+import { ClaimAndStakeOption, WithdrawOption } from '.'
 import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { TxDoneModal } from '../../TxDoneModal'
 
@@ -30,9 +32,22 @@ export function Done({
   )
 
   const content = [
-    option.id === 'claim-and-stake'
-      ? `You have withdrawn ${withdrawAmountFormatted} ${symbol} and redeposited to Permissionless.`
-      : `You successfully withdrew ${withdrawAmountFormatted} ${symbol}.`,
+    option.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT ? (
+      <>
+        You have withdrawn {withdrawAmountFormatted} {symbol} and redeposited to
+        Permissionless.{' '}
+        <Link
+          href={configUtil.dappLink}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          Go to Permissionless
+        </Link>{' '}
+        to view your deposit.
+      </>
+    ) : (
+      `You successfully withdrew ${withdrawAmountFormatted} ${symbol}.`
+    ),
   ]
 
   return <TxDoneModal handleAction={handleAction} content={content} />

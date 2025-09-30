@@ -5,6 +5,7 @@ import {
   NETWORK_TYPE,
   requestPost,
 } from '../../utils'
+import { SolanaChainEnum } from '../chain'
 
 export interface PermissionlessRewardsMetadata {
   feathersPerHumaToken: string
@@ -124,7 +125,66 @@ function getUserFeathersBoosters(
     })
 }
 
+export const updatePermissionlessDeposit = (
+  networkType: NETWORK_TYPE,
+  isDev: boolean,
+  walletAddress: string,
+  chainId: SolanaChainEnum,
+  transactionHash: string,
+) => {
+  const url = configUtil.getPermissionlessAPIUrl(networkType, isDev)
+
+  const query = {
+    query: `
+      mutation Mutation($input: DepositInput!) {
+        deposit(input: $input) {
+          ... on DepositResult {
+            success
+          }
+          ... on PermissionlessGraphqlError {
+            errMessage
+          }
+        }
+      }
+    `,
+    variables: {
+      input: {
+        walletAddress,
+        chainId,
+        transactionHash,
+      },
+    },
+  }
+
+  return requestPost<{
+    data?: {
+      deposit?: { success?: boolean } & {
+        errMessage: string
+      }
+    }
+    errors?: unknown
+  }>(url, JSON.stringify(query))
+    .then((res) => {
+      if (res.errors) {
+        console.log(res.errors)
+        throw new Error(COMMON_ERROR_MESSAGE)
+      }
+      const errMessage = res.data?.deposit?.errMessage
+      if (errMessage) {
+        console.error(errMessage)
+        throw new Error(errMessage)
+      }
+
+      return res.data?.deposit ?? {}
+    })
+    .catch((err) => {
+      console.error(err)
+      throw new Error(COMMON_ERROR_MESSAGE)
+    })
+}
+
 export const PermissionlessService = {
   getPermissionlessRewardsMetadata,
   getUserFeathersBoosters,
+  updatePermissionlessDeposit,
 }

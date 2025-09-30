@@ -41,7 +41,9 @@ export function Benefit(): React.ReactElement {
     <Box css={styles.container}>
       <Box css={styles.title}>Permissionless benefits</Box>
       <ul css={styles.list}>
-        <li css={styles.listItem}>Earn more with OG status</li>
+        <li css={styles.listItem}>
+          Keep your OG status and unlock boosted yield forever
+        </li>
         <li css={styles.listItem}>Choose your own investment lockup periods</li>
         <li css={styles.listItem}>Earn incentives for longer commitments</li>
         <li css={styles.listItem}>

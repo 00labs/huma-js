@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@mui/material'
 import React from 'react'
-import { ClaimAndStakeOption, ClaimAndStakeOptions } from '.'
+import { ClaimAndStakeOption, ClaimAndStakeOptions, WithdrawOption } from '.'
 import useLogOnFirstMount from '../../../hooks/useLogOnFirstMount'
 import { BottomButton } from '../../BottomButton'
 import { WrapperModal } from '../../WrapperModal'
@@ -30,7 +30,7 @@ export function Option({
   setSelectedOption,
   handleConfirmOption,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('ConfirmTransfer')
+  useLogOnFirstMount('SelectWithdrawOption')
   const theme = useTheme()
   const { isSmSize } = useMQ()
   const { symbol } = poolUnderlyingToken
@@ -152,7 +152,10 @@ export function Option({
                       <ul css={styles.descriptionList}>
                         {option.description.map((description) => (
                           <li key={description} css={styles.descriptionItem}>
-                            <CheckIcon css={styles.checkIcon} />
+                            {option.id ===
+                              WithdrawOption.WITHDRAW_AND_REDEPOSIT && (
+                              <CheckIcon css={styles.checkIcon} />
+                            )}
                             <Box component='span' css={styles.descriptionText}>
                               {description}
                             </Box>
@@ -168,7 +171,7 @@ export function Option({
         })}
       </RadioGroup>
       <BottomButton variant='contained' onClick={handleConfirmOption}>
-        {selectedOption.id === 'claim-and-stake'
+        {selectedOption.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT
           ? 'WITHDRAW AND REDEPOSIT'
           : 'WITHDRAW'}
       </BottomButton>
