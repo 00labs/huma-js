@@ -11,6 +11,7 @@ import {
 } from '@huma-finance/shared'
 import {
   checkIsDev,
+  logErrorRaw,
   useHumaProgram,
   usePermissionlessLenderModeATA,
   usePermissionlessLenderStateAccount,
@@ -252,6 +253,9 @@ export function TransferAndDeposit({
             options?.signature,
           )
         } catch (error) {
+          logErrorRaw(error, {
+            message: 'Failed to update permissionless deposit',
+          })
           console.error('Failed to update permissionless deposit', error)
         }
       }

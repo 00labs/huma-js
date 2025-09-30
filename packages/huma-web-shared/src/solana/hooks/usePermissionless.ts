@@ -27,6 +27,7 @@ import {
   checkIsDev,
   getPermissonlessLpFeathersMultiplier,
   getPermissonlessLpFeathersPerMonth,
+  logErrorRaw,
 } from '../../utils'
 import { tryGetPermissionlessVoter } from '../utils'
 import {
@@ -43,13 +44,20 @@ export function usePermissionlessRewardsMetadata(chainId: SolanaChainEnum) {
 
   useEffect(() => {
     const fetchRewardsMetadata = async () => {
-      const rewardsMetadata =
-        await PermissionlessService.getPermissionlessRewardsMetadata(
-          getSolanaNetworkType(chainId),
-          isDev,
-        )
-      setRewardsMetadata(rewardsMetadata)
-      setIsLoaded(true)
+      try {
+        const rewardsMetadata =
+          await PermissionlessService.getPermissionlessRewardsMetadata(
+            getSolanaNetworkType(chainId),
+            isDev,
+          )
+        setRewardsMetadata(rewardsMetadata)
+        setIsLoaded(true)
+      } catch (e) {
+        logErrorRaw(e, {
+          message: 'Fetch permissionless rewards metadata error',
+        })
+        console.log(e)
+      }
     }
     fetchRewardsMetadata()
   }, [chainId, isDev])
@@ -69,13 +77,20 @@ export function usePermissionlessFeathersBoosters(chainId: SolanaChainEnum) {
 
   useEffect(() => {
     const fetchFeathersBoosters = async () => {
-      const feathersBoosters =
-        await PermissionlessService.getUserFeathersBoosters(
-          getSolanaNetworkType(chainId),
-          isDev,
-        )
-      setFeathersBoosters(feathersBoosters)
-      setIsLoaded(true)
+      try {
+        const feathersBoosters =
+          await PermissionlessService.getUserFeathersBoosters(
+            getSolanaNetworkType(chainId),
+            isDev,
+          )
+        setFeathersBoosters(feathersBoosters)
+        setIsLoaded(true)
+      } catch (e) {
+        logErrorRaw(e, {
+          message: 'Fetch permissionless user feathers booster error',
+        })
+        console.log(e)
+      }
     }
     fetchFeathersBoosters()
   }, [chainId, isDev])
