@@ -1,25 +1,26 @@
 import { AnchorProvider, Program } from '@coral-xyz/anchor'
 import {
   Permissionless,
+  PermissionlessDevnetIDL,
   PermissionlessIDL,
   PermissionlessVoter,
   PermissionlessVoterIDL,
 } from '@huma-finance/shared'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { useMemo } from 'react'
+import { checkIsDev } from '../../utils'
 
 export const usePermissionlessProgram = () => {
+  const isDev = checkIsDev()
   const wallet = useAnchorWallet()
   const { connection } = useConnection()
 
   const program = useMemo(() => {
+    const IDL = isDev ? PermissionlessDevnetIDL : PermissionlessIDL
     // @ts-ignore
     const provider = new AnchorProvider(connection, wallet, {})
-    return new Program<Permissionless>(
-      PermissionlessIDL as Permissionless,
-      provider,
-    )
-  }, [connection, wallet])
+    return new Program<Permissionless>(IDL as Permissionless, provider)
+  }, [connection, isDev, wallet])
 
   return program
 }

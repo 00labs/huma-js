@@ -40,7 +40,7 @@ function getPermissionlessRewardsMetadata(
 
   return requestPost<{
     data?: {
-      apy: { data: PermissionlessRewardsMetadata } & { errMessage: string }
+      apy: PermissionlessRewardsMetadata & { errMessage: string }
     }
     errors?: unknown
   }>(url, JSON.stringify({ query }))
@@ -55,14 +55,9 @@ function getPermissionlessRewardsMetadata(
         throw new Error(errMessage)
       }
 
-      return res.data?.apy.data
+      return res.data?.apy
     })
     .catch((err) => {
-      return {
-        feathersPerHumaToken: '30.00',
-        usdPerFeather: '0.000973086493476',
-      }
-
       console.error(err)
       throw new Error(COMMON_ERROR_MESSAGE)
     })
