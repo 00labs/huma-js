@@ -24,7 +24,11 @@ export function Done({
   option,
   handleAction,
 }: Props): React.ReactElement {
-  useLogOnFirstMount('Success')
+  useLogOnFirstMount(
+    option.id === WithdrawOption.WITHDRAW_AND_REDEPOSIT
+      ? 'RedepositSuccess'
+      : 'WithdrawSuccess',
+  )
   const { symbol } = poolUnderlyingToken
   const withdrawAmountFormatted = formatMoneyFixed(
     SolanaTokenUtils.formatUnits(withdrawAmount, poolUnderlyingToken.decimals),
