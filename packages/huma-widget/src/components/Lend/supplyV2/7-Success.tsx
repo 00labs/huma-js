@@ -99,7 +99,7 @@ export function Success({
     if (hasNextStep) {
       return "WHAT'S NEXT"
     }
-    return campaign ? 'VIEW FEATHERS' : undefined
+    return campaign ? 'VIEW REWARDS' : undefined
   }
 
   return (

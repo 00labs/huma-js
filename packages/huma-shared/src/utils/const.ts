@@ -17,6 +17,8 @@ export const CAMPAIGN_REFERENCE_CODE = 'CAMPAIGN_REFERENCE_CODE'
 
 export const BP_FACTOR_NUMBER = 10000
 
+export const FEATHERS_TO_HUMA_RATIO = 30
+
 export enum HUMA_ACCOUNT_EXCEPTION {
   AccountTokenNotFoundException = 'AccountTokenNotFoundException',
   InvalidAccountTokenException = 'InvalidAccountTokenException',
