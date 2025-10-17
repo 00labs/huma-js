@@ -345,7 +345,7 @@ export function PersonaEvaluation({
         {campaign && kycCopy === KYCCopies.verifyIdentity ? (
           <Box css={styles.description}>
             <span>
-              You'll be rewarded with Huma Feathers after completing KYC/KYB and
+              You'll be rewarded with Huma rewards after completing KYC/KYB and
               your first investment.
             </span>
           </Box>

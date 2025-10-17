@@ -69,7 +69,7 @@ export function Success({
       subContent={getSubContent()}
       chainId={poolInfo.chainId}
       solanaSignature={solanaSignature}
-      buttonText={campaign && !isExistingUser ? 'VIEW FEATHERS' : 'DONE'}
+      buttonText={campaign && !isExistingUser ? 'VIEW REWARDS' : 'DONE'}
     />
   )
 }

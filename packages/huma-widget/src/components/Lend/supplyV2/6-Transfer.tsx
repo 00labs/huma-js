@@ -58,7 +58,7 @@ export function Transfer({
           )
           dispatch(setPointsAccumulated(result.pointsAccumulated))
         } catch (error) {
-          console.error('Failed to update wallet Feathers', error)
+          console.error('Failed to update wallet rewards', error)
         }
       }
       dispatch(setStep(WIDGET_STEP.Done))
