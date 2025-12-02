@@ -154,6 +154,8 @@ export const useAuthErrorHandlingEvm = (
       const existingVerification = (window as any).humaAuthVerifications?.[
         verificationKey
       ]
+      console.log('verificationKey', verificationKey)
+      console.log('existingVerification', existingVerification)
       if (existingVerification && Date.now() - existingVerification < 30000) {
         return
       }
