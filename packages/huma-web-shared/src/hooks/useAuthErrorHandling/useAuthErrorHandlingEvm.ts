@@ -52,7 +52,11 @@ const verifyGnosisSafeSignature = async (
         throw e
       }
 
-      if (e instanceof AxiosError && e.status === HttpStatusCode.Unauthorized) {
+      if (
+        e instanceof AxiosError &&
+        (e.status === HttpStatusCode.Unauthorized ||
+          e.response?.status === HttpStatusCode.Unauthorized)
+      ) {
         await timeUtil.sleep(TEN_SECONDS * numAttempts)
       } else {
         throw e
