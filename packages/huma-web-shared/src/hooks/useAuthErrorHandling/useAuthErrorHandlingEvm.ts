@@ -149,15 +149,33 @@ export const useAuthErrorHandlingEvm = (
     ) {
       setAuthErrorType(AUTH_ERROR_TYPE.NotSignedIn)
       setIsVerificationRequired(true)
+
+      const verificationKey = `${account}-${chainId}`
+      const existingVerification = (window as any).humaAuthVerifications?.[
+        verificationKey
+      ]
+      if (existingVerification && Date.now() - existingVerification < 30000) {
+        return
+      }
+
+      if (!(window as any).humaAuthVerifications) {
+        ;(window as any).humaAuthVerifications = {}
+      }
+      ;(window as any).humaAuthVerifications[verificationKey] = Date.now()
+
       verifyOwnershipEvm(
         account,
         chainId,
         isDev,
         provider,
-        handleVerificationCompletion,
+        () => {
+          handleVerificationCompletion()
+        },
         setAuthStatus,
         setLoading,
-        reset,
+        () => {
+          reset()
+        },
       ).catch((e) => {
         setServerReturnedError(e)
       })
