@@ -6,7 +6,10 @@ import {
   getContract,
   POOL_NAME,
 } from '../../utils'
-import { TrancheVault } from '../abis/types'
+import {
+  TrancheVault,
+  TrancheVaultNoAutoredemptionUpgrade,
+} from '../abis/types'
 import { POOL_ABI_V2, TrancheType } from './pool'
 import { getPoolInfoV2 } from './poolContract'
 
@@ -14,7 +17,7 @@ export const getTrancheVaultContractV2 = async (
   poolName: POOL_NAME,
   trancheType: TrancheType,
   provider: JsonRpcProvider | Web3Provider | undefined,
-): Promise<TrancheVault | null> => {
+): Promise<TrancheVault | TrancheVaultNoAutoredemptionUpgrade | null> => {
   const chainId = await getChainIdFromSignerOrProvider(provider)
   const poolInfo = getPoolInfoV2(poolName, chainId)
   if (!poolInfo) {
@@ -24,9 +27,11 @@ export const getTrancheVaultContractV2 = async (
   const trancheVault = `${trancheType}TrancheVault` as
     | 'seniorTrancheVault'
     | 'juniorTrancheVault'
-  return getContract<TrancheVault>(
+  return getContract<TrancheVault | TrancheVaultNoAutoredemptionUpgrade>(
     poolInfo[trancheVault],
-    POOL_ABI_V2.trancheVaultAbi,
+    poolInfo.extra?.noTrancheAutoredeemUpdate
+      ? POOL_ABI_V2.trancheVaultNoAutoredemptionUpgradeAbi
+      : POOL_ABI_V2.trancheVaultAbi,
     provider,
   )
 }
