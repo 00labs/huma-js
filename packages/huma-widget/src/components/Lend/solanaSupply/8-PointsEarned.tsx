@@ -2,6 +2,7 @@ import {
   CampaignService,
   CHAIN_TYPE,
   CloseModalOptions,
+  FEATHERS_TO_HUMA_RATIO,
   formatNumber,
   isEmpty,
   NETWORK_TYPE,
@@ -61,6 +62,10 @@ export function PointsEarned({
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
   const [state, setState] = useState<STATE>(STATE.Loading)
 
+  const rewardsAccumulated = pointsAccumulated
+    ? pointsAccumulated / FEATHERS_TO_HUMA_RATIO
+    : undefined
+
   useEffect(() => {
     const updateWalletPoints = async () => {
       try {
@@ -74,7 +79,7 @@ export function PointsEarned({
         setPointsAccumulated(result.pointsAccumulated)
         setState(STATE.Congrats)
       } catch (error) {
-        console.error('Failed to update wallet Feathers', error)
+        console.error('Failed to update wallet rewards', error)
       }
     }
     updateWalletPoints()
@@ -138,7 +143,7 @@ export function PointsEarned({
 
   if (state === STATE.SignIn) {
     return (
-      <SignIn description='Please sign in to check the Feathers that you earned.' />
+      <SignIn description='Please sign in to check the rewards that you earned.' />
     )
   }
 
@@ -154,8 +159,8 @@ export function PointsEarned({
             <HumaPointsIcon />
             <Box>
               {hasPointsAccumulated
-                ? `${formatNumber(pointsAccumulated)} Feathers`
-                : 'Feathers earned'}
+                ? `${formatNumber(rewardsAccumulated)} $HUMA`
+                : 'Rewards earned'}
             </Box>
           </Box>
         </Box>
@@ -163,14 +168,14 @@ export function PointsEarned({
           {hasPointsAccumulated ? (
             <>
               <Box>Congratulations,</Box>
-              <Box>you've earned {pointsAccumulated} Feathers</Box>
+              <Box>you've earned {rewardsAccumulated} $HUMA</Box>
             </>
           ) : (
             <Box>Congratulations on joining the Huma Protocol!</Box>
           )}
         </Box>
         <Box css={styles.entirePointsDetails}>
-          You'll earn Feathers <span css={styles.everyday}>everyday</span> for{' '}
+          You'll earn rewards <span css={styles.everyday}>everyday</span> for{' '}
           {monthText} straight.
         </Box>
         <BottomButton variant='contained' onClick={handleCloseModal}>

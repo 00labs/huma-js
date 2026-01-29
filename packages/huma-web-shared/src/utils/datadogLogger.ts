@@ -74,11 +74,16 @@ export type LoggingActions =
   | 'TransactionError'
   | 'TransactionSuccess'
   | 'ConfirmTransfer'
+  | 'ConfirmTransferAndRedeposit'
   | 'ShowRetryScreenDueToExpiration'
   | 'UnknownError'
   | 'Success'
   | 'PointsEarned'
   | 'SetInitialStep'
+  | 'SelectWithdrawOption'
+  | 'RedepositTransaction'
+  | 'RedepositSuccess'
+  | 'WithdrawSuccess'
 
 export class LoggingContextHelper {
   #context: LoggingContext | null

@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.13.0
+          node-version: 20.19.5
           cache: 'yarn'
 
       - name: Cache Yarn dependencies

@@ -1,4 +1,9 @@
-import { CloseModalOptions, formatNumber, isEmpty } from '@huma-finance/shared'
+import {
+  CloseModalOptions,
+  FEATHERS_TO_HUMA_RATIO,
+  formatNumber,
+  isEmpty,
+} from '@huma-finance/shared'
 import { txAtom } from '@huma-finance/web-shared'
 import { Box, css, useTheme } from '@mui/material'
 import { useResetAtom } from 'jotai/utils'
@@ -31,6 +36,10 @@ export function PointsEarned({
   )
   const monthText =
     lockupMonths > 1 ? `${lockupMonths} months` : `${lockupMonths} month`
+
+  const rewardsAccumulated = pointsAccumulated
+    ? pointsAccumulated / FEATHERS_TO_HUMA_RATIO
+    : undefined
 
   const handleCloseModal = useCallback(() => {
     reset()
@@ -99,8 +108,8 @@ export function PointsEarned({
           <HumaPointsIcon />
           <Box>
             {hasPointsAccumulated
-              ? `${formatNumber(pointsAccumulated)} Feathers`
-              : 'Feathers earned'}
+              ? `${formatNumber(rewardsAccumulated)} $HUMA`
+              : 'Rewards earned'}
           </Box>
         </Box>
       </Box>
@@ -108,14 +117,14 @@ export function PointsEarned({
         {hasPointsAccumulated ? (
           <>
             <Box>Congratulations,</Box>
-            <Box>you've earned {pointsAccumulated} Feathers</Box>
+            <Box>you've earned {rewardsAccumulated} $HUMA</Box>
           </>
         ) : (
           <Box>Congratulations on joining the Huma Protocol!</Box>
         )}
       </Box>
       <Box css={styles.entirePointsDetails}>
-        You'll earn Feathers <span css={styles.everyday}>everyday</span> for{' '}
+        You'll earn rewards <span css={styles.everyday}>everyday</span> for{' '}
         {monthText} straight.
       </Box>
       <BottomButton variant='contained' onClick={handleCloseModal}>

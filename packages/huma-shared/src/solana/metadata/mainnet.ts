@@ -1,7 +1,23 @@
 import { POOL_NAME, POOL_TYPE } from '../../utils/pool'
 import { ARF_PERSONA_KYC_COPY } from '../../v2'
 import { SolanaChainEnum } from '../chain'
-import { SolanaChainInfo, SolanaPoolsInfo } from '../pool'
+import {
+  SolanaChainInfo,
+  SolanaChainInfoPermissionless,
+  SolanaPoolsInfo,
+} from '../pool'
+
+export const SOLANA_MAINNET_PERMISSIONLESS: SolanaChainInfoPermissionless = {
+  poolProgram: 'HumaXepHnjaRCpjYTokxY4UtaJcmx41prQ8cxGmFC5fn',
+  humaConfig: 'Fh2WKYCJfota6k76gDGnhTELUuhPa7FHQvVza4cE11ja',
+  poolConfig: '28hFhD21Nka3stL27a8zZ4nRLgaDVxRYwJgeEVgeakzS',
+  poolState: 'iFgP2EbzHUZzMjqbjaagJQ8zmn6as3Hw95aVUKm67od',
+  classicModeConfig: '3FhoMDyKzQqxtGxnz9DfysfoGQKvgDnSFjoDGgguDCQN',
+  classicModeMint: '59obFNBzyTBGowrkif5uK7ojS58vsuWz3ZCvg6tfZAGw',
+  maxiModeConfig: 'AcHvC47rpoMAY22CbHRpp7vsAskRyhyZGYQCqdm4BWcH',
+  maxiModeMint: 'HUPfpnsaJtJGpJxAPNX1vXah7BgYiQYt1c2JMgMumvPs',
+  underlyingMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+}
 
 export const SOLANA_MAINNET_INFO: SolanaChainInfo = {
   poolProgram: 'EVQ4s1b6N1vmWFDv8PRNc77kufBP8HcrSNWXQAhRsJq9',
@@ -243,6 +259,38 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
     juniorTrancheState: 'yjPniE1s3AtdJ874zQhViKSB4AJeANm6btuMUU2LNhz',
     seniorTrancheMint: 'Ez3efLbdCQv29oC9JQZNnRfLnzS4N5LFEBtcngJjyM7U',
     seniorTrancheState: '5abq5sz2bnULuGV3QxkX98hDRwY5KuKSVPsu462tBxi3',
+    trancheDecimals: 6,
+    underlyingMint: {
+      address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+      symbol: 'USDC',
+      decimals: 6,
+      icon: 'USDC',
+    },
+    KYC: {
+      Persona: ARF_PERSONA_KYC_COPY,
+    },
+    extra: {
+      hasReceivables: true,
+      hidden: true,
+    },
+  },
+  ArfInstitutionalPoolODL: {
+    title: 'Arf - Cross Border Payment Financing (ODL)',
+    poolName: POOL_NAME.ArfInstitutionalPoolODL,
+    poolType: POOL_TYPE.CreditLine,
+    chainId: SolanaChainEnum.SolanaMainnet,
+    industry: 'Remittance Financing',
+    desc: 'Arf provides an innovative on-chain liquidity solution that simplifies cross-border payments by facilitating immediate USDC-based settlements and tokenizing payment orders, enhancing transparency in the process.',
+    poolId: 'FkzV1biHWNXb81YyBagfiLr9v7Q2WRzW9mGa6LuuQYji',
+    poolAuthority: '2fvRaLXxyaaG3fsCFGbmJzVzEhtcL58McQCV4XK7dESv',
+    poolUnderlyingTokenAccount: 'DBk9WZ6JK78ZBLYvSijMJcT7LUopS5MREjD68ozR9wtC',
+    poolConfig: '96tEJ4ThtQyBFzuFrqGZssVEUFoec2wW8LJvXVQDkuzm',
+    humaConfig: 'Fh2WKYCJfota6k76gDGnhTELUuhPa7FHQvVza4cE11ja',
+    poolState: '4PsdWbdwVMSjKRKM7Z7KUZgnX2ULuQHFp6q1W8Ei4n3w',
+    juniorTrancheMint: '8w6yzFwtikP3bvw5Dkmb7frhYA29swKg65UAQ2xkzQ1c',
+    juniorTrancheState: '4yWJGURzGo7iuu1b4fxey9uDY4Pkeox3zdSCqBGQNwC9',
+    seniorTrancheMint: 'FWmJbMcJ7J3u95NXLAY2EhPpTrg9JpwyDYJrb5XAikZa',
+    seniorTrancheState: 'E55ctvWwfAmzB9jQzD1uat3v9953E3HbQEDeG8wtEF8w',
     trancheDecimals: 6,
     underlyingMint: {
       address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',

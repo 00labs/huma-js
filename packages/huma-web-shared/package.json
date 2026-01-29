@@ -96,7 +96,7 @@
     "@solana/wallet-adapter-react": "0.15.35",
     "@solana/web3.js": "^1.95.3",
     "@stellar/freighter-api": "^3.0.0",
-    "@stellar/stellar-sdk": "13.0.0",
+    "@stellar/stellar-sdk": "14.1.1",
     "@vitejs/plugin-react": "4.3.4",
     "@web3-react/core": "^8.2.0",
     "ethers": "^5.6.1",

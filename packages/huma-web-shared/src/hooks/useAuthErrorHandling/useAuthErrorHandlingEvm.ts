@@ -9,7 +9,7 @@ import { SiweMessage } from 'siwe'
 import { AUTH_ERROR_TYPE, AUTH_STATUS } from '.'
 
 const TEN_SECONDS = 10000
-const MAX_NUM_ATTEMPS = 4
+const MAX_NUM_ATTEMPS = 20
 
 const createSiweMessage = (
   address: string,
@@ -52,7 +52,11 @@ const verifyGnosisSafeSignature = async (
         throw e
       }
 
-      if (e instanceof AxiosError && e.status === HttpStatusCode.Unauthorized) {
+      if (
+        e instanceof AxiosError &&
+        (e.status === HttpStatusCode.Unauthorized ||
+          e.response?.status === HttpStatusCode.Unauthorized)
+      ) {
         await timeUtil.sleep(TEN_SECONDS * numAttempts)
       } else {
         throw e
