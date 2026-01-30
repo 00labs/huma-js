@@ -1,0 +1,87 @@
+name: NPM Packages Publishing
+
+on:
+  pull_request:
+    types: [closed]
+    branches: ['develop', 'master']
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: 'Publish channel'
+        required: true
+        default: 'beta'
+        type: choice
+        options:
+          - beta
+          - production
+
+permissions:
+  id-token: write  # Required for OIDC trusted publishing with npm
+  contents: write  # Checkout + production sync step (push to develop)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Only run on workflow_dispatch or when a PR was merged (not just closed)
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+
+    steps:
+      - name: Determine publish channel
+        id: channel
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "channel=${{ inputs.channel }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.pull_request.base.ref }}" = "master" ]; then
+            echo "channel=production" >> "$GITHUB_OUTPUT"
+          else
+            echo "channel=beta" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.channel.outputs.channel == 'production' && secrets.CI_TOKEN_PUBLIC || github.token }}
+
+      - name: Use Node.js 20.19.5
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.19.5
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build packages
+        run: yarn build:all
+
+      - name: Configure Git User
+        run: |
+          git config --global user.email "ci@huma.finance"
+          git config --global user.name "humaci"
+
+      - name: Publish packages (beta)
+        if: steps.channel.outputs.channel == 'beta'
+        run: yarn lerna publish patch --preid beta --canary --no-private --yes --force-publish
+
+      - name: Publish packages (production)
+        if: steps.channel.outputs.channel == 'production'
+        run: yarn lerna publish patch --no-private --yes
+
+      - name: Synchronize lerna version bump commit with develop branch
+        if: steps.channel.outputs.channel == 'production'
+        run: |
+          git fetch --unshallow
+          git checkout develop
+          git pull
+          git merge --no-ff master -m "Auto-merge master back to develop"
+          git push
