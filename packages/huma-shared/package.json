@@ -1,6 +1,10 @@
 {
   "name": "@huma-finance/shared",
   "version": "0.0.77",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/00labs/huma-js.git"
+  },
   "types": "./dist/index.d.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
