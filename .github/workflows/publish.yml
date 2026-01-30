@@ -16,8 +16,8 @@ on:
           - production
 
 permissions:
-  id-token: write  # Required for OIDC trusted publishing with npm
-  contents: write  # Checkout + production sync step (push to develop)
+  id-token: write # Required for OIDC trusted publishing with npm
+  contents: write # Checkout + production sync step (push to develop)
 
 jobs:
   publish:
@@ -80,7 +80,7 @@ jobs:
       - name: Synchronize lerna version bump commit with develop branch
         if: steps.channel.outputs.channel == 'production'
         run: |
-          git fetch --unshallow
+          git fetch
           git checkout develop
           git pull
           git merge --no-ff master -m "Auto-merge master back to develop"
