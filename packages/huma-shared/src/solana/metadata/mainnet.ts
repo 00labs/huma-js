@@ -307,7 +307,7 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
     },
   },
   ArfMarJunSepDec: {
-    title: 'Arf - Cross Border Payment Financing (ODL)',
+    title: 'Arf - Cross Border Payment Financing (Mar Jun Sep Dec)',
     poolName: POOL_NAME.ArfMarJunSepDec,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaMainnet,
@@ -339,7 +339,7 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
     },
   },
   ArfJanAprJulOct: {
-    title: 'Arf - Cross Border Payment Financing (ODL)',
+    title: 'Arf - Cross Border Payment Financing (Jan Apr Jul Oct)',
     poolName: POOL_NAME.ArfJanAprJulOct,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaMainnet,
@@ -371,7 +371,7 @@ export const SOLANA_MAINNET_METADATA: SolanaPoolsInfo = {
     },
   },
   ArfFebMayAugNov: {
-    title: 'Arf - Cross Border Payment Financing (ODL)',
+    title: 'Arf - Cross Border Payment Financing (Feb May Aug Nov)',
     poolName: POOL_NAME.ArfFebMayAugNov,
     poolType: POOL_TYPE.CreditLine,
     chainId: SolanaChainEnum.SolanaMainnet,
