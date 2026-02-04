@@ -45,6 +45,17 @@ export class HumaReceivableFactory {
       throw new Error('Input must be a JSON object.')
     }
 
+    // Check that the private key is different from the signer passed in the context
+    const signerAddress = await this.#humaContext.signer.getAddress()
+    const arweavePaymentAddress = ethers.utils.computeAddress(
+      arweavePaymentPrivateKey,
+    )
+    if (signerAddress === arweavePaymentAddress) {
+      throw new Error(
+        'The ARWeave payment private key must be different from the signer address',
+      )
+    }
+
     await this.throwIfReferenceIdExists(referenceId)
 
     const metadataURI = await this.uploadMetadata(
