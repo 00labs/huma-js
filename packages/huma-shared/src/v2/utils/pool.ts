@@ -19,6 +19,7 @@ import POOL_ABI from '../abis/Pool.json'
 import POOL_CONFIG_ABI from '../abis/PoolConfig.json'
 import POOL_SAFE_ABI from '../abis/PoolSafe.json'
 import TRANCHE_VAULT_ABI from '../abis/TrancheVault.json'
+import TRANCHE_VAULT_NO_AUTOREDEMPTION_ABI from '../abis/TrancheVaultNoAutoredemptionUpgrade.json'
 import { ALFAJORES_METADATA } from '../metadata/alfajores'
 import { AMOY_METADATA } from '../metadata/amoy'
 import { BASE_SEPOLIA_METADATA } from '../metadata/baseSepolia'
@@ -52,6 +53,7 @@ export type PoolAbis = {
   poolSafeAbi: unknown
   poolConfigAbi: unknown
   trancheVaultAbi: unknown
+  trancheVaultNoAutoredemptionUpgradeAbi: unknown
   firstLossCoverAbi: unknown
   epochManagerAbi: unknown
   calendarAbi: unknown
@@ -113,6 +115,7 @@ export type PoolInfoV2 = {
     borrower?: string // For single borrower pools
     rwrUploader?: string // For single borrower pools where receivables are uploaded by a different wallet
     enableGetTestUSDC?: boolean
+    noTrancheAutoredeemUpdate?: boolean
   }
   redirect?: REDIRECTS
 }
@@ -133,6 +136,7 @@ export const POOL_ABI_V2: PoolAbis = {
   poolSafeAbi: POOL_SAFE_ABI,
   poolConfigAbi: POOL_CONFIG_ABI,
   trancheVaultAbi: TRANCHE_VAULT_ABI,
+  trancheVaultNoAutoredemptionUpgradeAbi: TRANCHE_VAULT_NO_AUTOREDEMPTION_ABI,
   firstLossCoverAbi: FIRST_LOSS_COVER_ABI,
   epochManagerAbi: EPOCH_MANAGER_ABI,
   calendarAbi: CALENDAR_ABI,

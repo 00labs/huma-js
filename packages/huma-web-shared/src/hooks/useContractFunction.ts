@@ -91,6 +91,7 @@ export const sendTxAtom = atom(
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
+      console.error(e)
       const contractErrorMessage = getTransactionErrorFromError(e)
       if (contractErrorMessage) {
         set(txAtom, {

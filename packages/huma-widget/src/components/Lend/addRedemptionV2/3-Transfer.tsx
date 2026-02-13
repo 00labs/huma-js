@@ -42,7 +42,14 @@ export function Transfer({
     return null
   }
 
-  return (
+  return poolInfo.extra?.noTrancheAutoredeemUpdate ? (
+    <TxSendModalV2
+      contract={trancheVaultContract}
+      method='addRedemptionRequest'
+      params={[redeemSharesBN]}
+      handleSuccess={handleSuccess}
+    />
+  ) : (
     <TxSendModalV2
       contract={trancheVaultContract}
       method='addRedemptionRequest'
