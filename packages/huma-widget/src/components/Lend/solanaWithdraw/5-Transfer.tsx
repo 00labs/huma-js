@@ -6,6 +6,7 @@ import {
 import { useHumaProgram } from '@huma-finance/web-shared'
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountIdempotentInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
   TOKEN_2022_PROGRAM_ID,
@@ -88,6 +89,16 @@ export function Transfer({
           )
         }
       }
+
+      tx.add(
+        createAssociatedTokenAccountIdempotentInstruction(
+          publicKey,
+          lenderTrancheToken,
+          publicKey,
+          new PublicKey(trancheMint),
+          TOKEN_2022_PROGRAM_ID,
+        ),
+      )
 
       if (!poolIsClosed) {
         const disburseTx = await program.methods
