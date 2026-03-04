@@ -78,6 +78,10 @@ import {
   SolanaLendWithdrawProps,
 } from './components/Lend/solanaWithdraw'
 import {
+  StellarLendAddRedemption,
+  StellarLendAddRedemptionProps,
+} from './components/Lend/stellarAddRedemption'
+import {
   StellarLendSupply,
   StellarLendSupplyProps,
 } from './components/Lend/stellarSupply'
@@ -709,6 +713,28 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
   return (
     <GenericWidget {...props}>
       <StellarLendSupply {...props} />
+    </GenericWidget>
+  )
+}
+
+/**
+ * Lend pool add redemption widget props for Stellar pools
+ * @typedef {Object} StellarLendAddRedemptionWidgetProps
+ */
+type StellarLendAddRedemptionWidgetProps = StellarLendAddRedemptionProps &
+  GenericWidgetProps
+
+/**
+ * Lend pool add redemption widget for Stellar pools
+ *
+ * @param {StellarLendAddRedemptionWidgetProps} props - Widget props
+ */
+export function StellarLendAddRedemptionWidget(
+  props: StellarLendAddRedemptionWidgetProps,
+) {
+  return (
+    <GenericWidget {...props}>
+      <StellarLendAddRedemption {...props} />
     </GenericWidget>
   )
 }
