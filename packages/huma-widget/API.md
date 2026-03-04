@@ -1,6 +1,8 @@
 ## Functions
 
 <dl>
+<dt><a href="#StellarLendAddRedemption">StellarLendAddRedemption()</a></dt>
+<dd><p>Stellar add redemption props – request to withdraw (redeem) shares from a tranche.</p></dd>
 <dt><a href="#InvoiceFactoringBorrowWidget">InvoiceFactoringBorrowWidget(props)</a> ⇒</dt>
 <dd><p>Invoice factoring borrow widget</p></dd>
 <dt><a href="#InvoiceFactoringPaymentWidget">InvoiceFactoringPaymentWidget(props)</a> ⇒</dt>
@@ -52,6 +54,8 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Solana lend withdraw widget</p></dd>
 <dt><a href="#StellarLendSupplyWidget">StellarLendSupplyWidget(props)</a></dt>
 <dd><p>Lend pool supply widget for Stellar pools</p></dd>
+<dt><a href="#StellarLendAddRedemptionWidget">StellarLendAddRedemptionWidget(props)</a></dt>
+<dd><p>Lend pool add redemption widget for Stellar pools</p></dd>
 <dt><a href="#StellarBorrowWidget">StellarBorrowWidget(props)</a></dt>
 <dd><p>Borrow widget for Stellar pools</p></dd>
 <dt><a href="#SolanaEnableAutoRedemptionWidget">SolanaEnableAutoRedemptionWidget(props)</a></dt>
@@ -165,11 +169,29 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 <dd><p>Lend pool supply widget props for Solana pools</p></dd>
 <dt><a href="#StellarLendSupplyWidgetProps">StellarLendSupplyWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props for Stellar pools</p></dd>
+<dt><a href="#StellarLendAddRedemptionWidgetProps">StellarLendAddRedemptionWidgetProps</a> : <code>Object</code></dt>
+<dd><p>Lend pool add redemption widget props for Stellar pools</p></dd>
 <dt><a href="#StellarLendSupplyWidgetProps">StellarLendSupplyWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Borrow widget props for Stellar pools</p></dd>
 <dt><a href="#SolanaEnableAutoRedemptionWidgetProps">SolanaEnableAutoRedemptionWidgetProps</a> : <code>Object</code></dt>
 <dd><p>Lend pool supply widget props for Solana pools</p></dd>
 </dl>
+
+<a name="StellarLendAddRedemption"></a>
+
+## StellarLendAddRedemption()
+<p>Stellar add redemption props – request to withdraw (redeem) shares from a tranche.</p>
+
+**Kind**: global function  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| poolInfo | <code>StellarPoolInfo</code> | <p>The metadata of the pool.</p> |
+| poolState | <code>StellarPoolState</code> | <p>The current state config of the pool.</p> |
+| tranche | <code>TrancheType</code> | <p>The tranche to redeem from (junior or senior).</p> |
+| handleClose | <code>function</code> | <p>Function to close the widget modal.</p> |
+| handleSuccess | <code>function</code> | <p>Optional callback when redemption request succeeds.</p> |
 
 <a name="InvoiceFactoringBorrowWidget"></a>
 
@@ -465,6 +487,17 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 | Param | Type | Description |
 | --- | --- | --- |
 | props | [<code>StellarLendSupplyWidgetProps</code>](#StellarLendSupplyWidgetProps) | <p>Widget props</p> |
+
+<a name="StellarLendAddRedemptionWidget"></a>
+
+## StellarLendAddRedemptionWidget(props)
+<p>Lend pool add redemption widget for Stellar pools</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| props | [<code>StellarLendAddRedemptionWidgetProps</code>](#StellarLendAddRedemptionWidgetProps) | <p>Widget props</p> |
 
 <a name="StellarBorrowWidget"></a>
 
@@ -1173,6 +1206,12 @@ To be used when re-enabling autopay and other pool actions that require allowanc
 
 ## StellarLendSupplyWidgetProps : <code>Object</code>
 <p>Lend pool supply widget props for Stellar pools</p>
+
+**Kind**: global typedef  
+<a name="StellarLendAddRedemptionWidgetProps"></a>
+
+## StellarLendAddRedemptionWidgetProps : <code>Object</code>
+<p>Lend pool add redemption widget props for Stellar pools</p>
 
 **Kind**: global typedef  
 <a name="StellarLendSupplyWidgetProps"></a>
