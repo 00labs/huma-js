@@ -78,9 +78,17 @@ import {
   SolanaLendWithdrawProps,
 } from './components/Lend/solanaWithdraw'
 import {
+  StellarLendAddRedemption,
+  StellarLendAddRedemptionProps,
+} from './components/Lend/stellarAddRedemption'
+import {
   StellarLendSupply,
   StellarLendSupplyProps,
 } from './components/Lend/stellarSupply'
+import {
+  StellarLendWithdraw,
+  StellarLendWithdrawProps,
+} from './components/Lend/stellarWithdraw'
 import { LendSupply, LendSupplyProps } from './components/Lend/supply'
 import { LendSupplyPropsV2, LendSupplyV2 } from './components/Lend/supplyV2'
 import { LendWithdraw, LendWithdrawProps } from './components/Lend/withdraw'
@@ -709,6 +717,50 @@ export function StellarLendSupplyWidget(props: StellarLendSupplyWidgetProps) {
   return (
     <GenericWidget {...props}>
       <StellarLendSupply {...props} />
+    </GenericWidget>
+  )
+}
+
+/**
+ * Lend pool add redemption widget props for Stellar pools
+ * @typedef {Object} StellarLendAddRedemptionWidgetProps
+ */
+type StellarLendAddRedemptionWidgetProps = StellarLendAddRedemptionProps &
+  GenericWidgetProps
+
+/**
+ * Lend pool add redemption widget for Stellar pools
+ *
+ * @param {StellarLendAddRedemptionWidgetProps} props - Widget props
+ */
+export function StellarLendAddRedemptionWidget(
+  props: StellarLendAddRedemptionWidgetProps,
+) {
+  return (
+    <GenericWidget {...props}>
+      <StellarLendAddRedemption {...props} />
+    </GenericWidget>
+  )
+}
+
+/**
+ * Lend pool withdraw widget props for Stellar pools
+ * @typedef {Object} StellarLendWithdrawWidgetProps
+ */
+type StellarLendWithdrawWidgetProps = StellarLendWithdrawProps &
+  GenericWidgetProps
+
+/**
+ * Lend pool withdraw widget for Stellar pools (disburse when pool open, withdraw_after_pool_closure when closed)
+ *
+ * @param {StellarLendWithdrawWidgetProps} props - Widget props
+ */
+export function StellarLendWithdrawWidget(
+  props: StellarLendWithdrawWidgetProps,
+) {
+  return (
+    <GenericWidget {...props}>
+      <StellarLendWithdraw {...props} />
     </GenericWidget>
   )
 }
