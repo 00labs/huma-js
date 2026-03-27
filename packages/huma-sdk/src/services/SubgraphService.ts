@@ -73,8 +73,9 @@ function getCreditEventsForUser(
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
   event: number[],
+  apiKey?: string,
 ): Promise<CreditEventPayload[]> {
-  const url = getSubgraphUrlForChainId(chainId)
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
   if (!url) {
     return Promise.resolve([])
   }
@@ -133,10 +134,16 @@ function getLastFactorizedAmountFromPool(
   chainId: number,
   poolName: POOL_NAME,
   poolType: POOL_TYPE,
+  apiKey?: string,
 ): Promise<number> {
-  return getCreditEventsForUser(userAddress, chainId, poolName, poolType, [
-    CreditEvent.DrawdownMadeWithReceivable,
-  ]).then((events) => Number(events[0].amount))
+  return getCreditEventsForUser(
+    userAddress,
+    chainId,
+    poolName,
+    poolType,
+    [CreditEvent.DrawdownMadeWithReceivable],
+    apiKey,
+  ).then((events) => Number(events[0].amount))
 }
 
 /**
@@ -161,8 +168,9 @@ function getRWReceivableInfo(
     orderBy: 'tokenId',
     orderDirection: 'desc',
   },
+  apiKey?: string,
 ): Promise<RealWorldReceivableInfoBase[]> {
-  const url = getSubgraphUrlForChainId(chainId)
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
   if (!url) {
     return Promise.resolve([])
   }
@@ -334,8 +342,9 @@ function checkBorrowAndLendHistory(
   chainId: number,
   pool: string,
   userAddress: string,
+  apiKey?: string,
 ): Promise<{ hasBorrowHistory: boolean; hasLendHistory: boolean } | undefined> {
-  const url = getSubgraphUrlForChainId(chainId)
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
   if (!url || !userAddress || !pool) {
     return Promise.resolve(undefined)
   }
@@ -579,8 +588,9 @@ export type AccountData = {
 function fetchAllAccountData(
   chainId: number,
   account: string,
+  apiKey?: string,
 ): Promise<AccountData | undefined> {
-  const url = PoolSubgraphMap[chainId]?.subgraph
+  const url = getSubgraphUrlForChainId(chainId, apiKey)
   if (!url) {
     return Promise.resolve(undefined)
   }

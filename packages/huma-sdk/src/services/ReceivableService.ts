@@ -32,6 +32,7 @@ import { Pagination, SubgraphService } from './SubgraphService'
 async function getTokenIdByURI(
   signer: ethers.Signer,
   uri: string | null,
+  apiKey?: string,
 ): Promise<string | null | undefined> {
   if (uri === null) {
     return null
@@ -57,7 +58,10 @@ async function getTokenIdByURI(
     }
   `
 
-  const receivableSubgraph = SubgraphService.getSubgraphUrlForChainId(chainId)
+  const receivableSubgraph = SubgraphService.getSubgraphUrlForChainId(
+    chainId,
+    apiKey,
+  )
   if (!receivableSubgraph) {
     throw new Error('No receivable subgraph exists for this chain')
   }
